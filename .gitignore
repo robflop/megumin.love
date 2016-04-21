@@ -1,0 +1,15 @@
+# ignore Cordova/PhoneGap CLI directories
+# in essence, everything but *.xdk file and www directory
+/*
+!/www
+!/docs
+!/config.xml
+!/README.md
+!/LICENSE.md
+!/intelxdk.config.additions.xml
+!/*.xdk
+!/.gitignore
+!/.jscodehints
+!/app.json
+!/screenshot.png
+!/icon.png
