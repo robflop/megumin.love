@@ -1,0 +1,44 @@
+body {
+    background: url(images/bg.png) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+: #box {
+    width: 300px;
+    height: 175px;
+    background: rgba(0,0,0,0.5);
+    top: 51vh;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 20px;
+}
+
+}
+
+#counter {
+    position: relative;
+    text-align: center;
+    top: 11px;
+    font-size: 50px;
+    color: crimson;
+}
+
+
+
+#button {
+    font-size: 70px;
+    background: #ff3338;
+    color: #ff8080;
+    border-radius: 20px;
+    width: 100%;
+}
+
+
+#button:hover {
+    background: #cc0000;
+}
