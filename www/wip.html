@@ -5,20 +5,13 @@
         <title>Megumin is love</title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/style.css">
+        <script src="js/count.js"></script>
     </head>
-    <body cz-shortcut-listen="true">
+    <body>
         <div id="box">
 		  <a id="counter">0</a>
 		  <button id="button" onclick="play()">やめろ!!</button>
         </div>
         <audio id="yamero" src="yamero.mp3"></audio>
-		<script type="text/javascript">
-			var counter = 0;
-			function play() {
-				counter += 1;
-				document.getElementById("counter").innerHTML = counter;
-				document.getElementById('yamero').play();
-				};
-		</script>
 	</body>
 </html>
