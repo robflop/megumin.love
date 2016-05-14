@@ -1,5 +1,5 @@
 body {
-    background: url(images/bg.png) no-repeat center center fixed; 
+    background: url(/images/bg.png) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -16,8 +16,6 @@ body {
     box-sizing: border-box;
     position: relative;
     border-radius: 20px;
-
-
 }
 
 #counter {
@@ -26,10 +24,8 @@ body {
     top: -10px;
     font-size: 50px;
     color: crimson;
+    margin: auto;
 }
-
-
-
 
 #button {
     font-size: 70px;
@@ -38,7 +34,6 @@ body {
     border-radius: 20px;
     width: 100%;
 }
-
 
 #button:hover {
     background: #cc0000;
