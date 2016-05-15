@@ -1,10 +1,5 @@
 <?php
-        $startcount = 0;
-        if ($_POST['action'] == "increment") {
-            $startcount = countInc(); 
-        }
-        
-        function countInc() {
+         function countInc() {
             $count = ("counter.txt");
             $clicks = file($count);
             $clicks[0]++;
@@ -12,5 +7,8 @@
             fwrite($counter, "$clicks[0]");
             return $clicks[0];
         }
- 
+        if ($_POST['action'] == "increment") {
+            echo countInc();
+            exit;
+        }
 ?>
