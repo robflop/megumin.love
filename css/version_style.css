@@ -1,0 +1,22 @@
+body {
+    background: url(/images/bg.png) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#container {
+    width: 500px;
+    height: auto;
+    background: #F2E6E6;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 20px;   
+}
+
+#header {
+    text-decoration: underline;
+}
