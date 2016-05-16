@@ -14,8 +14,8 @@
         <div id="box">
 		  <div id="counter"><?php echo fread($countfile, filesize("counter.txt")); fclose($countfile);?></div>
             <button id="button" onclick="count();">やめろ!!</button>
+            <a href="version.html" id="version">[ver. P2]</a>
         </div>
         <audio id="yamero" src="yamero.mp3" preload="auto"></audio>
-    
 	</body>
 </html>

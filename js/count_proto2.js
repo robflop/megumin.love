@@ -1,19 +1,22 @@
 function count() {
 
-ion.sound({
+    ion.sound({
         sounds: [
-        {
-            name: "yamero"
+            {
+                name: "yamero"
         }
     ],
-    path: "./",
-    preload: true,
-    multiplay: true,
-    
-});
+        path: "./",
+        preload: true,
+        multiplay: true,
 
-    $.post("count.php", {action: "increment"}, function(response){
+    });
+
+    $.post("count.php", {
+        action: "increment"
+    }, function (response) {
         ion.sound.play("yamero");
         document.getElementById('counter').innerHTML = response;
     });
 }
+console.log("No stealing code! ;)");

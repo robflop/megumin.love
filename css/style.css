@@ -8,7 +8,7 @@ body {
 
 #box {
     width: 300px;
-    height: 175px;
+    height: 190px;
     background: rgba(0,0,0,0.5);
     top: 51vh;
     margin: 0 auto;
@@ -37,4 +37,12 @@ body {
 
 #button:hover {
     background: #cc0000;
+}
+
+#version {
+    color: #ff3338;
+    font-family: cursive;
+    position: relative;
+    text-align: right;
+    width: 100%;
 }
