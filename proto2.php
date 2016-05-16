@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="css/style.css">
         <script src="js/count_proto2.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-        <script src="js/ion.sound.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
     </head>
     <body>
         <?php $countfile = fopen("counter.txt", "r")?>
