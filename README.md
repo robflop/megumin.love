@@ -1,2 +1,2 @@
 # Megumin
-A site commited to worshipping best girl Megumin.
+A site committed to worshipping best girl Megumin.
