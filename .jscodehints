@@ -1,6 +1,0 @@
-{               
-     "excluded-directories" : ["/docs", "/node_modules", "/plugins", "/merges", "/platforms", "/hooks", "/.cordova"],
-     "excluded-files" : ["jquery*.js", "*.xml", "*.md"],
-     "max-file-count": "100",
-     "max-file-size": "524288"
-}
