@@ -1,2 +1,2 @@
 # Megumin
-Joke-ish site about a character called "Megumin".
+A site commited to worshipping best girl Megumin.
