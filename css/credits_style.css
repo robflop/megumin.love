@@ -6,31 +6,18 @@ body {
     background-size: cover;
 }
 
-#container {
-    width: 500px;
-    height: auto;
+#creditsbox {
+    width: 510px;
+    height: 500px;
     background: #F2E6E6;
+    top: 10vh;
     margin: 0 auto;
     padding: 16px;
     box-sizing: border-box;
     position: relative;
-    border-radius: 20px;   
+    border-radius: 20px;
 }
 
-#header {
+h1 {
     text-decoration: underline;
-}
-
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    font-family: 'Courgette', cursive;
-    margin-left: 10px;
-    color: azure;
-}
-
-#credits {
-    color: azure;
 }
