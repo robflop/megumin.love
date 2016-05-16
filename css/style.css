@@ -46,3 +46,17 @@ body {
     text-align: right;
     width: 100%;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-family: 'Courgette', cursive;
+    margin-left: 10px;
+    color: azure;
+}
+
+#credits {
+    color: azure;
+}
