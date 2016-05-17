@@ -1,5 +1,5 @@
 body {
-    background: url(/images/bg.png) no-repeat center center fixed; 
+    background: url(/images/bg.png) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -14,7 +14,7 @@ body {
     padding: 16px;
     box-sizing: border-box;
     position: relative;
-    border-radius: 20px;   
+    border-radius: 20px;
 }
 
 #header {

@@ -1,5 +1,5 @@
 body {
-    background: url(/images/bg.png) no-repeat center center fixed; 
+    background: url(/images/bg.png) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -9,7 +9,7 @@ body {
 #box {
     width: 300px;
     height: 190px;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     top: 51vh;
     margin: 0 auto;
     padding: 16px;
@@ -42,9 +42,6 @@ body {
 #version {
     color: #ff3338;
     font-family: cursive;
-    position: relative;
-    text-align: right;
-    width: 100%;
 }
 
 footer {
@@ -59,4 +56,8 @@ footer {
 
 #credits {
     color: azure;
+}
+
+#share-buttons {
+    width: 190px;
 }
