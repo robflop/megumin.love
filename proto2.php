@@ -25,25 +25,27 @@
     <script src="js/count_proto2.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-    <script src="js/share.js"></script>
-    <script src="//opensharecount.com/bubble.js"></script>
+    <script src="js/googleanalytics.js"></script>
+
 </head>
 
 <body>
-    <?php $countfile = fopen("counter.txt", "r")?>
-        <div id="box">
-            <div id="counter">
-                <?php echo fread($countfile, filesize("counter.txt")); fclose($countfile);?>
-            </div>
-            <button id="button" onclick="count();">やめろ!!</button>
-            <a href="version.html" id="version">[ver. P2]</a>
-            <span id="share-buttons">
-                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://megumin.love" data-text="New Megumin fansite! Check it out!" data-via="robflop98">Tweet</a>
-                <a href="http://megumin.love" target="_blank" class="osc-counter" data-dir="left">1</a>
-                <div class="fb-share-button" data-href="https://megumin.love" data-layout="button_count" data-mobile-iframe="true"></div>
-            </span>
+    <div id="box">
+        <div id="counter">
+            <?php $countfile = fopen("counter.txt", "r"); echo fread($countfile, filesize("counter.txt")); fclose($countfile);?>
         </div>
-        <audio id="yamero" src="yamero.mp3" preload="auto"></audio>
+        <button id="button" onclick="count();">やめろ!!</button>
+        <a href="version.html" id="version">[ver. P2]</a>
+        <span id="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=New%20Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
+            <img src="/images/twitter.png" alt="Tweet on Twitter" /></a>
+            <a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
+            <img src="/images/facebook.png" alt="Share on Facebook" /></a>
+            <a href="https://www.reddit.com/submit?url=http://megumin.love;title=megumin.love" target="_blank">
+            <img src="https://www.redditstatic.com/spreddit1.gif" alt="Submit to Reddit"></a>
+        </span>
+    </div>
+    <audio id="yamero" src="yamero.mp3" preload="auto"></audio>
 </body>
 <footer>
     <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
