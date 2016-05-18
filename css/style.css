@@ -42,13 +42,14 @@ body {
 #version {
     color: #ff3338;
     font-family: cursive;
+    vertical-align: baseline;
 }
 
 footer {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 18%;
     font-family: 'Courgette', cursive;
     margin-left: 10px;
     color: azure;
@@ -59,5 +60,6 @@ footer {
 }
 
 #share-buttons {
-    width: 190px;
+    position: relative;
+    margin-left: 120px;
 }
