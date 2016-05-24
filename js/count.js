@@ -17,6 +17,7 @@ $(document).ready(function () {
         multiplay: true,
     });
     $('#button').click(function () {
+        ion.sound.play("yamero");
         $.ajax({
             method: 'GET',
             url: 'includes/update_counter.php',
@@ -24,7 +25,6 @@ $(document).ready(function () {
                 count: '1'
             }
         }).done(function (res) {
-            ion.sound.play("yamero");
             $('#counter').html(res);
         });
     });

@@ -52,13 +52,11 @@ $currentCount = ob_get_clean();
 
         <footer>
             <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+            <script src="//megumin.love/js/count_sql.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+            <script src="//megumin.love/js/googleanalytics.js"></script>
         </footer>
-
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-        <script src="js/count.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-        <script src="js/googleanalytics.js"></script>
     </body>
 
     </html>
