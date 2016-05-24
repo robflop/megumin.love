@@ -1,5 +1,5 @@
 <!doctype HTML>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -44,7 +44,7 @@
 </body>
 <footer>
     <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
-    <script src="js/count_proto2.js"></script>
+    <script src="js/count.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
     <script src="js/googleanalytics.js"></script>
