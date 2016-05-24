@@ -8,7 +8,7 @@ if($db->connect_errno) {
 	die();
 }
 if(isset($_GET['count']) && $_GET['count'] == '1') {
-	$statement = 'UPDATE megumin_love_counter SET `counter` = `counter`+1'; 
+	$statement = 'UPDATE yamero_counter SET `counter` = `counter`+1'; 
 
 	if(!$db->query($statement)) {
 		printf('Error updating entry: %s\n', $db->error);
@@ -16,7 +16,7 @@ if(isset($_GET['count']) && $_GET['count'] == '1') {
 	}
 }
 
-$statement = 'SELECT `counter` FROM megumin_love_counter';
+$statement = 'SELECT `counter` FROM yamero_counter';
 $result = $db->query($statement);
 while($rowResult = $result->fetch_row()) {
 	echo $rowResult[0];
