@@ -27,7 +27,7 @@
 <body>
     <div id="box" style="display:none;">
         <div id="counter">
-            <?php $countfile = fopen("counter.txt", "r"); echo fread($countfile, filesize("counter.txt")); fclose($countfile);?>
+            <?php file_get_contents("includes/update_counter.php");?>
         </div>
         <button id="button">やめろ!!</button>
         <a href="version.html" id="version">[ver. P2]</a>
