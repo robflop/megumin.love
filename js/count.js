@@ -19,4 +19,3 @@ function count() {
         document.getElementById('counter').innerHTML = response;
     });
 }
-console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
