@@ -7,10 +7,9 @@ body {
 }
 
 #box {
-	width:300px;
-	top:50%;
-	left:50%;
-	
+    width: 300px;
+    top: 50%;
+    left: 50%;
     background: rgba(0, 0, 0, 0.5);
     padding: 16px;
     box-sizing: border-box;
