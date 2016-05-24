@@ -25,11 +25,11 @@
 </head>
 
 <body>
-    <div id="box">
+    <div id="box" style="display:none;">
         <div id="counter">
             <?php $countfile = fopen("counter.txt", "r"); echo fread($countfile, filesize("counter.txt")); fclose($countfile);?>
         </div>
-        <button id="button" onclick="count();">やめろ!!</button>
+        <button id="button">やめろ!!</button>
         <a href="version.html" id="version">[ver. P2]</a>
         <span id="share-buttons">
             <a href="https://twitter.com/intent/tweet?text=New%20Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
@@ -41,13 +41,16 @@
         </span>
     </div>
     <audio id="yamero" src="yamero.mp3" preload="auto"></audio>
+	
+	<footer>
+		<p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
+	</footer>
+	
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+	<script src="js/count_sql.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+	<script src="js/googleanalytics.js"></script>
 </body>
-<footer>
-    <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
-    <script src="js/count_proto2.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-    <script src="js/googleanalytics.js"></script>
-</footer>
 
 </html>

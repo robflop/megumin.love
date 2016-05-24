@@ -7,14 +7,14 @@ body {
 }
 
 #box {
-    width: 300px;
-    height: 190px;
+	width:300px;
+	top:50%;
+	left:50%;
+	
     background: rgba(0, 0, 0, 0.5);
-    top: 51vh;
-    margin: 0 auto;
     padding: 16px;
     box-sizing: border-box;
-    position: relative;
+    position: fixed;
     border-radius: 20px;
 }
 
