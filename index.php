@@ -6,9 +6,6 @@ $currentCount = ob_get_clean();
     <!doctype HTML>
     <html lang="en">
 
-    <!doctype HTML>
-    <html lang="en">
-
     <head>
         <meta charset="utf-8">
         <!--FACEBOOK-->
@@ -33,7 +30,7 @@ $currentCount = ob_get_clean();
     </head>
 
     <body>
-        <div id="box">
+        <div id="box" style="display:none;">
             <div id="counter">
                 <?php echo $currentCount; ?>
             </div>
@@ -48,15 +45,16 @@ $currentCount = ob_get_clean();
             <img src="https://www.redditstatic.com/spreddit1.gif" alt="Submit to Reddit"></a>
         </span>
         </div>
-        <audio id="yamero" src="yamero.mp3" preload="auto"></audio>
 
         <footer>
             <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-            <script src="//megumin.love/js/count_sql.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-            <script src="//megumin.love/js/googleanalytics.js"></script>
         </footer>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+        <script src="js/count_sql.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+        <script src="js/googleanalytics.js"></script>
     </body>
 
     </html>
