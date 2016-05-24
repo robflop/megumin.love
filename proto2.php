@@ -22,11 +22,6 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet' type='text/css'>
-    <script src="js/count_proto2.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-    <script src="js/googleanalytics.js"></script>
-
 </head>
 
 <body>
@@ -49,6 +44,10 @@
 </body>
 <footer>
     <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
+    <script src="js/count_proto2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+    <script src="js/googleanalytics.js"></script>
 </footer>
 
 </html>
