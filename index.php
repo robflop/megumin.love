@@ -42,7 +42,7 @@ $currentCount = ob_get_clean();
             <a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
             <img src="/images/facebook.png" alt="Share on Facebook" /></a>
             <a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank">
-            <img src="https://www.redditstatic.com/spreddit1.gif" alt="Submit to Reddit"></a>
+            <img src="/images/reddit.png" alt="Submit to Reddit"></a>
         </span>
         </div>
 
@@ -50,9 +50,8 @@ $currentCount = ob_get_clean();
             <p>Created and maintained by robflop<a id="credits" href="credits.html"> -> Credits</a></p>
         </footer>
 
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-        <script src="js/count_sql.js"></script>
+        <script src="js/count.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
         <script src="js/googleanalytics.js"></script>
     </body>
