@@ -49,6 +49,7 @@ body {
     color: #ff3338;
     font-family: cursive;
     vertical-align: baseline;
+    margin-top: 1px;
 }
 
 footer {
@@ -66,6 +67,7 @@ footer {
 }
 
 #share-buttons {
-    position: relative;
+    position: absolute;
     margin-left: 120px;
+    margin-top: 6px;
 }
