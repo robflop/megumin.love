@@ -2,6 +2,8 @@
 ![Version](https://img.shields.io/badge/Version-P.3-blue.svg)
 [![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?maxAge=2592000)](https://megumin.love)
 
+>Original: https://megumin.love
+
 # Megumin.love
 A site committed to worshipping best girl Megumin!
 
@@ -14,6 +16,7 @@ Written under PHP5.6, no guarantees for PHP7.
 - Insert value zero (0) into previously created "counter" column of your "yamero_counter" table or see below
 - (Optional: Install phpmemcachedadmin for a simple memcached control panel. Make sure you protect it!)
 - Set up cronjob for update_sql.php -- this updates the cached counter to mysql with your set interval.
+- Click!
 
 
 
