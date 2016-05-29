@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors', 1);
+error_reporting(0);
 include('global_variables.php');
 $db = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
 $cacheCounter = new Memcached();

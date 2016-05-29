@@ -11,22 +11,22 @@ $(document).ready(function () {
     ion.sound({
         sounds: [{
             name: "yamero"
-		}],
+        }],
         path: "./",
         preload: true,
         multiplay: true,
     });
     $('#button').click(function () {
         ion.sound.play("yamero");
+        var curr =
+            $('#counter').html(parseInt($('#counter').html()) + 1);
         $.ajax({
             method: 'GET',
             url: 'includes/cache_counter.php',
             data: {
                 count: '1'
             }
-        }).done(function (res) {
-            $('#counter').html(res);
-        });
+        }).done(function (res) {});
     });
 
 });
