@@ -20,7 +20,7 @@ $(document).ready(function () {
         ion.sound.play("yamero");
         $.ajax({
             method: 'GET',
-            url: 'includes/update_counter.php',
+            url: 'includes/cache_counter.php',
             data: {
                 count: '1'
             }

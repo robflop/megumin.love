@@ -1,6 +1,6 @@
 <?php
 ob_start();
-include('includes/update_counter.php');
+include('includes/cache_counter.php');
 $currentCount = ob_get_clean();
 ?>
     <!doctype HTML>
