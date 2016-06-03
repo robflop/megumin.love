@@ -71,3 +71,37 @@ footer {
     margin-left: 120px;
     margin-top: 6px;
 }
+
+#navbar-slide {
+    position: fixed;
+    top: 40px;
+    left: -340px;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+#navbar-slide-inner {
+    position: fixed;
+    top: 40px;
+    left: -350px;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+#navbar-slide:hover {
+    left: 0px;
+}
+
+#navbar-slide:hover #navbar-slide-inner {
+    top: 70px;
+    left: 7px;
+    font-family: 'Courgette', cursive;
+}
+
+#megsquad {
+    text-decoration: underline;
+}

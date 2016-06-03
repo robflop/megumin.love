@@ -30,6 +30,19 @@ $currentCount = ob_get_clean();
     </head>
 
     <body>
+        <div id="navbar-slide">
+            <img src="/images/hangumin.png" alt="Megumin Sidebar" />
+            <div id="navbar-slide-inner">
+                <h2 id="megsquad">Megumin Squad assemble!</h2>
+                <p>Be sure to also visit the following Sites:</p>
+                <p>-><a href="http://megum.in">megum.in</a> by Kagumi</p>
+                <p>-><a href="https://cerx.pw/megumin">cerx.pw/megumin</a> by Cerx</p>
+                <p>-><a href="http://megumin.pw">megumin.pw</a> by (?)</p>
+                <hr>
+                <p>Also, feel free to contact me <a href="https://www.reddit.com/message/compose/?to=robflop&subject=megumin.love">on reddit</a>
+                    <br>or under <a href="mailto:robflop@megumin.love">robflop@megumin.love</a>.</p>
+            </div>
+        </div>
         <div id="box" style="display:none;">
             <div id="counter">
                 <?php echo $currentCount; ?>
@@ -43,7 +56,7 @@ $currentCount = ob_get_clean();
             <img src="/images/facebook.png" alt="Share on Facebook" /></a>
             <a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank">
             <img src="/images/reddit.png" alt="Submit to Reddit"></a>
-        </span>
+            </span>
         </div>
 
         <footer>
