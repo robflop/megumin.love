@@ -12,7 +12,7 @@ $(document).ready(function () {
         sounds: [{
             name: "yamero"
         }],
-        path: "./",
+        path: "sounds/",
         preload: true,
         multiplay: true,
     });
