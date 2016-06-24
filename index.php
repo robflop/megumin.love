@@ -39,8 +39,10 @@ $currentCount = ob_get_clean();
                 <p>-><a href="https://cerx.pw/megumin">cerx.pw/megumin</a> by Cerx</p>
                 <p>-><a href="http://megumin.pw">megumin.pw</a> by (?)</p>
                 <hr>
-                <p>Also, feel free to contact me <a href="https://www.reddit.com/message/compose/?to=robflop&subject=megumin.love">on reddit</a>
-                    <br>or under <a href="mailto:robflop@megumin.love">robflop@megumin.love</a>.</p>
+                <p>Have Suggestions, found a bug or want me
+                    <br>to do your taxes? Shoot me a message
+                    <a href="https://www.reddit.com/message/compose/?to=robflop&subject=megumin.love">
+                        <br>on reddit</a> or under <a href="mailto:robflop@megumin.love">robflop@megumin.love</a>!</p>
             </div>
         </div>
         <div id="box" style="display:none;">
