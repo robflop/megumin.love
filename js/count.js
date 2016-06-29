@@ -15,13 +15,20 @@ $(document).ready(function () {
             {name: "explosion"},
             {name: "itai"},
             {name: "name"},
+            {name: "eugh1"},
+            {name: "eugh2"},
+            {name: "eugh3"},
+            {name: "eugh4"},
+            {name: "n"},
+            {name: "sion"},
+            {name: "plosion"},
         ],
         path: "sounds/",
         preload: true,
         multiplay: true,
     });
     $('#button').click(function () {
-        var rsound = Math.floor(Math.random() * 5);
+        var rsound = Math.floor(Math.random() * 13);
         switch(rsound) {
             case 0:
                 ion.sound.play("yamero");
@@ -37,6 +44,27 @@ $(document).ready(function () {
                 break;
             case 4:
                 ion.sound.play("name");
+                break;
+            case 5:
+                ion.sound.play("eugh1");
+                break;
+            case 6:
+                ion.sound.play("eugh2");
+                break;
+            case 7: 
+                ion.sound.play("eugh3");
+                break;
+            case 8:
+                ion.sound.play("eugh4");
+                break;
+            case 9:
+                ion.sound.play("n");
+                break;
+            case 10:
+                ion.sound.play("plosion");
+                break;
+            case 11:
+                ion.sound.play("sion");
                 break;
         }
         var curr =
