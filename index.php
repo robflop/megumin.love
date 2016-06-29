@@ -43,6 +43,10 @@ $currentCount = ob_get_clean();
                     <br>to do your taxes? Shoot me a message
                     <a href="https://www.reddit.com/message/compose/?to=robflop&subject=megumin.love">
                         <br>on reddit</a> or under <a href="mailto:robflop@megumin.love">robflop@megumin.love</a>!</p>
+                <p>In addition, be sure to check out the 
+                <br><a href="https://discord.gg/0u643X7fpwihIjTQ">r/megumin Discord Server</a>! 
+                <br>Me and the owners of the other sites are
+                <br>around there most of the time, too.</p>
             </div>
         </div>
         <div id="box" style="display:none;">
