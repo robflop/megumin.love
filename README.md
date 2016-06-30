@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-MPL-blue.svg)](https://github.com/robflop/Megumin/blob/master/LICENSE)
-![Version](https://img.shields.io/badge/Version-1.0-blue.svg)
+![Version](https://img.shields.io/badge/Version-1.1-blue.svg)
 [![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?maxAge=2592000)](https://megumin.love)
 
 >Original: https://megumin.love
