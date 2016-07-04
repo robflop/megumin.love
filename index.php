@@ -40,7 +40,7 @@ $currentCount = ob_get_clean();
                 <p>Be sure to also visit the following Sites:</p>
                 <p>-><a href="http://megum.in">megum.in</a> by Kagumi</p>
                 <p>-><a href="https://cerx.pw/megumin">cerx.pw/megumin</a> by Cerx</p>
-                <p>-><a href="http://megumin.pw">megumin.pw</a> by (?)</p>
+                <p>-><a href="http://megumin.pw">megumin.pw</a> by ricsivg</p>
                 <hr>
                 <p>Have Suggestions, found a bug or want me
                     <br>to do your taxes? Shoot me a message
