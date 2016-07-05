@@ -28,42 +28,42 @@ $(document).ready(function () {
         multiplay: true,
     });
     $('#button').click(function () {
-        var rsound = Math.floor(Math.random() * 13);
+        var rsound = Math.floor(Math.random() * 12) + 1;
         switch(rsound) {
-            case 0:
+            case 1:
                 ion.sound.play("yamero");
                 break;
-            case 1:
+            case 2:
                 ion.sound.play("pull");
                 break;
-            case 2:
+            case 3:
                 ion.sound.play("explosion");
                 break;
-            case 3:
+            case 4:
                 ion.sound.play("itai");
                 break;
-            case 4:
+            case 5:
                 ion.sound.play("name");
                 break;
-            case 5:
+            case 6:
                 ion.sound.play("eugh1");
                 break;
-            case 6:
+            case 7:
                 ion.sound.play("eugh2");
                 break;
-            case 7: 
+            case 8: 
                 ion.sound.play("eugh3");
                 break;
-            case 8:
+            case 9:
                 ion.sound.play("eugh4");
                 break;
-            case 9:
+            case 10:
                 ion.sound.play("n");
                 break;
-            case 10:
+            case 11:
                 ion.sound.play("plosion");
                 break;
-            case 11:
+            case 12:
                 ion.sound.play("sion");
                 break;
         }
