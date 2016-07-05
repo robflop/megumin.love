@@ -35,7 +35,7 @@ Column insert -> INSERT INTO megumin_yamero.yamero_counter (counter) VALUES ('0'
 Previous sounds amount: 12
 - Add "test.mp3", (ogg, aac) to /sounds/
 - Add "test" to the ion.sound initialization within count.js
-- Adjust the rsound variable, so changing the multiplier 13 to 14 (always 1 more than the amount of sounds) within count.js
+- Adjust the rsound variable, so changing the multiplier 12 to 13 within count.js
 
 New sounds amount: 13
 
