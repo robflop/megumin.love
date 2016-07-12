@@ -56,14 +56,14 @@ $currentCount = ob_get_clean();
             <div id="counter">
                 <?php echo $currentCount; ?>
             </div>
-            <button id="button">やめろ!!</button>
+            <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
             <a href="version.html" id="version">[ver1.1]</a>
             <span id="share-buttons">
-            <a href="https://twitter.com/intent/tweet?text=New%20Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
+            <a href="https://twitter.com/intent/tweet?text=New%20Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
             <img src="/images/twitter.png" alt="Tweet on Twitter" /></a>
-            <a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); return false;">
+            <a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Facebook', 'click'); return false;">
             <img src="/images/facebook.png" alt="Share on Facebook" /></a>
-            <a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank">
+            <a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank" onclick="ga('send', 'event', 'Reddit', 'click');">
             <img src="/images/reddit.png" alt="Submit to Reddit"></a>
             </span>
         </div>
