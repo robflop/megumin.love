@@ -8,6 +8,7 @@
 A site committed to worshipping best girl Megumin!
 
 Runs under JS/PHP with MySQL. [Memcached](https://pecl.php.net/package/memcached) (PECL) extension required for it to work.
+
 Written under PHP5.6, no guarantees for PHP7.
 
 ## Usage:
@@ -23,7 +24,7 @@ Written under PHP5.6, no guarantees for PHP7.
 
 ##### MySQL prepared queries:
 
-Table wih column -> CREATE TABLE megumin_yamero.yamero_counter ( counter INT NOT NULL ) ENGINE = InnoDB; 
+Table with column -> CREATE TABLE megumin_yamero.yamero_counter ( counter INT NOT NULL ) ENGINE = InnoDB; 
 
 Column insert -> INSERT INTO megumin_yamero.yamero_counter (counter) VALUES ('0');
 
