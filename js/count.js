@@ -77,5 +77,7 @@ $(document).ready(function () {
             }
         }).done(function (res) {});
     });
-
+    $(window).on("orientationchange", function() {
+        $('#box').center();
+    }); 
 });
