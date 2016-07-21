@@ -26,6 +26,7 @@ $currentCount = ob_get_clean();
         <meta property="twitter:image" content="https://megumin.love/images/bg.png">
         <meta name="keywords" content="megumin, love, konosuba, best girl, best, girl, anime">
         <meta name="description" content="Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <title>Megumin is love!</title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/style.css">
@@ -33,11 +34,12 @@ $currentCount = ob_get_clean();
     </head>
 
     <body>
-        <div id="navbar-slide">
+        <div id="navbar-slide" class="navbarPc">
             <img src="/images/hangumin.png" alt="Megumin Sidebar" />
-            <div id="navbar-slide-inner">
+            <div id="navbar-slide-inner" class="navbarPc">
                 <h2 id="megsquad">Megumin Squad assemble!</h2>
                 <p>Be sure to also visit the following Sites:</p>
+                <p>-><a href="https://robflop.pw">robflop.pw</a>, my personal Site</p>
                 <p>-><a href="http://megum.in">megum.in</a> by Kagumi</p>
                 <p>-><a href="https://cerx.pw/megumin">cerx.pw/megumin</a> by Cerx</p>
                 <p>-><a href="http://megumin.pw">megumin.pw</a> by ricsivg</p>

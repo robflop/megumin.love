@@ -6,7 +6,7 @@ body {
     background-size: cover;
 }
 
-#container {
+div#container {
     width: 500px;
     height: auto;
     background: #F2E6E6;
@@ -17,7 +17,7 @@ body {
     border-radius: 20px;
 }
 
-#header {
+h1#header {
     text-decoration: underline;
 }
 
@@ -31,6 +31,52 @@ footer {
     color: azure;
 }
 
-#credits {
+a#credits {
     color: azure;
+}
+
+@media only screen and (max-width: 481px) {
+    div#container {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        left: -80px;
+        top: -120px;
+    }
+    footer {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        bottom: -15px;
+    }
+    body {
+        height: 620px;
+    }
+}
+
+@media only screen and (max-height: 481px) {
+    div#container {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        top: -120px;
+    }
+    footer {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        bottom: -15px;
+        text-align: center;
+    }
+    body {
+        height: 620px;   
+    }
 }

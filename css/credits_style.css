@@ -6,9 +6,8 @@ body {
     background-size: cover;
 }
 
-#creditsbox {
+div#creditsbox {
     width: 510px;
-    height: 500px;
     background: #F2E6E6;
     top: 10vh;
     margin: 0 auto;
@@ -20,4 +19,30 @@ body {
 
 h1 {
     text-decoration: underline;
+}
+
+@media only screen and (max-width: 481px) {
+    div#creditsbox {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        left: -82px;
+    }
+    
+}
+
+@media only screen and (max-height: 481px) {
+    div#creditsbox {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+        top: 20px;
+    }
+    body {
+        height: 300px;   
+    }
 }
