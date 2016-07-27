@@ -31,6 +31,7 @@ $currentCount = ob_get_clean();
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/style.css">
         <link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet' type='text/css'>
+        <script src="js/googleanalytics.js"></script>
     </head>
 
     <body>
@@ -47,7 +48,7 @@ $currentCount = ob_get_clean();
                 <p>Have Suggestions, found a bug or want me
                     <br>to do your taxes? Shoot me a message
                     <a href="https://www.reddit.com/message/compose/?to=robflop&subject=megumin.love">
-                        <br>on reddit</a> or under <a href="mailto:robflop@megumin.love">robflop@megumin.love</a>!</p>
+                        <br>on reddit</a> or under <a href="mailto:me@robflop.pw">me@robflop.pw</a>!</p>
                 <p>In addition, be sure to check out the 
                 <br><a href="https://discord.gg/0u643X7fpwihIjTQ">r/megumin Discord Server</a>! 
                 <br>Me and the owners of the other sites are
@@ -61,7 +62,7 @@ $currentCount = ob_get_clean();
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
             <a href="version.html" id="version">[ver1.1]</a>
             <span id="share-buttons">
-            <a href="https://twitter.com/intent/tweet?text=New%20Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
+            <a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&via=robflop98&url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
             <img src="/images/twitter.png" alt="Tweet on Twitter" /></a>
             <a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Facebook', 'click'); return false;">
             <img src="/images/facebook.png" alt="Share on Facebook" /></a>
@@ -77,7 +78,6 @@ $currentCount = ob_get_clean();
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
         <script src="js/count.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
-        <script src="js/googleanalytics.js"></script>
     </body>
 
     </html>
