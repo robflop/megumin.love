@@ -1,8 +1,5 @@
 body {
-    background: url(/images/bg.png) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -24,9 +21,6 @@ h1 {
 @media only screen and (max-width: 481px) {
     div#creditsbox {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         left: -82px;
     }
@@ -36,9 +30,6 @@ h1 {
 @media only screen and (max-height: 481px) {
     div#creditsbox {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         top: 20px;
     }
