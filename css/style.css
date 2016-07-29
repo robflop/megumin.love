@@ -4,10 +4,7 @@ html {
 }
 
 body {
-    background: url(/images/bg.png) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
     min-height: 100%;
     overflow: hidden;
@@ -66,7 +63,7 @@ a#credits {
     color: azure;
 }
 
-span#share-buttons {
+span.share-buttons-frame {
     position: absolute;
     margin-left: 120px;
     margin-top: 6px;
@@ -77,8 +74,6 @@ div#navbar-slide {
     top: 40px;
     left: -340px;
     -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
     transition-duration: 0.3s;
 }
 
@@ -87,8 +82,6 @@ div#navbar-slide-inner {
     top: 40px;
     left: -350px;
     -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
     transition-duration: 0.3s;
 }
 
@@ -110,17 +103,11 @@ h2#megsquad {
     div#box {
         width: 85%;
         -webkit-transform: scale(0.5);
-        -moz-transform: scale(0.5);
-        -ms-transform: scale(0.5);
-        -o-transform: scale(0.5);
         transform: scale(0.5);
     }
     div#navbar-slide {
         top: -95px;
         -webkit-transform: scale(0.6);
-        -moz-transform: scale(0.6);
-        -ms-transform: scale(0.6);
-        -o-transform: scale(0.6);
         transform: scale(0.6);
     }
     div#navbar-slide:hover {
@@ -132,12 +119,9 @@ h2#megsquad {
     footer {
         width: 100%;
         -webkit-transform: scale(0.5);
-        -moz-transform: scale(0.5);
-        -ms-transform: scale(0.5);
-        -o-transform: scale(0.5);
         transform: scale(0.5);
     }
-    span#share-buttons {
+    span.share-buttons-frame {
         position: absolute;
         margin-left: 120px;
         margin-top: 6px;
@@ -146,28 +130,18 @@ h2#megsquad {
 
 @media only screen and (max-height: 481px) {
     div#box {
-        width: 50%;
         -webkit-transform: scale(0.5);
-        -moz-transform: scale(0.5);
-        -ms-transform: scale(0.5);
-        -o-transform: scale(0.5);
         transform: scale(0.5);
     }
     div#navbar-slide {
         top: -95px;
         -webkit-transform: scale(0.6);
-        -moz-transform: scale(0.6);
-        -ms-transform: scale(0.6);
-        -o-transform: scale(0.6);
         transform: scale(0.6);
     }
     footer {
         width: 100%;
         text-align: center;
         -webkit-transform: scale(0.5);
-        -moz-transform: scale(0.5);
-        -ms-transform: scale(0.5);
-        -o-transform: scale(0.5);
         transform: scale(0.5);
     }
     div#navbar-slide:hover {
@@ -176,7 +150,7 @@ h2#megsquad {
     div#navbar-slide-inner.navbarPc {
         top: 20px !important;
     }
-    span#share-buttons {
+    span.share-buttons-frame {
         position: absolute;
         right: -0px;
         margin-top: 6px;

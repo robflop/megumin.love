@@ -4,7 +4,7 @@ $(document).ready(function () {
         this.css('top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 1.5) + $(window).scrollTop()) + 'px');
         this.css('left', Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + 'px');
         return this;
-    }
+    };
     $('#box').center();
     $('#box').fadeIn(250);
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
@@ -66,9 +66,8 @@ $(document).ready(function () {
             case 12:
                 ion.sound.play("sion");
                 break;
-        }
-        var curr =
-            $('#counter').html(parseInt($('#counter').html()) + 1);
+        };
+        $('#counter').html(parseInt($('#counter').html()) + 1);
         $.ajax({
             method: 'GET',
             url: 'includes/cache_counter.php',

@@ -1,8 +1,5 @@
 body {
-    background: url(/images/bg.png) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -38,18 +35,12 @@ a#credits {
 @media only screen and (max-width: 481px) {
     div#container {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         left: -80px;
         top: -120px;
     }
     footer {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         bottom: -15px;
     }
@@ -61,17 +52,11 @@ a#credits {
 @media only screen and (max-height: 481px) {
     div#container {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         top: -120px;
     }
     footer {
         -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -o-transform: scale(0.7);
         transform: scale(0.7);
         bottom: -15px;
         text-align: center;
