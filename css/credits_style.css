@@ -24,7 +24,12 @@ h1 {
         transform: scale(0.7);
         left: -82px;
     }
-    
+    a.backlink {
+        margin-left: 8px;
+        display: inline-block;
+        -webkit-transform: scale(1.8);
+        transform: scale(1.8);   
+    }
 }
 
 @media only screen and (max-height: 481px) {
@@ -35,5 +40,11 @@ h1 {
     }
     body {
         height: 300px;   
+    }
+    a.backlink {
+        margin-left: 8px;
+        display: inline-block;
+        -webkit-transform: scale(1.8);
+        transform: scale(1.8);   
     }
 }

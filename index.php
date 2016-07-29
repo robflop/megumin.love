@@ -59,7 +59,7 @@ $currentCount = ob_get_clean();
                 <?php echo $currentCount; ?>
             </div>
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
-            <a href="version.html" id="version">[ver1.1]</a>
+            <a href="version.html" id="version" class="mobile-scale">[ver1.1]</a>
             <span class="share-buttons-frame">
             <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
             <img src="/images/twitter.png" alt="Tweet on Twitter" /></a></span>
@@ -71,7 +71,7 @@ $currentCount = ob_get_clean();
         </div>
 
         <footer>
-            <p>Created and maintained by robflop<a id="credits" href="credits.html"> -&gt; Credits</a></p>
+            <p>Created and maintained by robflop<a id="credits" class="mobile-scale" href="credits.html"> -&gt; Credits</a></p>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>

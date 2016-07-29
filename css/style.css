@@ -46,7 +46,7 @@ a#version {
     color: #ff3338;
     font-family: cursive;
     vertical-align: baseline;
-    margin-top: 1px;
+    margin-top: 5px;
 }
 
 footer {
@@ -117,19 +117,30 @@ h2#megsquad {
         top: 20px !important;
     }
     footer {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
         width: 100%;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
     }
     span.share-buttons-frame {
         position: absolute;
-        margin-left: 120px;
-        margin-top: 6px;
+        margin-left: 23px;
+        margin-top: 70px;
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+    }
+    span.share-buttons {
+        margin-left: 10px;   
+    }
+    a#version.mobile-scale {
+        display: inline-block;
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);   
     }
 }
 
 @media only screen and (max-height: 481px) {
     div#box {
+        width: 50%;
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
     }
@@ -139,10 +150,10 @@ h2#megsquad {
         transform: scale(0.6);
     }
     footer {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
         width: 100%;
         text-align: center;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
     }
     div#navbar-slide:hover {
         left: -114px;
@@ -152,7 +163,17 @@ h2#megsquad {
     }
     span.share-buttons-frame {
         position: absolute;
-        right: -0px;
-        margin-top: 6px;
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+        margin-left: 23px;
+        margin-top: 70px;
+    }
+    span.share-buttons {
+        margin-left: 10px;   
+    }
+    a#version.mobile-scale {
+        display: inline-block;
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
     }
 }
