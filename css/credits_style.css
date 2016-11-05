@@ -18,6 +18,10 @@ h1 {
     text-decoration: underline;
 }
 
+a.backlink {
+    color: #ff3338;   
+}
+
 @media only screen and (max-width: 481px) {
     div#creditsbox {
         -webkit-transform: scale(0.7);
