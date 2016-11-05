@@ -31,6 +31,9 @@ footer {
 a#credits {
     color: azure;
 }
+a.backlink {
+    color: #ff3338;   
+}
 
 @media only screen and (max-width: 481px) {
     div#container {

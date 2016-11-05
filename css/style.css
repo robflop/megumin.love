@@ -26,7 +26,7 @@ div#counter {
     text-align: center;
     top: -10px;
     font-size: 50px;
-    color: crimson;
+    color: #ec173f;
     margin: auto;
 }
 
@@ -36,6 +36,10 @@ button#button {
     color: #ff8080;
     border-radius: 20px;
     width: 100%;
+}
+
+button#button:focus {
+	outline:0;
 }
 
 button#button:hover {
@@ -97,6 +101,10 @@ div#navbar-slide:hover.navbarPc div#navbar-slide-inner.navbarPc {
 
 h2#megsquad {
     text-decoration: underline;
+}
+
+#counter {
+	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);	
 }
 
 @media only screen and (max-width: 481px) {
