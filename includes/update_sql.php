@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('global_variables.php');
-$db = new SQLite3('../../megumin_yamero.db');
+$db = new SQLite3('/var/www/megumin_yamero.db');
 $cacheCounter = new Memcached();
 $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached connection failed!");
 
@@ -22,8 +22,8 @@ if($count < $sqlVal) {
 } else {
     $updateSql = 'UPDATE yamero_counter SET `counter` = '.$count;
     if(!$db->query($updateSql))
-    	echo $db->error;
-	
+    	echo $db->error;	
 }
+
 $db->close();
 ?>
