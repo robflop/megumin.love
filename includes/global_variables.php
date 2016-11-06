@@ -1,6 +1,4 @@
 <?php
-define('HOST', 'localhost');
-define('USERNAME', 'user');
-define('PASSWORD', 'password');
-define('DATABASE', 'database_name');
+define('MEMCACHED_HOST', "127.0.0.1");
+define("MEMCACHED_PORT", "11211");
 ?>
