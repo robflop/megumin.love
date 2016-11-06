@@ -5,7 +5,7 @@ $db = new SQLite3('../../megumin_yamero.db');
 $cacheCounter = new Memcached();
 $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached connection failed!");
 
- if($db->lastErrorCode > 0) {
+if($db->lastErrorCode > 0) {
 	printf('Last occured error code: %s\n', $db->lastErrorCode);
     die();
 } 
