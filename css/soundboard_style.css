@@ -10,8 +10,8 @@ body {
     overflow: hidden;
 }
 
-div#box {
-    width: 300px;
+div#container {
+    width: 1175px;
     top: 50%;
     left: 50%;
     background: rgba(0, 0, 0, 0.5);
@@ -21,36 +21,28 @@ div#box {
     border-radius: 20px;
 }
 
-div#counter {
-    position: relative;
-    text-align: center;
-    top: -10px;
-    font-size: 50px;
-    color: #ec173f;
-    margin: auto;
-}
+div#row1, div#row2, div#row3 {
+	width: 100%;
+	
+} 
 
-button#button {
-    font-size: 70px;
+button.buttons {
+	float: left;
+	margin-top: 10px;
+	margin-left: 5px;
+    font-size: 40px;
     background: #ff3338;
     color: #ff8080;
     border-radius: 20px;
-    width: 100%;
+    width: 23%;
 }
 
-button#button:focus {
+button.buttons:focus {
 	outline:0;
 }
 
-button#button:hover {
+button.buttons:hover {
     background: #cc0000;
-}
-
-a#version {
-    color: #ff3338;
-    font-family: cursive;
-    vertical-align: baseline;
-    margin-top: 5px;
 }
 
 footer {
@@ -65,12 +57,6 @@ footer {
 
 a#credits {
     color: azure;
-}
-
-span.share-buttons-frame {
-    position: absolute;
-    margin-left: 120px;
-    margin-top: 6px;
 }
 
 div#navbar-slide {
@@ -103,25 +89,26 @@ h2#megsquad {
     text-decoration: underline;
 }
 
-#counter {
-	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);	
-}
-
-#soundboard {
-	color: #ff3338;
-    font-family: cursive;
-    vertical-align: baseline;
-	margin-left: 35px;
+#backlink {
+	color: #ff8080;
+	left: 10px;
 }
 
 @media only screen and (max-width: 481px) {
-    div#box {
-        width: 85%;
+    div#container {
+		top: 220px !important;
+        width: 220%;
+		left: -205px !important;
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
     }
-    div#navbar-slide {
-        top: -95px;
+	footer {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+        width: 100%;
+    }
+	div#navbar-slide {
+        top: -60px;
         -webkit-transform: scale(0.6);
         transform: scale(0.6);
     }
@@ -131,64 +118,30 @@ h2#megsquad {
     div#navbar-slide-inner.navbarPc {
         top: 20px !important;
     }
-    footer {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        width: 100%;
-    }
-    span.share-buttons-frame {
-        position: absolute;
-        margin-left: 23px;
-        margin-top: 100px;
-        -webkit-transform: scale(2.2);
-        transform: scale(2.2);
-    }
-    span.share-buttons {
-        margin-left: 10px;   
-    }
-    a#version.mobile-scale {
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);   
-    }
 }
-
 @media only screen and (max-height: 481px) {
-    div#box {
-        width: 50%;
+    div#container {
+		top: 70px !important;
+        width: 180%;
+		left: -190px !important;
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
     }
-    div#navbar-slide {
-        top: -95px;
-        -webkit-transform: scale(0.6);
-        transform: scale(0.6);
-    }
-    footer {
+	footer {
         -webkit-transform: scale(0.7);
         transform: scale(0.7);
         width: 100%;
         text-align: center;
     }
+    div#navbar-slide {
+        top: -95px;
+        -webkit-transform: scale(0.6);
+        transform: scale(0.6);
+    }
     div#navbar-slide:hover {
         left: -114px;
     }
     div#navbar-slide-inner.navbarPc {
         top: 20px !important;
-    }
-    span.share-buttons-frame {
-        position: absolute;
-        -webkit-transform: scale(2.2);
-        transform: scale(2.2);
-        margin-left: 23px;
-        margin-top: 120px;
-    }
-    span.share-buttons {
-        margin-left: 10px;   
-    }
-    a#version.mobile-scale {
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);
     }
 }

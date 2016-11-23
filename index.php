@@ -66,6 +66,9 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
             <span class="share-buttons"><a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank" onclick="ga('send', 'event', 'Reddit', 'click');">
             <img src="/images/reddit.png" alt="Submit to Reddit"></a></span>
             </span>
+            <br>
+            <br>
+            <a href="soundboard.html" id="soundboard">megumin.love Soundboard!</a>
         </div>
 
         <footer>
