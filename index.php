@@ -1,4 +1,5 @@
-<?php
+<?php 
+/* Load count number from memcached */
 include('includes/global_variables.php');
 $cacheCounter = new Memcached();
 $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached connection failed!");
@@ -32,6 +33,7 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
     </head>
 
     <body>
+       <!-- Sidebar -->
         <div id="navbar-slide" class="navbarPc">
             <img src="/images/hangumin.png" alt="Megumin Sidebar" />
             <div id="navbar-slide-inner" class="navbarPc">
@@ -52,12 +54,14 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
                 <br>around there most of the time, too.</p>
             </div>
         </div>
+        <!-- Content box -->
         <div id="box" style="display:none;">
             <div id="counter">
                 <?php echo $cacheCounter->get('yamero_counter');?>
             </div>
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
             <a href="version.html" id="version" class="mobile-scale">[ver1.2]</a>
+            <!-- Share buttons-->
             <span class="share-buttons-frame">
             <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
             <img src="/images/twitter.png" alt="Tweet on Twitter" /></a></span>
@@ -74,7 +78,7 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
         <footer>
             <p>Created and maintained by robflop<a id="credits" class="mobile-scale" href="credits.html"> -&gt; Credits</a></p>
         </footer>
-
+		<!-- Ressource loading -->
         <link rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>

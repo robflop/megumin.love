@@ -1,14 +1,14 @@
-$(document).ready(function () {
-    jQuery.fn.center = function () {
+$(document).ready(function () { 
+    jQuery.fn.center = function () { // Function to center elements
         this.css('position', 'absolute');
         this.css('top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 1.5) + $(window).scrollTop()) + 'px');
         this.css('left', Math.max(0, (($(window).width() - $(this).outerWidth()) / 2.2) + $(window).scrollLeft()) + 'px');
         return this;
     };
-    $('#container').center();
+    $('#container').center();  
     $('#container').fadeIn(250);
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
-    ion.sound({
+    ion.sound({  // Initialize all sounds with options
         sounds: [
             {name: "yamero"},
             {name: "pull"},
@@ -28,6 +28,7 @@ $(document).ready(function () {
         preload: true,
         multiplay: true,
     });
+	// Make button clicks play corresponding sounds
 	$('#yamero').click(function () {
 		ion.sound.play("yamero");
 	});

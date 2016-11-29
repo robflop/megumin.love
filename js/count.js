@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    jQuery.fn.center = function () {
+    jQuery.fn.center = function () { // Function to center elements
         this.css('position', 'absolute');
         this.css('top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 1.5) + $(window).scrollTop()) + 'px');
         this.css('left', Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + 'px');
@@ -8,7 +8,7 @@ $(document).ready(function () {
     $('#box').center();
     $('#box').fadeIn(250);
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
-    ion.sound({
+    ion.sound({ // Initialize all sounds with options
         sounds: [
             {name: "yamero"},
             {name: "pull"},
@@ -27,7 +27,7 @@ $(document).ready(function () {
         preload: true,
         multiplay: true,
     });
-    $('#button').click(function () {
+    $('#button').click(function () { // Randomize sound that is played on buttonclick
         var rsound = Math.floor(Math.random() * 12) + 1;
         switch(rsound) {
             case 1:
@@ -67,15 +67,16 @@ $(document).ready(function () {
                 ion.sound.play("sion");
                 break;
         };
+		// Increase counter client-side
         $('#counter').html(parseInt($('#counter').html()) + 1);
-        $.ajax({
+        $.ajax({ // Send GET-request to increase counter server-side
             method: 'GET',
             url: 'includes/cache_counter.php',
             data: {
                 count: '1'
             }
         }).done(function (res) {});
-    });
+    }); // Re-center box on orientation change
     $(window).on("orientationchange", function() {
         $('#box').center();
     }); 
