@@ -27,7 +27,6 @@ div#row1, div#row2, div#row3 {
 } 
 
 button.buttons {
-	float: left;
 	margin-top: 10px;
 	margin-left: 5px;
     font-size: 40px;
@@ -89,9 +88,8 @@ h2#megsquad {
     text-decoration: underline;
 }
 
-#backlink {
+a#backlink {
 	color: #ff8080;
-	left: 10px;
 }
 
 @media only screen and (max-width: 481px) {
