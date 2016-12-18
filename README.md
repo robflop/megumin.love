@@ -29,7 +29,7 @@ Table with column -> CREATE TABLE yamero_counter ( counter INT NOT NULL );
 
 Column insert -> INSERT INTO yamero_counter (counter) VALUES ('0');
 
-## Adding new sounds:
+### Adding new sounds:
 - Add sound files to "sounds" folder (preferably mp3, aac and ogg format)
 - Adjust count.js, adding new sound(s) to the ion.sound initialization and adjusting the switch() + rsound statement
 
@@ -41,7 +41,7 @@ Previous sounds amount: 12
 
 New sounds amount: 13
 
-## Changing the Interval at which the counter updates:
+### Changing the Interval at which the counter updates:
 - Open index.php and change "1500" on line 72 to your desired length.
 - Unit used is milliseconds, 1500ms stand for 1,5s.
 
