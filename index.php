@@ -55,7 +55,7 @@
             <script>
 				$(document).ready(function () { // Wait for document to finish loading
 					setInterval(function(){
-						$.get("https://american.megumin.love/includes/get_cache.php?update=1&t=" + (+(new Date()))).done(function(result){ // GET request the memcached value
+						$.get("https://megumin.love/includes/get_cache.php?update=1&t=" + (+(new Date()))).done(function(result){ // GET request the memcached value
 							var ele = $("#counter");
 							var currentValue = +(ele.text());
 							var next = +result;
@@ -73,7 +73,7 @@
 				}); 
 			</script> 
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
-            <a href="version.html" id="version" class="mobile-scale">[ver1.2]</a>
+            <a href="version.html" id="version" class="mobile-scale">[ver1.3]</a>
             <!-- Share buttons-->
             <span class="share-buttons-frame">
             <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
