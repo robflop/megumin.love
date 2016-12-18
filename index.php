@@ -1,9 +1,3 @@
-<?php 
-/* Load count number from memcached */
-include('includes/global_variables.php');
-$cacheCounter = new Memcached();
-$cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached connection failed!");
-?>
     <!doctype HTML>
     <html lang="en">
 
@@ -30,6 +24,7 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <title>Megumin is love!</title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     </head>
 
     <body>
@@ -56,9 +51,22 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
         </div>
         <!-- Content box -->
         <div id="box" style="display:none;">
-            <div id="counter">
-                <?php echo $cacheCounter->get('yamero_counter');?>
-            </div>
+            <div id="counter"></div>
+            <script>
+				$(document).ready(function () { // Wait for document to finish loading
+					function update() {
+						$.ajax({ // Send GET-request to display updated counter
+            				method: 'GET',
+            				url: 'includes/get_cache.php',
+            				data: { update: '1' }
+        				}).done(function (res) { // Save result in "res"
+							$('#counter').html(res); // Replace counter html with result of ajax request
+							setTimeout(function() {update();}, 2000); // Set timer to repeat ajax request
+							});	
+						}
+					update();
+				}); 
+			</script> 
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
             <a href="version.html" id="version" class="mobile-scale">[ver1.2]</a>
             <!-- Share buttons-->
@@ -81,7 +89,6 @@ $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached conne
 		<!-- Ressource loading -->
         <link rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
         <script src="js/count.js" async></script>
         <script src="js/googleanalytics.js" async></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
