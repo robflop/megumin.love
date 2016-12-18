@@ -51,20 +51,25 @@
         </div>
         <!-- Content box -->
         <div id="box" style="display:none;">
-            <div id="counter"></div>
+            <div id="counter"><?php include("includes/get_cache.php")?></div> <!--Display base counter-->
             <script>
 				$(document).ready(function () { // Wait for document to finish loading
-					function update() {
-						$.ajax({ // Send GET-request to display updated counter
-            				method: 'GET',
-            				url: 'includes/get_cache.php',
-            				data: { update: '1' }
-        				}).done(function (res) { // Save result in "res"
-							$('#counter').html(res); // Replace counter html with result of ajax request
-							setTimeout(function() {update();}, 2000); // Set timer to repeat ajax request
-							});	
-						}
-					update();
+					setInterval(function(){
+						$.get("https://american.megumin.love/includes/get_cache.php?update=1&t=" + (+(new Date()))).done(function(result){ // GET request the memcached value
+							var ele = $("#counter");
+							var currentValue = +(ele.text());
+							var next = +result;
+							$({val: currentValue}).animate({val: next}, { // Animate the counter change
+								duration: 1000,
+								step: function() {
+									// only update when the new value is greater than the current value
+									if (this.val > currentValue) {
+										ele.text(Math.round(this.val));
+									}
+								}
+							})
+						});
+					}, 1500);
 				}); 
 			</script> 
             <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
