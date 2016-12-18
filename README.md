@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-MPL-blue.svg)](https://github.com/robflop/Megumin/blob/master/LICENSE)
-![Version](https://img.shields.io/badge/Version-1.2-blue.svg)
+![Version](https://img.shields.io/badge/Version-1.3-blue.svg)
 
 >Original: https://megumin.love
 
@@ -40,4 +40,8 @@ Previous sounds amount: 12
 - Adjust the rsound variable, so changing the multiplier 12 to 13 within count.js
 
 New sounds amount: 13
+
+## Changing the Interval at which the counter updates:
+- Open index.php and change "1500" on line 72 to your desired length.
+- Unit used is milliseconds, 1500ms stand for 1,5s.
 
