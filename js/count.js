@@ -28,45 +28,9 @@ $(document).ready(function () {
         multiplay: true,
     });
     $('#button').click(function () { // Randomize sound that is played on buttonclick
-        var rsound = Math.floor(Math.random() * 12) + 1;
-        switch(rsound) {
-            case 1:
-                ion.sound.play("yamero");
-                break;
-            case 2:
-                ion.sound.play("pull");
-                break;
-            case 3:
-                ion.sound.play("explosion");
-                break;
-            case 4:
-                ion.sound.play("itai");
-                break;
-            case 5:
-                ion.sound.play("name");
-                break;
-            case 6:
-                ion.sound.play("eugh1");
-                break;
-            case 7:
-                ion.sound.play("eugh2");
-                break;
-            case 8: 
-                ion.sound.play("eugh3");
-                break;
-            case 9:
-                ion.sound.play("eugh4");
-                break;
-            case 10:
-                ion.sound.play("n");
-                break;
-            case 11:
-                ion.sound.play("plosion");
-                break;
-            case 12:
-                ion.sound.play("sion");
-                break;
-        };
+        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero"]; 
+		var sound = sounds[Math.floor(Math.random()*sounds.length)];
+		ion.sound.play(sound);
 		// Increase counter client-side
         $('#counter').html(parseInt($('#counter').html()) + 1);
         $.ajax({ // Send GET-request to increase counter server-side
