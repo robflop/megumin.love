@@ -97,10 +97,12 @@ div#navbar-slide:hover.navbarPc div#navbar-slide-inner.navbarPc {
     top: 70px;
     left: 7px;
     font-family: 'Courgette', cursive;
+	font-size: 15px;
 }
 
 h2#megsquad {
     text-decoration: underline;
+	font-size: 25px;
 }
 
 #counter {
