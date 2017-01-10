@@ -22,13 +22,17 @@ $(document).ready(function () {
             {name: "n"},
             {name: "sion"},
             {name: "plosion"},
+			{name: "magic-item"},
+			{name: "parents"},
+			{name: "hyoizaburo"},
+			{name: "oi"}
         ],
         path: "sounds/",
         preload: true,
         multiplay: true,
     });
     $('#button').click(function () { // Randomize sound that is played on buttonclick
-        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero"]; 
+        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "oi"]; 
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
 		ion.sound.play(sound);
 		// Increase counter client-side

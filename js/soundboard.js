@@ -23,6 +23,10 @@ $(document).ready(function () {
             {name: "sion"},
             {name: "n"},
 			{name: "realname",preload:false},
+			{name: "magic-item"},
+			{name: "parents"},
+			{name: "hyoizaburo"},
+			{name: "oi"}
         ],
         path: "sounds/",
         preload: true,
@@ -72,5 +76,17 @@ $(document).ready(function () {
 	});
 	$('#n').click(function () {
 		ion.sound.play("n");
+	});
+	$('#parents').click(function () {
+		ion.sound.play("parents");
+	});
+	$('#hyoizaburo').click(function () {
+		ion.sound.play("hyoizaburo");
+	});
+	$('#oi').click(function () {
+		ion.sound.play("oi");
+	});
+	$('#magic.item').click(function () {
+		ion.sound.play("magic-item");
 	});
 });
