@@ -21,27 +21,34 @@ div#container {
     border-radius: 20px;
 }
 
-div#row1, div#row2, div#row3 {
-	width: 100%;
-	
-} 
-
 button.buttons {
 	margin-top: 10px;
 	margin-left: 5px;
     font-size: 40px;
-    background: #ff3338;
+    background: #dd0000;
     color: #ff8080;
     border-radius: 20px;
     width: 23%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
 }
 
 button.buttons:focus {
-	outline:0;
+	outline: 0;
 }
 
 button.buttons:hover {
-    background: #cc0000;
+    background: #ff3338;
+}
+
+.titles {
+	margin-left: 300px;
+	font-size: 35px;
+	text-align: center;
+	background: #dd0000;
+	color: #ff8080;
+	border-radius: 15px;
+	width: 50%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
 }
 
 footer {
@@ -90,8 +97,13 @@ h2#megsquad {
 	font-size: 25px;
 }
 
-a#backlink {
-	color: #ff8080;
+a#backlink-top {
+	color: #dd0000;
+}
+
+a#backlink-bottom {
+	color: #dd0000;
+	margin-left: 1100px;
 }
 
 @media only screen and (max-width: 481px) {
