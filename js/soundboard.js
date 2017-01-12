@@ -26,7 +26,9 @@ $(document).ready(function () {
 			{name: "magic-item"},
 			{name: "parents"},
 			{name: "hyoizaburo"},
-			{name: "oi"}
+			{name: "oi"},
+			{name: "igiari"},
+			{name: "hmph"}
         ],
         path: "sounds/",
         preload: true,
@@ -88,5 +90,11 @@ $(document).ready(function () {
 	});
 	$('#magic-item').click(function () {
 		ion.sound.play("magic-item");
+	});
+	$('#igiari').click(function () {
+		ion.sound.play("igiari");
+	});
+	$('#hmph').click(function () {
+		ion.sound.play("hmph");
 	});
 });
