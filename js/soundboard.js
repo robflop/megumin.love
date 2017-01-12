@@ -86,7 +86,7 @@ $(document).ready(function () {
 	$('#oi').click(function () {
 		ion.sound.play("oi");
 	});
-	$('#magic.item').click(function () {
+	$('#magic-item').click(function () {
 		ion.sound.play("magic-item");
 	});
 });
