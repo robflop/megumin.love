@@ -1,23 +1,26 @@
 html {
     height: 100%;
-    min-height: 100%;
+    width: 100%;
+    display: table;
 }
 
 body {
+    display: table-cell;
+    min-height: 100%;
     background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
-    min-height: 100%;
+    vertical-align: middle;
     overflow: hidden;
 }
 
 div#container {
     width: 1175px;
-    top: 50%;
-    left: 50%;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
     background: rgba(0, 0, 0, 0.5);
     padding: 16px;
     box-sizing: border-box;
-    position: fixed;
     border-radius: 20px;
 }
 

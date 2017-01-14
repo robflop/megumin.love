@@ -1,12 +1,4 @@
 $(document).ready(function () {
-    jQuery.fn.center = function () { // Function to center elements
-        this.css('position', 'absolute');
-        this.css('top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 1.5) + $(window).scrollTop()) + 'px');
-        this.css('left', Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + 'px');
-        return this;
-    };
-    $('#box').center();
-    $('#box').fadeIn(250);
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
     ion.sound({ // Initialize all sounds with options
         sounds: [
@@ -39,15 +31,7 @@ $(document).ready(function () {
 		ion.sound.play(sound);
 		// Increase counter client-side
         $('#counter').html(parseInt($('#counter').html()) + 1);
-        $.ajax({ // Send GET-request to increase counter server-side
-            method: 'GET',
-            url: 'includes/cache_counter.php',
-            data: {
-                count: '1'
-            }
-        }).done(function (res) {});
-    }); // Re-center box on orientation change
-    $(window).on("orientationchange", function() {
-        $('#box').center();
-    }); 
+        $.get('/includes/cache_counter.php?count=1').done(function (res) {});
+        //// Send GET-request to increase counter server-side
+    });
 });
