@@ -51,7 +51,7 @@
             </div>
         </div>
         <!-- Content box -->
-        <div id="box" style="display:none;">
+        <div id="box">
             <div id="counter"><?php include("includes/get_cache.php")?></div> <!--Display base counter-->
             <script>
 				$(document).ready(function () { // Wait for document to finish loading
