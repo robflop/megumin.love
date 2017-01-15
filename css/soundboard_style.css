@@ -24,6 +24,19 @@ div#container {
     border-radius: 20px;
 }
 
+div#mobileContainer {
+   width: 250px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(0, 0, 0, 1);
+    color: white;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    display: none;
+}
+
 button.buttons {
 	margin-top: 10px;
 	margin-left: 5px;
@@ -100,23 +113,24 @@ h2#megsquad {
 	font-size: 25px;
 }
 
-a#backlink-top {
-	color: #dd0000;
+a.backlink {
+    color: #dd0000;
 }
 
 a#backlink-bottom {
-	color: #dd0000;
 	margin-left: 1100px;
 }
 
-@media only screen and (max-width: 481px) {
+@media only screen and (max-width: 599px) {
+    /* Portrait mode*/
     div#container {
-		top: 220px !important;
-        width: 220%;
-		left: -205px !important;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
+		display: none;
     }
+    
+    div#mobileContainer {
+        display: block;
+    }
+
 	footer {
         -webkit-transform: scale(0.7);
         transform: scale(0.7);
@@ -134,14 +148,17 @@ a#backlink-bottom {
         top: 20px !important;
     }
 }
-@media only screen and (max-height: 481px) {
+@media only screen and (max-height: 599px) {
+    /* Landscape mode */
     div#container {
-		top: 70px !important;
-        width: 180%;
-		left: -190px !important;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
+		display: none;
     }
+
+    div#mobileContainer {
+        margin-top: 0px;
+        display: block;
+    }
+
 	footer {
         -webkit-transform: scale(0.7);
         transform: scale(0.7);
