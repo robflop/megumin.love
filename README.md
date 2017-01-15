@@ -1,6 +1,3 @@
-[![License](https://img.shields.io/badge/License-MPL-blue.svg)](https://github.com/robflop/Megumin/blob/master/LICENSE)
-![Version](https://img.shields.io/badge/Version-1.3-blue.svg)
-
 >Original: https://megumin.love
 
 # Megumin.love
@@ -22,6 +19,10 @@ Written under PHP5.6, no guarantees for PHP7.
 ##### Information:
 The default version of this website operates with a sqlite database called "megumin_yamero.db" located on folder on top of the webroot. It also assumes you run memcached on the same server, on port 11211.
 Since the php files are located in /includes/ it has to grab two folders above. If you want to change the location and name of your database please take note of this and change as needed.
+
+#### License
+
+Licensed under the MIT License.
 
 ##### MySQL prepared queries:
 
