@@ -150,6 +150,9 @@ $(document).ready(function () {
 		ion.sound.play("shouganai");
 	});
 	$('#sigh').click(function () {
+		ion.sound.play("sigh");
+	});
+	$('#splat').click(function () {
 		ion.sound.play("splat");
 	});
 	$('#itscold').click(function () {
