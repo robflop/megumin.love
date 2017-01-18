@@ -10,12 +10,10 @@ body {
     background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
     vertical-align: middle;
-    overflow: hidden;
 }
 
 div#container {
     width: 1175px;
-    margin-top: 150px;
     margin-left: auto;
     margin-right: auto;
     background: rgba(0, 0, 0, 0.5);
@@ -123,6 +121,10 @@ a#backlink-bottom {
 
 @media only screen and (max-width: 599px) {
     /* Portrait mode*/
+    body {
+        overflow: scroll;
+    }
+    
     div#container {
 		display: none;
     }
@@ -150,6 +152,10 @@ a#backlink-bottom {
 }
 @media only screen and (max-height: 599px) {
     /* Landscape mode */
+    body {
+        overflow: scroll;
+    }
+
     div#container {
 		display: none;
     }
