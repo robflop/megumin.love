@@ -1,7 +1,7 @@
 $(document).ready(function () { 
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
     ion.sound({  // Initialize all sounds with options
-        sounds: [
+       sounds: [
             {name: "yamero"},
             {name: "pull"},
             {name: "explosion"},
@@ -11,16 +11,43 @@ $(document).ready(function () {
             {name: "eugh2"},
             {name: "eugh3"},
             {name: "eugh4"},
-            {name: "plosion"},
-            {name: "sion"},
             {name: "n"},
-			{name: "realname",preload:false},
+            {name: "sion"},
+            {name: "plosion"},
 			{name: "magic-item"},
 			{name: "parents"},
 			{name: "hyoizaburo"},
 			{name: "oi"},
 			{name: "igiari"},
-			{name: "hmph"}
+			{name: "hmph"},
+            {name: "zuryah"},
+            {name: "whatsthis"},
+            {name: "who"},
+            {name: "yes"},
+            {name: "yoroshii"},
+            {name: "tropes"},
+            {name: "truepower"},
+            {name: "waah"},
+            {name: "wellthanks"},
+            {name: "oh"},
+            {name: "shouganai"},
+            {name: "sigh"},
+            {name: "splat"},
+            {name: "itscold"},
+            {name: "ladiesfirst"},
+            {name: "mywin"},
+            {name: "nani"},
+            {name: "dontwanna"},
+            {name: "doushimashou"},
+            {name: "friends"},
+            {name: "hau"},
+            {name: "isee"},
+            {name: "bighug"},
+            {name: "chomusuke"},
+            {name: "comeatme"},
+            {name: "dododo"},
+            {name: "are"},
+            {name: "aughh"}
         ],
         path: "sounds/",
         preload: true,
@@ -88,5 +115,86 @@ $(document).ready(function () {
 	});
 	$('#hmph').click(function () {
 		ion.sound.play("hmph");
+	});
+	$('#zuryah').click(function () {
+		ion.sound.play("zuryah");
+	});
+	$('#whatsthis').click(function () {
+		ion.sound.play("whatsthis");
+	});
+	$('#who').click(function () {
+		ion.sound.play("who");
+	});
+	$('#yes').click(function () {
+		ion.sound.play("yes");
+	});
+	$('#yoroshii').click(function () {
+		ion.sound.play("yoroshii");
+	});
+	$('#tropes').click(function () {
+		ion.sound.play("tropes");
+	});
+	$('#truepower').click(function () {
+		ion.sound.play("truepower");
+	});
+	$('#waah').click(function () {
+		ion.sound.play("waah");
+	});
+	$('#wellthanks').click(function () {
+		ion.sound.play("wellthanks");
+	});
+	$('#oh').click(function () {
+		ion.sound.play("oh");
+	});
+	$('#shouganai').click(function () {
+		ion.sound.play("shouganai");
+	});
+	$('#sigh').click(function () {
+		ion.sound.play("splat");
+	});
+	$('#itscold').click(function () {
+		ion.sound.play("itscold");
+	});
+	$('#ladiesfirst').click(function () {
+		ion.sound.play("ladiesfirst");
+	});
+	$('#mywin').click(function () {
+		ion.sound.play("mywin");
+	});
+	$('#nani').click(function () {
+		ion.sound.play("nani");
+	});
+	$('#dontwanna').click(function () {
+		ion.sound.play("dontwanna");
+	});
+	$('#doushimashou').click(function () {
+		ion.sound.play("doushimashou");
+	});
+	$('#friends').click(function () {
+		ion.sound.play("friends");
+	});
+	$('#hau').click(function () {
+		ion.sound.play("hau");
+	});
+	$('#isee').click(function () {
+		ion.sound.play("isee");
+	});
+	$('#bighug').click(function () {
+		ion.sound.play("bighug");
+	});
+	$('#chomusuke').click(function () {
+		ion.sound.play("chomusuke");
+	});
+	$('#comeatme').click(function () {
+		ion.sound.play("comeatme");
+	});
+	$('#dododo').click(function () {
+		ion.sound.play("dododo");
+	});
+	$('#are').click(function () {
+		ion.sound.play("are");
+	});
+	$('#aughh').click(function () {
+		ion.sound.play("aughh");
 	});
 });
