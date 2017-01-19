@@ -12,6 +12,7 @@ $(document).ready(function () {
             {name: "eugh3"},
             {name: "eugh4"},
             {name: "n"},
+			{name: "realname",preload:false},
             {name: "sion"},
             {name: "plosion"},
 			{name: "magic-item"},
