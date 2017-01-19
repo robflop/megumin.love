@@ -35,12 +35,17 @@ Column insert -> INSERT INTO yamero_counter (counter) VALUES ('0');
 - Adjust count.js, adding new sound(s) to the ion.sound initialization and adjusting the switch() + rsound statement
 
 #### Example:
-Previous sounds amount: 12
-- Add "test.mp3", (ogg, aac) to /sounds/
-- Add "test" to the ion.sound initialization within count.js
-- Adjust the rsound variable, so changing the multiplier 12 to 13 within count.js
+Previous sounds amount: 47
 
-New sounds amount: 13
+- Add "test.mp3" (optional: ogg, aac) to /sounds/ directory
+- Add "test" to the ion.sound initialization within count.js/soundboard.js
+- Add "test" to the sounds array
+
+New sounds amount: 48
+
+##### INFO:
+To add new sounds to the Soundboard, a button for each will have to be created in the soundboard.html file, and the corresponding on-click event(s) will have to be added in soundboard.js.
+See the existing code for examples regarding both.
 
 ### Changing the Interval at which the counter updates:
 - Open index.php and change "1500" on line 72 to your desired length.
