@@ -53,6 +53,12 @@ $(document).ready(function () {
         preload: true,
         multiplay: true,
     });
+    $('#button').keypress(function(key) {
+    // Listen to keypresses on the button
+        if(key.which == 13) { // Checks for the enter key
+            key.preventDefault(); // Stops IE from triggering the button if the key used is enter
+        };
+    });
     $('#button').click(function () { // Randomize sound that is played on buttonclick
         var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh"]; 
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
