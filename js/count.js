@@ -17,6 +17,7 @@ $(document).ready(function () {
 			{name: "magic-item"},
 			{name: "parents"},
 			{name: "hyoizaburo"},
+            {name: "star"},
 			{name: "oi"},
 			{name: "igiari"},
 			{name: "hmph"},
@@ -47,7 +48,15 @@ $(document).ready(function () {
             {name: "comeatme"},
             {name: "dododo"},
             {name: "are"},
-            {name: "aughh"}
+            {name: "aughh"},
+            {name: "chomusukefaint"},
+            {name: "ripchomusuke"},
+            {name: "explosion2"},
+            {name: "losion"},
+            {name: "sion2"},
+            {name: "n2"},
+            {name: "hua"},
+            {name: "thinking"}
         ],
         path: "sounds/",
         preload: true,
@@ -60,7 +69,7 @@ $(document).ready(function () {
         };
     });
     $('#button').click(function () { // Randomize sound that is played on buttonclick
-        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh"]; 
+        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "star", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh", "chomusukefaint", "ripchomusuke", "explosion2", "losion", "sion2", "n2", "hua", "thinking"]; 
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
 		ion.sound.play(sound);
 		// Increase counter client-side
