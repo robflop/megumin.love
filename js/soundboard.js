@@ -18,6 +18,7 @@ $(document).ready(function () {
 			{name: "magic-item"},
 			{name: "parents"},
 			{name: "hyoizaburo"},
+			{name: "star"},
 			{name: "oi"},
 			{name: "igiari"},
 			{name: "hmph"},
@@ -48,7 +49,15 @@ $(document).ready(function () {
             {name: "comeatme"},
             {name: "dododo"},
             {name: "are"},
-            {name: "aughh"}
+            {name: "aughh"},
+			{name: "chomusukefaint"},
+            {name: "ripchomusuke"},
+            {name: "explosion2"},
+            {name: "losion"},
+            {name: "sion2"},
+            {name: "n2"},
+            {name: "hua"},
+            {name: "thinking"}
         ],
         path: "sounds/",
         preload: true,
@@ -104,6 +113,9 @@ $(document).ready(function () {
 	});
 	$('#hyoizaburo').click(function () {
 		ion.sound.play("hyoizaburo");
+	});
+	$('#star').click(function () {
+		ion.sound.play("star");
 	});
 	$('#oi').click(function () {
 		ion.sound.play("oi");
@@ -200,5 +212,29 @@ $(document).ready(function () {
 	});
 	$('#aughh').click(function () {
 		ion.sound.play("aughh");
+	});
+	$('#chomusukefaint').click(function () {
+		ion.sound.play("chomusukefaint");
+	});
+	$('#ripchomusuke').click(function () {
+		ion.sound.play("ripchomusuke");
+	});
+	$('#explosion2').click(function () {
+		ion.sound.play("explosion2");
+	});
+	$('#losion').click(function () {
+		ion.sound.play("losion");
+	});
+	$('#sion2').click(function () {
+		ion.sound.play("sion2");
+	});
+	$('#n2').click(function () {
+		ion.sound.play("n2");
+	});
+	$('#hua').click(function () {
+		ion.sound.play("hua");
+	});
+	$('#thinking').click(function () {
+		ion.sound.play("thinking");
 	});
 });
