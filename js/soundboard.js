@@ -57,7 +57,8 @@ $(document).ready(function () {
             {name: "sion2"},
             {name: "n2"},
             {name: "hua"},
-            {name: "thinking"}
+            {name: "thinking"},
+			{name: "lalala"}
         ],
         path: "sounds/",
         preload: true,
@@ -236,5 +237,8 @@ $(document).ready(function () {
 	});
 	$('#thinking').click(function () {
 		ion.sound.play("thinking");
+	});
+	$('#lalala').click(function () {
+		ion.sound.play("lalala");
 	});
 });
