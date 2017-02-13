@@ -1,4 +1,4 @@
-$(document).ready(function () { 
+$(document).ready(function () {
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
     ion.sound({  // Initialize all sounds with options
        sounds: [
@@ -79,14 +79,14 @@ $(document).ready(function () {
 	});
 	$('#name').click(function () {
 		var rsound = Math.floor(Math.random() * 100) + 1;
-		switch(rsound){
+		switch(rsound) {
 			case 42:
-				ion.sound.play("realname")
+				ion.sound.play("realname");
 				break;
 			default:
-				ion.sound.play("name")
+				ion.sound.play("name");
 				break;
-		}
+		};
 	});
 	$('#eugh1').click(function () {
 		ion.sound.play("eugh1");
