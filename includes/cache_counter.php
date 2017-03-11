@@ -22,7 +22,7 @@ if(isset($_GET['count']) && $_GET['count'] == 1) {
     }
     else { // If memcached value is loaded, increment it by 1
         $cacheCounter->increment('yamero_counter', 1);
-    } 
+    }
 }
 // Close db connection
 $db->close();

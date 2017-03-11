@@ -63,6 +63,7 @@ $(document).ready(function () {
         preload: true,
         multiplay: true,
     });
+    var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "star", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh", "chomusukefaint", "ripchomusuke", "explosion2", "losion", "sion2", "n2", "hua", "thinking", "lalala"];
     $('#button').keypress(function(key) {
     // Listen to keypresses on the button
         if(key.which == 13) { // Checks for the enter key
@@ -70,12 +71,11 @@ $(document).ready(function () {
         };
     });
     $('#button').click(function () { // Randomize sound that is played on buttonclick
-        var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "star", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh", "chomusukefaint", "ripchomusuke", "explosion2", "losion", "sion2", "n2", "hua", "thinking", "lalala"]; 
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
 		ion.sound.play(sound);
 		// Increase counter client-side
         $('#counter').html(parseInt($('#counter').html()) + 1);
         $.get('/includes/cache_counter.php?count=1').done(function (res) {});
-        //// Send GET-request to increase counter server-side
+        // Send GET-request to increase counter server-side
     });
 });

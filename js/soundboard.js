@@ -1,7 +1,7 @@
 $(document).ready(function () {
     console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
-    ion.sound({  // Initialize all sounds with options
-       sounds: [
+    ion.sound({	// Initialize all sounds with options
+    	sounds: [
             {name: "yamero"},
             {name: "pull"},
             {name: "explosion"},

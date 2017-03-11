@@ -22,7 +22,7 @@ if($count < $sqlVal) { // Set memcached value to db value if db > memcached
 } else { // Send query to update db value to memcached value if memcached > db
     $updateSql = 'UPDATE yamero_counter SET `counter` = '.$count;
     if(!$db->query($updateSql))
-    	echo $db->error;	
+    	echo $db->error;
 }
 // Close db connection
 $db->close();
