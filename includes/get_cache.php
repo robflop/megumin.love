@@ -9,12 +9,12 @@ if(!$cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT)) {
     die();
 }
 
-if(isset($_GET['update']) && $_GET['update'] == 1) { 
+if(isset($_GET['update']) && $_GET['update'] == 1) {
 	$cacheNumber = $cacheCounter->get('yamero_counter');
 	echo $cacheNumber;
 }
  else {
 	$cacheNumber = $cacheCounter->get('yamero_counter');
 	echo $cacheNumber;
-} 
+}
 ?>
