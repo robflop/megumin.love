@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
-    ion.sound({	// Initialize all sounds with options
-    	sounds: [
+	console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
+	ion.sound({	// Initialize all sounds with options
+		sounds: [
             {name: "yamero"},
             {name: "pull"},
             {name: "explosion"},
@@ -58,12 +58,13 @@ $(document).ready(function () {
             {name: "n2"},
             {name: "hua"},
             {name: "thinking"},
-			{name: "lalala"}
-        ],
-        path: "sounds/",
-        preload: true,
-        multiplay: true,
-    });
+			{name: "lalala"},
+			{name: "chunchunmaru"}
+		],
+		path: "sounds/",
+		preload: true,
+		multiplay: true,
+	});
 	// Make button clicks play corresponding sounds
 	$('#yamero').click(function () {
 		ion.sound.play("yamero");
@@ -80,12 +81,12 @@ $(document).ready(function () {
 	$('#name').click(function () {
 		var rsound = Math.floor(Math.random() * 100) + 1;
 		switch(rsound) {
-			case 42:
-				ion.sound.play("realname");
-				break;
-			default:
-				ion.sound.play("name");
-				break;
+		case 42:
+			ion.sound.play("realname");
+			break;
+		default:
+			ion.sound.play("name");
+			break;
 		};
 	});
 	$('#eugh1').click(function () {
@@ -240,5 +241,8 @@ $(document).ready(function () {
 	});
 	$('#lalala').click(function () {
 		ion.sound.play("lalala");
+	});
+	$('#chunchunmaru').click(function () {
+		ion.sound.play("chunchunmaru");
 	});
 });
