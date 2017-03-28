@@ -43,8 +43,8 @@ div#navbar-slide:hover {
 }
 
 div#navbar-slide:hover.navbarPc div#navbar-slide-inner.navbarPc {
-    top: 70px;
-    left: 7px;
+    top: 58px;
+    left: 15px;
     font-family: 'Courgette', cursive;
 	font-size: 15px;
 }
