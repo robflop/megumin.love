@@ -1,0 +1,25 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "no-unused-vars": "off",
+		"no-extra-semi": "off",
+		"no-redeclare": "off",
+		"no-console": "off",
+		"no-undef": "off"
+    }
+}
