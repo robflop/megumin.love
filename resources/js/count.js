@@ -9,14 +9,15 @@ $(document).ready(function() {
 	$('#button').keypress(function(key) {
 		if(key.which == 13) {
 			key.preventDefault(); // don't trigger the button on "enter" keypress
-		}; 
+		};
 	});
 	$('#button').click(function() { // Randomize sound that is played on buttonclick
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
 		howlerList[sound].play();
 		$('#counter').html(parseInt($('#counter').html()) + 1);
 		// Increase counter client-side
-		$.get('/includes/cache_counter.php?count=1').done(function(res) {});
+		// $.get("https://megumin.love/increment").done(function(res) {});
+		$.get("/increment").done(function(res) {});
         // Send GET-request to increase counter server-side
 	});
 });
