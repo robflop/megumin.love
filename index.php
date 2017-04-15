@@ -56,31 +56,27 @@
             <?php include("includes/get_cache.php") ?>
         </div>
         <!--Display base counter-->
-        <script>
-            $(document).ready(function () { // Wait for document to finish loading
-                setInterval(function () {
-                    $.get("https://megumin.love/includes/get_cache.php?update=1&t=" + (+(new Date()))).done(
-                        function (result) { // GET request the memcached value
-                            var ele = $("#counter");
-                            var currentValue = +(ele.text());
-                            var next = +result;
-                            $({
-                                val: currentValue
-                            }).animate({
-                                val: next
-                            }, { // Animate the counter change
-                                duration: 1000,
-                                step: function () {
-                                    // only update when the new value is greater than the current value
-                                    if (this.val > currentValue) {
-                                        ele.text(Math.round(this.val));
-                                    }
-                                }
-                            })
-                        });
-                }, 1500);
-            });
-        </script>
+		<script>
+    		$(document).ready(function() { // Wait for document to finish loading
+        		var ele = $("#counter");
+        		var animateNumbers = function(result) {
+            		currentValue = +(ele.text());
+            		$({val: currentValue}).animate({val: +result}, { // Animate the counter change
+                		duration: 1000,
+                		step: function() {
+                    		if(this.val > currentValue) {
+                        		ele.text(Math.round(this.val));
+                    		}; // only update when the new value is greater than the current value
+                		}
+            		});
+        		};
+        		setInterval(function() {
+            		$.get("https://megumin.love/includes/get_cache.php").done(function(result) { 
+                		animateNumbers(result); // GET request the memcached value and animate the change
+            		});
+        		}, 1500);
+    		});
+		</script>
         <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
         <a href="version.html" id="version" class="mobile-scale">[ver1.3]</a>
         <!-- Share buttons-->
@@ -103,9 +99,10 @@
     <!-- Ressource loading -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.3/howler.core.min.js"></script>
+	<script src="js/sounds.js" async></script>
     <script src="js/count.js" async></script>
     <script src="js/googleanalytics.js" async></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
 </body>
 
 </html>
