@@ -32,8 +32,7 @@ server.get('/counter', (req, res) => {
 server.get('/increment', (req, res) => {
 	db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
 		counter = row["counter"] + 1;
-		db.get("UPDATE yamero_counter SET `counter` = " + counter, [], (error, row) => {
-		});
+		db.get("UPDATE yamero_counter SET `counter` = " + counter);
 	});
 	res.send('');
 });
