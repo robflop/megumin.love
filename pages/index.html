@@ -53,11 +53,11 @@
     <!-- Content box -->
     <div id="box">
         <div id="counter">Loading...</div>
-        <!--Display base counter-->
+        <!--Display placeholder-->
 		<script>
     		$(document).ready(function() { // Wait for document to finish loading
 				$.get("/counter").done(function(result) { $('#counter').html(result) });
-				// laod initial counter 
+				// laod counter number
         		var ele = $("#counter");
         		var animateNumbers = function(result) {
             		currentValue = +(ele.text());
