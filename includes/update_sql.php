@@ -19,10 +19,10 @@ $sqlVal = $db->querySingle("SELECT counter FROM yamero_counter");
 $count = $cacheCounter->get('yamero_counter');
 if($count < $sqlVal) { // Set memcached value to db value if db > memcached
     $cacheCounter->set('yamero_counter', $sqlVal);
-} else { // Send query to update db value to memcached value if memcached > db
+}
+else { // Send query to update db value to memcached value if memcached > db
     $updateSql = 'UPDATE yamero_counter SET `counter` = '.$count;
-    if(!$db->query($updateSql))
-    	echo $db->error;
+    if(!$db->query($updateSql)) echo $db->error;
 }
 // Close db connection
 $db->close();
