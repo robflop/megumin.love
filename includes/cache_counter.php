@@ -19,7 +19,7 @@ if(isset($_GET['count']) && $_GET['count'] == 1) {
 	if($cacheCounter->get('yamero_counter') == false) {
 	// Check if memcached keypair is loaded and if not load from db
 		$sqlVal = $db->querySingle("SELECT counter FROM yamero_counter");
-		$cacheCounter->set('yamero_counter', $sqlVal);
+		$cacheCounter->set('yamero_counter', $sqlVal + 1);
     }
     else { // If memcached value is loaded, increment it by 1
         $cacheCounter->increment('yamero_counter', 1);
