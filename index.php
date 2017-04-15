@@ -100,7 +100,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.3/howler.core.min.js"></script>
-	<script src="js/sounds.js" async></script>
+	<script src="js/sounds.js"></script>
     <script src="js/count.js" async></script>
     <script src="js/googleanalytics.js" async></script>
 </body>
