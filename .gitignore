@@ -3,14 +3,11 @@ logs
 *.log
 npm-debug.log*
 
-# ignore ignore lists
-ignores
-
-# ignore serverconfigs
-serverconf
-
 # ignore some files
-config.json
+config.js
+db/megumi_yamero.db
+.vscode
+googlee2713ce6ca671684.html
 
 # Runtime data
 pids
