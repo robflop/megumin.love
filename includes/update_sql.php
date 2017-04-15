@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('global_variables.php'); // Load necessary ressources and make connections
-$db = new SQLite3('/var/www/megumin_yamero.db');
+$db = new SQLite3(DATABASE_PATH);
 $cacheCounter = new Memcached();
 $cacheCounter->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die("Memcached connection failed!");
 
