@@ -40,12 +40,13 @@ server.get('/port', (req, res) => {
 });
 
 server.get('/counter', (req, res) => {
+	if(req.params.inc) counter++;
 	res.send(`${counter}`);
 });
 
 io.on('connection', (socket) => {
 	socket.on('click', (data) => {
-		counter += data.count;
+		counter++;
 		io.sockets.emit('update', {counter: counter});
 	});
 });
