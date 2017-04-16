@@ -1,8 +1,10 @@
 $(document).ready(function() {
 	$.get("/counter").done((res) => $('#counter').html(res));
 	// load initial counter
+	var port;
+	$.get("/port").done((res) => port = res);
 
-	const socket = io.connect('localhost:5959');
+	const socket = io.connect('localhost:'+port);
 	socket.on('update', function(data) {
 		$('#counter').html(data.counter);
 	});
