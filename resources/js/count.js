@@ -1,23 +1,28 @@
 $(document).ready(function() {
-	console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
+	$.get("/counter").done((res) => $('#counter').html(res));
+	// load initial counter
+
+	const socket = io.connect('localhost:5959');
+	socket.on('update', function(data) {
+		$('#counter').html(data.counter);
+	});
+
 	howlerList = {};
 	sounds.indexOf('realname')>-1?sounds.splice(sounds.indexOf('realname'),1):"";
 	for (var i = sounds.length - 1; i >= 0; i--) {
 		howlerList[sounds[i]] = new Howl({src: ["/sounds/"+sounds[i]+".mp3", "/sounds/"+sounds[i]+".ogg", "/sounds/"+sounds[i]+".aac"]});
 		// load all sounds
 	};
+
 	$('#button').keypress(function(key) {
 		if(key.which == 13) {
 			key.preventDefault(); // don't trigger the button on "enter" keypress
 		};
 	});
+
 	$('#button').click(function() {
 		var sound = sounds[Math.floor(Math.random()*sounds.length)];
-		// Randomize sound that is played on buttonclick
 		howlerList[sound].play();
-		$('#counter').html(parseInt($('#counter').html()) + 1);
-		// Increase counter client-side
-		$.get("/counter?inc=1").done((res)=>{});
-        // Send GET-request to increase counter server-side
+		socket.emit('click', {count: 1});
 	});
 });

@@ -6,6 +6,11 @@ const config = require('./config.js');
 
 const db = new sqlite3.Database(config.databasePath);
 const server = express();
+const http = require('http').Server(server);
+const io = require('socket.io')(http);
+
+http.listen(5959, '', '', () => console.log(`Megumin.love running on port ${config.port}!`));
+// info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = path.join(__dirname, '/pages');
 const errorPath = path.join(pagePath, '/errorTemplates');
@@ -31,8 +36,14 @@ db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
 });
 
 server.get('/counter', (req, res) => {
-	if(req.query.inc) counter++;
 	res.send(`${counter}`);
+});
+
+io.on('connection', function(socket) {
+	socket.on('click', function(data) {
+		counter += data.count;
+		io.sockets.emit('update', {counter: counter});
+	});
 });
 
 for(let page of pages) {
@@ -42,5 +53,3 @@ for(let page of pages) {
 for(let error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
 };
-
-server.listen(config.port, () => console.log(`Megumin.love running on port ${config.port}!`));
