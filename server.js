@@ -35,6 +35,10 @@ db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
 	counter = row["counter"];
 });
 
+server.get('/port', (req, res) => {
+	res.send(`${config.port}`);
+});
+
 server.get('/counter', (req, res) => {
 	res.send(`${counter}`);
 });
