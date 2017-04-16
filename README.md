@@ -3,12 +3,12 @@
 # Megumin.love
 A site committed to worshipping best girl Megumin!
 
-Runs under NodeJS with SQLite3.
+Runs under NodeJS with Express, SQLite3 and Socket.IO.
 
 ## Self-hosting Usage:
 - Rename `config.sample.js` to ``config.js` and adjust as needed/wanted
-- Use `npm install` in a terminal to install dependencies
-- Run using `node server.js`
+- Run `npm install` in a terminal to install dependencies
+- Start the website using `node server.js`
 - Click!
 
 #### Information
@@ -25,17 +25,12 @@ In addition, if you add to the errorTemplates, you will have to create the actua
 
 ### Adding new sounds:
 - Put your new sound files in the `/sounds/` folder (in mp3, ogg, aac and format)
-- Add your sound's name (name of the files!) to the sounds array in ``/js/sounds.js``
+- Add your sound's name (name of the file!) to the sounds array in ``/js/sounds.js``
 
 And that's it. Your sound will automatically be added to the main button's available sounds.
 
 ##### Information:
 To add new sounds to the Soundboard, a button for each has to be created in the `soundboard.html` file.
-
-### Changing the Interval at which the counter updates:
-- Open `index.html` and change `1500` on line 77 to your desired length.
-- Unit used is milliseconds, 1500ms stand for 1,5s.
-
 
 #### License
 
