@@ -1,8 +1,8 @@
-$(document).ready(function () {
+$(document).ready(() => {
 	console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
 	var howlerList = {};
 
-	$('#name').click(function () {
+	$('#name').click(() => {
 		var rsound = Math.floor(Math.random() * 100) + 1;
 		switch(rsound) {
 		case 42:
@@ -18,7 +18,7 @@ $(document).ready(function () {
 	for(var i = sounds.length - 1; i >= 0; i--) {
 		howlerList[sounds[i]] = new Howl({src: ["/sounds/"+sounds[i]+".mp3", "/sounds/"+sounds[i]+".ogg", "/sounds/"+sounds[i]+".aac"]});
 		if(sounds[i] == "name") continue;
-		$("#"+sounds[i]).click(function() {
+		$("#"+sounds[i]).click(() => {
 			howlerList[$(this).attr("id")].play();
 		});
 	};

@@ -30,9 +30,10 @@ db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
 	counter = row["counter"];
 });
 
-server.get('/counter', (req, res) => res.send(`${counter}`));
-
-server.get('/increment', (req, res) => counter++);
+server.get('/counter', (req, res) => {
+	if(req.query.inc) counter++;
+	res.send(`${counter}`);
+});
 
 for(let page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
