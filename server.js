@@ -40,7 +40,7 @@ server.get('/port', (req, res) => {
 });
 
 server.get('/counter', (req, res) => {
-	if(req.params.inc) counter++;
+	if(req.query.inc) counter++;
 	res.send(`${counter}`);
 });
 
