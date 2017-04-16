@@ -1,8 +1,8 @@
-$(document).ready(function () {
+$(document).ready(function() {
 	console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
 	var howlerList = {};
 
-	$('#name').click(function () {
+	$('#name').click(function() {
 		var rsound = Math.floor(Math.random() * 100) + 1;
 		switch(rsound) {
 		case 42:

@@ -1,0 +1,31 @@
+{
+  "name": "megumin.love",
+  "version": "2.0.0",
+  "description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3",
+    "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robflop/Megumin.love.git"
+  },
+  "keywords": [
+    "megumin",
+    "love",
+    "konosuba",
+    "anime",
+    "robflop",
+    "node.js"
+  ],
+  "author": "robflop",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robflop/Megumin.love/issues"
+  },
+  "homepage": "https://github.com/robflop/Megumin.love#readme"
+}

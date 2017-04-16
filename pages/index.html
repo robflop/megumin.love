@@ -23,7 +23,7 @@
     <meta name="description" content="Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>Megumin is love!</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 </head>
 
@@ -35,7 +35,7 @@
             <h2 id="megsquad">Megumin Squad assemble!</h2>
             <p>Be sure to also visit the following Sites:</p>
             <p>-&gt;<a href="https://robflop.pw">robflop.pw</a>, my personal Site</p>
-            <p>-&gt;<a href="https://github.com/robflop/megumin.love-discordbot">megumin.love Discord bot</a> by myself</p>
+            <p>-&gt;<a href="https://github.com/robflop/robbot">robbot</a> by myself</p>
             <p>-&gt;<a href="http://megum.in">megum.in</a> by Kagumi</p>
             <p>-&gt;<a href="https://cerx.pw/megumin">cerx.pw/megumin</a> by Cerx</p>
             <p>-&gt;<a href="http://megumin.pw">megumin.pw</a> by ricsivg</p>
@@ -52,33 +52,10 @@
     </div>
     <!-- Content box -->
     <div id="box">
-        <div id="counter">
-            <?php include("includes/get_cache.php") ?>
-        </div>
-        <!--Display base counter-->
-		<script>
-    		$(document).ready(function() { // Wait for document to finish loading
-        		var ele = $("#counter");
-        		var animateNumbers = function(result) {
-            		currentValue = +(ele.text());
-            		$({val: currentValue}).animate({val: +result}, { // Animate the counter change
-                		duration: 1000,
-                		step: function() {
-                    		if(this.val > currentValue) {
-                        		ele.text(Math.round(this.val));
-                    		}; // only update when the new value is greater than the current value
-                		}
-            		});
-        		};
-        		setInterval(function() {
-            		$.get("https://megumin.love/includes/get_cache.php").done(function(result) { 
-                		animateNumbers(result); // GET request the memcached value and animate the change
-            		});
-        		}, 1500);
-    		});
-		</script>
+        <div id="counter">Loading...</div>
+        <!--Display placeholder-->
         <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
-        <a href="version.html" id="version" class="mobile-scale">[ver1.3]</a>
+        <a href="version" id="version" class="mobile-scale">[ver2.0]</a>
         <!-- Share buttons-->
         <span class="share-buttons-frame">
             <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
@@ -90,16 +67,17 @@
         </span>
         <br>
         <br>
-        <a href="soundboard.html" id="soundboard">megumin.love Soundboard!</a>
+        <a href="soundboard" id="soundboard">megumin.love Soundboard!</a>
     </div>
 
     <footer>
-        <p>Created and maintained by robflop<a id="credits" class="mobile-scale" href="credits.html"> -&gt; Credits</a></p>
+        <p>Created and maintained by robflop<a id="credits" class="mobile-scale" href="credits"> -&gt; Credits</a></p>
     </footer>
     <!-- Ressource loading -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.3/howler.core.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 	<script src="js/sounds.js"></script>
     <script src="js/count.js" async></script>
     <script src="js/googleanalytics.js" async></script>
