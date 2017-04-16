@@ -54,29 +54,6 @@
     <div id="box">
         <div id="counter">Loading...</div>
         <!--Display placeholder-->
-		<script>
-    		$(document).ready(() => { // Wait for document to finish loading
-				$.get("/counter").done((res) => $('#counter').html(res));
-				// load counter number
-        		var ele = $("#counter");
-        		var animateNumbers = (res) => {
-            		currentValue = +(ele.text());
-            		$({val: currentValue}).animate({val: +res}, { // Animate the counter change
-                		duration: 1000,
-                		step: function() {
-                    		if(this.val > currentValue) {
-                        		ele.text(Math.round(this.val));
-                    		}; // only update when the new value is greater than the current value
-                		}
-            		});
-        		};
-				setInterval(() => {
-            		$.get("/counter").done((res) => {
-            	    	animateNumbers(res); // GET request the memcached value and animate the change
-            		});
-        		}, 1500);
-    		});
-		</script>
         <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
         <a href="version" id="version" class="mobile-scale">[ver1.3]</a>
         <!-- Share buttons-->
@@ -100,6 +77,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.3/howler.core.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 	<script src="js/sounds.js"></script>
     <script src="js/count.js" async></script>
     <script src="js/googleanalytics.js" async></script>
