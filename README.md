@@ -13,9 +13,9 @@ Runs under NodeJS with Express, SQLite3 and Socket.IO.
 
 #### Information
 
-If you do not plan on using the prepared database that comes by default located in `/db/megumin_yamero.db` as is, you will either have to rename the database name to your liking, or create one of your own and execute the queries below on it before being able to run the website.
+If you do not plan on using the prepared database that comes by default located in `./db/megumin_yamero.db` as is, you will either have to rename the database name to your liking, or create one of your own and execute the queries below on it before being able to run the website.
 
-In addition, if you add to the errorTemplates, you will have to create the actual html pages for these in `/pages/errorTemplates` aswell, otherwise this setting will not take effect.
+In addition, if you add to the errorTemplates, you will have to create the actual html pages for these in `./pages/errorTemplates/` aswell, otherwise this setting will not take effect.
 
 ##### Necessary queries:
 
@@ -24,14 +24,14 @@ In addition, if you add to the errorTemplates, you will have to create the actua
 2) `INSERT INTO yamero_counter (counter) VALUES ('0');`
 
 ### Adding new sounds:
-- Put your new sound files in the `/sounds/` folder (in mp3, ogg, aac and format)
-- Add your sound's name (name of the file!) to the sounds array in ``/js/sounds.js``
+- Put your new sound files in the `./sounds/` folder (in mp3, ogg, aac and format)
+- Add your sound's name (name of the files!) to the sounds array in ``./js/sounds.js``
 
 And that's it. Your sound will automatically be added to the main button's available sounds.
 
 ##### Information:
-To add new sounds to the Soundboard, a button for each has to be created in the `soundboard.html` file.
+To add new sounds to the Soundboard, a button for each has to be created in the `./pages/soundboard.html` file.
 
 #### License
 
-Licensed under the MIT License.
+Licensed under the [MIT License](LICENSE.md).
