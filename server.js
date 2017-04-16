@@ -53,3 +53,5 @@ for(let page of pages) {
 for(let error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
 };
+
+setInterval(() => { db.get("UPDATE yamero_counter SET `counter` ="+counter); }, 1000*60*1); // update sql every 30min
