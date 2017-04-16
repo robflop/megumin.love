@@ -9,7 +9,7 @@ const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
 
-http.listen(5959, '', '', () => console.log(`Megumin.love running on port ${config.port}!`));
+http.listen(config.port, '', '', () => console.log(`Megumin.love running on port ${config.port}!`));
 // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = path.join(__dirname, '/pages');
@@ -39,8 +39,8 @@ server.get('/counter', (req, res) => {
 	res.send(`${counter}`);
 });
 
-io.on('connection', function(socket) {
-	socket.on('click', function(data) {
+io.on('connection', (socket) => {
+	socket.on('click', (data) => {
 		counter += data.count;
 		io.sockets.emit('update', {counter: counter});
 	});
@@ -54,4 +54,4 @@ for(let error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
 };
 
-setInterval(() => { db.get("UPDATE yamero_counter SET `counter` ="+counter); }, 1000*60*1); // update sql every 30min
+setInterval(() => { db.get("UPDATE yamero_counter SET `counter` ="+counter); }, 1000*60*config.updateInterval); // update sql every 30min
