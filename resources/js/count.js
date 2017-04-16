@@ -1,12 +1,12 @@
 $(document).ready(function() {
 	$.get("/counter").done((res) => $('#counter').html(res));
 	// load initial counter
-	var port;
-	$.get("/port").done((res) => port = res);
-
-	const socket = io.connect('localhost:'+port);
-	socket.on('update', function(data) {
-		$('#counter').html(data.counter);
+	var socket;
+	$.get("/port").done((res) => {
+		socket = io.connect('localhost:'+res);
+		socket.on('update', function(data) {
+			$('#counter').html(data.counter);
+		});
 	});
 
 	howlerList = {};
