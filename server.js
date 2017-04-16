@@ -3,10 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const config = require('./config.js');
+
 const db = new sqlite3.Database(config.databasePath);
 const server = express();
-
-server.use(express.static('resources'));
 
 const pagePath = path.join(__dirname, '/pages');
 const errorPath = path.join(pagePath, '/errorTemplates');
@@ -23,19 +22,17 @@ fs.readdirSync(pagePath).forEach(file => {
 	});
 });
 
-server.get('/counter', (req, res) => {
-	db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
-		res.send(`${row["counter"]}`);
-	});
+server.use(express.static('resources'));
+
+var counter;
+
+db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
+	counter = row["counter"];
 });
 
-server.get('/increment', (req, res) => {
-	db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
-		counter = row["counter"] + 1;
-		db.get("UPDATE yamero_counter SET `counter` = " + counter);
-	});
-	res.send('');
-});
+server.get('/counter', (req, res) => res.send(`${counter}`));
+
+server.get('/increment', (req, res) => counter++);
 
 for(let page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
