@@ -55,13 +55,13 @@
         <div id="counter">Loading...</div>
         <!--Display placeholder-->
 		<script>
-    		$(document).ready(function() { // Wait for document to finish loading
-				$.get("/counter").done(function(result) { $('#counter').html(result) });
-				// laod counter number
+    		$(document).ready(() => { // Wait for document to finish loading
+				$.get("/counter").done((res) => $('#counter').html(res));
+				// load counter number
         		var ele = $("#counter");
-        		var animateNumbers = function(result) {
+        		var animateNumbers = (res) => {
             		currentValue = +(ele.text());
-            		$({val: currentValue}).animate({val: +result}, { // Animate the counter change
+            		$({val: currentValue}).animate({val: +res}, { // Animate the counter change
                 		duration: 1000,
                 		step: function() {
                     		if(this.val > currentValue) {
@@ -71,8 +71,8 @@
             		});
         		};
 				setInterval(() => {
-            		$.get("/counter").done(function(result) { 
-            	    	animateNumbers(result); // GET request the memcached value and animate the change
+            		$.get("/counter").done((res) => {
+            	    	animateNumbers(res); // GET request the memcached value and animate the change
             		});
         		}, 1500);
     		});
