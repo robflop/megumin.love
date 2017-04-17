@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	console.log("No stealing code! ;) -- Check out the Github Repo at https://git.io/vrrEi instead.");
 	var howlerList = {};
 
 	$('#name').click(function() {
