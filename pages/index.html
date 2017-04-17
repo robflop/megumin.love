@@ -28,7 +28,27 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
+    <!--Content box-->
+    <div id="box">
+        <div id="counter">Loading...</div>
+        <!--Display placeholder-->
+        <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
+        <a href="version" id="version" class="mobile-scale">[ver2.0]</a>
+        <!--Share buttons-->
+        <span class="share-buttons-frame">
+            <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
+            <img src="/images/twitter.png" alt="Tweet on Twitter" /></a></span>
+        <span class="share-buttons"><a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Facebook', 'click'); return false;">
+            <img src="/images/facebook.png" alt="Share on Facebook" /></a></span>
+        <span class="share-buttons"><a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank" onclick="ga('send', 'event', 'Reddit', 'click');">
+            <img src="/images/reddit.png" alt="Submit to Reddit"></a></span>
+        </span>
+        <br>
+        <br>
+        <a href="soundboard" id="soundboard">megumin.love Soundboard!</a>
+    </div>
+
+    <!--Sidebar-->
     <div id="navbar-slide" class="navbarPc">
         <img src="/images/hangumin.png" alt="Megumin Sidebar" />
         <div id="navbar-slide-inner" class="navbarPc">
@@ -50,30 +70,11 @@
             <br>around there most of the time, too.</p>
         </div>
     </div>
-    <!-- Content box -->
-    <div id="box">
-        <div id="counter">Loading...</div>
-        <!--Display placeholder-->
-        <button id="button" onclick="ga('send', 'event', 'Button', 'click');">やめろ!!</button>
-        <a href="version" id="version" class="mobile-scale">[ver2.0]</a>
-        <!-- Share buttons-->
-        <span class="share-buttons-frame">
-            <span class="share-buttons"><a href="https://twitter.com/intent/tweet?text=Megumin%20Fansite%21%20Check%20it%20out%21&amp;via=robflop98&amp;url=https%3A%2F%2Fmegumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Twitter', 'click'); return false; ">
-            <img src="/images/twitter.png" alt="Tweet on Twitter" /></a></span>
-        <span class="share-buttons"><a href="https://www.facebook.com/sharer.php?u=https://megumin.love" onclick="window.open(this.href, '', 'width=650, height=450, menubar=no, toolbar=no, scrollbars=yes'); ga('send', 'event', 'Facebook', 'click'); return false;">
-            <img src="/images/facebook.png" alt="Share on Facebook" /></a></span>
-        <span class="share-buttons"><a href="https://www.reddit.com/submit?url=https://megumin.love;title=megumin.love" target="_blank" onclick="ga('send', 'event', 'Reddit', 'click');">
-            <img src="/images/reddit.png" alt="Submit to Reddit"></a></span>
-        </span>
-        <br>
-        <br>
-        <a href="soundboard" id="soundboard">megumin.love Soundboard!</a>
-    </div>
 
     <footer>
         <p>Created and maintained by robflop<a id="credits" class="mobile-scale" href="credits"> -&gt; Credits</a></p>
     </footer>
-    <!-- Ressource loading -->
+    <!--Ressource loading-->
     <link rel="stylesheet" href="/css/index_style.css">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" type="text/css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.3/howler.core.min.js"></script>
