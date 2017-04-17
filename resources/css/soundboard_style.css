@@ -1,16 +1,4 @@
-html {
-    height: 100%;
-    width: 100%;
-    display: table;
-}
-
-body {
-    display: table-cell;
-    min-height: 100%;
-    background: url(/images/bg.jpg) no-repeat center center fixed;
-    background-size: cover;
-    vertical-align: middle;
-}
+@import url("./style_template.css");
 
 div#container {
     width: 1175px;
@@ -65,52 +53,6 @@ button.buttons:hover {
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 18%;
-    font-family: 'Courgette', cursive;
-    margin-left: 10px;
-    color: azure;
-}
-
-a#credits {
-    color: azure;
-}
-
-div#navbar-slide {
-    position: fixed;
-    top: 40px;
-    left: -340px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-div#navbar-slide-inner {
-    position: fixed;
-    top: 40px;
-    left: -350px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-div#navbar-slide:hover {
-    left: 0px;
-}
-
-div#navbar-slide:hover.navbarPc div#navbar-slide-inner.navbarPc {
-    top: 58px;
-    left: 15px;
-    font-family: 'Courgette', cursive;
-	font-size: 15px;
-}
-
-h2#megsquad {
-    text-decoration: underline;
-	font-size: 25px;
-}
-
 a.backlink {
     color: #dd0000;
 }
@@ -120,11 +62,7 @@ a#backlink-bottom {
 }
 
 @media only screen and (max-width: 599px) {
-    /* Portrait mode*/
-    body {
-        overflow: scroll;
-    }
-    
+    /* Portrait mode */  
     div#container {
 		display: none;
     }
@@ -132,30 +70,9 @@ a#backlink-bottom {
     div#mobileContainer {
         display: block;
     }
-
-	footer {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        width: 100%;
-    }
-	div#navbar-slide {
-        top: -60px;
-        -webkit-transform: scale(0.6);
-        transform: scale(0.6);
-    }
-    div#navbar-slide:hover {
-        left: -114px;
-    }
-    div#navbar-slide-inner.navbarPc {
-        top: 20px !important;
-    }
 }
 @media only screen and (max-height: 599px) {
     /* Landscape mode */
-    body {
-        overflow: scroll;
-    }
-
     div#container {
 		display: none;
     }
@@ -163,23 +80,5 @@ a#backlink-bottom {
     div#mobileContainer {
         margin-top: 0px;
         display: block;
-    }
-
-	footer {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        width: 100%;
-        text-align: center;
-    }
-    div#navbar-slide {
-        top: -95px;
-        -webkit-transform: scale(0.6);
-        transform: scale(0.6);
-    }
-    div#navbar-slide:hover {
-        left: -114px;
-    }
-    div#navbar-slide-inner.navbarPc {
-        top: 20px !important;
     }
 }
