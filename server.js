@@ -3,9 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const moment = require('moment');
+const scheduler = require('node-schedule');
 const config = require('./config.json');
 
-const timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+var timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 
 const db = new sqlite3.Database(config.databasePath);
 const server = express();
@@ -65,15 +66,6 @@ db.all("SELECT * FROM statistics WHERE date BETWEEN date('now','-31 days') AND d
 	average = Math.round(month / pastThirtyOneDays.length);
 });
 
-const updateDB = () => {
-	const timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	db.serialize(() => {
-		db.run("UPDATE yamero_counter SET `counter` ="+counter);
-		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now'); INSERT INTO statistics ( date, count ) (SELECT ${todayDate}, ${today}) WHERE (SELECT Changes() = 0)`)
-		console.log(`[${timestamp}] Database updated.`);
-	});
-};
-
 server.get('/port', (req, res) => {
 	res.send(`${config.port}`);
 });
@@ -104,4 +96,27 @@ for(let error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
 };
 
-setInterval(() => { updateDB(); }, 1000*60*config.updateInterval); // update sql every 30min
+// database updates
+scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
+	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+	db.serialize(() => {
+		db.run("UPDATE yamero_counter SET `counter` ="+counter);
+		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now'); INSERT INTO statistics ( date, count ) (SELECT ${todayDate}, ${today}) WHERE (SELECT Changes() = 0)`)
+		console.log(`[${timestamp}] Database updated.`);
+	});
+}); // update db at the configured minute of each hour
+scheduler.scheduleJob('0 0 * * *', () => {
+	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+	today = 0;
+	console.log(`[${timestamp}] Daily counter reset.`);
+}); // reset daily counter at midnight
+scheduler.scheduleJob('0 0 * * 1', () => {
+	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+	week = 0;
+	console.log(`[${timestamp}] Weekly counter reset.`);
+}); // reset weekly counter at the start of the week (1=monday)
+scheduler.scheduleJob('0 0 1 * *', () => {
+	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+	month = 0;
+	console.log(`[${timestamp}] Monthly counter reset.`);
+}); // reset monthly counter at the start of the month

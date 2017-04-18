@@ -3,7 +3,7 @@
 # Megumin.love
 A site committed to worshipping best girl Megumin!
 
-Runs under NodeJS with Express, SQLite3 and Socket.IO.
+Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
 
 ## Self-hosting Usage:
 - Rename `config.sample.json` to ``config.json` and adjust as needed/wanted
@@ -24,6 +24,8 @@ If you add to the errorTemplates, you will have to create the actual html pages 
 To add new sounds to the Soundboard, a button for each has to be created in the `./pages/soundboard.html` file.
 
 Don't flip off the ``firstRun`` setting if it's your first run. There will be crashes and no support will be provided.
+
+Update interval represents minutes, max value is 60 (meaning every hour). Commas will be rounded (This is due to scheduling).
 
 #### License
 
