@@ -21,8 +21,16 @@ p {
 
 @media only screen and (max-width: 481px) {
 	/* Portrait mode */
+    div#box {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
 }
 
 @media only screen and (max-height: 481px) {
 	/* Landscape mode */
+    div#box {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
 }
