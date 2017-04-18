@@ -108,15 +108,18 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 scheduler.scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0;
+	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Daily counter reset.`);
 }); // reset daily counter at midnight
 scheduler.scheduleJob('0 0 * * 1', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
+	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Weekly counter reset.`);
 }); // reset weekly counter at the start of the week (1=monday)
 scheduler.scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	month = 0;
+	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Monthly counter reset.`);
 }); // reset monthly counter at the start of the month
