@@ -4,7 +4,7 @@ logs
 npm-debug.log*
 
 # ignore some files
-config.js
+config.json
 db/megumi_yamero.db
 .vscode
 googlee2713ce6ca671684.html

@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
-const config = require('./config.js');
+const config = require('./config.json');
 
 const db = new sqlite3.Database(config.databasePath);
 const server = express();
@@ -30,6 +30,15 @@ fs.readdirSync(pagePath).forEach(file => {
 server.use(express.static('resources'));
 
 var counter;
+
+if(config.firstRun) {
+	db.serialize(() => {
+		db.run("CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )");
+		db.run("INSERT INTO yamero_counter (counter) VALUES ('0')");
+	}); // prepare the database on first run
+	config.firstRun = false;
+	fs.writeFileSync(`./config.json`, JSON.stringify(config, null, "\t"));
+};
 
 db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
 	counter = row["counter"];
