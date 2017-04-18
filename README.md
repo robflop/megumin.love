@@ -23,6 +23,8 @@ If you add to the errorTemplates, you will have to create the actual html pages 
 
 To add new sounds to the Soundboard, a button for each has to be created in the `./pages/soundboard.html` file.
 
+Don't flip off the ``firstRun`` setting if it's your first run. There will be crashes and no support will be provided.
+
 #### License
 
 Licensed under the [MIT License](LICENSE.md).

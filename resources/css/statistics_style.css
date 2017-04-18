@@ -1,0 +1,50 @@
+@import url("./style_template.css");
+
+body {
+	vertical-align: baseline;
+}
+
+div#box {
+    width: 600px;
+    background: #F2E6E6;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    margin-top: 225px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1#header {
+    text-decoration: underline;
+	text-align: center;
+}
+
+a.backlink {
+    color: #dd0000;   
+}
+
+div.statistics {
+	font-size: 25px;
+	text-align: center;
+}
+
+@media only screen and (max-width: 481px) {
+	/* Portrait mode */
+    div#box {
+        width: 85%;
+        margin-top: 150px;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+}
+
+@media only screen and (max-height: 481px) {
+	/* Landscape mode */
+    div#box {
+        width: 50%;
+         margin-top: 80px;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+}
