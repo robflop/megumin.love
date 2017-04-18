@@ -1,11 +1,15 @@
 $(document).ready(function() {
-	$.get("/counter").done((res) => $('#counter').html(res));
+	const formatNumber = (number) => {
+		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+	};
+
+	$.get("/counter").done((res) => $('#counter').html(formatNumber(res)));
 	// load initial counter
 	var socket;
 	$.get("/port").done((res) => {
 		socket = io.connect('localhost:'+res);
 		socket.on('update', function(data) {
-			$('#counter').html(data.counter);
+			$('#counter').html(formatNumber(data.counter));
 		});
 	});
 
