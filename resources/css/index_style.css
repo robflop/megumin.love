@@ -58,11 +58,18 @@ div#counter {
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);	
 }
 
-a#soundboard {
+a#soundboard, a#statistics {
 	color: #dd0000;
     font-family: cursive;
     vertical-align: baseline;
-	margin-left: 35px;
+}
+
+a#statistics {
+	margin-left: 45px;
+}
+
+a#soundboard {
+	margin-left: 30px;
 }
 
 @media only screen and (max-width: 481px) {
