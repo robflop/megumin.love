@@ -42,28 +42,32 @@ if(config.firstRun) {
 		db.run("INSERT INTO yamero_counter ( counter ) VALUES ('0')");
 
 		db.run("CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )");
-		db.run("INSERT INTO statistics ( date, count ) VALUES ( date('now'), 0 )");
+		db.run("INSERT INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0 )");
 	}); // prepare the database on first run
 	config.firstRun = false;
 	fs.writeFileSync(`./config.json`, JSON.stringify(config, null, "\t"));
 };
 
-db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
-	counter = row["counter"];
-});
+db.serialize(() => {
+	db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
+		counter = row["counter"];
+	});
 
-db.all("SELECT * FROM statistics WHERE date BETWEEN date('now','-31 days') AND date('now')", [], (error, rows) => {
-	today = rows.filter(row => { return row.date===todayDate })[0].count;
-	pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
-	pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
-	for(let date in pastSevenDays) {
-		week += pastSevenDays[date].count;
-	};
-	for(let date in pastThirtyOneDays) {
-		month += pastThirtyOneDays[date].count;
-	};
-	monthly = pastThirtyOneDays.length;
-	average = Math.round(month / pastThirtyOneDays.length);
+	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
+	// insert row for today with value 0 (or do nothing if exists)
+	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now','-31 days') AND date('now', 'localtime')", [], (error, rows) => {
+		today = rows.filter(row => { return row.date===todayDate })[0].count;
+		pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
+		pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
+		for(let date in pastSevenDays) {
+			week += pastSevenDays[date].count;
+		};
+		for(let date in pastThirtyOneDays) {
+			month += pastThirtyOneDays[date].count;
+		};
+		monthly = pastThirtyOneDays.length;
+		average = Math.round(month / pastThirtyOneDays.length);
+	});
 });
 
 server.get('/port', (req, res) => {
@@ -101,7 +105,7 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	db.serialize(() => {
 		db.run("UPDATE yamero_counter SET `counter` ="+counter);
-		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now'); INSERT INTO statistics ( date, count ) (SELECT ${todayDate}, ${today}) WHERE (SELECT Changes() = 0)`)
+		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime'); INSERT INTO statistics ( date, count ) (SELECT ${todayDate}, ${today}) WHERE (SELECT Changes() = 0)`);
 		console.log(`[${timestamp}] Database updated.`);
 	});
 }); // update db at the configured minute of each hour
