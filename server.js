@@ -55,7 +55,7 @@ db.serialize(() => {
 
 	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
 	// insert row for today with value 0 (or do nothing if exists)
-	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now','-31 days') AND date('now', 'localtime')", [], (error, rows) => {
+	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
 		today = rows.filter(row => { return row.date===todayDate })[0].count;
 		pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
 		pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
