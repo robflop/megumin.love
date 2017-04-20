@@ -33,7 +33,7 @@ fs.readdirSync(pagePath).forEach(file => {
 
 server.use(express.static('resources'));
 
-var counter = 0, today = 0, week = 0, month = 0, average = 0;
+var counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 0;
 var todayDate = moment().format('YYYY-MM-DD');
 
 if(config.firstRun) {
@@ -65,7 +65,7 @@ db.serialize(() => {
 		for(let date in pastThirtyOneDays) {
 			month += pastThirtyOneDays[date].count;
 		};
-		monthly = pastThirtyOneDays.length;
+		fetchedDaysAmount = pastThirtyOneDays.length;
 		average = Math.round(month / pastThirtyOneDays.length);
 	});
 });
@@ -87,7 +87,7 @@ server.get('/counter', (req, res) => {
 io.on('connection', (socket) => {
 	socket.on('click', (data) => {
 		counter++; today++; week++; month++;
-		average = Math.round(month / monthly);
+		average = Math.round(month / fetchedDaysAmount);
 		io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	});
 });
@@ -109,21 +109,22 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		console.log(`[${timestamp}] Database updated.`);
 	});
 }); // update db at the configured minute of each hour
-scheduler.scheduleJob('0 0 * * *', () => {
+scheduler.scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	today = 0;
+	month = 0; fetchedDaysAmount = 0;
 	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
-	console.log(`[${timestamp}] Daily counter reset.`);
-}); // reset daily counter at midnight
+	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
+}); // reset monthly counter at the start of the month
 scheduler.scheduleJob('0 0 * * 1', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
 	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Weekly counter reset.`);
 }); // reset weekly counter at the start of the week (1=monday)
-scheduler.scheduleJob('0 0 1 * *', () => {
+scheduler.scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	month = 0;
+	today = 0; fetchedDaysAmount++;
+	average = Math.round(month / fetchedDaysAmount);
 	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
-	console.log(`[${timestamp}] Monthly counter reset.`);
-}); // reset monthly counter at the start of the month
+	console.log(`[${timestamp}] Daily counter reset & fetched days amount incremented.`);
+}); // reset daily counter at midnight
