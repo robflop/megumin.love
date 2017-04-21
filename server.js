@@ -94,6 +94,7 @@ io.on('connection', (socket) => {
 
 for(let page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
+	server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
 };
 
 for(let error of config.errorTemplates) {
