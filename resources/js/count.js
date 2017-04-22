@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 	$.get("/counter").done((res) => $('#counter').html(formatNumber(res)));
 	// load initial counter
-	var socket;
+	let socket;
 	$.get("/port").done((res) => {
 		socket = io.connect('localhost:'+res);
 		socket.on('update', function(data) {
@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 	howlerList = {};
 	sounds.indexOf('realname')>-1?sounds.splice(sounds.indexOf('realname'),1):"";
-	for (var i = sounds.length - 1; i >= 0; i--) {
+	for (let i = sounds.length - 1; i >= 0; i--) {
 		howlerList[sounds[i]] = new Howl({src: ["/sounds/"+sounds[i]+".mp3", "/sounds/"+sounds[i]+".ogg", "/sounds/"+sounds[i]+".aac"]});
 		// load all sounds
 	};
@@ -27,7 +27,7 @@ $(document).ready(function() {
 	});
 
 	$('#button').click(function() {
-		var sound = sounds[Math.floor(Math.random()*sounds.length)];
+		const sound = sounds[Math.floor(Math.random()*sounds.length)];
 		howlerList[sound].play();
 		socket.emit('click', {count: 1});
 	});
