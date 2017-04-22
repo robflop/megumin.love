@@ -6,7 +6,7 @@ const moment = require('moment');
 const scheduler = require('node-schedule');
 const config = require('./config.json');
 
-var timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+let timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 
 const db = new sqlite3.Database(config.databasePath);
 const server = express();
@@ -21,7 +21,7 @@ const errorPath = path.join(pagePath, '/errorTemplates');
 const pages = [];
 
 fs.readdirSync(pagePath).forEach(file => {
-	let page = file.slice(0, -5).toLowerCase();
+	const page = file.slice(0, -5).toLowerCase();
 	if(file.substr(-5, 5) !== ".html" || config.errorTemplates.includes(page)) return;
 
 	pages.push({
@@ -33,8 +33,8 @@ fs.readdirSync(pagePath).forEach(file => {
 
 server.use(express.static('resources'));
 
-var counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 0;
-var todayDate = moment().format('YYYY-MM-DD');
+let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 0;
+const todayDate = moment().format('YYYY-MM-DD');
 
 if(config.firstRun) {
 	db.serialize(() => {
@@ -57,12 +57,12 @@ db.serialize(() => {
 	// insert row for today with value 0 (or do nothing if exists)
 	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
 		today = rows.filter(row => { return row.date===todayDate })[0].count;
-		pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
-		pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
-		for(let date in pastSevenDays) {
+		const pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
+		const pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
+		for(const date in pastSevenDays) {
 			week += pastSevenDays[date].count;
 		};
-		for(let date in pastThirtyOneDays) {
+		for(const date in pastThirtyOneDays) {
 			month += pastThirtyOneDays[date].count;
 		};
 		fetchedDaysAmount = pastThirtyOneDays.length;
@@ -92,12 +92,12 @@ io.on('connection', (socket) => {
 	});
 });
 
-for(let page of pages) {
+for(const page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
 	server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
 };
 
-for(let error of config.errorTemplates) {
+for(const error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
 };
 

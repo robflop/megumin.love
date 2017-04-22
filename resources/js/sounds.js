@@ -1,4 +1,4 @@
-var sounds = [
+const sounds = [
 	"are",
 	"aughh",
 	"bighug",

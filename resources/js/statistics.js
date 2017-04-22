@@ -3,7 +3,7 @@ $(document).ready(function() {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 	};
 
-	var socket;
+	let socket;
 	$.get("/port").done((res) => {
 		socket = io.connect('localhost:'+res);
 		socket.on('update', function(data) {

@@ -21,6 +21,11 @@
 		"no-redeclare": "off",
 		"no-console": "off",
 		"no-undef": "off",
-		"no-trailing-spaces": "error"
+		"no-trailing-spaces": "error",
+		"no-var": "error",
+		"prefer-const": ["error", {
+        	"destructuring": "any",
+        	"ignoreReadBeforeAssign": true
+    	}]
     }
 }
