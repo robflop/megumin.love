@@ -106,7 +106,7 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	db.serialize(() => {
 		db.run("UPDATE yamero_counter SET `counter` ="+counter);
-		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime'); INSERT INTO statistics ( date, count ) SELECT ${todayDate}, ${today} WHERE (SELECT Changes() = 0 );`);
+		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime'); INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( ${todayDate}, ${today} );`);
 		console.log(`[${timestamp}] Database updated.`);
 	});
 }); // update db at the configured minute of each hour
