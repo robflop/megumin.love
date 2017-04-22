@@ -5,9 +5,16 @@ $(document).ready(function() {
 
 	$.get("/counter").done((res) => $('#counter').html(formatNumber(res)));
 	// load initial counter
+
+	const domainOrIP = document.URL.split('/')[2].split(':')[0];
+	let host = 'http://'+domainOrIP;
 	let socket;
-	$.get("/port").done((res) => {
-		socket = io.connect('localhost:'+res);
+
+	$.get("/conInfo").done((res) => {
+		const port = res[0], SSLproxy = res[1];
+		host = SSLproxy ? host.replace("http", "https") : host += `:${port}`;
+
+		socket = io.connect(host);
 		socket.on('update', function(data) {
 			$('#counter').html(formatNumber(data.counter));
 		});

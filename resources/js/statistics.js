@@ -3,9 +3,15 @@ $(document).ready(function() {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 	};
 
+	const domainOrIP = document.URL.split('/')[2].split(':')[0];
+	let host = 'http://'+domainOrIP;
 	let socket;
-	$.get("/port").done((res) => {
-		socket = io.connect('localhost:'+res);
+
+	$.get("/conInfo").done((res) => {
+		const port = res[0], SSLproxy = res[1];
+		host = SSLproxy ? host.replace("http", "https") : host += `:${port}`;
+
+		socket = io.connect(host);
 		socket.on('update', function(data) {
 			$('#alltime').html(`All-time clicks: ${formatNumber(data.statistics.alltime)}`);
 			$('#today').html(`Today's clicks: ${formatNumber(data.statistics.today)}`);
