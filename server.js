@@ -13,7 +13,7 @@ const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
 
-http.listen(config.port, '', '', () => console.log(`[${timestamp}] Megumin.love running on port ${config.port}!`));
+http.listen(config.port, '', '', () => console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy?" (Proxied to SSL)":""}`));
 // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = path.join(__dirname, '/pages');
@@ -70,8 +70,8 @@ db.serialize(() => {
 	});
 });
 
-server.get('/port', (req, res) => {
-	res.send(`${config.port}`);
+server.get('/conInfo', (req, res) => {
+	res.send([config.port, config.SSLproxy]);
 });
 
 server.get('/counter', (req, res) => {

@@ -27,6 +27,14 @@ Don't flip off the ``firstRun`` setting if it's your first run. There will be cr
 
 Update interval represents minutes, max value is 60 (meaning every hour). Commas will be rounded (This is due to scheduling).
 
+**__Important for proxying to 443 (SSL):__**
+
+If you want to proxy the website to the SSL port (443), so that users can access the site via "https://<domain>", then flip on the "SSLproxy" setting in the config.
+This will make the front-end socket.io connections connect to "https://<domain>" instead of "http://<domain>:<port>".
+Not changing this setting but still proxying to the SSL port (443) will result in the counter being unresponsive, as it cannot connect to Socket.io
+
+Otherwise, leave the setting at the default "false" value and everything should be fine.
+
 #### License
 
 Licensed under the [MIT License](LICENSE.md).

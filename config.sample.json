@@ -1,6 +1,7 @@
 {
 	"firstRun": true,
 	"port": 5959,
+	"SSLproxy": false,
 	"errorTemplates": [
 		"404",
 		"500"
