@@ -4,7 +4,8 @@
 	"SSLproxy": false,
 	"errorTemplates": [
 		"404",
-		"500"
+		"500",
+		"503"
 	],
 	"databasePath": "./db/megumin_yamero.db",
 	"updateInterval": 30
