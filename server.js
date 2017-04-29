@@ -57,8 +57,8 @@ db.serialize(() => {
 	// insert row for today with value 0 (or do nothing if exists)
 	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
 		today = rows.filter(row => { return row.date===todayDate })[0].count;
-		const pastSevenDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 7 });
-		const pastThirtyOneDays = rows.filter(row => { return moment(row.date).diff(todayDate, 'days') < 31 });
+		const pastSevenDays = rows.filter(row => { return moment(todayDate).diff(row.date, 'days') < 7 });
+		const pastThirtyOneDays = rows.filter(row => { return moment(todayDate).diff(row.date, 'days') < 31 });
 		for(const date in pastSevenDays) {
 			week += pastSevenDays[date].count;
 		};
