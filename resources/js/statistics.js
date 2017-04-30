@@ -17,7 +17,7 @@ $(document).ready(function() {
 			$('#today').html(`Today's clicks: ${formatNumber(data.statistics.today)}`);
 			$('#week').html(`Past 7 days' clicks: ${formatNumber(data.statistics.week)}`);
 			$('#month').html(`Past 31 days' clicks: ${formatNumber(data.statistics.month)}`);
-			$('#average').html(`Average clicks a day (in last month): ~${formatNumber(data.statistics.average)}`);
+			$('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(data.statistics.average)}`);
 		});
 	});
 
@@ -25,5 +25,5 @@ $(document).ready(function() {
 	$.get("/counter?statistics=today").done((res) => $('#today').html(`Today's clicks: ${formatNumber(res)}`));
 	$.get("/counter?statistics=week").done((res) => $('#week').html(`Past 7 days' clicks: ${formatNumber(res)}`));
 	$.get("/counter?statistics=month").done((res) => $('#month').html(`Past 31 days' clicks: ${formatNumber(res)}`));
-	$.get("/counter?statistics=average").done((res) => $('#average').html(`Average clicks a day (in last month): ~${formatNumber(res)}`));
+	$.get("/counter?statistics=average").done((res) => $('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(res)}`));
 });
