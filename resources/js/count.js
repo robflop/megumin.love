@@ -3,15 +3,12 @@ $(document).ready(function() {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 	};
 
-	$.get("/counter").done((res) => $('#counter').html(formatNumber(res)));
-	// load initial counter
-
 	const domainOrIP = document.URL.split('/')[2].split(':')[0];
 	let host = 'http://'+domainOrIP;
 	let socket;
 
-	$.get("/conInfo").done((res) => {
-		const port = res[0], SSLproxy = res[1];
+	$.get("/conInfo").done((con) => {
+		const port = con.port, SSLproxy = con.ssl;
 		host = SSLproxy ? host.replace("http", "https") : host += `:${port}`;
 
 		socket = io.connect(host);
@@ -19,6 +16,9 @@ $(document).ready(function() {
 			$('#counter').html(formatNumber(data.counter));
 		});
 	});
+
+	$.get("/counter").done((res) => $('#counter').html(formatNumber(res)));
+	// load initial counter
 
 	howlerList = {};
 	sounds.indexOf('realname')>-1?sounds.splice(sounds.indexOf('realname'),1):"";
@@ -29,13 +29,13 @@ $(document).ready(function() {
 
 	$('#button').keypress(function(key) {
 		if(key.which == 13) {
-			key.preventDefault(); // don't trigger the button on "enter" keypress
+			return key.preventDefault(); // don't trigger the button on "enter" keypress
 		};
 	});
 
 	$('#button').click(function() {
 		const sound = sounds[Math.floor(Math.random()*sounds.length)];
-		howlerList[sound].play();
 		socket.emit('click', {count: 1});
+		return howlerList[sound].play();
 	});
 });

@@ -7,8 +7,8 @@ $(document).ready(function() {
 	let host = 'http://'+domainOrIP;
 	let socket;
 
-	$.get("/conInfo").done((res) => {
-		const port = res[0], SSLproxy = res[1];
+	$.get("/conInfo").done((con) => {
+		const port = con.port, SSLproxy = con.ssl;
 		host = SSLproxy ? host.replace("http", "https") : host += `:${port}`;
 
 		socket = io.connect(host);
@@ -21,9 +21,11 @@ $(document).ready(function() {
 		});
 	});
 
-	$.get("/counter?statistics=alltime").done((res) => $('#alltime').html(`All-time clicks: ${formatNumber(res)}`));
-	$.get("/counter?statistics=today").done((res) => $('#today').html(`Today's clicks: ${formatNumber(res)}`));
-	$.get("/counter?statistics=week").done((res) => $('#week').html(`Past 7 days' clicks: ${formatNumber(res)}`));
-	$.get("/counter?statistics=month").done((res) => $('#month').html(`Past 31 days' clicks: ${formatNumber(res)}`));
-	$.get("/counter?statistics=average").done((res) => $('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(res)}`));
+	$.get("/counter?statistics").done((statistics) => {
+		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
+		$('#today').html(`Today's clicks: ${formatNumber(statistics.today)}`);
+		$('#week').html(`Past 7 days' clicks: ${formatNumber(statistics.week)}`);
+		$('#month').html(`Past 31 days' clicks: ${formatNumber(statistics.month)}`);
+		$('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(statistics.average)}`);
+	});
 });
