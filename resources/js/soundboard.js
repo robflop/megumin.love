@@ -18,7 +18,7 @@ $(document).ready(function() {
 		howlerList[sounds[i]] = new Howl({src: ["/sounds/"+sounds[i]+".mp3", "/sounds/"+sounds[i]+".ogg", "/sounds/"+sounds[i]+".aac"]});
 		if(sounds[i] == "name") continue;
 		$("#"+sounds[i]).click(function() {
-			howlerList[$(this).attr("id")].play();
+			return howlerList[$(this).attr("id")].play();
 		});
 	};
 });

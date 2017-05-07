@@ -13,7 +13,7 @@ const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
 
-http.listen(config.port, '', '', () => console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy?" (Proxied to SSL)":""}`));
+http.listen(config.port, () => console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy?" (Proxied to SSL)":""}`));
 // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = path.join(__dirname, '/pages');
@@ -24,7 +24,7 @@ fs.readdirSync(pagePath).forEach(file => {
 	const page = file.slice(0, -5).toLowerCase();
 	if(file.substr(-5, 5) !== ".html" || config.errorTemplates.includes(page)) return;
 
-	pages.push({
+	return pages.push({
 		name: file,
 		path: path.join(pagePath, file),
 		route: page === "index" ? "/" : "/" + page
@@ -70,25 +70,40 @@ db.serialize(() => {
 	});
 });
 
-server.get('/conInfo', (req, res) => {
-	res.send([config.port, config.SSLproxy]);
-});
+server.get('/conInfo', (req, res) => res.send({port: config.port, ssl: config.SSLproxy}));
 
 server.get('/counter', (req, res) => {
-	if(req.query.statistics==="alltime") return res.send(`${counter}`);
-	if(req.query.statistics==="today") return res.send(`${today}`);
-	if(req.query.statistics==="week") return res.send(`${week}`);
-	if(req.query.statistics==="month") return res.send(`${month}`);
-	if(req.query.statistics==="average") return res.send(`${average}`);
+
+	if(req.query.statistics==='') {
+		return res.send({
+			alltime: counter,
+			today: today,
+			week: week,
+			month: month,
+			average: average
+		});
+	};
+
 	if(req.query.inc) counter++;
-	res.send(`${counter}`);
+
+	return res.send(`${counter}`);
 });
 
 io.on('connection', (socket) => {
 	socket.on('click', (data) => {
 		counter++; today++; week++; month++;
 		average = Math.round(month / fetchedDaysAmount);
-		io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
+
+		io.sockets.emit('update', {
+			counter: counter,
+			statistics: {
+				alltime: counter,
+				today: today,
+				week: week,
+				month: month,
+				average: average
+			},
+		});
 	});
 });
 
@@ -108,25 +123,25 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run("UPDATE yamero_counter SET `counter` ="+counter);
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
 		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
-		console.log(`[${timestamp}] Database updated.`);
 	});
+	return console.log(`[${timestamp}] Database updated.`);
 }); // update db at the configured minute of each hour
 scheduler.scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	month = 0; fetchedDaysAmount = 0;
-	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
+	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 }); // reset monthly counter at the start of the month
 scheduler.scheduleJob('0 0 * * 1', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
-	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Weekly counter reset.`);
+	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 }); // reset weekly counter at the start of the week (1=monday)
 scheduler.scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0; fetchedDaysAmount++;
 	average = Math.round(month / fetchedDaysAmount);
-	io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 	console.log(`[${timestamp}] Daily counter reset & fetched days amount incremented.`);
+	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
 }); // reset daily counter at midnight
