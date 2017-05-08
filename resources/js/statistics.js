@@ -15,17 +15,17 @@ $(document).ready(function() {
 		socket.on('update', function(data) {
 			$('#alltime').html(`All-time clicks: ${formatNumber(data.statistics.alltime)}`);
 			$('#today').html(`Today's clicks: ${formatNumber(data.statistics.today)}`);
-			$('#week').html(`Past 7 days' clicks: ${formatNumber(data.statistics.week)}`);
-			$('#month').html(`Past 31 days' clicks: ${formatNumber(data.statistics.month)}`);
-			$('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(data.statistics.average)}`);
+			$('#week').html(`This week's clicks: ${formatNumber(data.statistics.week)}`);
+			$('#month').html(`This month's clicks: ${formatNumber(data.statistics.month)}`);
+			$('#average').html(`Average clicks a day (in last this month): ~${formatNumber(data.statistics.average)}`);
 		});
 	});
 
 	$.get("/counter?statistics").done((statistics) => {
 		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
 		$('#today').html(`Today's clicks: ${formatNumber(statistics.today)}`);
-		$('#week').html(`Past 7 days' clicks: ${formatNumber(statistics.week)}`);
-		$('#month').html(`Past 31 days' clicks: ${formatNumber(statistics.month)}`);
-		$('#average').html(`Average clicks a day (in last 31 days): ~${formatNumber(statistics.average)}`);
+		$('#week').html(`This week's clicks: ${formatNumber(statistics.week)}`);
+		$('#month').html(`This month's clicks: ${formatNumber(statistics.month)}`);
+		$('#average').html(`Average clicks a day (in this month): ~${formatNumber(statistics.average)}`);
 	});
 });
