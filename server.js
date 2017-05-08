@@ -35,6 +35,9 @@ server.use(express.static('resources'));
 
 let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 0;
 const todayDate = moment().format('YYYY-MM-DD');
+const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
+// add 1 day because moment sees sunday as start and saturday as end of week and i don't
+const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
 
 if(config.firstRun) {
 	db.serialize(() => {
@@ -57,16 +60,17 @@ db.serialize(() => {
 	// insert row for today with value 0 (or do nothing if exists)
 	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
 		today = rows.filter(row => { return row.date===todayDate })[0].count;
-		const pastSevenDays = rows.filter(row => { return moment(todayDate).diff(row.date, 'days') < 7 });
-		const pastThirtyOneDays = rows.filter(row => { return moment(todayDate).diff(row.date, 'days') < 31 });
-		for(const date in pastSevenDays) {
-			week += pastSevenDays[date].count;
+		const thisWeek = rows.filter(row => { return moment(row.date).isBetween(startOfWeek, endOfWeek, null, []) });
+		const thisMonth = rows.filter(row => { return moment(row.date).isBetween(startOfMonth, endOfMonth, null, []) });
+		// null & [] parameters given for including first and last day of range (see moment docs)
+		for(const date in thisWeek) {
+			week += thisWeek[date].count;
 		};
-		for(const date in pastThirtyOneDays) {
-			month += pastThirtyOneDays[date].count;
+		for(const date in thisMonth) {
+			month += thisMonth[date].count;
 		};
-		fetchedDaysAmount = pastThirtyOneDays.length;
-		average = Math.round(month / pastThirtyOneDays.length);
+		fetchedDaysAmount = thisMonth.length;
+		average = Math.round(month / thisMonth.length);
 	});
 });
 
