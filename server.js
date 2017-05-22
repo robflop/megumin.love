@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -13,8 +15,9 @@ const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
 
-http.listen(config.port, () => console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy?" (Proxied to SSL)":""}`));
-// info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
+http.listen(config.port, () => {
+	console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy ? ' (Proxied to SSL)' : ''}`);
+}); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = path.join(__dirname, '/pages');
 const errorPath = path.join(pagePath, '/errorTemplates');
@@ -22,12 +25,12 @@ const pages = [];
 
 fs.readdirSync(pagePath).forEach(file => {
 	const page = file.slice(0, -5).toLowerCase();
-	if(file.substr(-5, 5) !== ".html" || config.errorTemplates.includes(page)) return;
+	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
 
 	return pages.push({
 		name: file,
 		path: path.join(pagePath, file),
-		route: page === "index" ? "/" : "/" + page
+		route: page === 'index' ? '/' : `/${page}`
 	});
 });
 
@@ -39,46 +42,45 @@ const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment(
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
 
-if(config.firstRun) {
+if (config.firstRun) {
 	db.serialize(() => {
-		db.run("CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )");
-		db.run("INSERT INTO yamero_counter ( counter ) VALUES ('0')");
+		db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
+		db.run('INSERT INTO yamero_counter ( counter ) VALUES ( 0 )');
 
-		db.run("CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )");
-		db.run("INSERT INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0 )");
+		db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+		db.run('INSERT INTO statistics ( date, count ) VALUES ( date(\'now\', \'localtime\'), 0 )');
 	}); // prepare the database on first run
 	config.firstRun = false;
-	fs.writeFileSync(`./config.json`, JSON.stringify(config, null, "\t"));
-};
+	fs.writeFileSync(`./config.json`, JSON.stringify(config, null, '\t'));
+}
 
 db.serialize(() => {
-	db.get("SELECT counter FROM yamero_counter", [], (error, row) => {
-		counter = row["counter"];
+	db.get('SELECT counter FROM yamero_counter', [], (error, row) => {
+		counter = row.counter;
 	});
 
 	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
 	// insert row for today with value 0 (or do nothing if exists)
 	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
-		today = rows.filter(row => { return row.date===todayDate })[0].count;
-		const thisWeek = rows.filter(row => { return moment(row.date).isBetween(startOfWeek, endOfWeek, null, []) });
-		const thisMonth = rows.filter(row => { return moment(row.date).isBetween(startOfMonth, endOfMonth, null, []) });
+		today = rows.filter(row => row.date === todayDate)[0].count;
+		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
+		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
-		for(const date in thisWeek) {
+		for (const date in thisWeek) {
 			week += thisWeek[date].count;
-		};
-		for(const date in thisMonth) {
+		}
+		for (const date in thisMonth) {
 			month += thisMonth[date].count;
-		};
+		}
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(month / thisMonth.length);
 	});
 });
 
-server.get('/conInfo', (req, res) => res.send({port: config.port, ssl: config.SSLproxy}));
+server.get('/conInfo', (req, res) => res.send({ port: config.port, ssl: config.SSLproxy }));
 
 server.get('/counter', (req, res) => {
-
-	if(req.query.statistics==='') {
+	if (req.query.statistics === '') {
 		return res.send({
 			alltime: counter,
 			today: today,
@@ -86,16 +88,17 @@ server.get('/counter', (req, res) => {
 			month: month,
 			average: average
 		});
-	};
+	}
 
-	if(req.query.inc) counter++;
+	if (req.query.inc) counter++;
 
 	return res.send(`${counter}`);
 });
 
-io.on('connection', (socket) => {
-	socket.on('click', (data) => {
-		counter++; today++; week++; month++;
+io.on('connection', socket => {
+	socket.on('click', data => {
+		counter++; today++;
+		week++; month++;
 		average = Math.round(month / fetchedDaysAmount);
 
 		io.sockets.emit('update', {
@@ -111,20 +114,20 @@ io.on('connection', (socket) => {
 	});
 });
 
-for(const page of pages) {
+for (const page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
 	server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
-};
+}
 
-for(const error of config.errorTemplates) {
-	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`))
-};
+for (const error of config.errorTemplates) {
+	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
+}
 
 // database updates
 scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	db.serialize(() => {
-		db.run("UPDATE yamero_counter SET `counter` ="+counter);
+		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
 		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
 	});
@@ -134,18 +137,27 @@ scheduler.scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	month = 0; fetchedDaysAmount = 0;
 	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
-	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
+	return io.sockets.emit('update', {
+		counter: counter,
+		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
+	});
 }); // reset monthly counter at the start of the month
 scheduler.scheduleJob('0 0 * * 1', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
 	console.log(`[${timestamp}] Weekly counter reset.`);
-	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
+	return io.sockets.emit('update', {
+		counter: counter,
+		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
+	});
 }); // reset weekly counter at the start of the week (1=monday)
 scheduler.scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0; fetchedDaysAmount++;
 	average = Math.round(month / fetchedDaysAmount);
 	console.log(`[${timestamp}] Daily counter reset & fetched days amount incremented.`);
-	return io.sockets.emit('update', {counter: counter, statistics: {alltime: counter, today: today, week: week, month: month, average: average}});
+	return io.sockets.emit('update', {
+		counter: counter,
+		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
+	});
 }); // reset daily counter at midnight
