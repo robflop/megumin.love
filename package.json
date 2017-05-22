@@ -10,24 +10,30 @@
     "socket.io": "^1.7.3",
     "sqlite3": "^3.1.8"
   },
-  "devDependencies": {},
-  "scripts": {},
+  "devDependencies": {
+    "eslint": "^3.19.0"
+  },
+  "scripts": {
+    "test": "eslint server.js resources/js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robflop/Megumin.love.git"
   },
   "keywords": [
     "megumin",
-    "love",
     "konosuba",
     "anime",
-    "robflop",
-    "node.js"
+    "soundboard",
+    "node"
   ],
   "author": "robflop",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/robflop/Megumin.love/issues"
   },
-  "homepage": "https://github.com/robflop/Megumin.love#readme"
+  "homepage": "https://github.com/robflop/Megumin.love#readme",
+  "engines": {
+    "node": ">=7.6.0"
+  }
 }
