@@ -1,6 +1,9 @@
 >Original: https://megumin.love
 
 # Megumin.love
+
+[![Build Status](https://travis-ci.org/robflop/Megumin.love.svg?branch=master)](https://travis-ci.org/robflop/Megumin.love)
+
 A site committed to worshipping best girl Megumin!
 
 Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
