@@ -96,7 +96,7 @@ server.get('/counter', (req, res) => {
 });
 
 io.on('connection', socket => {
-	socket.on('click', data => {
+	socket.on('click', () => {
 		counter++; today++;
 		week++; month++;
 		average = Math.round(month / fetchedDaysAmount);
