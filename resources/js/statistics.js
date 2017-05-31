@@ -15,7 +15,7 @@ $(document).ready(() => {
 			$('#today').html(`Today's clicks: ${formatNumber(data.statistics.today)}`);
 			$('#week').html(`This week's clicks: ${formatNumber(data.statistics.week)}`);
 			$('#month').html(`This month's clicks: ${formatNumber(data.statistics.month)}`);
-			$('#average').html(`Average clicks a day (in last this month): ~${formatNumber(data.statistics.average)}`);
+			$('#average').html(`Average clicks a day (in this month): ~${formatNumber(data.statistics.average)}`);
 		});
 	});
 
