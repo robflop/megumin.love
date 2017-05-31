@@ -27,7 +27,8 @@ $(document).ready(() => {
 
 	$('#button').keypress(key => {
 		if (key.which === 13) {
-			return key.preventDefault(); // don't trigger the button on 'enter' keypress
+			return key.preventDefault();
+			// don't trigger the button on 'enter' keypress
 		}
 	});
 
