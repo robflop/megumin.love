@@ -36,7 +36,7 @@ fs.readdirSync(pagePath).forEach(file => {
 
 server.use(express.static('resources'));
 
-let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 0;
+let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 1;
 const todayDate = moment().format('YYYY-MM-DD');
 const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
