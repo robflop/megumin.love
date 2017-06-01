@@ -126,16 +126,16 @@ for (const error of config.errorTemplates) {
 // database updates
 scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	db.serialize(() => {
+	console.log(`[${timestamp}] Database updated.`);
+	return db.serialize(() => {
 		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
 		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
 	});
-	return console.log(`[${timestamp}] Database updated.`);
 }); // update db at the configured minute of each hour
 scheduler.scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	month = 0; fetchedDaysAmount = 0;
+	month = 0; fetchedDaysAmount = 1;
 	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
 	return io.sockets.emit('update', {
 		counter: counter,
