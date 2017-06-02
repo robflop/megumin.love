@@ -1,16 +1,16 @@
 /* eslint-env node */
 
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const sqlite3 = require('sqlite3');
 const moment = require('moment');
-const scheduler = require('node-schedule');
+const { join } = require('path');
+const { readdirSync, writeFileSync } = require('fs');
+const { Database } = require('sqlite3');
+const { scheduleJob } = require('node-schedule');
 const config = require('./config.json');
 
 let timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 
-const db = new sqlite3.Database(config.databasePath);
+const db = new Database(config.databasePath);
 const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
@@ -19,17 +19,17 @@ http.listen(config.port, () => {
 	console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy ? ' (Proxied to SSL)' : ''}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
-const pagePath = path.join(__dirname, '/pages');
-const errorPath = path.join(pagePath, '/errorTemplates');
+const pagePath = join(__dirname, '/pages');
+const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
 
-fs.readdirSync(pagePath).forEach(file => {
+readdirSync(pagePath).forEach(file => {
 	const page = file.slice(0, -5).toLowerCase();
 	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
 
 	return pages.push({
 		name: file,
-		path: path.join(pagePath, file),
+		path: join(pagePath, file),
 		route: page === 'index' ? '/' : `/${page}`
 	});
 });
@@ -40,6 +40,7 @@ let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount 
 const todayDate = moment().format('YYYY-MM-DD');
 const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
+
 const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
 
 if (config.firstRun) {
@@ -50,8 +51,9 @@ if (config.firstRun) {
 		db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
 		db.run('INSERT INTO statistics ( date, count ) VALUES ( date(\'now\', \'localtime\'), 0 )');
 	}); // prepare the database on first run
+
 	config.firstRun = false;
-	fs.writeFileSync(`./config.json`, JSON.stringify(config, null, '\t'));
+	writeFileSync(`./config.json`, JSON.stringify(config, null, '\t'));
 }
 
 db.serialize(() => {
@@ -61,11 +63,13 @@ db.serialize(() => {
 
 	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
 	// insert row for today with value 0 (or do nothing if exists)
+
 	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
 		today = rows.filter(row => row.date === todayDate)[0].count;
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
+
 		for (const date in thisWeek) {
 			week += thisWeek[date].count;
 		}
@@ -109,7 +113,7 @@ io.on('connection', socket => {
 				week: week,
 				month: month,
 				average: average
-			},
+			}
 		});
 	});
 });
@@ -124,7 +128,7 @@ for (const error of config.errorTemplates) {
 }
 
 // database updates
-scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
+scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	console.log(`[${timestamp}] Database updated.`);
 	return db.serialize(() => {
@@ -132,8 +136,9 @@ scheduler.scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
 		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
 	});
-}); // update db at the configured minute of each hour
-scheduler.scheduleJob('0 0 1 * *', () => {
+}); // update db at every xth minute of each hour
+
+scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	month = 0; fetchedDaysAmount = 1;
 	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
@@ -142,7 +147,8 @@ scheduler.scheduleJob('0 0 1 * *', () => {
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
 	});
 }); // reset monthly counter at the start of the month
-scheduler.scheduleJob('0 0 * * 1', () => {
+
+scheduleJob('0 0 * * 1', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
 	console.log(`[${timestamp}] Weekly counter reset.`);
@@ -151,7 +157,8 @@ scheduler.scheduleJob('0 0 * * 1', () => {
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
 	});
 }); // reset weekly counter at the start of the week (1=monday)
-scheduler.scheduleJob('0 0 * * *', () => {
+
+scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0; fetchedDaysAmount++;
 	average = Math.round(month / fetchedDaysAmount);
