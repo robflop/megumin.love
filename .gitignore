@@ -4,10 +4,10 @@ logs
 npm-debug.log*
 
 # ignore some files
-config.json
-db/megumin_yamero.db
+src/config.json
+src/db/megumin_yamero.db
 .vscode
-googlee2713ce6ca671684.html
+src/pages/googlee2713ce6ca671684.html
 
 # Runtime data
 pids

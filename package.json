@@ -14,7 +14,7 @@
     "eslint": "^3.19.0"
   },
   "scripts": {
-    "test": "eslint server.js resources/js"
+    "test": "eslint src/server.js src/resources/js"
   },
   "repository": {
     "type": "git",
