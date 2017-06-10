@@ -1,52 +1,51 @@
 @import url("./style_template.css");
 
+body {
+	padding-bottom: 75px;
+}
+
 div#container {
-    width: 1175px;
-    margin-left: auto;
-    margin-right: auto;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 20px;
+	width: 90%;
+	margin: 0 auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
+	text-align: center;
 }
 
-div#mobileContainer {
-   width: 250px;
-    margin-top: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    background: rgba(0, 0, 0, 1);
-    color: white;
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    display: none;
+.buttons-wrap {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 10px;
 }
 
-button.buttons {
+.buttons-wrap button {
 	margin-top: 10px;
 	margin-left: 5px;
-    font-size: 35px;
-    background: #dd0000;
-    color: #ff8080;
-    border-radius: 20px;
-    width: 23%;
+	font-size: 35px;
+	background: #dd0000;
+	color: #ff8080;
+	border-radius: 20px;
+	width: 24%;
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
 }
 
-button.buttons:focus {
+.buttons-wrap button:focus {
 	outline: 0;
 }
 
-button.buttons:hover {
-    background: #ff3338;
+.buttons-wrap button:hover {
+	background: #ff3338;
 }
 
 .titles {
-	margin-left: 300px;
+	margin: 0 auto;
 	font-size: 35px;
 	text-align: center;
-	background: #dd0000;
+	background-color: #dd0000;
 	color: #ff8080;
 	border-radius: 15px;
 	width: 50%;
@@ -54,31 +53,32 @@ button.buttons:hover {
 }
 
 a.backlink {
-    color: #dd0000;
+	color: #dd0000;
+	display: block;
+	text-align: left;
+	margin-bottom: 10px;
 }
 
 a#backlink-bottom {
-	margin-left: 1100px;
+	text-align: right;
+	margin: 10px 0 0;
 }
 
-@media only screen and (max-width: 599px) {
-    /* Portrait mode */  
-    div#container {
-		display: none;
-    }
-    
-    div#mobileContainer {
-        display: block;
-    }
+@media only screen and (max-width: 1150px) {
+	.buttons-wrap button {
+		width: 32%;
+	}
 }
-@media only screen and (max-height: 599px) {
-    /* Landscape mode */
-    div#container {
-		display: none;
-    }
 
-    div#mobileContainer {
-        margin-top: 0px;
-        display: block;
-    }
+@media only screen and (max-width: 950px) {
+	.buttons-wrap button {
+		width: 49%;
+	}
+}
+
+@media only screen and (max-width: 650px) {
+	.buttons-wrap button,
+	.titles {
+		width: 100%;
+	}
 }
