@@ -3,22 +3,13 @@ $(document).ready(function() { // eslint-disable-line
 
 	$('#name').click(() => {
 		const rsound = Math.floor(Math.random() * 100) + 1;
-		switch (rsound) {
-			case 42:
-				howlerList.realname.play();
-				break;
-			default:
-				howlerList.name.play();
-				break;
-		}
+		rsound === 42 ? howlerList.realname.play() : howlerList.name.play();
 	});
 
 	// Make button clicks play corresponding sounds
-	for (let i = sounds.length - 1; i >= 0; i--) {
-		howlerList[sounds[i]] = new Howl({ src: [`/sounds/${sounds[i]}.mp3`, `/sounds/${sounds[i]}.ogg`, `/sounds/${sounds[i]}.aac`] });
-		if (sounds[i] === 'name') continue;
-		$(`#${sounds[i]}`).click(function() { // eslint-disable-line func-names
-			howlerList[$(this).attr('id')].play();
-		});
+	for (const sound of sounds) {
+		howlerList[sound] = new Howl({ src: [`/sounds/${sound}.mp3`, `/sounds/${sound}.ogg`, `/sounds/${sound}.aac`] });
+		if (sound === 'name') continue;
+		$(`#${sound}`).click(() => howlerList[sound].play());
 	}
 });
