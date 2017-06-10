@@ -10,10 +10,11 @@ body {
     background: url(/images/bg.jpg) no-repeat center center fixed;
     background-size: cover;
     vertical-align: middle;
+	position: relative;
 }
 
 footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 18%;
