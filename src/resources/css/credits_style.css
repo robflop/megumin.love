@@ -7,8 +7,7 @@ body {
 div#creditsbox {
     width: 510px;
     background: #F2E6E6;
-    top: 10vh;
-    margin: 0 auto;
+    margin: 10vh auto;
     padding: 16px;
     box-sizing: border-box;
     position: relative;
@@ -23,31 +22,37 @@ a.backlink {
     color: #dd0000;   
 }
 
-@media only screen and (max-width: 481px) {
+@media only screen and (max-width: 360px) {
 	/* Portrait mode */
     body {
         overflow: scroll;
     }
     div#creditsbox {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        left: -82px;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+        margin-left: -82px;
+		font-size: 20px;
+		margin-top: -50px;
     }
     a.backlink {
 		position: relative;
         margin-left: 430px;
         display: inline-block;
-        -webkit-transform: scale(1.8);
-        transform: scale(1.8);   
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);   
     }
+
+	footer {
+		width: auto;
+	}
 }
 
-@media only screen and (max-height: 481px) {
+@media only screen and (max-height: 360px) {
 	/* Landscape mode */
     div#creditsbox {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        top: 20px;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+        margin-top: 20px;
     }
     body {
         height: 300px;   
@@ -56,7 +61,7 @@ a.backlink {
 		position: relative;
         margin-left: 430px;
         display: inline-block;
-        -webkit-transform: scale(1.8);
-        transform: scale(1.8);   
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);   
     }
 }

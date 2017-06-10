@@ -59,7 +59,7 @@ h2#megsquad {
 	font-size: 25px;
 }
 
-@media only screen and (max-width: 481px) {
+@media only screen and (max-width: 360px) {
 	/* Portrait mode*/
     body {
         overflow: scroll;
@@ -83,7 +83,7 @@ h2#megsquad {
     }
 }
 
-@media only screen and (max-height: 481px) {
+@media only screen and (max-height: 360px) {
 	/* Landscape mode*/
     body {
         overflow: scroll;
