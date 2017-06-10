@@ -136,7 +136,7 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
 		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
 	});
-}); // update db at every xth minute of each hour
+}); // update db at every xth minute
 
 scheduleJob('0 0 1 * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
@@ -156,7 +156,7 @@ scheduleJob('0 0 * * 1', () => {
 		counter: counter,
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
 	});
-}); // reset weekly counter at the start of the week (1=monday)
+}); // reset weekly counter at the start of the week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
