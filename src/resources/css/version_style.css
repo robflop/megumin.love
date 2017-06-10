@@ -19,13 +19,13 @@ a.backlink {
     color: #dd0000;   
 }
 
-@media only screen and (max-width: 481px) {
+@media only screen and (max-width: 360px) {
 	/* Portrait mode */
     div#container {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
         left: -80px;
-        top: -120px;
+        top: -500px;
     }
     body {
         height: 620px;
@@ -34,17 +34,21 @@ a.backlink {
 		position: relative;
         margin-left: 400px;
         display: inline-block;
-        -webkit-transform: scale(1.8);
-        transform: scale(1.8);   
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);   
     }
+
+	footer {
+		width: auto;
+	}
 }
 
-@media only screen and (max-height: 481px) {
+@media only screen and (max-height: 360px) {
 	/* Landscape mode */
     div#container {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        top: -120px;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+        top: -500px;
     }
     body {
         height: 620px;   
@@ -53,7 +57,7 @@ a.backlink {
 		position: relative;
         margin-left: 400px;
         display: inline-block;
-        -webkit-transform: scale(1.8);
-        transform: scale(1.8);   
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);   
     }
 }
