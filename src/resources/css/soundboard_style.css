@@ -5,13 +5,20 @@ body {
 }
 
 div#container {
-	width: 90%;
+	width: 1175px;
 	margin: 0 auto;
 	background-color: rgba(0, 0, 0, 0.5);
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;
-	text-align: center;
+}
+
+div#container::after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 .buttons-wrap {
@@ -54,17 +61,21 @@ div#container {
 
 a.backlink {
 	color: #dd0000;
-	display: block;
+	display: inline-block;
 	text-align: left;
 	margin-bottom: 10px;
 }
 
 a#backlink-bottom {
-	text-align: right;
+	float: right;
 	margin: 10px 0 0;
 }
 
 @media only screen and (max-width: 1150px) {
+	div#container {
+		width: 90%;
+	}
+
 	.buttons-wrap button {
 		width: 32%;
 	}
