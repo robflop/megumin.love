@@ -18,7 +18,7 @@ Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
 
 ### Adding new sounds
 
-- Put your new sound files in the `src/resources/sounds/` folder (in mp3, ogg, aac and format)
+- Put your new sound files in the `src/resources/sounds/` folder (in mp3, ogg and aac format)
 - Add your sound's name (name of the files!) to the sounds array in `src/resources/js/sounds.js`
 
 And that's it. Your sound will automatically be added to the main button's available sounds.
