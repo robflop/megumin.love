@@ -10,7 +10,13 @@ Returns an object containing the website's statistics, mapped by their correspon
 | from | First day of statistics to be returned | YYYY-MM-DD | 2017-05-27 |
 | to   | Last day of statistics to be returned  | YYYY-MM-DD | 2017-06-05 |
 
-Example request:
+Supplying only the `from` parameter will result in the output only returning the specified date.
+
+Supplying only the `to` parameter will result in the output starting at the earliest known date and return everything up to the specified date.
+
+Omitting both the `from` and `to` parameter will return the entirety of the statistics from beginning to end.
+
+#### Example request
 
 `/stats?from=2017-05-10&to=2017-06-23`
 
