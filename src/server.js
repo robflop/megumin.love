@@ -40,8 +40,8 @@ let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount 
 const todayDate = moment().format('YYYY-MM-DD');
 const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
-
 const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
+const statistics = new Map(); // eslint-disable-line no-undef
 
 if (config.firstRun) {
 	db.serialize(() => {
@@ -64,12 +64,15 @@ db.serialize(() => {
 	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
 	// insert row for today with value 0 (or do nothing if exists)
 
-	db.all("SELECT * FROM statistics WHERE date BETWEEN date('now', 'localtime', '-31 days') AND date('now', 'localtime')", [], (error, rows) => {
+	db.all("SELECT * FROM statistics", [], (error, rows) => {
 		today = rows.filter(row => row.date === todayDate)[0].count;
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
 
+		for (const date in rows) {
+			statistics.set(rows[date].date, rows[date].count);
+		}
 		for (const date in thisWeek) {
 			week += thisWeek[date].count;
 		}
@@ -99,11 +102,48 @@ server.get('/counter', (req, res) => {
 	return res.send(`${counter}`);
 });
 
+server.get('/stats', (req, res) => {
+	const requestedStats = {};
+	if (req.query.from || req.query.to) {
+		if (req.query.from === todayDate && req.query.to === todayDate) {
+			return res.send({ [todayDate]: statistics.get(todayDate) });
+		}
+		else if (req.query.from && !req.query.to) {
+			return res.send({ [req.query.from]: statistics.get(req.query.from) || 0 });
+		}
+		else if (!req.query.from && req.query.to) {
+			const to = moment(req.query.to);
+
+			statistics.forEach((count, date) => {
+				if (moment(date).isSameOrBefore(to)) requestedStats[date] = count;
+			});
+
+			return res.send(requestedStats || {});
+		}
+		else if (req.query.from && req.query.to) {
+			const from = moment(req.query.from), to = moment(req.query.to);
+
+			statistics.forEach((count, date) => {
+				if (moment(date).isBetween(from, to, null, [])) requestedStats[date] = count;
+			});
+
+			return res.send(requestedStats || {});
+		}
+	}
+	else {
+		statistics.forEach((count, date) => requestedStats[date] = count);
+
+		return res.send(requestedStats);
+	}
+});
+
 io.on('connection', socket => {
 	socket.on('click', () => {
 		counter++; today++;
 		week++; month++;
 		average = Math.round(month / fetchedDaysAmount);
+
+		statistics.set(todayDate, today);
 
 		io.sockets.emit('update', {
 			counter: counter,
@@ -127,7 +167,8 @@ for (const error of config.errorTemplates) {
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
 }
 
-// database updates
+// database updates below
+
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	console.log(`[${timestamp}] Database updated.`);
@@ -162,9 +203,10 @@ scheduleJob('0 0 * * *', () => {
 	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0; fetchedDaysAmount++;
 	average = Math.round(month / fetchedDaysAmount);
+	statistics.set(moment().format('YYYY-MM-DD'), 0);
 	console.log(`[${timestamp}] Daily counter reset & fetched days amount incremented.`);
 	return io.sockets.emit('update', {
 		counter: counter,
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
 	});
-}); // reset daily counter at midnight
+}); // reset daily counter and update local statistics map at midnight
