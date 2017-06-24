@@ -84,7 +84,7 @@
     "no-array-constructor": "error",
     "no-inline-comments": "off",
     "no-lonely-if": "error",
-    "no-mixed-operators": "error",
+    "no-mixed-operators": "off",
     "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
     "no-new-object": "error",
     "no-spaced-func": "error",
