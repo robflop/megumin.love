@@ -64,7 +64,7 @@ db.serialize(() => {
 	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
 	// insert row for today with value 0 (or do nothing if exists)
 
-	db.all("SELECT * FROM statistics", [], (error, rows) => {
+	db.all('SELECT * FROM statistics', [], (error, rows) => {
 		today = rows.filter(row => row.date === todayDate)[0].count;
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
