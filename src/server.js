@@ -37,7 +37,7 @@ readdirSync(pagePath).forEach(file => {
 server.use(express.static('resources'));
 
 let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 1;
-const todayDate = moment().format('YYYY-MM-DD');
+const bootDate = moment().format('YYYY-MM-DD');
 const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
@@ -66,7 +66,7 @@ db.serialize(() => {
 	// insert row for today with value 0 (or do nothing if exists)
 
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
-		today = rows.filter(row => row.date === todayDate)[0].count;
+		today = rows.filter(row => row.date === bootDate)[0].count;
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
@@ -105,6 +105,7 @@ server.get('/counter', (req, res) => {
 
 server.get('/stats', (req, res) => {
 	const requestedStats = {};
+	const todayDate = moment().format('YYYY-MM-DD');
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).send({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
@@ -143,6 +144,7 @@ server.get('/stats', (req, res) => {
 
 io.on('connection', socket => {
 	socket.on('click', () => {
+		const todayDate = moment().format('YYYY-MM-DD');
 		counter++; today++;
 		week++; month++;
 		average = Math.round(month / fetchedDaysAmount);
