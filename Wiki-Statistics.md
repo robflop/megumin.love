@@ -18,7 +18,7 @@ Omitting both the `from` and `to` parameter will return the entirety of the stat
 
 #### Example request
 
-`/stats?from=2017-05-10&to=2017-06-23`
+`/stats?from=2017-05-27&to=2017-06-5`
 
 Output:
 
