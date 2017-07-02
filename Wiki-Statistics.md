@@ -3,7 +3,7 @@
 `GET /stats`  
 Returns an object containing the website's statistics, mapped by their corresponding date.
 
-#### Parameters:
+#### Parameters
 
 | Key  | Description                            | Format     | Example    |
 |------|----------------------------------------|------------|------------|
@@ -22,7 +22,7 @@ Omitting both the `from` and `to` parameter will return the entirety of the stat
 
 Output:
 
-```
+```js
 {
 "2017-05-27":529745,
 "2017-05-28":3694,
@@ -41,3 +41,25 @@ Output:
 
 `GET /counter?statistics`  
 Returns an object containing the overall statistics, seperated into all-time clicks, today's clicks, this week's clicks, this month's clicks and average clicks this month. Not available for any other time than the current.
+
+#### Parameters
+
+- None
+
+#### Example request
+
+`/counter?statistics`
+
+Output:
+
+```js
+{
+  "alltime": 21198920,
+  "today": 558,
+  "week": 17430,
+  "month": 8489,
+  "average": 4245
+}
+```
+
+---
