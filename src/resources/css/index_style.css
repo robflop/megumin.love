@@ -77,7 +77,7 @@ a#soundboard {
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
     }
-    span.share-buttons-frame {
+    span#share-buttons-frame {
         position: absolute;
         margin-left: 23px;
         margin-top: 120px;
@@ -101,7 +101,7 @@ a#soundboard {
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
     }
-    span.share-buttons-frame {
+    span#share-buttons-frame {
         position: absolute;
         -webkit-transform: scale(2.2);
         transform: scale(2.2);
