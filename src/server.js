@@ -110,10 +110,7 @@ server.get('/stats', (req, res) => {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).send({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
-		if (req.query.from === todayDate && req.query.to === todayDate) {
-			return res.send({ [todayDate]: statistics.get(todayDate) });
-		}
-		else if (req.query.from && !req.query.to) {
+		if (req.query.from && !req.query.to) {
 			return res.send({ [req.query.from]: statistics.get(req.query.from) || 0 });
 		}
 		else if (!req.query.from && req.query.to) {
