@@ -46,7 +46,7 @@ a#version {
     margin-top: 5px;
 }
 
-span.share-buttons-frame {
+span#share-buttons-frame {
     position: absolute;
     margin-left: 120px;
     margin-top: 6px;
