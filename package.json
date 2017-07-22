@@ -15,7 +15,7 @@
     "htmllint-cli": "0.0.6"
   },
   "scripts": {
-    "test": "eslint src/server.js src/resources/js"
+    "test": "eslint src/server.js src/resources/js && htmllint src/pages/* src/pages/errorTemplates/*"
   },
   "repository": {
     "type": "git",
