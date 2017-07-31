@@ -19,15 +19,13 @@ Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
 ### Adding new sounds
 
 - Put your new sound files in the `src/resources/sounds/` folder (in mp3, ogg and aac format)
-- Add your sound's name (name of the files!) to the sounds array in `src/resources/js/sounds.js`
+- Fill out all 3 properties for your new sound in `src/resources/js/sounds.js` (see existing sounds for examples)
 
-And that's it. Your sound will automatically be added to the main button's available sounds.
+And that's it. Your sound will automatically be added to the main button's available sounds and to the soundboard.
 
 ### Important Information
 
 If you add to the errorTemplates, you will have to create the actual html pages for these in `src/pages/errorTemplates/` aswell, otherwise this setting will not take effect.
-
-To add new sounds to the Soundboard, a button for each has to be created in the `src/pages/soundboard.html` file.
 
 Don't flip off the `firstRun` setting if it's your first run. There will be crashes and no support will be provided.
 
