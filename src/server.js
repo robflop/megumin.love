@@ -105,7 +105,6 @@ server.get('/counter', (req, res) => {
 
 server.get('/stats', (req, res) => {
 	const requestedStats = {};
-	const todayDate = moment().format('YYYY-MM-DD');
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).send({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
