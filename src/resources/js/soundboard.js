@@ -24,7 +24,7 @@ $(document).ready(() => {
 			$('#container').append(`<div class="titles">Season ${sound.season}:</div>`);
 			$(`<div class="buttons-wrap season${sound.season.replace(/\s/g, '-')}">`)
 				.appendTo('#container')
-				.append(`<button id=${sound.filename}>${sound.displayName}</button>`)
+				.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 			// use appendTo to get reference to newly-created wrapper in return value which is then appended to
 		}
 		if (sound.filename === 'name') continue;
