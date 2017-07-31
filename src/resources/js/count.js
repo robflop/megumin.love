@@ -17,9 +17,12 @@ $(document).ready(() => {
 	$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
 	// load initial counter
 
-	sounds.includes('realname') ? sounds.splice(sounds.indexOf('realname'), 1) : null;
 	for (const sound of sounds) {
-		howlerList[sound] = new Howl({ src: [`/sounds/${sound}.mp3`, `/sounds/${sound}.ogg`, `/sounds/${sound}.aac`] });
+		if (sound.filename === 'realname') continue;
+
+		howlerList[sound.filename] = new Howl({
+			src: [`/sounds/${sound.filename}.mp3`, `/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.aac`]
+		});
 		// load all sounds
 	}
 
@@ -31,6 +34,6 @@ $(document).ready(() => {
 	$('#button').click(() => {
 		const sound = sounds[Math.floor(Math.random() * sounds.length)];
 		socket.emit('click', { count: 1 });
-		return howlerList[sound].play();
+		return howlerList[sound.filename].play();
 	});
 });
