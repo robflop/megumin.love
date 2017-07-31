@@ -20,12 +20,13 @@ $(document).ready(() => {
 			season.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 		}
 		else {
-			$('#container').append('<br><br>');
-			$('#container').append(`<div class="titles">Season ${sound.season}:</div>`);
+			$('#backlink-top').append('<br><br>');
+			$('#backlink-top').append(`<div class="titles">Season ${sound.season}:</div>`);
 			$(`<div class="buttons-wrap season${sound.season.replace(/\s/g, '-')}">`)
-				.appendTo('#container')
+				.appendTo('#backlink-top')
 				.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 			// use appendTo to get reference to newly-created wrapper in return value which is then appended to
+			// append to top backlink as to not mess up bottom backlink
 		}
 		if (sound.filename === 'name') continue;
 		// create button but don't use standard click function
