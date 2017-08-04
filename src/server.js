@@ -42,7 +42,7 @@ const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment(
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
 const statistics = new Map(); // eslint-disable-line no-undef
-const dateRegex = new RegExp(/(^\d{4})-(\d{2})-(\d{2})$/);
+const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 
 if (config.firstRun) {
 	db.serialize(() => {
@@ -62,7 +62,7 @@ db.serialize(() => {
 		counter = row.counter;
 	});
 
-	db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), 0)`);
+	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0)');
 	// insert row for today with value 0 (or do nothing if exists)
 
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
@@ -71,15 +71,11 @@ db.serialize(() => {
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
 
-		for (const date in rows) {
-			statistics.set(rows[date].date, rows[date].count);
-		}
-		for (const date in thisWeek) {
-			week += thisWeek[date].count;
-		}
-		for (const date in thisMonth) {
-			month += thisMonth[date].count;
-		}
+		rows.map(date => statistics.set(date.date, date.count));
+		// populate statistics map
+		week = thisWeek.reduce((total, date) => total += date.count, 0);
+		month = thisMonth.reduce((total, date) => total += date.count, 0);
+
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(month / thisMonth.length);
 	});
