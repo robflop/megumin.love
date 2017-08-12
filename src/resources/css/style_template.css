@@ -99,7 +99,7 @@ a#credits {
 	margin: 10px 0 0;
 }
 
-.sidebar-content p:last-of-type {
+.sidebar-content > *:last-child {
 	padding-bottom: 10px;
 }
 
