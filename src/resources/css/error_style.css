@@ -1,17 +1,17 @@
 @import url("./style_template.css");
 
 body {
-    background: url(/images/error_bg.jpg) no-repeat center center fixed;
+	background: url(/images/error_bg.jpg) no-repeat center center fixed;
 }
 
 div#box {
-    width: 500px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    margin-left: auto;
-    margin-right: auto;
+	width: 500px;
+	background: rgba(0, 0, 0, 0.7);
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 p {
@@ -21,16 +21,16 @@ p {
 
 @media only screen and (max-width: 481px) {
 	/* Portrait mode */
-    div#box {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-    }
+	div#box {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+	}
 }
 
 @media only screen and (max-height: 481px) {
 	/* Landscape mode */
-    div#box {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-    }
+	div#box {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+	}
 }
