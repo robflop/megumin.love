@@ -1,108 +1,140 @@
 html {
-    height: 100%;
-    width: 100%;
-    display: table;
+	height: 100%;
+	width: 100%;
+	display: table;
 }
 
 body {
-    display: table-cell;
-    min-height: 100%;
-    background: url(/images/bg.jpg) no-repeat center center fixed;
-    background-size: cover;
-    vertical-align: middle;
+	display: table-cell;
+	min-height: 100%;
+	background: url(/images/bg.jpg) no-repeat center center fixed;
+	background-size: cover;
+	vertical-align: middle;
 	position: relative;
 }
 
 footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 18%;
-    font-family: 'Courgette', cursive;
-    margin-left: 10px;
-    color: azure;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 18%;
+	font-family: 'Courgette', cursive;
+	margin-left: 10px;
+	color: azure;
 }
 
 a#credits {
-    color: azure;
+	color: azure;
 }
 
-div#navbar-slide {
-    position: fixed;
-    top: 40px;
-    left: -340px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
+.megu-sidebar {
+	background-color: #A09A9A;
+	position: fixed;
+	top: 80px;
+	left: -345px;
+	min-width: 330px;
+	min-height: 410px;
+	font-family: 'Courgette', cursive;
+	transition-duration: 0.3s;
+	border: 4px solid #F9CA65;
+	border-radius: 3px;
+	z-index: 100;
 }
 
-div#navbar-slide-inner {
-    position: fixed;
-    top: 40px;
-    left: -350px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
+.megu-sidebar:hover {
+	left: 0;
 }
 
-div#navbar-slide:hover {
-    left: 0px;
+.megu-sidebar .hangumin {
+	position: absolute;
+	right: -245px;
+	top: -42px;
 }
 
-div#navbar-slide:hover.navbar-pc div#navbar-slide-inner.navbar-pc {
-    top: 58px;
-    left: 15px;
-    font-family: 'Courgette', cursive;
+.sidebar-content {
+	display: flex;
+	flex-direction: column;
+	max-width: 310px;
+	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 }
 
-h2#megsquad {
-    text-decoration: underline;
-	font-size: 25px;
+.sidebar-content h1,
+.sidebar-content h3 {
+	margin: 0;
+}
+
+.sidebar-content h1 {
+	font-size: 1.5rem;
+	margin-bottom: 15px;
+	text-decoration: underline;
+}
+
+.sidebar-content h3 {
+	font-weight: 400;
+	font-size: inherit;
+}
+
+.sidebar-content ul {
+	margin: 0;
+	padding: 0;
+}
+
+.sidebar-content ul li {
+	list-style-type: none;
+	margin: 15px 0;
+}
+
+.sidebar-content ul li::before {
+	content: "->";
+}
+
+.sidebar-content hr {
+	width: 100%;
+}
+
+.sidebar-content p {
+	margin: 10px 0 0;
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode*/
-    body {
-        overflow: scroll;
-    }
-	div#navbar-slide {
-        top: -95px;
-        -webkit-transform: scale(0.6);
-        transform: scale(0.6);
-    }
-    div#navbar-slide:hover {
-        left: -114px;
-    }
-    div#navbar-slide-inner.navbar-pc {
-        top: 20px !important;
-    }
+	body {
+		overflow: scroll;
+	}
+	.megu-sidebar {
+		transform: scale(0.6);
+		left: -275px;
+		top: -60px;
+	}
+	.megu-sidebar:hover {
+		left: -68px;
+	}
 	footer {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        width: 100%;
-        text-align: center;
-    }
+		-webkit-transform: scale(0.7);
+		transform: scale(0.7);
+		width: 100%;
+		text-align: center;
+	}
 }
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode*/
-    body {
-        overflow: scroll;
-    }
-	div#navbar-slide {
-        top: -95px;
-        -webkit-transform: scale(0.6);
-        transform: scale(0.6);
-    }
-    div#navbar-slide:hover {
-        left: -114px;
-    }
-    div#navbar-slide-inner.navbar-pc {
-        top: 20px !important;
-    }
+	body {
+		overflow: scroll;
+	}
+	.megu-sidebar {
+		transform: scale(0.6);
+		left: -275px;
+		top: -60px;
+	}
+	.megu-sidebar:hover {
+		left: -68px;
+	}
 	footer {
-        -webkit-transform: scale(0.7);
-        transform: scale(0.7);
-        width: 100%;
-        text-align: center;
-    }
+		-webkit-transform: scale(0.7);
+		transform: scale(0.7);
+		width: 100%;
+		text-align: center;
+	}
 }

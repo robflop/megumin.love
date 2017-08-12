@@ -5,21 +5,21 @@ body {
 }
 
 div#box {
-    width: 600px;
-    background: #F2E6E6;
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 20px;
+	width: 600px;
+	background: #F2E6E6;
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
 	margin: 225px auto auto auto;
 }
 
 h1#header {
-    text-decoration: underline;
+	text-decoration: underline;
 	text-align: center;
 }
 
 a.backlink {
-    color: #dd0000;   
+	color: #dd0000;   
 }
 
 div.statistics {
@@ -29,20 +29,20 @@ div.statistics {
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-    div#box {
-        width: auto;
+	div#box {
+		width: auto;
 		margin-top: 0px;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-    }
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+	}
 }
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-    div#box {
-        width: auto;
-        margin-top: 0px;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-    }
+	div#box {
+		width: auto;
+		margin-top: 0px;
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+	}
 }

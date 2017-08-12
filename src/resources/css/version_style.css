@@ -1,42 +1,42 @@
 @import url("./style_template.css");
 
 div#container {
-    width: 500px;
-    height: auto;
-    background: #F2E6E6;
-    margin: 0 auto;
-    padding: 16px;
-    box-sizing: border-box;
-    position: relative;
-    border-radius: 20px;
+	width: 500px;
+	height: auto;
+	background: #F2E6E6;
+	margin: 0 auto;
+	padding: 16px;
+	box-sizing: border-box;
+	position: relative;
+	border-radius: 20px;
 }
 
 h1#header {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 a.backlink {
-    color: #dd0000;   
+	color: #dd0000;   
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-    div#container {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-        left: -80px;
-        top: -500px;
-    }
-    body {
-        height: 620px;
-    }
-    a.backlink {
+	div#container {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		left: -80px;
+		top: -500px;
+	}
+	body {
+		height: 620px;
+	}
+	a.backlink {
 		position: relative;
-        margin-left: 400px;
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);   
-    }
+		margin-left: 400px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
 
 	footer {
 		width: auto;
@@ -45,19 +45,19 @@ a.backlink {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-    div#container {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-        top: -500px;
-    }
-    body {
-        height: 620px;   
-    }
-    a.backlink {
+	div#container {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		top: -500px;
+	}
+	body {
+		height: 620px;   
+	}
+	a.backlink {
 		position: relative;
-        margin-left: 400px;
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);   
-    }
+		margin-left: 400px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
 }

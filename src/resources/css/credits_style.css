@@ -5,42 +5,42 @@ body {
 }
 
 div#creditsbox {
-    width: 510px;
-    background: #F2E6E6;
-    margin: 10vh auto;
-    padding: 16px;
-    box-sizing: border-box;
-    position: relative;
-    border-radius: 20px;
+	width: 510px;
+	background: #F2E6E6;
+	margin: 10vh auto;
+	padding: 16px;
+	box-sizing: border-box;
+	position: relative;
+	border-radius: 20px;
 }
 
 h1 {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 a.backlink {
-    color: #dd0000;   
+	color: #dd0000;   
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-    body {
-        overflow: scroll;
-    }
-    div#creditsbox {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-        margin-left: -82px;
+	body {
+		overflow: scroll;
+	}
+	div#creditsbox {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		margin-left: -82px;
 		font-size: 20px;
 		margin-top: -50px;
-    }
-    a.backlink {
+	}
+	a.backlink {
 		position: relative;
-        margin-left: 430px;
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);   
-    }
+		margin-left: 430px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
 
 	footer {
 		width: auto;
@@ -49,19 +49,19 @@ a.backlink {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-    div#creditsbox {
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-        margin-top: 20px;
-    }
-    body {
-        height: 300px;   
-    }
-    a.backlink {
+	div#creditsbox {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		margin-top: 20px;
+	}
+	body {
+		height: 300px;   
+	}
+	a.backlink {
 		position: relative;
-        margin-left: 430px;
-        display: inline-block;
-        -webkit-transform: scale(1.5);
-        transform: scale(1.5);   
-    }
+		margin-left: 430px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
 }
