@@ -12,10 +12,10 @@
   },
   "devDependencies": {
     "eslint": "^4.4.1",
-    "htmllint-cli": "0.0.6"
+    "htmlhint": "^0.9.13"
   },
   "scripts": {
-    "test": "eslint src/server.js src/resources/js && htmllint src/pages/* src/pages/errorTemplates/*"
+    "test": "eslint src/server.js src/resources/js && htmlhint --ignore src/pages/googlee2713ce6ca671684.html"
   },
   "repository": {
     "type": "git",
