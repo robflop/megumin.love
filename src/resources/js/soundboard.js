@@ -1,11 +1,6 @@
 $(document).ready(() => {
 	const howlerList = {};
 
-	$('#name').click(() => {
-		const rsound = Math.floor(Math.random() * 100) + 1;
-		rsound === 42 ? howlerList.realname.play() : howlerList.name.play();
-	});
-
 	// Create buttons and make them play corresponding sounds
 	for (const sound of sounds) {
 		const season = $(`div.buttons-wrap.season${sound.season.replace(/\s/g, '-')}`);
@@ -27,8 +22,15 @@ $(document).ready(() => {
 				.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 			// use appendTo to get reference to newly-created wrapper in return value which is then appended to
 		}
-		if (sound.filename === 'name') continue;
+
+		if (sound.filename === 'name') {
+			$('#name').click(() => {
+				const rsound = Math.floor(Math.random() * 100) + 1;
+				rsound === 42 ? howlerList.realname.play() : howlerList.name.play();
+			});
+			continue;
 		// create button but don't use standard click function
+		}
 		$(`#${sound.filename}`).click(() => howlerList[sound.filename].play());
 	}
 });
