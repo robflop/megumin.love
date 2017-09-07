@@ -103,7 +103,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.inc) counter++;
+	if (req.query.inc) ++counter;
 
 	return res.send(`${counter}`); // template string because a number gets interpreted as status code
 });
@@ -148,8 +148,8 @@ server.get('/stats', (req, res) => {
 io.on('connection', socket => {
 	socket.on('click', () => {
 		const todayDate = moment().format('YYYY-MM-DD');
-		counter++; today++;
-		week++; month++;
+		++counter; ++today;
+		++week; ++month;
 		average = Math.round(month / fetchedDaysAmount);
 
 		statistics.set(todayDate, today);
@@ -191,7 +191,7 @@ scheduleJob('0 0 * * 1', () => {
 }); // reset weekly counter at the start of the week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
-	today = 0; fetchedDaysAmount++;
+	today = 0; ++fetchedDaysAmount;
 	average = Math.round(month / fetchedDaysAmount);
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
 	console.log(`[${currentTime()}] Daily counter reset & fetched days amount incremented.`);
