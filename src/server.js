@@ -8,7 +8,9 @@ const { Database } = require('sqlite3');
 const { scheduleJob } = require('node-schedule');
 const config = require('./config.json');
 
-let timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
+function currentTime() {
+	return moment().format('DD/MM/YYYY HH:mm:ss');
+}
 
 const db = new Database(config.databasePath);
 const server = express();
@@ -16,7 +18,7 @@ const http = require('http').Server(server);
 const io = require('socket.io')(http);
 
 http.listen(config.port, () => {
-	console.log(`[${timestamp}] Megumin.love running on port ${config.port}!${config.SSLproxy ? ' (Proxied to SSL)' : ''}`);
+	console.log(`[${currentTime()}] Megumin.love running on port ${config.port}!${config.SSLproxy ? ' (Proxied to SSL)' : ''}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = join(__dirname, '/pages');
@@ -170,8 +172,7 @@ for (const error of config.errorTemplates) {
 // database updates below
 
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
-	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-	console.log(`[${timestamp}] Database updated.`);
+	console.log(`[${currentTime()}] Database updated.`);
 	return db.serialize(() => {
 		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
@@ -180,9 +181,8 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 }); // update db at every xth minute
 
 scheduleJob('0 0 1 * *', () => {
-	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	month = 0; fetchedDaysAmount = 1;
-	console.log(`[${timestamp}] Monthly counter & fetched days amount reset.`);
+	console.log(`[${currentTime()}] Monthly counter & fetched days amount reset.`);
 	return io.sockets.emit('update', {
 		counter: counter,
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
@@ -190,9 +190,8 @@ scheduleJob('0 0 1 * *', () => {
 }); // reset monthly counter at the start of the month
 
 scheduleJob('0 0 * * 1', () => {
-	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	week = 0;
-	console.log(`[${timestamp}] Weekly counter reset.`);
+	console.log(`[${currentTime()}] Weekly counter reset.`);
 	return io.sockets.emit('update', {
 		counter: counter,
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
@@ -200,11 +199,10 @@ scheduleJob('0 0 * * 1', () => {
 }); // reset weekly counter at the start of the week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
-	timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
 	today = 0; fetchedDaysAmount++;
 	average = Math.round(month / fetchedDaysAmount);
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
-	console.log(`[${timestamp}] Daily counter reset & fetched days amount incremented.`);
+	console.log(`[${currentTime()}] Daily counter reset & fetched days amount incremented.`);
 	return io.sockets.emit('update', {
 		counter: counter,
 		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
