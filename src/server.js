@@ -12,6 +12,13 @@ function currentTime() {
 	return moment().format('DD/MM/YYYY HH:mm:ss');
 }
 
+function emitUpdate() {
+	return io.sockets.emit('update', {
+		counter,
+		statistics: { alltime: counter, today, week, month, average }
+	});
+}
+
 const db = new Database(config.databasePath);
 const server = express();
 const http = require('http').Server(server);
@@ -89,16 +96,16 @@ server.get('/counter', (req, res) => {
 	if (req.query.statistics === '') {
 		return res.send({
 			alltime: counter,
-			today: today,
-			week: week,
-			month: month,
-			average: average
+			today,
+			week,
+			month,
+			average
 		});
 	}
 
 	if (req.query.inc) counter++;
 
-	return res.send(`${counter}`);
+	return res.send(`${counter}`); // template string because a number gets interpreted as status code
 });
 
 server.get('/stats', (req, res) => {
@@ -147,16 +154,7 @@ io.on('connection', socket => {
 
 		statistics.set(todayDate, today);
 
-		io.sockets.emit('update', {
-			counter: counter,
-			statistics: {
-				alltime: counter,
-				today: today,
-				week: week,
-				month: month,
-				average: average
-			}
-		});
+		return emitUpdate();
 	});
 });
 
@@ -183,19 +181,13 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 scheduleJob('0 0 1 * *', () => {
 	month = 0; fetchedDaysAmount = 1;
 	console.log(`[${currentTime()}] Monthly counter & fetched days amount reset.`);
-	return io.sockets.emit('update', {
-		counter: counter,
-		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
-	});
+	return emitUpdate();
 }); // reset monthly counter at the start of the month
 
 scheduleJob('0 0 * * 1', () => {
 	week = 0;
 	console.log(`[${currentTime()}] Weekly counter reset.`);
-	return io.sockets.emit('update', {
-		counter: counter,
-		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
-	});
+	return emitUpdate();
 }); // reset weekly counter at the start of the week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
@@ -203,8 +195,5 @@ scheduleJob('0 0 * * *', () => {
 	average = Math.round(month / fetchedDaysAmount);
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
 	console.log(`[${currentTime()}] Daily counter reset & fetched days amount incremented.`);
-	return io.sockets.emit('update', {
-		counter: counter,
-		statistics: { alltime: counter, today: today, week: week, month: month, average: average }
-	});
+	return emitUpdate();
 }); // reset daily counter and update local statistics map at midnight
