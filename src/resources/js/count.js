@@ -1,14 +1,11 @@
 $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-
-	const domainOrIP = document.URL.split('/')[2].split(':')[0];
-	const howlerList = {};
-	let host = `http://${domainOrIP}`;
 	let socket;
 
 	$.get('/conInfo').done(con => {
+		const domainOrIP = document.URL.split('/')[2].split(':')[0];
 		const port = con.port, SSLproxy = con.ssl;
-		host = SSLproxy ? host.replace('http', 'https') : host += `:${port}`;
+		const host = SSLproxy ? `https://${domainOrIP}` : `http://${domainOrIP}:${port}`;
 
 		socket = io.connect(host);
 		socket.on('update', data => $('#counter').html(formatNumber(data.counter)));
@@ -16,6 +13,8 @@ $(document).ready(() => {
 
 	$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
 	// load initial counter
+
+	const howlerList = {};
 
 	for (const sound of sounds) {
 		if (sound.filename === 'realname') continue;
