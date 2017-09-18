@@ -1,5 +1,5 @@
 const sounds = [
-	{ filename: 'eugh1', season: '1', displayName: 'Eugh # 1' },
+	{ filename: 'eugh1', season: '1', displayName: 'Eugh #1' },
 	{ filename: 'eugh2', season: '1', displayName: 'Eugh #2' },
 	{ filename: 'eugh3', season: '1', displayName: 'Eugh #3' },
 	{ filename: 'eugh4', season: '1', displayName: 'Eugh #4' },
