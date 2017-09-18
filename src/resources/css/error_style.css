@@ -17,6 +17,7 @@ div#box {
 p {
 	color: #a50000;
 	font-size: 72px;
+	text-align: center;
 }
 
 @media only screen and (max-width: 481px) {
