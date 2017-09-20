@@ -57,6 +57,7 @@ div#container::after {
 	border-radius: 15px;
 	width: 50%;
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+	margin-top: 23px;
 }
 
 a.backlink {
