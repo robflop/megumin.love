@@ -25,6 +25,8 @@ And that's it. Your sound will automatically be added to the main button's avail
 
 ### Important Information
 
+#### Using the master branch instead of releases does not guarantee receiving a working version. I work on the site on my own pace and don't always update the master branch to a working state (especially when i am working on new features), so if you want a version that works, use the releases.
+
 If you add to the errorTemplates, you will have to create the actual html pages for these in `src/pages/errorTemplates/` aswell, otherwise this setting will not take effect.
 
 Don't flip off the `firstRun` setting if it's your first run. There will be crashes and no support will be provided.
