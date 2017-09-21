@@ -17,7 +17,7 @@ Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
 - Click!
 
       A maintenance mode that will route every request to a 503 page is also
-	  available. Simply pass ``--maintenance`` as node arg when launching the
+	  available. Simply pass "--maintenance" as node arg when launching the
 	  server.
 
 ### Adding new sounds
