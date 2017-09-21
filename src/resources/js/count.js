@@ -4,8 +4,7 @@ $(document).ready(() => {
 
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const port = con.port, SSLproxy = con.ssl;
-		const host = SSLproxy ? `https://${domainOrIP}` : `http://${domainOrIP}:${port}`;
+		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
 
 		socket = io.connect(host);
 		socket.on('update', data => $('#counter').html(formatNumber(data.counter)));
