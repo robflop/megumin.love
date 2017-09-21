@@ -16,12 +16,23 @@ Runs under NodeJS mainly with Express, SQLite3 and Socket.IO.
 - Start the website using `node server.js` (or `pm2 start server.js` if you use pm2)
 - Click!
 
+      A maintenance mode that will route every request to a 503 page is also
+	  available. Simply pass ``--maintenance`` as node arg when launching the
+	  server.
+
 ### Adding new sounds
 
 - Put your new sound files in the `src/resources/sounds/` folder (in mp3, ogg and aac format)
 - Fill out all 3 properties for your new sound in `src/resources/js/sounds.js` (see existing sounds for examples)
 
-And that's it. Your sound will automatically be added to the main button's available sounds and to the soundboard.
+And that's it. Your sound will automatically be added to the main button's available sounds, the soundboard and the rankings after a restart.
+
+    Notice: If you want to rename a sound after adding it, do the following:
+    1) Rename the files
+    2) Rename its entry in the sounds.js file
+    3) Update the database row to contain the new name (rankings table)
+	
+	Query: "UPDATE rankings SET filename = <new name> WHERE filename = <old name>"
 
 ### Important Information
 
@@ -32,6 +43,8 @@ If you add to the errorTemplates, you will have to create the actual html pages 
 Update interval represents minutes, following the cronjob syntax, so max value is 60 (meaning once every hour).
 
 `1` would mean once every minute, `10` once every 10 minutes etc. Commas will be rounded (this is due to scheduling).
+
+It is also advised to check out the [Wiki](https://github.com/robflop/megumin.love/wiki) for more information.
 
 #### Important for proxying to 443 (SSL)
 

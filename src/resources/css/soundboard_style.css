@@ -29,7 +29,7 @@ div#container::after {
 	margin-top: 10px;
 }
 
-.buttons-wrap button {
+.buttons-wrap button, #loading {
 	margin-top: 10px;
 	margin-left: 5px;
 	font-size: 35px;
@@ -60,7 +60,7 @@ div#container::after {
 	margin-top: 23px;
 }
 
-a.backlink {
+a {
 	color: #dd0000;
 	display: inline-block;
 	text-align: left;
@@ -70,6 +70,14 @@ a.backlink {
 a#backlink-bottom {
 	float: right;
 	margin: 10px 0 0;
+}
+
+a#rankings {
+	text-align: center;
+	display: block;
+	font-size: 30px;
+	margin: 0 auto;
+	width: 130px;
 }
 
 @media only screen and (max-width: 1150px) {

@@ -60,3 +60,5 @@ const sounds = [
 
 	{ filename: 'realname', season: '', displayName: '' },
 ];
+
+if (typeof process === 'object') module.exports = sounds;

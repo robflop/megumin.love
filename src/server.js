@@ -2,20 +2,19 @@
 
 const express = require('express');
 const moment = require('moment');
+const Logger = require('./resources/js/Logger');
 const { join } = require('path');
-const { readdirSync, writeFileSync } = require('fs');
+const { readdirSync } = require('fs');
 const { Database } = require('sqlite3');
 const { scheduleJob } = require('node-schedule');
 const config = require('./config.json');
-
-function currentTime() {
-	return moment().format('DD/MM/YYYY HH:mm:ss');
-}
+const sounds = require('./resources/js/sounds');
 
 function emitUpdate() {
 	return io.sockets.emit('update', {
 		counter,
-		statistics: { alltime: counter, today, week, month, average }
+		statistics: { alltime: counter, daily, weekly, monthly, average },
+		rankings
 	});
 }
 
@@ -23,9 +22,11 @@ const db = new Database(config.databasePath);
 const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
+const maintenanceMode = process.argv.slice(2)[0] || '' === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
 
 http.listen(config.port, () => {
-	console.log(`[${currentTime()}] Megumin.love running on port ${config.port}!${config.SSLproxy ? ' (Proxied to SSL)' : ''}`);
+	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
+	Logger.info(`megumin.love running on port ${config.port}!${options}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = join(__dirname, '/pages');
@@ -45,50 +46,67 @@ readdirSync(pagePath).forEach(file => {
 
 server.use(express.static('resources'));
 
-let counter = 0, today = 0, week = 0, month = 0, average = 0, fetchedDaysAmount = 1;
+let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
 const bootDate = moment().format('YYYY-MM-DD');
-const startOfWeek = moment().startOf('week').add(1, 'days'), endOfWeek = moment().endOf('week').add(1, 'days');
+const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
-const startOfMonth = moment().startOf('month'), endOfMonth = moment().endOf('month');
+const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 const statistics = new Map(); // eslint-disable-line no-undef
 const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 
-if (config.firstRun) {
-	db.serialize(() => {
-		db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
-		db.run('INSERT INTO yamero_counter ( counter ) VALUES ( 0 )');
+const rankings = [];
+const soundQueryValues = sounds.map(sound => `( '${sound.filename}', 0 )`);
 
-		db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
-		db.run('INSERT INTO statistics ( date, count ) VALUES ( date(\'now\', \'localtime\'), 0 )');
-	}); // prepare the database on first run
-
-	config.firstRun = false;
-	writeFileSync(`./config.json`, JSON.stringify(config, null, '\t'));
-}
+// on-boot database interaction
 
 db.serialize(() => {
+	db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
+
+	db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
+
+	db.run('CREATE TABLE IF NOT EXISTS rankings ( id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+	db.run(`INSERT OR IGNORE INTO rankings ( filename, count ) VALUES ${soundQueryValues}`);
+
+	// make sure all necessary tables with at least one necessary column exist
+
 	db.get('SELECT counter FROM yamero_counter', [], (error, row) => {
-		counter = row.counter;
+		if (!row) db.run(`INSERT OR IGNORE INTO yamero_counter ( counter ) VALUES ( 0 )`);
+		// create row if it doesn't exist
+		counter = row ? row.counter : 0;
+		return Logger.info('Main counter loaded.');
 	});
 
-	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0)');
-	// insert row for today with value 0 (or do nothing if exists)
-
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
-		today = rows.filter(row => row.date === bootDate)[0].count;
-		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfWeek, endOfWeek, null, []));
-		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfMonth, endOfMonth, null, []));
+		daily = rows.find(row => row.date === bootDate).count;
+		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
+		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfBootMonth, endOfBootMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
 
 		rows.map(date => statistics.set(date.date, date.count));
 		// populate statistics map
-		week = thisWeek.reduce((total, date) => total += date.count, 0);
-		month = thisMonth.reduce((total, date) => total += date.count, 0);
+		weekly = thisWeek.reduce((total, date) => total += date.count, 0);
+		monthly = thisMonth.reduce((total, date) => total += date.count, 0);
 
 		fetchedDaysAmount = thisMonth.length;
-		average = Math.round(month / thisMonth.length);
+		average = Math.round(monthly / thisMonth.length);
+
+		return Logger.info('Statistics loaded.');
+	});
+
+	db.all('SELECT * FROM rankings', [], (error, rows) => {
+		rows.map(sound => {
+			const sbSound = sounds.find(s => sound.filename === s.filename);
+			if (!sbSound) return Logger.warn(`'${sound.filename}' sound found in database but not locally, skipping sound...`);
+
+			return rankings.push(Object.assign(sbSound, { count: sound.count }));
+		});
+
+		return Logger.info('Rankings loaded.');
 	});
 });
+
+// webserver
 
 server.get('/conInfo', (req, res) => res.send({ port: config.port, ssl: config.SSLproxy }));
 
@@ -96,16 +114,18 @@ server.get('/counter', (req, res) => {
 	if (req.query.statistics === '') {
 		return res.send({
 			alltime: counter,
-			today,
-			week,
-			month,
+			daily,
+			weekly,
+			monthly,
 			average
 		});
 	}
 
+	if (req.query.rankings === '') return res.send(rankings);
+
 	if (req.query.inc) ++counter;
 
-	return res.send(`${counter}`); // template string because a number gets interpreted as status code
+	return res.send(counter.toString());
 });
 
 server.get('/stats', (req, res) => {
@@ -145,55 +165,77 @@ server.get('/stats', (req, res) => {
 	}
 });
 
+if (!maintenanceMode) {
+	for (const page of pages) {
+		server.get(page.route, (req, res) => res.sendFile(page.path));
+		server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
+	}
+}
+
+for (const error of config.errorTemplates) {
+	if (maintenanceMode && error !== '503') continue;
+	if (maintenanceMode && error === '503') return server.get(/.*/, (req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
+	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
+}
+
+// socket server
+
 io.on('connection', socket => {
 	socket.on('click', () => {
-		const todayDate = moment().format('YYYY-MM-DD');
-		++counter; ++today;
-		++week; ++month;
-		average = Math.round(month / fetchedDaysAmount);
+		const currentDate = moment().format('YYYY-MM-DD');
+		++counter; ++daily;
+		++weekly; ++monthly;
+		average = Math.round(monthly / fetchedDaysAmount);
 
-		statistics.set(todayDate, today);
+		statistics.set(currentDate, daily);
+		return emitUpdate();
+	});
+
+	socket.on('sbClick', sound => {
+		let rankingsEntry = rankings.find(rank => rank.filename === sound.filename);
+
+		if (rankingsEntry) ++rankingsEntry.count;
+		else rankingsEntry = Object.assign(sound, { count: 1 });
 
 		return emitUpdate();
 	});
 });
 
-for (const page of pages) {
-	server.get(page.route, (req, res) => res.sendFile(page.path));
-	server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
-}
-
-for (const error of config.errorTemplates) {
-	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
-}
-
-// database updates below
+// database updates
 
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
-	console.log(`[${currentTime()}] Database updated.`);
-	return db.serialize(() => {
+	db.serialize(() => {
 		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
-		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${today} )`);
-		db.run(`UPDATE statistics SET count = ${today} WHERE date = date('now', 'localtime')`);
+
+		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${daily} )`);
+		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
+
+		const newSoundQueryValues = Object.entries(rankings).map(([name, sound]) => `( '${sound.filename}', ${sound.count} )`).join(', ');
+		db.run(`INSERT OR REPLACE INTO rankings ( filename, count ) VALUES ${newSoundQueryValues}`);
 	});
-}); // update db at every xth minute
+
+	return Logger.info('Database updated.');
+}); // update db at every n-th minute
 
 scheduleJob('0 0 1 * *', () => {
-	month = 0; fetchedDaysAmount = 1;
-	console.log(`[${currentTime()}] Monthly counter & fetched days amount reset.`);
+	monthly = 0; fetchedDaysAmount = 1;
+
+	Logger.info('Monthly counter & fetched days amount reset.');
 	return emitUpdate();
-}); // reset monthly counter at the start of the month
+}); // reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
-	week = 0;
-	console.log(`[${currentTime()}] Weekly counter reset.`);
+	weekly = 0;
+
+	Logger.info('Weekly counter reset.');
 	return emitUpdate();
-}); // reset weekly counter at the start of the week (1 = monday)
+}); // reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
-	today = 0; ++fetchedDaysAmount;
-	average = Math.round(month / fetchedDaysAmount);
+	daily = 0; ++fetchedDaysAmount;
+	average = Math.round(monthly / fetchedDaysAmount);
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
-	console.log(`[${currentTime()}] Daily counter reset & fetched days amount incremented.`);
+
+	Logger.info('Daily counter reset & fetched days amount incremented.');
 	return emitUpdate();
-}); // reset daily counter and update local statistics map at midnight
+}); // reset daily counter and update local statistics map at each midnight
