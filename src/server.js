@@ -22,7 +22,7 @@ const db = new Database(config.databasePath);
 const server = express();
 const http = require('http').Server(server);
 const io = require('socket.io')(http);
-const maintenanceMode = process.argv.slice(2)[0] || '' === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
+const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
