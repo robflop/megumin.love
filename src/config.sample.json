@@ -1,5 +1,4 @@
 {
-	"firstRun": true,
 	"port": 5959,
 	"SSLproxy": false,
 	"errorTemplates": [

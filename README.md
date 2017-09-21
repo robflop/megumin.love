@@ -29,8 +29,6 @@ And that's it. Your sound will automatically be added to the main button's avail
 
 If you add to the errorTemplates, you will have to create the actual html pages for these in `src/pages/errorTemplates/` aswell, otherwise this setting will not take effect.
 
-Don't flip off the `firstRun` setting if it's your first run. There will be crashes and no support will be provided.
-
 Update interval represents minutes, following the cronjob syntax, so max value is 60 (meaning once every hour).
 
 `1` would mean once every minute, `10` once every 10 minutes etc. Commas will be rounded (this is due to scheduling).
