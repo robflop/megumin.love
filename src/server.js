@@ -121,7 +121,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.rankings === '') return res.send(rankings);
+	if (req.query.rankings === '') return res.send(rankings.sort((a, b) => b.count - a.count));
 
 	if (req.query.inc) ++counter;
 
