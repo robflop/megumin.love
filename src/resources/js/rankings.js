@@ -1,7 +1,5 @@
 $(document).ready(() => {
 	const updateRanking = rankings => {
-		rankings = rankings.sort((a, b) => b.count - a.count);
-
 		$('#rankings').children('li').detach();
 
 		for (const rank of rankings) {
