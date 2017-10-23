@@ -4,15 +4,15 @@
   "description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
   "main": "src/server.js",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "express": "^4.15.4",
-    "moment": "^2.18.1",
+    "chalk": "^2.2.0",
+    "express": "^4.16.2",
+    "moment": "^2.19.1",
     "node-schedule": "^1.2.5",
-    "socket.io": "^2.0.3",
-    "sqlite3": "^3.1.11"
+    "socket.io": "^2.0.4",
+    "sqlite3": "^3.1.13"
   },
   "devDependencies": {
-    "eslint": "^4.7.1",
+    "eslint": "^4.9.0",
     "htmlhint": "^0.9.13"
   },
   "scripts": {
