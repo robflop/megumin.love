@@ -62,10 +62,10 @@ const soundQueryValues = sounds.map(sound => `( '${sound.filename}', 0 )`);
 db.serialize(() => {
 	db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
 
-	db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+	db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
 
-	db.run('CREATE TABLE IF NOT EXISTS rankings ( id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+	db.run('CREATE TABLE IF NOT EXISTS rankings ( id INTEGER PRIMARY KEY, filename TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
 	db.run(`INSERT OR IGNORE INTO rankings ( filename, count ) VALUES ${soundQueryValues}`);
 
 	// make sure all necessary tables with at least one necessary column exist
@@ -210,8 +210,9 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${daily} )`);
 		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
 
-		const newSoundQueryValues = Object.entries(rankings).map(([name, sound]) => `( '${sound.filename}', ${sound.count} )`).join(', ');
-		db.run(`INSERT OR REPLACE INTO rankings ( filename, count ) VALUES ${newSoundQueryValues}`);
+		for (const sound of rankings) {
+			db.run(`UPDATE rankings SET count = ${sound.count} WHERE filename = '${sound.filename}'`);
+		}
 	});
 
 	return Logger.info('Database updated.');
