@@ -26,7 +26,7 @@ const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? t
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
-	Logger.info(`megumin.love running on port ${config.port}!${options}`);
+	Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 const pagePath = join(__dirname, '/pages');
