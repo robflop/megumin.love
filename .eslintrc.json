@@ -4,8 +4,7 @@
     "ecmaVersion": 8
   },
   "env": {
-    "browser": true,
-    "jquery": true
+    "node": true
   },
   "rules": {
 	"no-unused-vars": "off",

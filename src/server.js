@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 const express = require('express');
 const moment = require('moment');
 const Logger = require('./resources/js/Logger');
@@ -10,54 +8,20 @@ const { scheduleJob } = require('node-schedule');
 const config = require('./config.json');
 const sounds = require('./resources/js/sounds');
 
-function emitUpdate() {
-	return io.sockets.emit('update', {
-		counter,
-		statistics: { alltime: counter, daily, weekly, monthly, average },
-		rankings
-	});
-}
-
-const db = new Database(config.databasePath);
-const server = express();
-const http = require('http').Server(server);
-const io = require('socket.io')(http);
-const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
-
-http.listen(config.port, () => {
-	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
-	Logger.info(`megumin.love booting on port ${config.port}...${options}`);
-}); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
-
-const pagePath = join(__dirname, '/pages');
-const errorPath = join(pagePath, '/errorTemplates');
-const pages = [];
-
-readdirSync(pagePath).forEach(file => {
-	const page = file.slice(0, -5).toLowerCase();
-	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
-
-	return pages.push({
-		name: file,
-		path: join(pagePath, file),
-		route: page === 'index' ? '/' : `/${page}`
-	});
-});
-
-server.use(express.static('resources'));
-
 let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
+
 const bootDate = moment().format('YYYY-MM-DD');
 const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
-const statistics = new Map(); // eslint-disable-line no-undef
-const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 
+const statistics = new Map(); // eslint-disable-line no-undef
 const rankings = [];
 const soundQueryValues = sounds.map(sound => `( '${sound.filename}', 0 )`);
 
 // on-boot database interaction
+
+const db = new Database(config.databasePath);
 
 db.serialize(() => {
 	db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
@@ -107,6 +71,33 @@ db.serialize(() => {
 });
 
 // webserver
+
+const server = express();
+const http = require('http').Server(server);
+const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
+const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+const pagePath = join(__dirname, '/pages');
+const errorPath = join(pagePath, '/errorTemplates');
+const pages = [];
+
+readdirSync(pagePath).forEach(file => {
+	const page = file.slice(0, -5).toLowerCase();
+	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
+
+	return pages.push({
+		name: file,
+		path: join(pagePath, file),
+		route: page === 'index' ? '/' : `/${page}`
+	});
+});
+
+server.use(express.static('resources'));
+
+http.listen(config.port, () => {
+	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
+	Logger.info(`megumin.love booting on port ${config.port}...${options}`);
+}); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 server.get('/conInfo', (req, res) => res.send({ port: config.port, ssl: config.SSLproxy }));
 
@@ -179,6 +170,16 @@ for (const error of config.errorTemplates) {
 }
 
 // socket server
+
+const io = require('socket.io')(http);
+
+function emitUpdate() {
+	return io.sockets.emit('update', {
+		counter,
+		statistics: { alltime: counter, daily, weekly, monthly, average },
+		rankings
+	});
+}
 
 io.on('connection', socket => {
 	socket.on('click', () => {
