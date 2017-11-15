@@ -99,11 +99,11 @@ http.listen(config.port, () => {
 	Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
-server.get('/conInfo', (req, res) => res.send({ port: config.port, ssl: config.SSLproxy }));
+server.get('/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
 server.get('/counter', (req, res) => {
 	if (req.query.statistics === '') {
-		return res.send({
+		return res.json({
 			alltime: counter,
 			daily,
 			weekly,
@@ -112,7 +112,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.rankings === '') return res.send(rankings.sort((a, b) => b.count - a.count));
+	if (req.query.rankings === '') return res.json(rankings.sort((a, b) => b.count - a.count));
 
 	if (req.query.inc) ++counter;
 
@@ -123,11 +123,11 @@ server.get('/stats', (req, res) => {
 	const requestedStats = {};
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
-			return res.status(400).send({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
 		if (req.query.from && !req.query.to) {
-			return res.send({ [req.query.from]: statistics.get(req.query.from) || 0 });
+			return res.json({ [req.query.from]: statistics.get(req.query.from) || 0 });
 		}
 		else if (!req.query.from && req.query.to) {
 			const to = moment(req.query.to);
@@ -136,7 +136,7 @@ server.get('/stats', (req, res) => {
 				if (moment(date).isSameOrBefore(to)) requestedStats[date] = count;
 			});
 
-			return res.send(requestedStats || {});
+			return res.json(requestedStats || {});
 		}
 		else if (req.query.from && req.query.to) {
 			const from = moment(req.query.from), to = moment(req.query.to);
@@ -146,13 +146,13 @@ server.get('/stats', (req, res) => {
 				// null & [] parameters given for including first and last day of range (see moment docs)
 			});
 
-			return res.send(requestedStats || {});
+			return res.json(requestedStats || {});
 		}
 	}
 	else {
 		statistics.forEach((count, date) => requestedStats[date] = count);
 
-		return res.send(requestedStats);
+		return res.json(requestedStats);
 	}
 });
 
