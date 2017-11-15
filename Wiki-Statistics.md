@@ -1,5 +1,7 @@
 # Website statistics
 
+Base domain for all requests is ``megumin.love``.
+
 `GET /stats`  
 Returns an object containing the website's statistics, mapped by their corresponding date.
 
