@@ -13,7 +13,7 @@ div#box {
 	margin: 225px auto auto auto;
 }
 
-div#counter {
+p#counter {
 	position: relative;
 	text-align: center;
 	top: -10px;
