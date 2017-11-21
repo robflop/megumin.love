@@ -1,11 +1,13 @@
 $(document).ready(() => {
+	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+
 	const updateRanking = rankings => {
 		$('#rankings').children('li').detach();
 
 		for (const rank of rankings) {
 			if (rank.filename === 'realname') continue;
 
-			$('#rankings').append(`<li id=${rank.filename}>${rank.displayName}: ${rank.count} clicks</li>`);
+			$('#rankings').append(`<li id=${rank.filename}>${rank.displayName}: ${formatNumber(rank.count)} clicks</li>`);
 		}
 
 		if ($('#loading')) $('#loading').remove();
