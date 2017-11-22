@@ -15,6 +15,16 @@ div#box {
 }
 
 p {
+	text-align: center;
+	color: white;
+}
+
+p > a {
+	color: white;
+}
+
+.big-red {
+	margin: 0;
 	color: #a50000;
 	font-size: 72px;
 	text-align: center;
