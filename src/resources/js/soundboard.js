@@ -15,7 +15,7 @@ $(document).ready(() => {
 
 	// Create buttons and make them play corresponding sounds
 	for (const sound of sounds) {
-		const season = $(`div.buttons-wrap.season${sound.season.replace(/\s/g, '-')}`);
+		const source = $(`div.buttons-wrap.source-${sound.source.replace(/\s/g, '-').toLowerCase()}`);
 
 		howlerList[sound.filename] = new Howl({
 			src: [`/sounds/${sound.filename}.mp3`, `/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.aac`]
@@ -23,12 +23,12 @@ $(document).ready(() => {
 
 		if (sound.filename === 'realname') continue;
 		// don't create button for this one
-		if (season.length) {
-			season.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
+		if (source.length) {
+			source.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 		}
 		else {
-			$('#container').append(`<div class="titles">Season ${sound.season}:</div>`);
-			$(`<div class="buttons-wrap season${sound.season.replace(/\s/g, '-')}">`)
+			$('#container').append(`<div class="titles">${sound.source}:</div>`);
+			$(`<div class="buttons-wrap source-${sound.source.replace(/\s/g, '-').toLowerCase()}">`)
 				.appendTo('#container')
 				.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 			// use appendTo to get reference to newly-created wrapper in return value which is then appended to
