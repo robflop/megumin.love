@@ -7,7 +7,7 @@ $(document).ready(() => {
 		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
 
 		socket = io.connect(host);
-		socket.on('update', data => $('#counter').html(formatNumber(data.counter)));
+		socket.on('update', data => data.counter ? $('#counter').html(formatNumber(data.counter)) : null);
 	});
 
 	$.get('/counter').done(res => $('#counter').html(formatNumber(res)));

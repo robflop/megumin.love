@@ -18,7 +18,7 @@ $(document).ready(() => {
 		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
 
 		const socket = io.connect(host);
-		socket.on('update', data => updateRanking(data.rankings));
+		socket.on('update', data => data.rankings ? updateRanking(data.rankings) : null);
 	});
 
 	$.get('/counter?rankings').done(rankings => updateRanking(rankings));

@@ -14,7 +14,7 @@ $(document).ready(() => {
 		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
 
 		const socket = io.connect(host);
-		socket.on('update', data => updateStatistics(data.statistics));
+		socket.on('update', data => data.statistics ? updateStatistics(data.statistics) : null);
 	});
 
 	$.get('/counter?statistics').done(statistics => updateStatistics(statistics));

@@ -8,16 +8,37 @@ const { scheduleJob } = require('node-schedule');
 const config = require('./config.json');
 const sounds = require('./resources/js/sounds');
 
-let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
-
 const bootDate = moment().format('YYYY-MM-DD');
 const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 
+let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
+
 const statistics = new Map(); // eslint-disable-line no-undef
-const rankings = [];
+
 const soundQueryValues = sounds.map(sound => `( '${sound.filename}', 0 )`);
+let rankings = [];
+
+function bubbleSort(arr, property) {
+	let sorted = arr.length;
+	do {
+		for (let i = 1; i < sorted; ++i) {
+			const a = property ? arr[i - 1][property] : arr[i - 1];
+			const b = property ? arr[i][property] : arr[i];
+
+			if (a < b) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+		}
+		--sorted;
+	} while (sorted > 0);
+
+	return arr;
+}
+/*
+bubble sort used to avoid ranking entries of the same count continuously swapping positions,
+since Array.sort() isn't a stable sort -- before bubble sorting it's sorted once already, so
+bubble sorting only does minimal work and therefore doesn't really slow down.
+*/
 
 // on-boot database interaction
 
@@ -59,6 +80,8 @@ db.serialize(() => {
 	});
 
 	db.all('SELECT * FROM rankings', [], (error, rows) => {
+		rows = rows.sort((a, b) => b.count - a.count);
+
 		rows.map(sound => {
 			const sbSound = sounds.find(s => sound.filename === s.filename);
 			if (!sbSound) return Logger.warn(`'${sound.filename}' sound found in database but not locally, skipping sound...`);
@@ -112,7 +135,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.rankings === '') return res.json(rankings.sort((a, b) => b.count - a.count));
+	if (req.query.rankings === '') return res.json(rankings);
 
 	if (req.query.inc) ++counter;
 
@@ -173,12 +196,14 @@ for (const error of config.errorTemplates) {
 
 const io = require('socket.io')(http);
 
-function emitUpdate() {
-	return io.sockets.emit('update', {
-		counter,
-		statistics: { alltime: counter, daily, weekly, monthly, average },
-		rankings
-	});
+function emitUpdate(types) {
+	const data = {
+		counter: types.includes('counter') ? counter : null,
+		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
+		rankings: types.includes('rankings') ? rankings : null
+	};
+
+	return io.sockets.emit('update', data);
 }
 
 io.on('connection', socket => {
@@ -189,7 +214,7 @@ io.on('connection', socket => {
 		average = Math.round(monthly / fetchedDaysAmount);
 
 		statistics.set(currentDate, daily);
-		return emitUpdate();
+		return emitUpdate(['counter', 'statistics']);
 	});
 
 	socket.on('sbClick', sound => {
@@ -198,7 +223,9 @@ io.on('connection', socket => {
 		if (rankingsEntry) ++rankingsEntry.count;
 		else rankingsEntry = Object.assign(sound, { count: 1 });
 
-		return emitUpdate();
+		rankings = bubbleSort(rankings, 'count');
+
+		return emitUpdate(['rankings']);
 	});
 });
 
@@ -223,14 +250,14 @@ scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate();
+	return emitUpdate(['statistics']);
 }); // reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate();
+	return emitUpdate(['statistics']);
 }); // reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
@@ -239,5 +266,5 @@ scheduleJob('0 0 * * *', () => {
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate();
+	return emitUpdate(['statistics']);
 }); // reset daily counter and update local statistics map at each midnight
