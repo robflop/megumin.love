@@ -59,6 +59,7 @@ db.serialize(() => {
 		if (!row) db.run(`INSERT OR IGNORE INTO yamero_counter ( counter ) VALUES ( 0 )`);
 		// create row if it doesn't exist
 		counter = row ? row.counter : 0;
+
 		return Logger.info('Main counter loaded.');
 	});
 
@@ -119,7 +120,8 @@ server.use(express.static('resources'));
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
-	Logger.info(`megumin.love booting on port ${config.port}...${options}`);
+
+	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 }); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
 
 server.get('/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
@@ -189,6 +191,7 @@ if (!maintenanceMode) {
 for (const error of config.errorTemplates) {
 	if (maintenanceMode && error !== '503') continue;
 	if (maintenanceMode && error === '503') return server.get(/.*/, (req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
+
 	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
 }
 
@@ -214,6 +217,7 @@ io.on('connection', socket => {
 		average = Math.round(monthly / fetchedDaysAmount);
 
 		statistics.set(currentDate, daily);
+
 		return emitUpdate(['counter', 'statistics']);
 	});
 
@@ -250,6 +254,7 @@ scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
+
 	return emitUpdate(['statistics']);
 }); // reset monthly counter at the start of each month
 
@@ -257,6 +262,7 @@ scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
+
 	return emitUpdate(['statistics']);
 }); // reset weekly counter at the start of each week (1 = monday)
 
@@ -266,5 +272,6 @@ scheduleJob('0 0 * * *', () => {
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
+
 	return emitUpdate(['statistics']);
 }); // reset daily counter and update local statistics map at each midnight
