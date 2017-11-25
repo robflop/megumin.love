@@ -16,7 +16,7 @@
     "htmlhint": "^0.9.13"
   },
   "scripts": {
-    "test": "eslint src/server.js src/resources/js && htmlhint --ignore src/pages/googlee2713ce6ca671684.html"
+    "test": "eslint src/server.js src/resources/js && htmlhint src/pages --ignore googlee2713ce6ca671684.html"
   },
   "repository": {
     "type": "git",
