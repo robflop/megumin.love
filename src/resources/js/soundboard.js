@@ -18,7 +18,7 @@ $(document).ready(() => {
 		const source = $(`div.buttons-wrap.source-${sound.source.replace(/\s/g, '-').toLowerCase()}`);
 
 		howlerList[sound.filename] = new Howl({
-			src: [`/sounds/${sound.filename}.mp3`, `/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.aac`]
+			src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
 		});
 
 		if (sound.filename === 'realname') continue;

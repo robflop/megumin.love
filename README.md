@@ -22,7 +22,7 @@ Runs under [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expres
 
 ### Adding new sounds
 
-- Put your new sound file(s) in the `src/resources/sounds/` folder (in mp3, ogg and aac format)
+- Put your new sound file(s) in the `src/resources/sounds/` folder (in ogg and mp3 format)
 - Fill out all 3 properties for your new sound in `src/resources/js/sounds.js` (see existing sounds for examples)
 
 And that's it. Your sound will automatically be added to the main button's available sounds, the soundboard and the rankings after a restart.

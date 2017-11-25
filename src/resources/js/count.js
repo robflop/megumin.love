@@ -19,7 +19,8 @@ $(document).ready(() => {
 		if (sound.filename === 'realname') continue;
 
 		howlerList[sound.filename] = new Howl({
-			src: [`/sounds/${sound.filename}.mp3`, `/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.aac`]
+			src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
+
 		});
 		// load all sounds
 	}
