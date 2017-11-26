@@ -1,5 +1,8 @@
 body {
-	background: url(/images/error_bg.jpg) no-repeat center center fixed;
+	background-image: url(/images/error_bg.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
 }
 
 div#box {

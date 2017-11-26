@@ -7,8 +7,11 @@ html {
 body {
 	display: table-cell;
 	min-height: 100%;
-	background: url(/images/bg.jpg) no-repeat center center fixed;
+	background-image: url(/images/bg.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
 	background-size: cover;
+	background-attachment: fixed;
 	vertical-align: middle;
 	position: relative;
 	font-family: "Open Sans", sans-serif;
