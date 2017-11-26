@@ -51,8 +51,13 @@ a#credits {
 
 .megu-sidebar .hangumin {
 	position: absolute;
-	right: -245px;
-	top: -42px;
+	right: -243px;
+	top: -44px;
+}
+
+img {
+	backface-visibility: hidden;
+	transform: translateZ(0);
 }
 
 .sidebar-content {
