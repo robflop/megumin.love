@@ -12,7 +12,7 @@
     "sqlite3": "^3.1.13"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "eslint": "^4.12.0",
     "htmlhint": "^0.9.13"
   },
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robflop/Megumin.love.git"
+    "url": "git+https://github.com/robflop/megumin.love.git"
   },
   "keywords": [
     "megumin",
@@ -32,9 +32,9 @@
   "author": "robflop",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/robflop/Megumin.love/issues"
+    "url": "https://github.com/robflop/megumin.love/issues"
   },
-  "homepage": "https://github.com/robflop/Megumin.love#readme",
+  "homepage": "https://github.com/robflop/megumin.love#readme",
   "engines": {
     "node": ">=7.6.0"
   }

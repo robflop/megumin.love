@@ -112,11 +112,11 @@ readdirSync(pagePath).forEach(file => {
 	return pages.push({
 		name: file,
 		path: join(pagePath, file),
-		route: page === 'index' ? '/' : `/${page}`
+		route: [page === 'index' ? '/' : `/${page}`, `/${page}.html`]
 	});
 });
 
-server.use(express.static('resources'));
+server.use(express.static('./resources'));
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
@@ -184,15 +184,16 @@ server.get('/stats', (req, res) => {
 if (!maintenanceMode) {
 	for (const page of pages) {
 		server.get(page.route, (req, res) => res.sendFile(page.path));
-		server.get(`${page.route}.html`, (req, res) => res.redirect(page.route));
 	}
 }
 
 for (const error of config.errorTemplates) {
-	if (maintenanceMode && error !== '503') continue;
-	if (maintenanceMode && error === '503') return server.get(/.*/, (req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
-
-	server.use((req, res) => res.status(error).sendFile(`${errorPath}/${error}.html`));
+	if (maintenanceMode) {
+		return server.get(/.*/, (req, res) => res.status(503).sendFile('503.html', { root: './pages/errorTemplates/' }));
+	}
+	else {
+		server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: './pages/errorTemplates/' }));
+	}
 }
 
 // socket server
