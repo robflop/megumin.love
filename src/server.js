@@ -225,6 +225,10 @@ io.on('connection', socket => {
 	socket.on('sbClick', sound => {
 		let rankingsEntry = rankings.find(rank => rank.filename === sound.filename);
 
+		if (!rankingsEntry && !sounds.find(s => sound.filename === s.filename)) return;
+		// safeguard against requests with sounds that don't exist from being saved serverside
+		// no need to check other props because if it's found, only count will be incremented (no user input)
+
 		if (rankingsEntry) ++rankingsEntry.count;
 		else rankingsEntry = Object.assign(sound, { count: 1 });
 

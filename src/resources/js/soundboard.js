@@ -1,5 +1,6 @@
 $(document).ready(() => {
 	let socket;
+	const howlerList = {};
 
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
@@ -7,8 +8,6 @@ $(document).ready(() => {
 
 		socket = io.connect(host);
 	});
-
-	const howlerList = {};
 
 	$('#container').append('<a href="/" id="backlink-top" class="backlink">Back</a>');
 	$('#container').append('<a href="rankings" id="rankings">Rankings</a>');
@@ -23,6 +22,7 @@ $(document).ready(() => {
 
 		if (sound.filename === 'realname') continue;
 		// don't create button for this one
+
 		if (source.length) {
 			source.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 		}
@@ -37,25 +37,25 @@ $(document).ready(() => {
 		if (sound.filename === 'name') {
 			$('#name').click(() => {
 				const rsound = Math.floor(Math.random() * 100) + 1;
-				let sbSound;
+
 				if (rsound === 42) {
 					howlerList.realname.play();
-					sbSound = sounds.find(s => s.filename === 'realname');
+					socket.emit('sbClick', sounds.find(s => s.filename === 'realname'));
 				}
 				else {
 					howlerList.name.play();
-					sbSound = sounds.find(s => s.filename === 'name');
+					socket.emit('sbClick', sounds.find(s => s.filename === 'name'));
 				}
-				socket.emit('sbClick', sbSound);
 			});
+
 			continue;
-		// create button but don't use standard click function
+			// create button but don't use standard click function
 		}
 
 		$(`#${sound.filename}`).click(() => {
-			const sbSound = sounds.find(s => s.filename === sound.filename);
 			howlerList[sound.filename].play();
-			socket.emit('sbClick', sbSound);
+
+			socket.emit('sbClick', sounds.find(s => s.filename === sound.filename));
 		});
 
 		$(`#${sound.filename}`).keypress(key => {
