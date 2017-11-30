@@ -1,6 +1,8 @@
 $(document).ready(() => {
-	const background = (document.cookie.split(';').find(cookie => cookie.startsWith('background')) || '').substr(11).trim();
-	// substr 11 is to get value of the cookie, trim is to remove trailing whitespace due to having cut preceeding cookies
+	// background
+
+	const backgroundCookie = (document.cookie.split(';').find(cookie => cookie.trim().startsWith('background')) || '').trim();
+	const background = backgroundCookie.substr(backgroundCookie.indexOf('=') + 1);
 
 	if (background === 'rotate' || !background) {
 		// falsy check for if no selection has been made, and thus is on standard
