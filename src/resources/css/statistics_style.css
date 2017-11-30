@@ -2,7 +2,7 @@ body {
 	vertical-align: baseline;
 }
 
-div#box {
+#box {
 	width: 600px;
 	background: #F2E6E6;
 	padding: 16px;
@@ -11,23 +11,23 @@ div#box {
 	margin: 225px auto auto auto;
 }
 
-h1#header {
+#header {
 	text-decoration: underline;
 	text-align: center;
 }
 
-a.backlink {
+.backlink {
 	color: #dd0000;   
 }
 
-div.statistics {
+.statistics {
 	font-size: 25px;
 	text-align: center;
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	div#box {
+	#box {
 		width: auto;
 		margin-top: 0px;
 		-webkit-transform: scale(0.5);
@@ -37,7 +37,7 @@ div.statistics {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-	div#box {
+	#box {
 		width: auto;
 		margin-top: 0px;
 		-webkit-transform: scale(0.5);

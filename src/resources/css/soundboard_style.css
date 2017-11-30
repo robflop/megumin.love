@@ -2,7 +2,7 @@ body {
 	padding-bottom: 75px;
 }
 
-div#container {
+#container {
 	width: 1175px;
 	margin: 0 auto;
 	background-color: rgba(0, 0, 0, 0.5);
@@ -11,7 +11,7 @@ div#container {
 	border-radius: 20px;
 }
 
-div#container::after {
+#container::after {
 	content: ".";
 	display: block;
 	height: 0;
@@ -58,19 +58,19 @@ div#container::after {
 	margin-top: 23px;
 }
 
-a.backlink, #rankings {
+.backlink, #rankings {
 	color: #dd0000;
 	display: inline-block;
 	text-align: left;
 	margin-bottom: 10px;
 }
 
-a#backlink-bottom {
+#backlink-bottom {
 	float: right;
 	margin: 10px 0 0;
 }
 
-a#rankings {
+#rankings {
 	text-align: center;
 	display: block;
 	font-size: 30px;
@@ -79,7 +79,7 @@ a#rankings {
 }
 
 @media only screen and (max-width: 1150px) {
-	div#container {
+	#container {
 		width: 90%;
 	}
 

@@ -69,7 +69,7 @@
     "comma-style": "error",
     "computed-property-spacing": "error",
     "eol-last": ["error", "never"],
-    "func-names": "error",
+    "func-names": "off",
     "func-name-matching": "error",
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
     "indent": ["error", "tab", { "SwitchCase": 1 }],

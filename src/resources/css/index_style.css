@@ -2,7 +2,7 @@ body {
 	overflow: hidden;
 }
 
-div#box {
+#box {
 	width: 300px;
 	background: rgba(0, 0, 0, 0.5);
 	padding: 16px;
@@ -11,7 +11,7 @@ div#box {
 	margin: 225px auto auto auto;
 }
 
-p#counter {
+#counter {
 	position: relative;
 	text-align: center;
 	top: -10px;
@@ -20,7 +20,7 @@ p#counter {
 	margin: auto;
 }
 
-button#button {
+#button {
 	font-size: 65px;
 	background: #dd0000;
 	color: #ff8080;
@@ -29,63 +29,63 @@ button#button {
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
 }
 
-button#button:focus {
+#button:focus {
 	outline:0;
 }
 
-button#button:hover {
+#button:hover {
 	background: #ff3338;
 }
 
-a#version {
+#version {
 	color: #dd0000;
 	font-family: cursive;
 	vertical-align: baseline;
 	margin-top: 5px;
 }
 
-span#share-buttons-frame {
+#share-buttons-frame {
 	position: absolute;
 	margin-left: 120px;
 	margin-top: 6px;
 }
 
-div#counter {
+#counter {
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);	
 }
 
-a#soundboard, a#statistics {
+#soundboard, #statistics {
 	color: #dd0000;
 	font-family: cursive;
 	vertical-align: baseline;
 }
 
-a#statistics {
+#statistics {
 	margin-left: 45px;
 }
 
-a#soundboard {
+#soundboard {
 	margin-left: 30px;
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	div#box {
+	#box {
 		margin-top: 80px;
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
-	span#share-buttons-frame {
+	#share-buttons-frame {
 		position: absolute;
 		margin-left: 23px;
 		margin-top: 120px;
 		-webkit-transform: scale(2.2);
 		transform: scale(2.2);
 	}
-	span.share-buttons {
+	.share-buttons {
 		margin-left: 10px;   
 	}
-	a#version.mobile-scale {
+	#version.mobile-scale {
 		display: inline-block;
 		-webkit-transform: scale(1.5);
 		transform: scale(1.5);   
@@ -94,22 +94,22 @@ a#soundboard {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */    
-	div#box {
+	#box {
 		margin-top: 50px;
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
-	span#share-buttons-frame {
+	#share-buttons-frame {
 		position: absolute;
 		-webkit-transform: scale(2.2);
 		transform: scale(2.2);
 		margin-left: 23px;
 		margin-top: 120px;
 	}
-	span.share-buttons {
+	.share-buttons {
 		margin-left: 10px;   
 	}
-	a#version.mobile-scale {
+	#version.mobile-scale {
 		display: inline-block;
 		-webkit-transform: scale(1.5);
 		transform: scale(1.5);

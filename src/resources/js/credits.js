@@ -1,6 +1,4 @@
 $(document).ready(() => {
-	// background
-
 	const background = (document.cookie.split(';').find(cookie => cookie.startsWith('background')) || '').substr(11).trim();
 	// substr 11 is to get value of the cookie, trim is to remove trailing whitespace due to having cut preceeding cookies
 
@@ -20,30 +18,4 @@ $(document).ready(() => {
 		return document.cookie = `background=${this.value}`;
 		/* eslint-enable no-invalid-this */
 	});
-
-	// actual functionality
-
-	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-
-	const updateRanking = rankings => {
-		$('#rankings').children('li').detach();
-
-		for (const rank of rankings) {
-			if (rank.filename === 'realname') continue;
-
-			$('#rankings').append(`<li id=${rank.filename}>${rank.displayName}: ${formatNumber(rank.count)} clicks</li>`);
-		}
-
-		if ($('#loading')) $('#loading').remove();
-	};
-
-	$.get('/conInfo').done(con => {
-		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
-
-		const socket = io.connect(host);
-		socket.on('update', data => data.rankings ? updateRanking(data.rankings) : null);
-	});
-
-	$.get('/counter?rankings').done(rankings => updateRanking(rankings));
 });

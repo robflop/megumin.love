@@ -2,7 +2,7 @@ body {
 	padding-bottom: 75px;
 }
 
-div#container {
+#container {
 	width: 660px;
 	background: #F2E6E6;
 	margin: 3vh auto 0 auto;
@@ -11,7 +11,7 @@ div#container {
 	border-radius: 20px;
 }
 
-div#container::after {
+#container::after {
 	content: ".";
 	display: block;
 	height: 0;
@@ -19,7 +19,7 @@ div#container::after {
 	visibility: hidden;
 }
 
-h1.header {
+.header {
 	text-decoration: underline;
 	text-align: center;
 }
@@ -29,20 +29,20 @@ h1.header {
 	text-align: center;
 }
 
-a.backlink {
+.backlink {
 	color: #dd0000;
 	display: inline-block;
 	text-align: left;
 	margin-bottom: 10px;
 }
 
-a#backlink-bottom {
+#backlink-bottom {
 	float: right;
 	margin: 10px 0 0;
 }
 
 @media only screen and (max-width: 1150px) {
-	div#container {
+	#container {
 		width: 90%;
 		margin: 15vh auto 0 auto;
 	}

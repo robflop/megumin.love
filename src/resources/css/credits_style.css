@@ -2,7 +2,7 @@ body {
 	vertical-align: baseline;
 }
 
-div#creditsbox {
+#creditsbox {
 	width: 510px;
 	background: #F2E6E6;
 	margin: 10vh auto;
@@ -16,7 +16,7 @@ h1 {
 	text-decoration: underline;
 }
 
-a.backlink {
+.backlink {
 	color: #dd0000;   
 }
 
@@ -25,14 +25,14 @@ a.backlink {
 	body {
 		overflow: scroll;
 	}
-	div#creditsbox {
+	#creditsbox {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 		margin-left: -82px;
 		font-size: 20px;
 		margin-top: -50px;
 	}
-	a.backlink {
+	.backlink {
 		position: relative;
 		margin-left: 430px;
 		display: inline-block;
@@ -47,7 +47,7 @@ a.backlink {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-	div#creditsbox {
+	#creditsbox {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 		margin-top: 20px;
@@ -55,7 +55,7 @@ a.backlink {
 	body {
 		height: 300px;   
 	}
-	a.backlink {
+	.backlink {
 		position: relative;
 		margin-left: 430px;
 		display: inline-block;

@@ -1,4 +1,4 @@
-div#container {
+#container {
 	width: 500px;
 	height: auto;
 	background: #F2E6E6;
@@ -9,17 +9,17 @@ div#container {
 	border-radius: 20px;
 }
 
-h1#header {
+#header {
 	text-decoration: underline;
 }
 
-a.backlink {
+.backlink {
 	color: #dd0000;   
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	div#container {
+	#container {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 		left: -80px;
@@ -28,7 +28,7 @@ a.backlink {
 	body {
 		height: 620px;
 	}
-	a.backlink {
+	.backlink {
 		position: relative;
 		margin-left: 400px;
 		display: inline-block;
@@ -43,7 +43,7 @@ a.backlink {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
-	div#container {
+	#container {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 		top: -500px;
@@ -51,7 +51,7 @@ a.backlink {
 	body {
 		height: 620px;   
 	}
-	a.backlink {
+	.backlink {
 		position: relative;
 		margin-left: 400px;
 		display: inline-block;

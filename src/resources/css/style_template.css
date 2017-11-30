@@ -7,7 +7,6 @@ html {
 body {
 	display: table-cell;
 	min-height: 100%;
-	background-image: url(/images/bg.jpg);
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: cover;
@@ -27,8 +26,17 @@ footer {
 	color: azure;
 }
 
-a#credits {
+#bg-select-wrapper {
+	white-space: nowrap;
+}
+
+#credits {
 	color: azure;
+}
+
+img {
+	backface-visibility: hidden;
+	transform: translateZ(0);
 }
 
 .megu-sidebar {
@@ -55,17 +63,12 @@ a#credits {
 	top: -42px;
 }
 
-img {
-	backface-visibility: hidden;
-	transform: translateZ(0);
-}
-
 .sidebar-content {
 	display: flex;
 	flex-direction: column;
 	position: relative;
 	max-width: 310px;
-	max-height: 450px;
+	max-height: 456px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 	overflow-y: auto;
@@ -110,9 +113,9 @@ img {
 	margin: 10px 0 0;
 }
 
-.sidebar-content > *:last-child {
+/* .sidebar-content > *:last-child {
 	padding-bottom: 10px;
-}
+} */
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode*/

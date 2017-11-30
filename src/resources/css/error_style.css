@@ -5,7 +5,7 @@ body {
 	background-size: cover;
 }
 
-div#box {
+#box {
 	width: 500px;
 	background: rgba(0, 0, 0, 0.7);
 	padding: 16px;
@@ -33,7 +33,7 @@ p > a {
 
 @media only screen and (max-width: 481px) {
 	/* Portrait mode */
-	div#box {
+	#box {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
@@ -41,7 +41,7 @@ p > a {
 
 @media only screen and (max-height: 481px) {
 	/* Landscape mode */
-	div#box {
+	#box {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
