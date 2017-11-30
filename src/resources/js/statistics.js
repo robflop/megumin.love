@@ -6,7 +6,7 @@ $(document).ready(() => {
 
 	if (background === 'rotate' || !background) {
 		// falsy check for if no selection has been made, and thus is on standard
-		$('body').css('background-image', `url(/images/${['bg1.jpg', 'bg2.jpg', 'bg3.jpg'][Math.round(Math.random() * 2)]})`);
+		$('body').css('background-image', `url(/images/${['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg'][Math.round(Math.random() * 3)]})`);
 	}
 	else {
 		$('body').css('background-image', `url(/images/${background}.jpg)`);
