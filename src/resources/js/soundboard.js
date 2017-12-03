@@ -23,14 +23,14 @@ $(document).ready(() => {
 
 	// actual functionality
 
-	let socket;
+	let ws;
 	const howlerList = {};
 
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
+		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
-		socket = io.connect(host);
+		const ws = new WebSocket(host);
 	});
 
 	$('#container').append('<a href="/" id="backlink-top" class="backlink">Back</a>');
@@ -64,11 +64,11 @@ $(document).ready(() => {
 
 				if (rsound === 42) {
 					howlerList.realname.play();
-					socket.emit('sbClick', sounds.find(s => s.filename === 'realname'));
+					ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(s => s.filename === 'realname') }));
 				}
 				else {
 					howlerList.name.play();
-					socket.emit('sbClick', sounds.find(s => s.filename === 'name'));
+					ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(s => s.filename === 'name') }));
 				}
 			});
 
@@ -79,7 +79,7 @@ $(document).ready(() => {
 		$(`#${sound.filename}`).click(() => {
 			howlerList[sound.filename].play();
 
-			socket.emit('sbClick', sounds.find(s => s.filename === sound.filename));
+			ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(s => s.filename === sound.filename) }));
 		});
 
 		$(`#${sound.filename}`).keypress(key => {

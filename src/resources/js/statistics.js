@@ -35,10 +35,25 @@ $(document).ready(() => {
 
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
+		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
-		const socket = io.connect(host);
-		socket.on('update', data => data.statistics ? updateStatistics(data.statistics) : null);
+		const ws = new WebSocket(host);
+
+		ws.addEventListener('open', event => {
+			ws.addEventListener('message', message => {
+				let data;
+
+				try {
+					data = JSON.parse(message.data);
+				}
+				catch (e) {
+					data = {};
+				}
+				if (data.type !== 'update') return;
+
+				return data.values.statistics ? updateStatistics(data.values.statistics) : null;
+			});
+		});
 	});
 
 	$.get('/counter?statistics').done(statistics => updateStatistics(statistics));

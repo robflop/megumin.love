@@ -6,7 +6,7 @@
 
 A site committed to worshipping best girl Megumin!
 
-Runs under [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [Socket.IO](https://socket.io).
+Runs under [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [uws](https://www.npmjs.com/package/uws).
 
 ## Self-hosting Usage
 
@@ -49,38 +49,17 @@ It is also advised to check out the [Wiki](https://github.com/robflop/megumin.lo
 #### Important for proxying to 443 (SSL)
 
 If you want to proxy the website to the SSL port (443), so that users can access the site via `https://<domain>` instead of `http://<domain>:<port>`, then flip on the `SSLproxy` setting in the config.
-This will make the front-end Socket.IO connections connect to `https://<domain>` instead of `http://<domain>:<port>`.
-Not changing this setting but still proxying to the SSL port (443) will result in every counter of the page being unresponsive, as the Socket.IO connections will fail.
+This will make the front-end WebSocket connections connect to `wss://<domain>` instead of `ws://<domain>:<port>`.
+Not changing this setting but still proxying to the SSL port (443) will result in every counter of the page being unresponsive, as the WebSocket connections will fail.
 
 If you're not going to be running the site on via SSL just leave the setting at the default `false` value and everything should be fine.
-
-Apache proxy example:
--
-
-```apache
-<VirtualHost *:443>
-    # domain-specific settings and so on left out of this
-
-    RewriteEngine On
-    RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]
-    RewriteCond %{QUERY_STRING} transport=websocket    [NC]
-    RewriteRule /(.*)           ws://localhost:<port>/$1 [P,L]
-
-    <Proxy *>
-        Order allow,deny
-        Allow from all
-    </Proxy>
-    ProxyPass / http://localhost:<port>/
-    ProxyPassReverse / http://localhost:<port>/
-</VirtualHost>
-```
 
 Nginx proxy example:
 -
 
 ```nginx
 server {
-    # proxy-unrelated settings left out again
+    # proxy-unrelated settings left out
 
     location / {
         proxy_set_header X-Real-IP $remote_addr;
@@ -94,13 +73,10 @@ server {
         proxy_store off;
         proxy_redirect off;
     }
-
-    location /socket.io/ {
-        # duplicate of the "/" location proxy settings here
-        # just copy-paste them for this example to work
-    }
 }
 ```
+
+>I used to have an Apache example too, but I couldn't figure out how to get it working after switching to uws, so i removed it instead of providing false info. Apologies for those who need it.
 
 You will have to insert the port you chose in the `src/config.json` file in place of the `<port>` placeholders here.
 

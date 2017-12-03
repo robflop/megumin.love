@@ -24,14 +24,36 @@ $(document).ready(() => {
 	// actual functionality
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-	let socket;
 
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `https://${domainOrIP}` : `http://${domainOrIP}:${con.port}`;
+		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
-		socket = io.connect(host);
-		socket.on('update', data => data.counter ? $('#counter').html(formatNumber(data.counter)) : null);
+		const ws = new WebSocket(host);
+
+		ws.addEventListener('open', event => {
+			ws.addEventListener('message', message => {
+				let data;
+
+				try {
+					data = JSON.parse(message.data);
+				}
+				catch (e) {
+					data = {};
+				}
+
+				if (data.type !== 'update') return;
+
+				return data.values.counter ? $('#counter').html(formatNumber(data.values.counter)) : null;
+			});
+
+			$('#button').click(() => {
+				const sound = sounds[Math.floor(Math.random() * sounds.length)];
+				ws.send(JSON.stringify({ type: 'click' }));
+
+				return howlerList[sound.filename].play();
+			});
+		});
 	});
 
 	$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
@@ -52,11 +74,5 @@ $(document).ready(() => {
 	$('#button').keypress(key => {
 		if (key.which === 13) return key.preventDefault();
 		// don't trigger the button on 'enter' keypress
-	});
-
-	$('#button').click(() => {
-		const sound = sounds[Math.floor(Math.random() * sounds.length)];
-		socket.emit('click', { count: 1 });
-		return howlerList[sound.filename].play();
 	});
 });

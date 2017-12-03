@@ -198,44 +198,65 @@ for (const error of config.errorTemplates) {
 
 // socket server
 
-const io = require('socket.io')(http);
+const uws = require('uws');
+const socketServer = new uws.Server({ server: http });
+const sockets = new Set();
 
 function emitUpdate(types) {
-	const data = {
+	const values = {
 		counter: types.includes('counter') ? counter : null,
 		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
 		rankings: types.includes('rankings') ? rankings : null
 	};
 
-	return io.sockets.emit('update', data);
+	return sockets.forEach(socket => socket.send(JSON.stringify({ type: 'update', values })));
 }
 
-io.on('connection', socket => {
-	socket.on('click', () => {
-		const currentDate = moment().format('YYYY-MM-DD');
-		++counter; ++daily;
-		++weekly; ++monthly;
-		average = Math.round(monthly / fetchedDaysAmount);
+socketServer.on('connection', socket => {
+	sockets.add(socket);
 
-		statistics.set(currentDate, daily);
+	socket.on('message', message => {
+		let data;
 
-		return emitUpdate(['counter', 'statistics']);
+		try {
+			data = JSON.parse(message);
+		}
+		catch (e) {
+			data = {};
+		}
+
+		if (!['click', 'sbClick'].includes(data.type)) return;
+
+		if (data.type === 'click') {
+			const currentDate = moment().format('YYYY-MM-DD');
+			++counter; ++daily;
+			++weekly; ++monthly;
+			average = Math.round(monthly / fetchedDaysAmount);
+
+			statistics.set(currentDate, daily);
+
+			return emitUpdate(['counter', 'statistics']);
+		}
+
+		if (data.type === 'sbClick') {
+			if (!data.sound) return;
+
+			let rankingsEntry = rankings.find(rank => rank.filename === data.sound.filename);
+
+			if (!rankingsEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
+			// safeguard against requests with sounds that don't exist from being saved serverside
+			// no need to check other props because if it's found, only count will be incremented (no user input)
+
+			if (rankingsEntry) ++rankingsEntry.count;
+			else rankingsEntry = Object.assign(data.sound, { count: 1 });
+
+			rankings = bubbleSort(rankings, 'count');
+
+			return emitUpdate(['rankings']);
+		}
 	});
 
-	socket.on('sbClick', sound => {
-		let rankingsEntry = rankings.find(rank => rank.filename === sound.filename);
-
-		if (!rankingsEntry && !sounds.find(s => sound.filename === s.filename)) return;
-		// safeguard against requests with sounds that don't exist from being saved serverside
-		// no need to check other props because if it's found, only count will be incremented (no user input)
-
-		if (rankingsEntry) ++rankingsEntry.count;
-		else rankingsEntry = Object.assign(sound, { count: 1 });
-
-		rankings = bubbleSort(rankings, 'count');
-
-		return emitUpdate(['rankings']);
-	});
+	socket.on('close', (code, reason) => sockets.delete(socket));
 });
 
 // database updates
