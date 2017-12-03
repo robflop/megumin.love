@@ -39,9 +39,8 @@ body {
 
 #version {
 	color: #dd0000;
-	font-family: cursive;
-	vertical-align: baseline;
 	margin-top: 5px;
+	margin-left: 5px;
 }
 
 #share-buttons-frame {
@@ -56,8 +55,6 @@ body {
 
 #soundboard, #statistics {
 	color: #dd0000;
-	font-family: cursive;
-	vertical-align: baseline;
 }
 
 #statistics {
@@ -75,6 +72,7 @@ body {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
+
 	#share-buttons-frame {
 		position: absolute;
 		margin-left: 23px;
@@ -82,9 +80,11 @@ body {
 		-webkit-transform: scale(2.2);
 		transform: scale(2.2);
 	}
+
 	.share-buttons {
 		margin-left: 10px;   
 	}
+
 	#version.mobile-scale {
 		display: inline-block;
 		-webkit-transform: scale(1.5);
@@ -99,6 +99,7 @@ body {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
+
 	#share-buttons-frame {
 		position: absolute;
 		-webkit-transform: scale(2.2);
@@ -106,9 +107,11 @@ body {
 		margin-left: 23px;
 		margin-top: 120px;
 	}
+
 	.share-buttons {
 		margin-left: 10px;   
 	}
+
 	#version.mobile-scale {
 		display: inline-block;
 		-webkit-transform: scale(1.5);

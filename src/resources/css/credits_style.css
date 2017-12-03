@@ -25,6 +25,7 @@ h1 {
 	body {
 		overflow: scroll;
 	}
+
 	#creditsbox {
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
@@ -32,6 +33,7 @@ h1 {
 		font-size: 20px;
 		margin-top: -50px;
 	}
+
 	.backlink {
 		position: relative;
 		margin-left: 430px;
@@ -52,9 +54,11 @@ h1 {
 		transform: scale(0.5);
 		margin-top: 20px;
 	}
+
 	body {
 		height: 300px;   
 	}
+
 	.backlink {
 		position: relative;
 		margin-left: 430px;

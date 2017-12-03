@@ -124,14 +124,17 @@ img {
 	body {
 		overflow: scroll;
 	}
+
 	.megu-sidebar {
 		transform: scale(0.6);
 		left: -275px;
 		top: -60px;
 	}
+
 	.megu-sidebar:hover {
 		left: -68px;
 	}
+
 	footer {
 		-webkit-transform: scale(0.7);
 		transform: scale(0.7);
@@ -145,14 +148,17 @@ img {
 	body {
 		overflow: scroll;
 	}
+
 	.megu-sidebar {
 		transform: scale(0.6);
 		left: -275px;
 		top: -60px;
 	}
+
 	.megu-sidebar:hover {
 		left: -68px;
 	}
+
 	footer {
 		-webkit-transform: scale(0.7);
 		transform: scale(0.7);
