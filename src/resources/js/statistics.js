@@ -49,6 +49,7 @@ $(document).ready(() => {
 				catch (e) {
 					data = {};
 				}
+
 				if (data.type !== 'update') return;
 
 				return data.values.statistics ? updateStatistics(data.values.statistics) : null;

@@ -53,6 +53,7 @@ $(document).ready(() => {
 				catch (e) {
 					data = {};
 				}
+
 				if (data.type !== 'update') return;
 
 				return data.values.rankings ? updateRanking(data.values.rankings) : null;

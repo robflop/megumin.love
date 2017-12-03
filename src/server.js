@@ -215,6 +215,8 @@ function emitUpdate(types) {
 socketServer.on('connection', socket => {
 	sockets.add(socket);
 
+	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
+
 	socket.on('message', message => {
 		let data;
 
@@ -256,7 +258,10 @@ socketServer.on('connection', socket => {
 		}
 	});
 
-	socket.on('close', (code, reason) => sockets.delete(socket));
+	socket.on('close', (code, reason) => {
+		clearInterval(socket.pingInterval);
+		sockets.delete(socket);
+	});
 });
 
 // database updates
