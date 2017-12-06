@@ -109,11 +109,14 @@ readdirSync(pagePath).forEach(file => {
 	const page = file.slice(0, -5).toLowerCase();
 	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
 
-	return pages.push({
+	pages.push({
 		name: file,
 		path: join(pagePath, file),
-		route: [page === 'index' ? '/' : `/${page}`, `/${page}.html`]
+		route: [`/${page}`, `/${page}.html`]
 	});
+
+	if (page === 'index') pages[pages.length - 1].route.push('/');
+	// last array item because during current iteration it will be the last (adds root-dir route for index)
 });
 
 server.use(express.static('./resources'));
