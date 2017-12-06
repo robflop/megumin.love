@@ -1,6 +1,6 @@
 {
   "name": "megumin.love",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
   "main": "src/server.js",
   "dependencies": {
