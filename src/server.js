@@ -125,7 +125,7 @@ http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
 
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
-}); // info for self: listening using http because socket.io doesn't take an express instance (see socket.io docs)
+});
 
 server.get('/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
