@@ -7,17 +7,17 @@ $(document).ready(() => {
 
 	if (background === 'rotate' || !background) {
 		// falsy check for if no selection has been made, and thus is on standard
-		$('body').css('background-image', `url(/images/${randomBg})`);
+		$('body').css('background-image', `url(/images/backgrounds/${randomBg})`);
 	}
 	else {
-		$('body').css('background-image', `url(/images/${background}.jpg)`);
+		$('body').css('background-image', `url(/images/backgrounds/${background}.jpg)`);
 	}
 
 	$('#bg-select').val(background || 'rotate');
 
 	$('#bg-select').change(function() {
 		/* eslint-disable no-invalid-this */
-		if (this.value !== 'rotate') $('body').css('background-image', `url(/images/${this.value}.jpg)`);
+		if (this.value !== 'rotate') $('body').css('background-image', `url(/images/backgrounds/${this.value}.jpg)`);
 		return document.cookie = `background=${this.value}`;
 		/* eslint-enable no-invalid-this */
 	});
