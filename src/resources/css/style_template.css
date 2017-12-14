@@ -41,6 +41,11 @@ img {
 	transform: translateZ(0);
 }
 
+.hangumin {
+	height: 410px;
+	width: 272px;
+}
+
 .megu-sidebar {
 	background-color: #A09A9A;
 	position: fixed;

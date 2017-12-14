@@ -2,6 +2,11 @@ body {
 	overflow: hidden;
 }
 
+.share-buttons img {
+	height: 22px;
+	width: 22px;
+}
+
 #box {
 	width: 300px;
 	background: rgba(0, 0, 0, 0.5);
