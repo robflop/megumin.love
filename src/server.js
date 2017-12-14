@@ -190,6 +190,9 @@ if (!maintenanceMode) {
 	}
 }
 
+server.get('/version', (req, res) => res.redirect('/versions'));
+// only doing this because the old name is still cached, probs remove this somewhen in the future
+
 for (const error of config.errorTemplates) {
 	if (maintenanceMode) {
 		return server.get(/.*/, (req, res) => res.status(503).sendFile('503.html', { root: './pages/errorTemplates/' }));
