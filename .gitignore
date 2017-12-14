@@ -7,7 +7,6 @@ npm-debug.log*
 src/config.json
 src/db/megumin_yamero.db
 .vscode
-src/pages/googlee2713ce6ca671684.html
 
 # Runtime data
 pids
