@@ -142,8 +142,6 @@ server.get('/counter', (req, res) => {
 
 	if (req.query.rankings === '') return res.json(rankings);
 
-	if (req.query.inc) ++counter;
-
 	return res.send(counter.toString());
 });
 
@@ -189,9 +187,6 @@ if (!maintenanceMode) {
 		server.get(page.route, (req, res) => res.sendFile(page.path));
 	}
 }
-
-server.get('/version', (req, res) => res.redirect('/versions'));
-// only doing this because the old name is still cached, probs remove this somewhen in the future
 
 for (const error of config.errorTemplates) {
 	if (maintenanceMode) {
