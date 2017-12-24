@@ -26,6 +26,8 @@ $(document).ready(() => {
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 
+	sounds.splice(sounds.findIndex(sound => sound.filename === 'realname'), 1);
+
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
 		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
