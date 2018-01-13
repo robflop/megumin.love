@@ -6,6 +6,7 @@ const sounds = [
 	{ filename: 'explosion', source: 'Season 1', displayName: 'Explosion!' },
 	{ filename: 'hyoizaburo', source: 'Season 1', displayName: 'Hyoizaburo!' },
 	{ filename: 'itai', source: 'Season 1', displayName: '痛い!' },
+	{ filename: 'kazuma', source: 'Season 1', displayName: 'Kazuma' },
 	{ filename: 'magic-item', source: 'Season 1', displayName: 'Magic Item' },
 	{ filename: 'n', source: 'Season 1', displayName: '\'n!' },
 	{ filename: 'name', source: 'Season 1', displayName: 'My Name is..' },
