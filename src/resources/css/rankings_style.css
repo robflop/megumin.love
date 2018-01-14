@@ -29,15 +29,7 @@ body {
 	text-align: center;
 }
 
-.backlink {
-	color: #dd0000;
-	display: inline-block;
-	text-align: left;
-	margin-bottom: 10px;
-}
-
 #backlink-bottom {
-	float: right;
 	margin: 10px 0 0;
 }
 

@@ -27,6 +27,15 @@ footer {
 	color: azure;
 }
 
+.backlink {
+	color: #dd0000;   
+}
+
+#backlink-bottom {
+	float: right;
+	margin: -15px 0 0;
+}
+
 #bg-select-wrapper {
 	white-space: nowrap;
 	text-align: center

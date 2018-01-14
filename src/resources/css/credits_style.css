@@ -16,10 +16,6 @@ h1 {
 	text-decoration: underline;
 }
 
-.backlink {
-	color: #dd0000;   
-}
-
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	body {
