@@ -19,6 +19,14 @@ body {
 	visibility: hidden;
 }
 
+#loading {
+	background: #dd0000;
+	color: #ff8080;
+	border-radius: 20px;
+	width: 40%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+}
+
 .header {
 	text-decoration: underline;
 	text-align: center;
