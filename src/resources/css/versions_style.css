@@ -13,11 +13,6 @@
 	text-decoration: underline;
 }
 
-#backlink-bottom {
-	float: none;
-	margin: 0;
-}
-
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	#container {

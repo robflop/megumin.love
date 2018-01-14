@@ -33,7 +33,7 @@ $(document).ready(() => {
 
 		const ws = new WebSocket(host);
 
-		$('#container').append('<a href="/" id="backlink-top" class="backlink">Back</a>');
+		$('#container').append('<div id="backlink-top"><a class="backlink" href="/">Back</a></div>');
 		$('#container').append('<a href="rankings" id="rankings">Rankings</a>');
 
 		// Create buttons and make them play corresponding sounds
@@ -88,7 +88,7 @@ $(document).ready(() => {
 			});
 		}
 
-		$('#container').append('<a href="/" id="backlink-bottom" class="backlink">Back</a>');
+		$('#container').append('<div id="backlink-bottom"><a class="backlink" href="/">Back</a></div>');
 		$('#loading').remove();
 	});
 });
