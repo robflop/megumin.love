@@ -9,7 +9,6 @@ const { join } = require('path');
 const { readdirSync } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
-const sounds = require('./resources/js/sounds');
 
 const bootDate = moment().format('YYYY-MM-DD');
 const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
@@ -17,11 +16,8 @@ const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek =
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
-
-const statistics = new Map(); // eslint-disable-line no-undef
-
-const soundQueryValues = sounds.map(sound => `( '${sound.filename}', 0 )`);
-let rankings = [];
+let sounds = []; // let and not const because i reassign the array to sort it
+const statistics = new Map();
 
 function bubbleSort(arr, property) {
 	let sorted = arr.length;
@@ -48,13 +44,41 @@ bubble sorting only does minimal work and therefore doesn't really slow down.
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
-	db.run('CREATE TABLE IF NOT EXISTS yamero_counter ( counter INT NOT NULL )');
+	db.run(`
+		CREATE TABLE IF NOT EXISTS sounds ( 
+			id INTEGER PRIMARY KEY, 
+			filename TEXT NOT NULL UNIQUE, 
+			displayname TEXT NOT NULL, 
+			source TEXT NOT NULL, 
+			count INTEGER NOT NULL
+		)
+	`);
 
-	db.run('CREATE TABLE IF NOT EXISTS statistics ( id INTEGER PRIMARY KEY, date TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
+	db.all('SELECT * FROM sounds', [], (error, rows) => {
+		rows = rows.sort((a, b) => b.count - a.count);
+		rows.map(sound => sounds.push(sound));
+
+		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayName}", "${sound.source}", 0 )`);
+
+		db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
+
+		return Logger.info('Sounds & rankings loaded.');
+	});
+
+	db.run(`
+		CREATE TABLE IF NOT EXISTS yamero_counter (
+			counter INT NOT NULL
+		)
+	`);
+
+	db.run(`
+		CREATE TABLE IF NOT EXISTS statistics (
+			id INTEGER PRIMARY KEY,
+			date TEXT NOT NULL UNIQUE,
+			count INTEGER NOT NULL
+		)
+	`);
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
-
-	db.run('CREATE TABLE IF NOT EXISTS rankings ( id INTEGER PRIMARY KEY, filename TEXT NOT NULL UNIQUE, count INTEGER NOT NULL )');
-	db.run(`INSERT OR IGNORE INTO rankings ( filename, count ) VALUES ${soundQueryValues}`);
 
 	// make sure all necessary tables with at least one necessary column exist
 
@@ -81,19 +105,6 @@ db.serialize(() => {
 		average = Math.round(monthly / thisMonth.length);
 
 		return Logger.info('Statistics loaded.');
-	});
-
-	db.all('SELECT * FROM rankings', [], (error, rows) => {
-		rows = rows.sort((a, b) => b.count - a.count);
-
-		rows.map(sound => {
-			const sbSound = sounds.find(s => sound.filename === s.filename);
-			if (!sbSound) return Logger.warn(`'${sound.filename}' sound found in database but not locally, skipping sound...`);
-
-			return rankings.push(Object.assign(sbSound, { count: sound.count }));
-		});
-
-		return Logger.info('Rankings loaded.');
 	});
 });
 
@@ -152,7 +163,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.rankings === '') return res.json(rankings);
+	if (req.query.rankings === '') return res.json(sounds);
 
 	return res.send(counter.toString());
 });
@@ -249,7 +260,7 @@ function emitUpdate(types, socket) {
 	const values = {
 		counter: types.includes('counter') ? counter : null,
 		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
-		rankings: types.includes('rankings') ? rankings : null
+		rankings: types.includes('rankings') ? sounds : null
 	};
 
 	if (socket) return socket.send(JSON.stringify({ type: 'update', values }));
@@ -287,16 +298,16 @@ socketServer.on('connection', socket => {
 		if (data.type === 'sbClick') {
 			if (!data.sound) return;
 
-			let rankingsEntry = rankings.find(rank => rank.filename === data.sound.filename);
+			let soundEntry = sounds.find(sound => sound.filename === data.sound.filename);
 
-			if (!rankingsEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
+			if (!soundEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
 			// safeguard against requests with sounds that don't exist from being saved serverside
 			// no need to check other props because if it's found, only count will be incremented (no user input)
 
-			if (rankingsEntry) ++rankingsEntry.count;
-			else rankingsEntry = Object.assign(data.sound, { count: 1 });
+			if (soundEntry) ++soundEntry.count;
+			else soundEntry = Object.assign(data.sound, { count: 1 });
 
-			rankings = bubbleSort(rankings, 'count');
+			sounds = bubbleSort(sounds, 'count');
 
 			return emitUpdate(['rankings']);
 		}
@@ -317,8 +328,8 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${daily} )`);
 		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
 
-		for (const sound of rankings) {
-			db.run(`UPDATE rankings SET count = ${sound.count} WHERE filename = '${sound.filename}'`);
+		for (const sound of sounds) {
+			db.run(`UPDATE sounds SET count = ${sound.count} WHERE filename = '${sound.filename}'`);
 		}
 	});
 

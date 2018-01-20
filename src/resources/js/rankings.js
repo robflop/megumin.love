@@ -32,7 +32,7 @@ $(document).ready(() => {
 		for (const rank of rankings) {
 			if (rank.filename === 'realname') continue;
 
-			$('#rankings').append(`<li id=${rank.filename}>${rank.displayName}: ${formatNumber(rank.count)} clicks</li>`);
+			$('#rankings').append(`<li id=${rank.filename}>${rank.displayname}: ${formatNumber(rank.count)} clicks</li>`);
 		}
 
 		if ($('#loading')) $('#loading').remove();
