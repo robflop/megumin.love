@@ -1,0 +1,57 @@
+#container {
+	width: 300px;
+	background: rgba(0, 0, 0, 0.5);
+	margin: 0 auto;
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
+}
+
+/* stuff here */
+
+@media only screen and (max-width: 360px) {
+	/* Portrait mode */
+	#container {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		left: -80px;
+		top: -500px;
+	}
+
+	body {
+		height: 620px;
+	}
+
+	.backlink {
+		position: relative;
+		margin-left: 400px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
+
+	footer {
+		width: auto;
+	}
+}
+
+@media only screen and (max-height: 360px) {
+	/* Landscape mode */
+	#container {
+		-webkit-transform: scale(0.5);
+		transform: scale(0.5);
+		top: -500px;
+	}
+
+	body {
+		height: 620px;   
+	}
+
+	.backlink {
+		position: relative;
+		margin-left: 400px;
+		display: inline-block;
+		-webkit-transform: scale(1.5);
+		transform: scale(1.5);   
+	}
+}

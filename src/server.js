@@ -1,10 +1,13 @@
 const express = require('express');
-const moment = require('moment');
-const Logger = require('./resources/js/Logger');
-const { join } = require('path');
-const { readdirSync } = require('fs');
+const session = require('express-session');
+const helmet = require('helmet');
 const { Database } = require('sqlite3');
 const { scheduleJob } = require('node-schedule');
+const uws = require('uws');
+const moment = require('moment');
+const { join } = require('path');
+const { readdirSync } = require('fs');
+const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 const sounds = require('./resources/js/sounds');
 
@@ -119,6 +122,15 @@ readdirSync(pagePath).forEach(file => {
 	// last array item because during current iteration it will be the last (adds root-dir route for index)
 });
 
+server.use(helmet());
+server.set('trust proxy', 1);
+server.use(express.urlencoded({ extended: false }));
+server.use(session({
+	secret: config.sessionSecret,
+	resave: false,
+	saveUninitialized: false,
+	cookie: { secure: config.SSLproxy ? true : false }
+}));
 server.use(express.static('./resources'));
 
 http.listen(config.port, () => {
@@ -182,8 +194,39 @@ server.get('/stats', (req, res) => {
 	}
 });
 
+server.post('/api/login', (req, res) => {
+	if (req.session.loggedIn) {
+		return res.json({ code: 401, message: 'Already logged in.' });
+	}
+
+	if (config.adminPassword === req.body.password) {
+		req.session.loggedIn = true;
+		return res.json({ code: 200, message: 'Successfully logged in!' });
+	}
+	else {
+		return res.json({ code: 401, message: 'Invalid password provided.' });
+	}
+});
+
+server.get('/api/logout', (req, res) => {
+	if (req.session.loggedIn) {
+		req.session.destroy();
+		return res.json({ code: 200, message: 'Successfully logged out!' });
+	}
+	else {
+		return res.json({ code: 401, message: 'Not logged in.' });
+	}
+});
+
 if (!maintenanceMode) {
 	for (const page of pages) {
+		if (page.name === 'admin.html') {
+			server.get(page.route, (req, res) => {
+				if (!req.session.loggedIn) res.status(401).sendFile('401.html', { root: './pages/errorTemplates/' });
+				else res.sendFile(page.path);
+			});
+			continue;
+		}
 		server.get(page.route, (req, res) => res.sendFile(page.path));
 	}
 }
@@ -199,18 +242,18 @@ for (const error of config.errorTemplates) {
 
 // socket server
 
-const uws = require('uws');
 const socketServer = new uws.Server({ server: http });
 const sockets = new Set();
 
-function emitUpdate(types) {
+function emitUpdate(types, socket) {
 	const values = {
 		counter: types.includes('counter') ? counter : null,
 		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
 		rankings: types.includes('rankings') ? rankings : null
 	};
 
-	return sockets.forEach(socket => socket.send(JSON.stringify({ type: 'update', values })));
+	if (socket) return socket.send(JSON.stringify({ type: 'update', values }));
+	else return sockets.forEach(socket => socket.send(JSON.stringify({ type: 'update', values })));
 }
 
 socketServer.on('connection', socket => {
