@@ -37,15 +37,16 @@ And that's it. Your sound(s) will automatically be added to the main button's av
 
 ### Important Information
 
-#### Using the master branch instead of releases does not guarantee receiving a working version of the website. I work on the site on my own pace and don't always update the master branch to a working state (especially when i am working on new features), so if you want a version that's guaranteed to work, use a release version -- optimally the latest.
+- #### Using the master branch instead of releases does not guarantee receiving a working version of the website. I work on the site on my own pace and don't always update the master branch to a working state (especially when i am working on new features), so if you want a version that's guaranteed to work, use a release version -- optimally the latest.
 
-If you add to the errorTemplates, you will have to create the actual html files for these in the `src/pages/errorTemplates/` folder as well, otherwise this setting will not take effect.
+- If upgrading to a new version (especially a new major (i.e. 3.x -> 4.x)), be sure to check if the release notes mention anything regarding changes that need to be made to the database. If something like that is needed instructions on how to adjust the database will be given, be sure to follow those.
 
-Update interval in the config represents minutes, following the cronjob syntax, so the max value is 60 (meaning once every hour).
+- If you add to the errorTemplates, you will have to create the actual html files for these in the `src/pages/errorTemplates/` folder as well, otherwise this setting will not take effect.
 
-`1` would mean once every minute, `10` once every 10 minutes etc. Commas will be rounded (this is due to scheduling).
+- Update interval in the config represents minutes, following the cronjob syntax, so the max value is 60 (meaning once every hour).
+  - `1` would mean once every minute, `10` once every 10 minutes etc. Commas will be rounded (this is due to scheduling).
 
-It is also advised to check out the [Wiki](https://github.com/robflop/megumin.love/wiki) for more information.
+- It is also advised to check out the [Wiki](https://github.com/robflop/megumin.love/wiki) for more information.
 
 #### Important for proxying to 443 (SSL)
 
