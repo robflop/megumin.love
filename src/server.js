@@ -279,7 +279,7 @@ server.post('/api/rename', (req, res) => {
 							if (err) {
 								Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
 							}
-							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);				
+							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
 						});
 					});
 				});
