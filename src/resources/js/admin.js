@@ -24,9 +24,20 @@ $(document).ready(() => {
 
 	// actual functionality
 
+	const updateSounds = () => {
+		$.get('/counter?sounds').done(sounds => {
+			const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
+
+			$('#rename-select').html(options.join(''));
+			$('#delete-select').html(options.join(''));
+		});
+	};
+
 	$.get('/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
 		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+
+		updateSounds();
 
 		const ws = new WebSocket(host);
 
@@ -55,31 +66,56 @@ $(document).ready(() => {
 		e.preventDefault();
 	});
 
-	$.get('/counter?sounds').done(sounds => {
-		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
-
-		$('#rename-select').html(options.join(''));
-		$('#delete-select').html(options.join(''));
-	});
-
 	$('#upload-form').submit(e => {
 		$.post('/api/upload', { sound: '' }).done(res => {
-			// stuff
+			if (res.code === 200) {
+				$('#upload-res').text('Sound successfully uploaded!');
+				return updateSounds();
+			}
+			else {
+				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(2000);
+			}
 		});
 		e.preventDefault();
 	});
 
-
 	$('#rename-form').submit(e => {
-		$.post('/api/rename', { oldSound: '', newSound: '' }).done(res => {
-			// stuff
+		const data = $('#rename-form').serializeArray();
+
+		$.post('/api/rename', {
+			oldSound: data[0].value,
+			newFilename: data[1].value,
+			newDisplayname: data[2].value,
+			newSource: data[3].value
+		}).done(res => {
+			if (res.code === 200) {
+				setTimeout(() => {
+					$('#rename-res').text('Sound successfully renamed!');
+					return updateSounds();
+				}, 1000 * 0.35);
+				// use a timeout to give server necessary time to update data
+			}
+			else {
+				return $('#rename-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
+			}
 		});
 		e.preventDefault();
 	});
 
 	$('#delete-form').submit(e => {
-		$.post('/api/delete', { sound: '' }).done(res => {
-			// stuff
+		const data = $('#delete-form').serializeArray();
+
+		$.post('/api/delete', { sound: data[0].value }).done(res => {
+			if (res.code === 200) {
+				setTimeout(() => {
+					$('#delete-res').text('Sound successfully deleted!');
+					return updateSounds();
+				}, 1000 * 0.35);
+				// use a timeout to give server necessary time to update data
+			}
+			else {
+				return $('#delete-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
+			}
 		});
 		e.preventDefault();
 	});
