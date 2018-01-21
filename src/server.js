@@ -235,6 +235,57 @@ server.post('/api/upload', (req, res) => {
 
 server.post('/api/rename', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+
+	const data = req.body;
+	const sound = sounds.find(sound => sound.filename === data.oldSound);
+	const newValues = [data.newFilename, data.newDisplayname, data.newSource, data.oldSound];
+
+	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
+	else {
+		Logger.info(`Renaming process for sound '${data.oldSound}' initiated.`);
+		let step = 0;
+
+		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?', newValues, err => {
+			if (err) {
+				Logger.error(`An error occurred updating the database entry, renaming aborted.`, err);
+				return res.json({ code: 400, message: 'An unexpected error occurred.' });
+			}
+			Logger.info(`(${++step}/8) Database entry successfully updated.`);
+
+			sound.filename = data.newFilename;
+			sound.displayname = data.newDisplayname;
+			sound.source = data.newSource;
+
+			Logger.info(`(${++step}/8) Rankings/Sound cache entry updated.`);
+
+			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
+				return copyFile(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.oldSound}.${ext}.bak`, err => {
+					if (err) {
+						Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, err);
+						return res.json({ code: 400, message: 'An unexpected error occurred.' });
+					}
+					Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
+
+					rename(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
+						if (err) {
+							Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted.`, err);
+							return res.json({ code: 400, message: 'An unexpected error occurred.' });
+						}
+						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
+
+						unlink(`./resources/sounds/${data.oldSound}.${ext}.bak`, err => {
+							if (err) {
+								Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
+							}
+							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
+
+							res.json({ code: 200, message: 'Sound successfully renamed.' });
+						});
+					});
+				});
+			});
+		});
+	}
 });
 
 server.post('/api/delete', (req, res) => {
@@ -246,19 +297,19 @@ server.post('/api/delete', (req, res) => {
 	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
 		Logger.info(`Deletion process for sound '${data.sound}' initiated.`);
-		let step = 1;
+		let step = 0;
 
 		db.run('DELETE FROM sounds WHERE filename = ?', data.sound, err => {
 			if (err) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborting.', err);
+				Logger.error('An error occurred while deleting the database entry, deletion aborted.', err);
 				return res.json({ code: 500, message: 'An unexpected error occurred.' });
 			}
-			Logger.info(`(${step}/4) Database entry deleted.`);
+			Logger.info(`(${++step}/4) Database entry deleted.`);
 
 			['ogg', 'mp3'].map(ext => {
 				return unlink(`./resources/sounds/${data.sound}.${ext}`, err => {
 					if (err) {
-						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborting.`, err);
+						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, err);
 						return res.json({ code: 500, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/4) ${ext} soundfile deleted.`);
@@ -267,6 +318,8 @@ server.post('/api/delete', (req, res) => {
 
 			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry deleted.`);
+
+			res.json({ code: 200, message: 'Sound successfully deleted.' });
 		});
 	}
 });
