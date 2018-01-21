@@ -69,11 +69,14 @@ $(document).ready(() => {
 	$('#upload-form').submit(e => {
 		$.post('/api/upload', { sound: '' }).done(res => {
 			if (res.code === 200) {
-				$('#upload-res').text('Sound successfully uploaded!');
-				return updateSounds();
+				setTimeout(() => {
+					$('#delete-res').text('Sound successfully uploaded!');
+					return updateSounds();
+				}, 1000 * 0.5);
+				// use a timeout to give server necessary time to update data
 			}
 			else {
-				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(2000);
+				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
 			}
 		});
 		e.preventDefault();
