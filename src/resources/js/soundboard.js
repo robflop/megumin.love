@@ -51,7 +51,7 @@ $(document).ready(() => {
 				source.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
 			}
 			else {
-				$('#container').append(`<div class="titles">${sound.source}:</div>`);
+				$('#container').append(`<h1 class="titles">${sound.source}:</h1>`);
 				$(`<div class="buttons-wrap source-${sound.source.replace(/\s/g, '-').toLowerCase()}">`)
 					.appendTo('#container')
 					.append(`<button id=${sound.filename}>${sound.displayName}</button>`);
