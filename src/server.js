@@ -163,7 +163,7 @@ server.get('/counter', (req, res) => {
 		});
 	}
 
-	if (req.query.rankings === '') return res.json(sounds);
+	if (req.query.sounds === '') return res.json(sounds);
 
 	return res.send(counter.toString());
 });

@@ -26,13 +26,13 @@ $(document).ready(() => {
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 
-	const updateRanking = rankings => {
+	const updateRanking = sounds => {
 		$('#rankings').children('li').detach();
 
-		for (const rank of rankings) {
-			if (rank.filename === 'realname') continue;
+		for (const sound of sounds) {
+			if (sound.filename === 'realname') continue;
 
-			$('#rankings').append(`<li id=${rank.filename}>${rank.displayname}: ${formatNumber(rank.count)} clicks</li>`);
+			$('#rankings').append(`<li id=${sound.filename}>${sound.displayname}: ${formatNumber(sound.count)} clicks</li>`);
 		}
 
 		if ($('#loading')) $('#loading').remove();
@@ -57,10 +57,10 @@ $(document).ready(() => {
 
 				if (data.type !== 'update') return;
 
-				return data.values.rankings ? updateRanking(data.values.rankings) : null;
+				return data.values.sounds ? updateRanking(data.values.sounds) : null;
 			});
 		});
 	});
 
-	$.get('/counter?rankings').done(rankings => updateRanking(rankings));
+	$.get('/counter?sounds').done(sounds => updateRanking(sounds));
 });
