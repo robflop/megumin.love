@@ -1,13 +1,50 @@
 #container {
-	width: 300px;
-	background: rgba(0, 0, 0, 0.5);
+	width: 1175px;
 	margin: 0 auto;
+	background: rgba(0, 0, 0, 0.5);
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;
 }
 
-/* stuff here */
+#panel {
+	display: flex;
+}
+
+#upload, #delete, #rename {
+	width: 33%;
+	text-align: center;
+	display: block;
+}
+
+form {
+	display: inline-block;
+	padding: 5px;
+}
+
+form input, form select, form label {
+	margin-top: 5px;
+	width: 185px;
+	box-sizing: border-box;
+	vertical-align: middle;
+}
+
+form input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	width: 16px;
+	height: 16px;
+}
+
+.titles {
+	margin: 0 auto 20px auto;
+	text-align: center;
+	background-color: #dd0000;
+	color: #ff8080;
+	border-radius: 15px;
+	width: 55%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+}
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */

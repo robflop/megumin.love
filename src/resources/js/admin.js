@@ -46,7 +46,34 @@ $(document).ready(() => {
 				console.log(data);
 			});
 		});
+	});
 
-		// more stuff here
+	$.get('/counter?sounds').done(sounds => {
+		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
+
+		$('#rename-select').html(options.join(''));
+		$('#delete-select').html(options.join(''));
+	});
+
+	$('#upload-form').submit(e => {
+		$.post('/api/upload', { sound: '' }).done(res => {
+			// stuff
+		});
+		e.preventDefault();
+	});
+
+
+	$('#rename-form').submit(e => {
+		$.post('/api/rename', { oldSound: '', newSound: '' }).done(res => {
+			// stuff
+		});
+		e.preventDefault();
+	});
+
+	$('#delete-form').submit(e => {
+		$.post('/api/delete', { sound: '' }).done(res => {
+			// stuff
+		});
+		e.preventDefault();
 	});
 });

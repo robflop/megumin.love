@@ -2,10 +2,8 @@
 	"port": 5959,
 	"SSLproxy": false,
 	"errorTemplates": [
-		"401",
 		"404",
-		"500",
-		"503"
+		"500"
 	],
 	"databasePath": "./db/megumin_yamero.db",
 	"updateInterval": 30,

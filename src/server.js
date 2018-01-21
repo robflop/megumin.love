@@ -229,11 +229,23 @@ server.get('/api/logout', (req, res) => {
 	}
 });
 
+server.post('/api/upload', (req, res) => {
+	console.log(req);
+});
+
+server.post('/api/rename', (req, res) => {
+	console.log(req);
+});
+
+server.post('/api/delete', (req, res) => {
+	console.log(req);
+});
+
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
 			server.get(page.route, (req, res) => {
-				if (!req.session.loggedIn) res.status(401).sendFile('401.html', { root: './pages/errorTemplates/' });
+				if (!req.session.loggedIn) return res.sendFile(page.path.replace('admin', 'login'));
 				else res.sendFile(page.path);
 			});
 			continue;

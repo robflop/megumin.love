@@ -39,7 +39,53 @@
 	<body>
 		<!--Content boxes and container-->
 		<div id="container">
-			<!-- wip -->
+			<div id="backlink-top">
+				<a class="backlink" href="/">Back</a>
+			</div>
+			<h1 class="titles">megumin.love Admin Panel</h1>
+			<div id="panel">
+				<div id="upload">
+					<h2 class="titles">Sound upload</h2>
+					<form id="upload-form" enctype="multipart/form-data" method="post">
+						<input type="file" name="files" accept="audio/ogg, audio/mp3" multiple required>
+						<input type="text" name="newDisplayname" placeholder="Sound filename" required>
+						<input type="text" name="displayname" placeholder="Sound display name" required>
+						<input type="text" name="source" placeholder="Sound source">
+						<input type="submit" value="Upload sound">
+					</form>
+					<p id="upload-res"></p>
+				</div>
+				<div id="rename">
+					<h2 class="titles">Sound renaming</h2>
+					<form id="rename-form" method="post">
+						<select name="rename-select" id="rename-select">
+							<!-- Auto-created -->
+						</select>
+						<input type="text" name="newFilename" placeholder="New filename" required>
+						<input type="text" name="newDisplayname" placeholder="New displayname" required>
+						<input type="text" name="newSource" placeholder="New source" required>
+						<input type="submit" value="Update name">
+					</form>
+					<p id="rename-res"></p>
+				</div>
+				<div id="delete">
+					<h2 class="titles">Sound deletion</h2>
+					<form id="delete-form" method="post">
+						<select name="delete-select" id="delete-select">
+							<!-- Auto-created -->
+						</select>
+						<div id="delete-confirmation">
+							<input type="checkbox" name="delete-checkbox" required>
+							<label for="delete-checkbox">Confirm deletion</label>
+						</div>
+						<input type="submit" value="Delete sound">
+					</form>
+					<p id="delete-res"></p>
+				</div>
+			</div>
+			<div id="backlink-bottom">
+					<a class="backlink" href="/">Back</a>
+			</div>
 		</div>
 		<!--Sidebar-->
 		<div class="megu-sidebar">
