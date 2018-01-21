@@ -67,7 +67,8 @@ $(document).ready(() => {
 	});
 
 	$('#upload-form').submit(e => {
-		$.post('/api/upload', { 'files[]': $('#upload-form')[0].files }).done(res => {
+		console.log($('#upload-form')[0][0].files);
+		$.post('/api/upload', { 'files[]': $('#upload-form')[0][0].files }).done(res => {
 			if (res.code === 200) {
 				setTimeout(() => {
 					$('#delete-res').text(res.message);

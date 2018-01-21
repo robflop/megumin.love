@@ -249,6 +249,7 @@ server.post('/api/upload', (req, res) => {
 
 	upload(req, res, err => {
 		if (err) return res.json({ code: 400, message: err });
+		Logger.info(`Upload process for sound '<placeholder>' initiated.`);
 
 		return res.json({ code: 200, message: 'Sound successfully uploaded!' });
 	});
