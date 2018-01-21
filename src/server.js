@@ -242,7 +242,7 @@ server.post('/api/rename', (req, res) => {
 
 	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${data.oldSound}' initiated.`);
+		Logger.info(`Renaming process for sound '${data.oldSound}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
 		let step = 0;
 
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?', newValues, err => {
@@ -277,14 +277,13 @@ server.post('/api/rename', (req, res) => {
 							if (err) {
 								Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
 							}
-							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
-
-							res.json({ code: 200, message: 'Sound successfully renamed.' });
+							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);				
 						});
 					});
 				});
 			});
 		});
+		return res.json({ code: 200, message: 'Sound successfully renamed.' });
 	}
 });
 
@@ -319,7 +318,7 @@ server.post('/api/delete', (req, res) => {
 			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry deleted.`);
 
-			res.json({ code: 200, message: 'Sound successfully deleted.' });
+			return res.json({ code: 200, message: 'Sound successfully deleted.' });
 		});
 	}
 });
@@ -329,7 +328,7 @@ if (!maintenanceMode) {
 		if (page.name === 'admin.html') {
 			server.get(page.route, (req, res) => {
 				if (!req.session.loggedIn) return res.sendFile(page.path.replace('admin', 'login'));
-				else res.sendFile(page.path);
+				else return res.sendFile(page.path);
 			});
 			continue;
 		}
