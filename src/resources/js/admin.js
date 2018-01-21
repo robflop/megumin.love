@@ -60,30 +60,42 @@ $(document).ready(() => {
 	});
 
 	$('#logout').click(e => {
+		e.preventDefault();
+
 		$.get('/api/logout').done(res => {
 			if (res.code === 200) return window.location.href = '/';
 		});
-		e.preventDefault();
 	});
 
 	$('#upload-form').submit(e => {
-		console.log($('#upload-form')[0][0].files);
-		$.post('/api/upload', { 'files[]': $('#upload-form')[0][0].files }).done(res => {
-			if (res.code === 200) {
-				setTimeout(() => {
-					$('#delete-res').text(res.message);
-					return updateSounds();
-				}, 1000 * 0.5);
-				// use a timeout to give server necessary time to update data
-			}
-			else {
-				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
+		e.preventDefault();
+
+		const formData = new FormData($('#upload-form'));
+
+		$.ajax({
+			type: 'POST',
+			url: '/api/upload',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success(res) {
+				if (res.code === 200) {
+					setTimeout(() => {
+						$('#upload-res').text(res.message);
+						return updateSounds();
+					}, 1000 * 0.5);
+					// use a timeout to give server necessary time to update data
+				}
+				else {
+					return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
+				}
 			}
 		});
-		e.preventDefault();
 	});
 
 	$('#rename-form').submit(e => {
+		e.preventDefault();
+
 		const data = $('#rename-form').serializeArray();
 
 		$.post('/api/rename', {
@@ -103,10 +115,11 @@ $(document).ready(() => {
 				return $('#rename-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
 			}
 		});
-		e.preventDefault();
 	});
 
 	$('#delete-form').submit(e => {
+		e.preventDefault();
+
 		const data = $('#delete-form').serializeArray();
 
 		$.post('/api/delete', { sound: data[0].value }).done(res => {
@@ -121,6 +134,5 @@ $(document).ready(() => {
 				return $('#delete-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
 			}
 		});
-		e.preventDefault();
 	});
 });
