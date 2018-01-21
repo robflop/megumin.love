@@ -231,6 +231,8 @@ server.get('/api/logout', (req, res) => {
 
 server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+
+	const data = req.body;
 });
 
 server.post('/api/rename', (req, res) => {
@@ -283,6 +285,9 @@ server.post('/api/rename', (req, res) => {
 				});
 			});
 		});
+		setTimeout(() => {
+			emitUpdate(['counter', 'statistics', 'sounds']);
+		}, 1000 * 0.5); // allow time for server to keep up and send actual new data
 		return res.json({ code: 200, message: 'Sound successfully renamed.' });
 	}
 });
@@ -305,7 +310,7 @@ server.post('/api/delete', (req, res) => {
 			}
 			Logger.info(`(${++step}/4) Database entry deleted.`);
 
-			['ogg', 'mp3'].map(ext => {
+			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
 				return unlink(`./resources/sounds/${data.sound}.${ext}`, err => {
 					if (err) {
 						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, err);
@@ -318,6 +323,9 @@ server.post('/api/delete', (req, res) => {
 			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry deleted.`);
 
+			setTimeout(() => {
+				emitUpdate(['counter', 'statistics', 'sounds']);
+			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
 			return res.json({ code: 200, message: 'Sound successfully deleted.' });
 		});
 	}
@@ -354,7 +362,7 @@ function emitUpdate(types, socket) {
 	const values = {
 		counter: types.includes('counter') ? counter : null,
 		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
-		rankings: types.includes('rankings') ? sounds : null
+		sounds: types.includes('sounds') ? sounds : null
 	};
 
 	if (socket) return socket.send(JSON.stringify({ type: 'update', values }));
@@ -403,7 +411,7 @@ socketServer.on('connection', socket => {
 
 			sounds = bubbleSort(sounds, 'count');
 
-			return emitUpdate(['rankings']);
+			return emitUpdate(['sounds']);
 		}
 	});
 

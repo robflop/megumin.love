@@ -92,7 +92,7 @@ $(document).ready(() => {
 				setTimeout(() => {
 					$('#rename-res').text('Sound successfully renamed!');
 					return updateSounds();
-				}, 1000 * 0.35);
+				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data
 			}
 			else {
@@ -110,7 +110,7 @@ $(document).ready(() => {
 				setTimeout(() => {
 					$('#delete-res').text('Sound successfully deleted!');
 					return updateSounds();
-				}, 1000 * 0.35);
+				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data
 			}
 			else {
