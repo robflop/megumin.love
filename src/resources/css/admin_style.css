@@ -17,6 +17,12 @@
 	display: block;
 }
 
+#upload-res, #delete-res, #rename-res {
+	display: none;
+	font-size: 16px;
+	color: red;
+}
+
 #logout {
 	float: right;
 }

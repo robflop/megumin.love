@@ -6,7 +6,7 @@ const { scheduleJob } = require('node-schedule');
 const uws = require('uws');
 const moment = require('moment');
 const { join } = require('path');
-const { readdirSync } = require('fs');
+const { readdirSync, unlink, rename, copyFile } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 
@@ -58,7 +58,7 @@ db.serialize(() => {
 		rows = rows.sort((a, b) => b.count - a.count);
 		rows.map(sound => sounds.push(sound));
 
-		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayName}", "${sound.source}", 0 )`);
+		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayname}", "${sound.source}", 0 )`);
 
 		db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
 
@@ -230,15 +230,45 @@ server.get('/api/logout', (req, res) => {
 });
 
 server.post('/api/upload', (req, res) => {
-	console.log(req);
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 });
 
 server.post('/api/rename', (req, res) => {
-	console.log(req);
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 });
 
 server.post('/api/delete', (req, res) => {
-	console.log(req);
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+
+	const data = req.body;
+	const sound = sounds.find(sound => sound.filename === data.sound);
+
+	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
+	else {
+		Logger.info(`Deletion process for sound '${data.sound}' initiated.`);
+		let step = 1;
+
+		db.run('DELETE FROM sounds WHERE filename = ?', data.sound, err => {
+			if (err) {
+				Logger.error('An error occurred while deleting the database entry, deletion aborting.', err);
+				return res.json({ code: 500, message: 'An unexpected error occurred.' });
+			}
+			Logger.info(`(${step}/4) Database entry deleted.`);
+
+			['ogg', 'mp3'].map(ext => {
+				return unlink(`./resources/sounds/${data.sound}.${ext}`, err => {
+					if (err) {
+						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborting.`, err);
+						return res.json({ code: 500, message: 'An unexpected error occurred.' });
+					}
+					Logger.info(`(${++step}/4) ${ext} soundfile deleted.`);
+				});
+			});
+
+			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
+			Logger.info(`(${++step}/4) Rankings/Sound cache entry deleted.`);
+		});
+	}
 });
 
 if (!maintenanceMode) {
