@@ -1,5 +1,5 @@
 #container {
-	width: 300px;
+	width: 320px;
 	background: rgba(0, 0, 0, 0.5);
 	margin: 0 auto;
 	padding: 16px;
@@ -9,12 +9,18 @@
 
 #login, #login-res {
 	text-align: center;
+	display: inline-block;
 }
 
 #login-res {
 	display: none;
 	font-size: 16px;
 	color: red;
+}
+
+#backlink-top {
+	display: inline-block;
+	margin-right: 10px;
 }
 
 @media only screen and (max-width: 360px) {

@@ -48,6 +48,13 @@ $(document).ready(() => {
 		});
 	});
 
+	$('#logout').click(e => {
+		$.get('/api/logout').done(res => {
+			if (res.code === 200) return window.location.href = '/';
+		});
+		e.preventDefault();
+	});
+
 	$.get('/counter?sounds').done(sounds => {
 		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
 
