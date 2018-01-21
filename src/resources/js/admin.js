@@ -67,10 +67,10 @@ $(document).ready(() => {
 	});
 
 	$('#upload-form').submit(e => {
-		$.post('/api/upload', { sound: '' }).done(res => {
+		$.post('/api/upload', { 'files[]': $('#upload-form')[0].files }).done(res => {
 			if (res.code === 200) {
 				setTimeout(() => {
-					$('#delete-res').text('Sound successfully uploaded!');
+					$('#delete-res').text(res.message);
 					return updateSounds();
 				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data

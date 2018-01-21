@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
+const multer = require('multer');
 const { Database } = require('sqlite3');
 const { scheduleJob } = require('node-schedule');
 const uws = require('uws');
@@ -144,6 +145,20 @@ server.use(session({
 }));
 server.use(express.static('./resources'));
 
+const upload = multer({
+	dest: './resources/temp/',
+	storage: multer.diskStorage({
+		destination: './resources/sounds',
+		filename(req, file, cb) {
+			cb(null, file.originalname);
+		}
+	}),
+	fileFilter(req, file, cb) {
+		if (!['audio/mpeg', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
+		cb(null, true);
+	}
+}).array('files[]');
+
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
 
@@ -232,7 +247,11 @@ server.get('/api/logout', (req, res) => {
 server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
-	const data = req.body;
+	upload(req, res, err => {
+		if (err) return res.json({ code: 400, message: err });
+
+		return res.json({ code: 200, message: 'Sound successfully uploaded!' });
+	});
 });
 
 server.post('/api/rename', (req, res) => {
