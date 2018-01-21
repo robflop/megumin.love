@@ -26,56 +26,57 @@ $(document).ready(() => {
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 
-	sounds.splice(sounds.findIndex(sound => sound.filename === 'realname'), 1);
+	$.get('/counter?sounds').done(sounds => {
+		sounds.splice(sounds.findIndex(sound => sound.filename === 'realname'), 1);
 
-	$.get('/conInfo').done(con => {
-		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+		$.get('/conInfo').done(con => {
+			const domainOrIP = document.URL.split('/')[2].split(':')[0];
+			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
-		const ws = new WebSocket(host);
+			const ws = new WebSocket(host);
 
-		ws.addEventListener('open', event => {
-			ws.addEventListener('message', message => {
-				let data;
+			ws.addEventListener('open', event => {
+				ws.addEventListener('message', message => {
+					let data;
 
-				try {
-					data = JSON.parse(message.data);
-				}
-				catch (e) {
-					data = {};
-				}
+					try {
+						data = JSON.parse(message.data);
+					}
+					catch (e) {
+						data = {};
+					}
 
-				if (data.type !== 'update') return;
+					if (data.type !== 'update') return;
 
-				return data.values.counter ? $('#counter').html(formatNumber(data.values.counter)) : null;
-			});
+					return data.values.counter ? $('#counter').html(formatNumber(data.values.counter)) : null;
+				});
 
-			$('#button').click(() => {
-				const sound = sounds[Math.floor(Math.random() * sounds.length)];
-				ws.send(JSON.stringify({ type: 'click' }));
+				$('#button').click(() => {
+					const sound = sounds[Math.floor(Math.random() * sounds.length)];
+					ws.send(JSON.stringify({ type: 'click' }));
 
-				return howlerList[sound.filename].play();
+					return howlerList[sound.filename].play();
+				});
 			});
 		});
-	});
 
-	$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
-	// load initial counter
+		$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
+		// load initial counter
 
-	const howlerList = {};
+		const howlerList = {};
 
-	for (const sound of sounds) {
-		if (sound.filename === 'realname') continue;
+		for (const sound of sounds) {
+			if (sound.filename === 'realname') continue;
 
-		howlerList[sound.filename] = new Howl({
-			src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
-
-		});
+			howlerList[sound.filename] = new Howl({
+				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`]
+			});
 		// load all sounds
-	}
+		}
 
-	$('#button').keypress(key => {
-		if (key.which === 13) return key.preventDefault();
-		// don't trigger the button on 'enter' keypress
+		$('#button').keypress(key => {
+			if (key.which === 13) return key.preventDefault();
+			// don't trigger the button on 'enter' keypress
+		});
 	});
 });
