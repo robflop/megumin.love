@@ -23,23 +23,37 @@ Runs under [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expres
 
 ### Adding new sounds
 
-- Put your new sound file(s) in the `src/resources/sounds/` folder (in ogg and mp3 format)
-- Fill out all 3 properties for your new sound(s) in `src/resources/js/sounds.js` (see existing sounds for examples)
+There are two ways to add new sounds starting with version 5.0.0 -- via interface or manually.
 
-And that's it. Your sound(s) will automatically be added to the main button's available sounds, the soundboard and the rankings after a restart.
+#### Interface:
+- Open the admin panel at `/admin` and log in.
+- Fill out the form for uploads on the very left and click "Upload sound".
 
-    Notice: If you want to rename the file(s) of a sound after adding it, do the following:
-    1) Rename the file(s)
-    2) Adjust the value of the respective filename property in the sounds.js file
-    3) Update the respective database row in the rankings table to contain the sound's new name
-	
-	Update query: "UPDATE rankings SET filename = <new name> WHERE filename = <old name>;"
+#### Manually:
+- Put your new sound files in the `src/resources/sounds/` folder (in ogg and mp3 format)
+- Run this query with the values you want to use for the sound:
+  - `INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( <your>, <values>, <here>, 0 );`
+
+And that's it. Your sound will automatically be added to the main button's available sounds, the soundboard and the rankings after a restart.
+
+### Renaming sounds
+
+There are also two ways to rename a sound, again via interface or manually.
+
+#### Interface:
+- Open the admin panel at `/admin` and log in.
+- Fill out the form for renaming in the center and click "Update sound".
+
+#### Manually:
+- Rename the files in the `/src/resources/sounds` folder
+- Run this query with with the new values you want to use for the sound:
+  - `UPDATE sounds SET filename = <your>, displayname = <values>, source = <here> WHERE filename = <old filename>;`
 
 ### Important Information
 
 - #### Using the master branch instead of releases does not guarantee receiving a working version of the website. I work on the site on my own pace and don't always update the master branch to a working state (especially when i am working on new features), so if you want a version that's guaranteed to work, use a release version -- optimally the latest.
 
-- If upgrading to a new version (especially a new major (i.e. 3.x -> 4.x)), be sure to check if the release notes mention anything regarding changes that need to be made to the database. If something like that is needed instructions on how to adjust the database will be given, be sure to follow those.
+- If upgrading to a new version (especially a new major, e.g. 3.x -> 4.x), be sure to check if the release notes mention anything regarding changes that need to be made to the database. If something like that is needed instructions on how to adjust the database will be given, be sure to follow those.
 
 - If you add to the errorTemplates, you will have to create the actual html files for these in the `src/pages/errorTemplates/` folder as well, otherwise this setting will not take effect.
 
