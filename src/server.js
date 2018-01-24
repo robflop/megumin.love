@@ -157,7 +157,7 @@ const upload = multer({
 		if (!['audio/mpeg', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
 		cb(null, true);
 	}
-}).array('files[]');
+}).array('files[]', 2);
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
@@ -248,8 +248,14 @@ server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	upload(req, res, err => {
+		console.log(req.files, req.body);
 		if (err) return res.json({ code: 400, message: err });
-		Logger.info(`Upload process for sound '<placeholder>' initiated.`);
+		Logger.info(`Upload process for sound '${req.body.filename}' initiated.`);
+
+		if (sounds.find(sound => sound.filename === req.body.fileame)) {
+			Logger.error(`Sound with filename '${req.body.filename}' already exists, upload aborted.`);
+			return res.json({ code: 400, message: 'Sound filename already in use.' });
+		}
 
 		return res.json({ code: 200, message: 'Sound successfully uploaded!' });
 	});
