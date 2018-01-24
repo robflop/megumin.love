@@ -319,7 +319,11 @@ server.post('/api/rename', (req, res) => {
 
 					rename(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
 						if (err) {
-							Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted.`, err);
+							Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, err);
+							rename(`./resources/sounds/${data.oldSound}.${ext}.bak`, `./resources/sounds/${data.oldSound}.${ext}`, err => {
+								if (err) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
+							});
+
 							return res.json({ code: 400, message: 'An unexpected error occurred.' });
 						}
 						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
