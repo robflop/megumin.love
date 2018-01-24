@@ -53,8 +53,6 @@ $(document).ready(() => {
 				}
 
 				if (data.type !== 'update') return;
-
-				console.log(data);
 			});
 		});
 	});
@@ -89,6 +87,7 @@ $(document).ready(() => {
 			mimeType: 'multipart/form-data',
 			data: formData
 		}).done(res => {
+			res = JSON.parse(res); // idk why it sends a string
 			if (res.code === 200) {
 				setTimeout(() => {
 					$('#upload-res').text('Sound successfully renamed!');

@@ -250,16 +250,37 @@ server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	upload(req, res, err => {
-		console.log(req.files, req.body);
 		if (err) return res.json({ code: 400, message: err });
-		Logger.info(`Upload process for sound '${req.body.filename}' initiated.`);
+		const data = req.body;
+		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
 
-		if (sounds.find(sound => sound.filename === req.body.fileame)) {
-			Logger.error(`Sound with filename '${req.body.filename}' already exists, upload aborted.`);
+		if (sounds.find(sound => sound.filename === data.filename)) {
+			Logger.error(`Sound with filename '${data.filename}' already exists, upload aborted.`);
 			return res.json({ code: 400, message: 'Sound filename already in use.' });
 		}
+		else {
+			let step = 0;
+			const latestID = sounds.reduce((prev, cur) => prev.id > cur.y ? prev : cur).id;
 
-		return res.json({ code: 200, message: 'Sound successfully uploaded!' });
+			db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, 0 )`,
+				data.filename, data.displayname, data.source,
+				err => {
+					if (err) {
+						Logger.error(`An error occurred creating the database entry, upload aborted.`, err);
+						return res.json({ code: 500, message: 'An unexpected error occurred.' });
+					}
+					Logger.info(`(${++step}/2) Database entry created.`);
+
+					sounds.push({ id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 });
+
+					Logger.info(`(${++step}/2) Rankings/Sound cache entry created.`);
+
+					setTimeout(() => {
+						emitUpdate(['counter', 'statistics', 'sounds']);
+					}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
+				});
+		}
 	});
 });
 
