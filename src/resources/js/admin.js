@@ -67,6 +67,8 @@ $(document).ready(() => {
 		}).done(res => {
 			res = JSON.parse(res); // idk why it sends a string
 			if (res.code === 200) {
+				$('#upload-form').trigger('reset');
+
 				setTimeout(() => {
 					$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
 					return updateSounds();
@@ -91,6 +93,8 @@ $(document).ready(() => {
 			newSource: data[3].value
 		}).done(res => {
 			if (res.code === 200) {
+				$('#rename-form').trigger('reset');
+
 				setTimeout(() => {
 					$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
 					return updateSounds();
@@ -110,6 +114,8 @@ $(document).ready(() => {
 
 		$.post('/api/delete', { sound: data[0].value }).done(res => {
 			if (res.code === 200) {
+				$('#delete-form').trigger('reset');
+
 				setTimeout(() => {
 					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
 					return updateSounds();
