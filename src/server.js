@@ -150,7 +150,9 @@ const upload = multer({
 	storage: multer.diskStorage({
 		destination: './resources/sounds',
 		filename(req, file, cb) {
-			cb(null, file.originalname);
+			if (file.mimetype === 'audio/ogg') return cb(null, `${req.body.filename}.ogg`);
+			else if (['audio/mpeg', 'audio/mp3'].includes(file.mimetype)) return cb(null, `${req.body.filename}.mp3`);
+			else return cb(null, false);
 		}
 	}),
 	fileFilter(req, file, cb) {

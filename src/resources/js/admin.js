@@ -72,32 +72,23 @@ $(document).ready(() => {
 
 		const textData = $('#upload-form').serializeArray();
 		const fileData = $('#files')[0].files;
-		console.log(textData, fileData);
+		const formData = new FormData();
 
-		const form = new FormData();
+		formData.append('filename', textData[0].value);
+		formData.append('displayname', textData[1].value);
+		formData.append('source', textData[2].value);
+		formData.append('files[]', fileData[0]);
+		formData.append('files[]', fileData[1]);
 
-		form.append('filename', textData[0].value);
-		form.append('displayname', textData[1].value);
-		form.append('source', textData[2].value);
-		form.append('files[]', fileData[0]);
-		form.append('files[]', fileData[1]);
-
-		const settings = {
+		$.ajax({
 			async: true,
-			crossDomain: true,
 			url: 'http://localhost:5959/api/upload',
 			method: 'POST',
-			headers: {
-				'Cache-Control': 'no-cache',
-				'Postman-Token': '4cbecde2-8c25-f581-1838-563217baa119'
-			},
 			processData: false,
 			contentType: false,
 			mimeType: 'multipart/form-data',
-			data: form
-		};
-
-		$.ajax(settings).done(res => {
+			data: formData
+		}).done(res => {
 			if (res.code === 200) {
 				setTimeout(() => {
 					$('#upload-res').text('Sound successfully renamed!');
@@ -109,24 +100,6 @@ $(document).ready(() => {
 				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
 			}
 		});
-
-		// $.post('/api/upload', {
-		// 	files: fileData,
-		// 	filename: textData[0].value,
-		// 	displayname: textData[1].value,
-		// 	source: textData[2].value
-		// }).done(res => {
-		// 	if (res.code === 200) {
-		// 		setTimeout(() => {
-		// 			$('#upload-res').text('Sound successfully renamed!');
-		// 			return updateSounds();
-		// 		}, 1000 * 0.5);
-		// 		// use a timeout to give server necessary time to update data
-		// 	}
-		// 	else {
-		// 		return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
-		// 	}
-		// });
 	});
 
 	$('#rename-form').submit(e => {
