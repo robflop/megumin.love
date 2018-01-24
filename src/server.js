@@ -154,7 +154,7 @@ const upload = multer({
 		}
 	}),
 	fileFilter(req, file, cb) {
-		if (!['audio/mpeg', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
+		if (!['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
 		cb(null, true);
 	}
 }).array('files[]', 2);
