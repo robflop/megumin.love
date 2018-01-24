@@ -333,11 +333,11 @@ server.post('/api/rename', (req, res) => {
 					});
 				});
 			});
+			setTimeout(() => {
+				emitUpdate(['counter', 'statistics', 'sounds']);
+			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+			return res.json({ code: 200, message: 'Sound successfully renamed.' });
 		});
-		setTimeout(() => {
-			emitUpdate(['counter', 'statistics', 'sounds']);
-		}, 1000 * 0.5); // allow time for server to keep up and send actual new data
-		return res.json({ code: 200, message: 'Sound successfully renamed.' });
 	}
 });
 
