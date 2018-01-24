@@ -33,29 +33,7 @@ $(document).ready(() => {
 		});
 	};
 
-	$.get('/conInfo').done(con => {
-		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
-
-		updateSounds();
-
-		const ws = new WebSocket(host);
-
-		ws.addEventListener('open', event => {
-			ws.addEventListener('message', message => {
-				let data;
-
-				try {
-					data = JSON.parse(message.data);
-				}
-				catch (e) {
-					data = {};
-				}
-
-				if (data.type !== 'update') return;
-			});
-		});
-	});
+	updateSounds();
 
 	$('#logout').click(e => {
 		e.preventDefault();
@@ -90,7 +68,7 @@ $(document).ready(() => {
 			res = JSON.parse(res); // idk why it sends a string
 			if (res.code === 200) {
 				setTimeout(() => {
-					$('#upload-res').text('Sound successfully renamed!');
+					$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data
@@ -114,7 +92,7 @@ $(document).ready(() => {
 		}).done(res => {
 			if (res.code === 200) {
 				setTimeout(() => {
-					$('#rename-res').text('Sound successfully renamed!');
+					$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data
@@ -133,7 +111,7 @@ $(document).ready(() => {
 		$.post('/api/delete', { sound: data[0].value }).done(res => {
 			if (res.code === 200) {
 				setTimeout(() => {
-					$('#delete-res').text('Sound successfully deleted!');
+					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
 				// use a timeout to give server necessary time to update data
