@@ -269,11 +269,11 @@ server.post('/api/upload', (req, res) => {
 						Logger.error(`An error occurred creating the database entry, upload aborted.`, err);
 						return res.json({ code: 500, message: 'An unexpected error occurred.' });
 					}
-					Logger.info(`(${++step}/2) Database entry created.`);
+					Logger.info(`(${++step}/2) Database entry successfully created.`);
 
 					sounds.push({ id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 });
 
-					Logger.info(`(${++step}/2) Rankings/Sound cache entry created.`);
+					Logger.info(`(${++step}/2) Rankings/Sound cache successfully entry created.`);
 
 					setTimeout(() => {
 						emitUpdate(['counter', 'statistics', 'sounds']);
@@ -307,7 +307,7 @@ server.post('/api/rename', (req, res) => {
 			sound.displayname = data.newDisplayname;
 			sound.source = data.newSource;
 
-			Logger.info(`(${++step}/8) Rankings/Sound cache entry updated.`);
+			Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
 			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
 				return copyFile(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.oldSound}.${ext}.bak`, err => {
@@ -361,7 +361,7 @@ server.post('/api/delete', (req, res) => {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.', err);
 				return res.json({ code: 500, message: 'An unexpected error occurred.' });
 			}
-			Logger.info(`(${++step}/4) Database entry deleted.`);
+			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
 
 			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
 				return unlink(`./resources/sounds/${data.sound}.${ext}`, err => {
@@ -369,12 +369,12 @@ server.post('/api/delete', (req, res) => {
 						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, err);
 						return res.json({ code: 500, message: 'An unexpected error occurred.' });
 					}
-					Logger.info(`(${++step}/4) ${ext} soundfile deleted.`);
+					Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
 				});
 			});
 
 			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
-			Logger.info(`(${++step}/4) Rankings/Sound cache entry deleted.`);
+			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
 				emitUpdate(['counter', 'statistics', 'sounds']);
