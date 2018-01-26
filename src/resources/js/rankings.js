@@ -62,5 +62,5 @@ $(document).ready(() => {
 		});
 	});
 
-	$.get('/counter?sounds').done(sounds => updateRanking(sounds));
+	$.get('/sounds').done(sounds => updateRanking(sounds));
 });

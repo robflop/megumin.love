@@ -169,6 +169,8 @@ http.listen(config.port, () => {
 
 server.get('/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
+server.get('/sounds', (req, res) => res.json(sounds));
+
 server.get('/counter', (req, res) => {
 	if (req.query.statistics === '') {
 		return res.json({
@@ -179,8 +181,6 @@ server.get('/counter', (req, res) => {
 			average
 		});
 	}
-
-	if (req.query.sounds === '') return res.json(sounds);
 
 	return res.send(counter.toString());
 });

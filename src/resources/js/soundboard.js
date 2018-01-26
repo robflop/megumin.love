@@ -24,7 +24,7 @@ $(document).ready(() => {
 
 	// actual functionality
 
-	$.get('/counter?sounds').done(sounds => {
+	$.get('/sounds').done(sounds => {
 		sounds = sounds.sort((a, b) => a.source.localeCompare(b.source));
 		// sort season 1 before season 2 etc
 

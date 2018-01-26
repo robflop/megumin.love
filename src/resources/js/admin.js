@@ -25,7 +25,7 @@ $(document).ready(() => {
 	// actual functionality
 
 	const updateSounds = () => {
-		$.get('/counter?sounds').done(sounds => {
+		$.get('/sounds').done(sounds => {
 			const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
 
 			$('#rename-select').html(options.join(''));

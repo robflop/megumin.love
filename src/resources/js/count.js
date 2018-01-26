@@ -26,7 +26,7 @@ $(document).ready(() => {
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 
-	$.get('/counter?sounds').done(sounds => {
+	$.get('/sounds').done(sounds => {
 		sounds.splice(sounds.findIndex(sound => sound.filename === 'realname'), 1);
 
 		$.get('/conInfo').done(con => {
