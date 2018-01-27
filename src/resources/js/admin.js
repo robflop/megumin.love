@@ -26,6 +26,8 @@ $(document).ready(() => {
 
 	const updateSounds = () => {
 		$.get('/sounds').done(sounds => {
+			sounds = sounds.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+			// sort primarily by season and secondarily alphabetically within seasons
 			const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
 
 			$('#rename-select').html(options.join(''));
