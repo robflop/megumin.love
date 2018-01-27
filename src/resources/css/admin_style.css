@@ -33,10 +33,10 @@ form {
 }
 
 form input, form select, form label {
+	display: block;
 	margin-top: 5px;
 	width: 185px;
 	box-sizing: border-box;
-	vertical-align: middle;
 }
 
 form input[type="checkbox"] {
@@ -47,13 +47,35 @@ form input[type="checkbox"] {
 }
 
 .titles {
-	margin: 0 auto 20px auto;
+	margin: 20px auto 10px auto;
 	text-align: center;
 	background-color: #dd0000;
 	color: #ff8080;
 	border-radius: 15px;
 	width: 55%;
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+}
+
+
+@media only screen and (max-width: 1150px) {
+	#container {
+		width: 90%;
+	}
+
+	#panel {
+		display: block;
+	}
+
+	#upload, #delete, #rename {
+		text-align: center;
+		display: block;
+		margin-left: 5%;
+		width: 90%;
+	}
+
+	footer {
+		width: 95%;
+	}
 }
 
 @media only screen and (max-width: 360px) {
