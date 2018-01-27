@@ -27,6 +27,8 @@ $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 
 	const updateRanking = sounds => {
+		sounds = sounds.sort((a, b) => b.count - a.count);
+
 		$('#rankings').children('li').detach();
 
 		for (const sound of sounds) {
@@ -55,9 +57,11 @@ $(document).ready(() => {
 					data = {};
 				}
 
-				if (data.type !== 'update') return;
+				if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-				return data.values.sounds ? updateRanking(data.values.sounds) : null;
+				if (data.values.sounds) return updateRanking(data.values.sounds);
+				// no need to differentiate soundUpdate and counterUpdate because list gets rebuilt each update either way,
+				// so it'll automatically include both new numbers and entirely new sounds
 			});
 		});
 	});

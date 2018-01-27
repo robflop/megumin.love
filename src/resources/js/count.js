@@ -25,9 +25,26 @@ $(document).ready(() => {
 	// actual functionality
 
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	let sounds = [];
+	let howlerList = {};
 
-	$.get('/sounds').done(sounds => {
-		sounds.splice(sounds.findIndex(sound => sound.filename === 'realname'), 1);
+	function loadSounds(s) {
+		s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
+		howlerList = {}; // wipe before (re)load
+		sounds = s; // reassign new sounds array
+
+		for (const sound of sounds) {
+			if (sound.filename === 'realname') continue;
+
+			howlerList[sound.filename] = new Howl({
+				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`]
+			});
+		}
+	}
+
+	$.get('/sounds').done(s => {
+		s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
+		sounds = s;
 
 		$.get('/conInfo').done(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
@@ -46,9 +63,10 @@ $(document).ready(() => {
 						data = {};
 					}
 
-					if (data.type !== 'update') return;
+					if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-					return data.values.counter ? $('#counter').html(formatNumber(data.values.counter)) : null;
+					if (data.type === 'soundUpdate' && data.values.sounds) return loadSounds(data.values.sounds);
+					else if (data.type === 'counterUpdate' && data.values.counter) return $('#counter').html(formatNumber(data.values.counter));
 				});
 
 				$('#button').click(() => {
@@ -63,16 +81,8 @@ $(document).ready(() => {
 		$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
 		// load initial counter
 
-		const howlerList = {};
-
-		for (const sound of sounds) {
-			if (sound.filename === 'realname') continue;
-
-			howlerList[sound.filename] = new Howl({
-				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`]
-			});
-		// load all sounds
-		}
+		loadSounds(sounds);
+		// load initial sounds
 
 		$('#button').keypress(key => {
 			if (key.which === 13) return key.preventDefault();

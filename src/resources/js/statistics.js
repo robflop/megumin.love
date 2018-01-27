@@ -51,9 +51,10 @@ $(document).ready(() => {
 					data = {};
 				}
 
-				if (data.type !== 'update') return;
+				if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-				return data.values.statistics ? updateStatistics(data.values.statistics) : null;
+				if (data.values.statistics) return updateStatistics(data.values.statistics);
+				// only numbers ever get updated here, no need to differentiate the two events
 			});
 		});
 	});
