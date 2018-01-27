@@ -56,7 +56,6 @@ db.serialize(() => {
 	`);
 
 	db.all('SELECT * FROM sounds', [], (error, rows) => {
-		rows = rows.sort((a, b) => b.count - a.count);
 		rows.map(sound => sounds.push(sound));
 
 		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayname}", "${sound.source}", 0 )`);
