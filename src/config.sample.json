@@ -5,7 +5,7 @@
 		"404",
 		"500"
 	],
-	"databasePath": "./db/megumin_yamero.db",
+	"databasePath": "./db/default.db",
 	"updateInterval": 30,
 	"adminPassword": "pathOfExplosions",
 	"sessionSecret": "someKindOfSecret"

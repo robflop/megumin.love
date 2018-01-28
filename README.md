@@ -11,7 +11,8 @@ Runs under [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expres
 ## Self-hosting Usage
 - Navigate into the folder you downloaded the repo to
 - Rename `src/config.sample.json` to `src/config.json`
-- Configure the website's settings (**Make sure to change the admin password and session secret**)
+- *Recommended, but not needed*: Rename `src/db/default.db` to a name of your choosing (take care to change the config appropriately)
+- Open the `config.json` file and configure the website's settings (**Make sure to change the admin password and session secret**)
 - Run `npm install` in a terminal to install dependencies
 - Navigate into the `src` folder (to set the cwd properly)
 - Start the website using `node server.js` (or `pm2 start server.js` if you use pm2)
