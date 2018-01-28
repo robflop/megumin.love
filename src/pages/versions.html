@@ -178,6 +178,24 @@
 				</p>
 			</div>
 			<hr>
+			<div class="version-box">
+				<h2>Version 5.0 - 28.01.2018</h2>
+				<p>
+					Third time's the charm, major update. The main backend feature which the user doesn't see is that how the website saves data has
+					been restructured, so information about sounds isn't saved in JSON anymore but in the database. The amount of soundboard clicks
+					(i.e. rankings) are	now stored alongside the sound's filename, displayname and source, which should be more efficient. This change
+					requires you to run a database migration script which I have provided in the repository. Use it before trying to boot the website.
+					The major frontend feature, which the user (or in this case, the admin) does see is the new admin panel. Using this panel you
+					can do three things: Upload new sounds, rename existing ones or delete sounds. Each action will also be live-updated onto the
+					soundboard, the rankings and the main page -- so currently visiting users will be served new sounds as soon as they are uploaded,
+					the soundboard will be rebuilt to adjust itself for potential new sections or renamed/deleted sounds and the rankings list will
+					adjust itself to account for the change done via the admin panel. Absolutely no code is required to use the panel, only text and
+					file input in a form which you submit and the server then processes. Logging into the admin panel requires a password you can
+					configure in the website's configuration file (see the instructions provided in the GitHub Repository). Besides this, various
+					small adjustments have been made that do not have a big impact on user or admin.
+				</p>
+			</div>
+			<hr>
 			<div id="backlink-bottom">
 				<a class="backlink" href="/">Back</a>
 			</div>
