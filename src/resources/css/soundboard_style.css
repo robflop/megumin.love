@@ -57,6 +57,12 @@ body {
 	margin-top: 23px;
 }
 
+#warning {
+	font-size: 40px;
+	background-color: rgba(96,96,96,1);
+	color: rgba(56,56,56,1);
+}
+
 #rankings {
 	color: #dd0000;
 	text-align: center;

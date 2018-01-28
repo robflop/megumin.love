@@ -29,7 +29,9 @@ $(document).ready(() => {
 	const updateRanking = sounds => {
 		sounds = sounds.sort((a, b) => b.count - a.count);
 
-		$('#rankings').children('li').detach();
+		$('#rankings').children().detach();
+
+		if (sounds.length === 0) $('#rankings').append('<h1 id="warning">No sounds available.</h1>');
 
 		for (const sound of sounds) {
 			if (sound.filename === 'realname') continue;

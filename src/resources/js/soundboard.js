@@ -32,7 +32,17 @@ $(document).ready(() => {
 		howlerList = {}; // wipe before (re)load
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// sort primarily by season and secondarily alphabetically within seasons
+
 		$('#container').html('<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>'); // reset container
+
+		if (sounds.length === 0) {
+			return $('#container').html(`
+			<div id="backlink-top"><a class="backlink" href="/">Back</a></div>
+			<a href="rankings" id="rankings">Rankings</a>
+			<p id="warning" class="titles" style="font-size:50px">No sounds available.</p>
+			<div id="backlink-bottom"><a class="backlink" href="/">Back</a></div>
+			`);
+		}
 
 		$('#container').append('<div id="backlink-top"><a class="backlink" href="/">Back</a></div>');
 		$('#container').append('<a href="rankings" id="rankings">Rankings</a>');

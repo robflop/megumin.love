@@ -28,10 +28,34 @@ $(document).ready(() => {
 	let sounds = [];
 	let howlerList = {};
 
+	function toggleButton() {
+		if ($('#button').text() === 'No sounds available.') {
+			$('#button').text('やめろ!!');
+			$('#button').css({
+				'font-size': '65px',
+				'background-color': '#dd0000',
+				'color': '#ff8080' // eslint-disable-line quote-props
+			});
+			$('#button').prop('disabled', false);
+		}
+		else {
+			$('#button').css({
+				'font-size': '40px',
+				'background-color': 'rgba(96,96,96,1)',
+				'color': 'rgba(56,56,56,1)' // eslint-disable-line quote-props
+			});
+			$('#button').text('No sounds available.');
+			$('#button').prop('disabled', true);
+		}
+	}
+
 	function loadSounds(s) {
-		s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
+		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
 		howlerList = {}; // wipe before (re)load
 		sounds = s; // reassign new sounds array
+
+		if (sounds.length > 0 && $('#button').text() === 'No sounds available.') toggleButton();
+		if (sounds.length === 0 && $('#button').text() === 'やめろ!!') toggleButton();
 
 		for (const sound of sounds) {
 			if (sound.filename === 'realname') continue;
@@ -43,8 +67,10 @@ $(document).ready(() => {
 	}
 
 	$.get('/sounds').done(s => {
-		s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
+		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
 		sounds = s;
+
+		if (sounds.length === 0) toggleButton();
 
 		$.get('/conInfo').done(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
