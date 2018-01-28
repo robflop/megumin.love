@@ -60,7 +60,8 @@ db.serialize(() => {
 
 		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayname}", "${sound.source}", 0 )`);
 
-		db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
+		if (soundQueryValues.length) db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
+		// only try to insert rows when there are sounds
 
 		return Logger.info('Sounds & rankings loaded.');
 	});
@@ -259,7 +260,7 @@ server.post('/api/upload', (req, res) => {
 		}
 		else {
 			let step = 0;
-			const latestID = sounds.reduce((prev, cur) => prev.id > cur.y ? prev : cur).id;
+			const latestID = sounds.length ? sounds.reduce((prev, cur) => prev.id > cur.y ? prev : cur).id : 0;
 
 			db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, 0 )`,
 				data.filename, data.displayname, data.source,
