@@ -39,6 +39,10 @@ form input, form select, form label {
 	box-sizing: border-box;
 }
 
+form input[type="file"], #delete-confirmation label {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
 form input[type="checkbox"] {
 	display: inline-block;
 	vertical-align: middle;
