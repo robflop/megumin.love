@@ -26,7 +26,8 @@ db.serialize(() => {
 				db.run(`UPDATE sounds SET count = ${row.count} WHERE filename = '${row.filename}'`);
 			}
 			db.run('DROP TABLE rankings');
-			console.log('Database migration/adjustment in progress... (wait for the commandline input to show up again)');
+			console.log('Database adjustment in progress. Once this is complete you may delete your "sounds.js" file at "/src/resources/sounds.js".');
+			console.log('(It is complete once the command line input shows up again.)');
 		});
 	});
 });
