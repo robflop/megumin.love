@@ -140,7 +140,7 @@ server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
 	saveUninitialized: false,
-	cookie: { secure: config.SSLproxy ? true : false }
+	cookie: { secure: 'auto' }
 }));
 server.use(express.static('./resources'));
 
