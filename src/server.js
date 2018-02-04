@@ -229,6 +229,7 @@ server.post('/api/login', (req, res) => {
 
 	if (config.adminPassword === req.body.password) {
 		req.session.loggedIn = true;
+		Logger.info('A user has logged into the admin panel.');
 		return res.json({ code: 200, message: 'Successfully logged in!' });
 	}
 	else {
@@ -239,6 +240,7 @@ server.post('/api/login', (req, res) => {
 server.get('/api/logout', (req, res) => {
 	if (req.session.loggedIn) {
 		req.session.destroy();
+		Logger.info('A user has logged out of the admin panel.');
 		return res.json({ code: 200, message: 'Successfully logged out!' });
 	}
 	else {
