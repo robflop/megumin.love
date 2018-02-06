@@ -17,28 +17,7 @@ const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek =
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
-let sounds = []; // let and not const because i reassign the array to sort it
-const statistics = new Map();
-
-function bubbleSort(arr, property) {
-	let sorted = arr.length;
-	do {
-		for (let i = 1; i < sorted; ++i) {
-			const a = property ? arr[i - 1][property] : arr[i - 1];
-			const b = property ? arr[i][property] : arr[i];
-
-			if (a < b) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
-		}
-		--sorted;
-	} while (sorted > 0);
-
-	return arr;
-}
-/*
-bubble sort used to avoid ranking entries of the same count continuously swapping positions,
-since Array.sort() isn't a stable sort -- before bubble sorting it's sorted once already, so
-bubble sorting only does minimal work and therefore doesn't really slow down.
-*/
+const sounds = [], statistics = new Map();
 
 // on-boot database interaction
 
@@ -51,7 +30,8 @@ db.serialize(() => {
 			filename TEXT NOT NULL UNIQUE, 
 			displayname TEXT NOT NULL, 
 			source TEXT NOT NULL, 
-			count INTEGER NOT NULL
+			count INTEGER NOT NULL,
+			soundID TEXT NOT NULL UNIQUE
 		)
 	`);
 
@@ -458,8 +438,6 @@ socketServer.on('connection', socket => {
 
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
-
-			sounds = bubbleSort(sounds, 'count');
 
 			return emitUpdate('counterUpdate', ['sounds']);
 		}
