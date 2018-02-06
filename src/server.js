@@ -58,11 +58,6 @@ db.serialize(() => {
 	db.all('SELECT * FROM sounds', [], (error, rows) => {
 		rows.map(sound => sounds.push(sound));
 
-		const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayname}", "${sound.source}", 0 )`);
-
-		if (soundQueryValues.length) db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
-		// only try to insert rows when there are sounds
-
 		return Logger.info('Sounds & rankings loaded.');
 	});
 
