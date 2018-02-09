@@ -36,7 +36,7 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 
 		db.run(`INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ${soundQueryValues}`);
 
-		db.all('SELECT * FROM rankings', [], (error, rows) => {
+		db.all('SELECT filename, count FROM rankings', [], (error, rows) => {
 			if (error) return console.log('An error occurred accessing v4-specific database values (v5+ does not have these), did you already migrate?');
 
 			db.serialize(() => {
