@@ -20,7 +20,6 @@ let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmo
 const sounds = [], statistics = new Map();
 
 // on-boot database interaction
-
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
@@ -36,7 +35,6 @@ db.serialize(() => {
 
 	db.all('SELECT * FROM sounds', [], (error, rows) => {
 		rows.map(sound => sounds.push(sound));
-
 		return Logger.info('Sounds & rankings loaded.');
 	});
 
@@ -55,36 +53,32 @@ db.serialize(() => {
 	`);
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
 
-	// make sure all necessary tables with at least one necessary column exist
-
 	db.get('SELECT counter FROM yamero_counter', [], (error, row) => {
-		if (!row) db.run(`INSERT OR IGNORE INTO yamero_counter ( counter ) VALUES ( 0 )`);
-		// create row if it doesn't exist
-		counter = row ? row.counter : 0;
+		if (!row) db.run(`INSERT INTO yamero_counter ( counter ) VALUES ( 0 )`);
 
+		counter = row ? row.counter : 0;
 		return Logger.info('Main counter loaded.');
 	});
 
+	// make sure all necessary tables with at least one necessary column exist
+
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
-		daily = rows.find(row => row.date === bootDate).count;
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfBootMonth, endOfBootMonth, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
 
-		rows.map(date => statistics.set(date.date, date.count));
-		// populate statistics map
+		daily = rows.find(row => row.date === bootDate).count;
 		weekly = thisWeek.reduce((total, date) => total += date.count, 0);
 		monthly = thisMonth.reduce((total, date) => total += date.count, 0);
-
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(monthly / thisMonth.length);
 
+		rows.map(date => statistics.set(date.date, date.count));
 		return Logger.info('Statistics loaded.');
 	});
 });
 
 // webserver
-
 const server = express();
 const http = require('http').Server(server);
 const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
@@ -137,7 +131,6 @@ const upload = multer({
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
-
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
@@ -161,13 +154,14 @@ server.get('/counter', (req, res) => {
 
 server.get('/stats', (req, res) => {
 	const requestedStats = {};
+
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
 		if (req.query.from && !req.query.to) {
-			return res.json({ [req.query.from]: statistics.get(req.query.from) || 0 });
+			requestedStats[req.query.from] = statistics.get(req.query.from) || 0;
 		}
 		else if (!req.query.from && req.query.to) {
 			const to = moment(req.query.to);
@@ -175,8 +169,6 @@ server.get('/stats', (req, res) => {
 			statistics.forEach((count, date) => {
 				if (moment(date).isSameOrBefore(to)) requestedStats[date] = count;
 			});
-
-			return res.json(requestedStats || {});
 		}
 		else if (req.query.from && req.query.to) {
 			const from = moment(req.query.from), to = moment(req.query.to);
@@ -185,15 +177,13 @@ server.get('/stats', (req, res) => {
 				if (moment(date).isBetween(from, to, null, [])) requestedStats[date] = count;
 				// null & [] parameters given for including first and last day of range (see moment docs)
 			});
-
-			return res.json(requestedStats || {});
 		}
 	}
 	else {
 		statistics.forEach((count, date) => requestedStats[date] = count);
-
-		return res.json(requestedStats);
 	}
+
+	return res.json(requestedStats);
 });
 
 server.post('/api/login', (req, res) => {
@@ -227,6 +217,7 @@ server.post('/api/upload', (req, res) => {
 
 	upload(req, res, err => {
 		if (err) return res.json({ code: 400, message: err });
+
 		const data = req.body;
 		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
 
@@ -254,6 +245,7 @@ server.post('/api/upload', (req, res) => {
 					setTimeout(() => {
 						emitUpdate('soundUpdate', ['sounds']);
 					}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+
 					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
 				});
 		}
@@ -316,6 +308,7 @@ server.post('/api/rename', (req, res) => {
 			setTimeout(() => {
 				emitUpdate('soundUpdate', ['sounds']);
 			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+
 			return res.json({ code: 200, message: 'Sound successfully renamed.' });
 		});
 	}
@@ -355,6 +348,7 @@ server.post('/api/delete', (req, res) => {
 			setTimeout(() => {
 				emitUpdate('soundUpdate', ['sounds']);
 			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+
 			return res.json({ code: 200, message: 'Sound successfully deleted.' });
 		});
 	}
@@ -383,7 +377,6 @@ for (const error of config.errorTemplates) {
 }
 
 // socket server
-
 const socketServer = new uws.Server({ server: http });
 const sockets = new Set();
 
@@ -400,7 +393,6 @@ function emitUpdate(event, types, socket) {
 
 socketServer.on('connection', socket => {
 	sockets.add(socket);
-
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
 	socket.on('message', message => {
@@ -430,7 +422,6 @@ socketServer.on('connection', socket => {
 			if (!data.sound) return;
 
 			let soundEntry = sounds.find(sound => sound.filename === data.sound.filename);
-
 			if (!soundEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
 			// safeguard against requests with sounds that don't exist from being saved serverside
 			// no need to check other props because if it's found, only count will be incremented (no user input)
@@ -449,7 +440,6 @@ socketServer.on('connection', socket => {
 });
 
 // database updates
-
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	db.serialize(() => {
 		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
@@ -469,7 +459,6 @@ scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-
 	return emitUpdate('counterUpdate', ['statistics']);
 }); // reset monthly counter at the start of each month
 
@@ -477,7 +466,6 @@ scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-
 	return emitUpdate('counterUpdate', ['statistics']);
 }); // reset weekly counter at the start of each week (1 = monday)
 
@@ -487,6 +475,5 @@ scheduleJob('0 0 * * *', () => {
 	statistics.set(moment().format('YYYY-MM-DD'), 0);
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-
 	return emitUpdate('counterUpdate', ['statistics']);
 }); // reset daily counter and update local statistics map at each midnight
