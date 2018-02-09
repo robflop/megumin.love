@@ -30,8 +30,7 @@ db.serialize(() => {
 			filename TEXT NOT NULL UNIQUE, 
 			displayname TEXT NOT NULL, 
 			source TEXT NOT NULL, 
-			count INTEGER NOT NULL,
-			soundID TEXT NOT NULL UNIQUE
+			count INTEGER NOT NULL
 		)
 	`);
 
@@ -94,14 +93,6 @@ const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
-
-function randomString(n) {
-	let r = '';
-	while (n--) {
-		r += String.fromCharCode((r = Math.random() * 62 | 0, r += r > 9 ? r < 36 ? 55 : 61 : 48));
-	}
-	return r;
-}
 
 readdirSync(pagePath).forEach(file => {
 	const page = file.slice(0, -5).toLowerCase();
@@ -247,8 +238,8 @@ server.post('/api/upload', (req, res) => {
 			let step = 0;
 			const latestID = sounds.length ? sounds.reduce((prev, cur) => prev.id > cur.y ? prev : cur).id : 0;
 
-			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count, soundID ) VALUES ( ?, ?, ?, 0, ? )',
-				data.filename, data.displayname, data.source, randomString(10),
+			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, 0 )',
+				data.filename, data.displayname, data.source,
 				err => {
 					if (err) {
 						Logger.error(`An error occurred creating the database entry, upload aborted.`, err);
