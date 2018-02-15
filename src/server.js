@@ -165,18 +165,31 @@ server.get('/stats', (req, res) => {
 		}
 		else if (!req.query.from && req.query.to) {
 			const to = moment(req.query.to);
+			const firstStatDay = moment(statistics.keys().next().value);
 
 			statistics.forEach((count, date) => {
 				if (moment(date).isSameOrBefore(to)) requestedStats[date] = count;
 			});
+
+			while (firstStatDay.add(1, 'day').diff(to) <= 0) {
+				if (!requestedStats.hasOwnProperty(firstStatDay.format('YYYY-MM-DD'))) requestedStats[firstStatDay.format('YYYY-MM-DD')] = 0;
+				// adding the dates that there aren't any statistics for into the object with value 0
+			}
 		}
 		else if (req.query.from && req.query.to) {
 			const from = moment(req.query.from), to = moment(req.query.to);
+
+			if (from.isAfter(to)) return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
 
 			statistics.forEach((count, date) => {
 				if (moment(date).isBetween(from, to, null, [])) requestedStats[date] = count;
 				// null & [] parameters given for including first and last day of range (see moment docs)
 			});
+
+			while (from.add(1, 'days').diff(to) <= 0) {
+				if (!requestedStats.hasOwnProperty(from.format('YYYY-MM-DD'))) requestedStats[from.format('YYYY-MM-DD')] = 0;
+				// adding the dates that there aren't any statistics for into the object with value 0
+			}
 		}
 	}
 	else {
