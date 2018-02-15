@@ -17,7 +17,7 @@ const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek =
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
-const sounds = [], statistics = new Map();
+const sounds = [], statistics = {};
 
 // on-boot database interaction
 const db = new Database(config.databasePath);
@@ -73,7 +73,7 @@ db.serialize(() => {
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(monthly / thisMonth.length);
 
-		rows.map(date => statistics.set(date.date, date.count));
+		rows.map(date => statistics[date.date] = date.count);
 		return Logger.info('Statistics loaded.');
 	});
 });
@@ -129,6 +129,32 @@ const upload = multer({
 	}
 }).array('files[]', 2);
 
+/*
+	Using a date iterator instead of simply looping over the statistics because I also want to fill out
+	the object values for dates that are not present in the database. Looping over the stats wouldn't
+	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
+	would not work if the difference between current stats iteration and date iterator is bigger than one.
+*/
+function iterateStats(iterator, startDate, endDate, statsCondition) {
+	const result = {};
+
+	if (!statsCondition) statsCondition = () => true; // if no condition provided, default to true
+
+	while (iterator.diff(endDate) <= 0) {
+		const formattedDate = iterator.format('YYYY-MM-DD');
+
+		if (!statistics.hasOwnProperty(formattedDate)) result[formattedDate] = 0;
+		// check for days missing in statistics and insert value for those
+		if (statistics.hasOwnProperty(formattedDate) && statsCondition(iterator, startDate, endDate)) {
+			result[formattedDate] = statistics[formattedDate];
+		}
+
+		iterator.add(1, 'days');
+	}
+
+	return result;
+}
+
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
@@ -152,8 +178,8 @@ server.get('/counter', (req, res) => {
 	return res.send(counter.toString());
 });
 
-server.get('/stats', (req, res) => {
-	const requestedStats = {};
+server.get('/stats', (req, res) => { // eslint-disable-line complexity
+	let requestedStats = {};
 
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
@@ -161,39 +187,41 @@ server.get('/stats', (req, res) => {
 		}
 
 		if (req.query.from && !req.query.to) {
-			requestedStats[req.query.from] = statistics.get(req.query.from) || 0;
+			requestedStats[req.query.from] = statistics[req.query.from] || 0;
 		}
 		else if (!req.query.from && req.query.to) {
 			const to = moment(req.query.to);
-			const firstStatDay = moment(statistics.keys().next().value);
+			const dateIterator = moment(Object.keys(statistics)[0]);
 
-			statistics.forEach((count, date) => {
-				if (moment(date).isSameOrBefore(to)) requestedStats[date] = count;
-			});
-
-			while (firstStatDay.add(1, 'day').diff(to) <= 0) {
-				if (!requestedStats.hasOwnProperty(firstStatDay.format('YYYY-MM-DD'))) requestedStats[firstStatDay.format('YYYY-MM-DD')] = 0;
-				// adding the dates that there aren't any statistics for into the object with value 0
+			if (to.isAfter(moment().format('YYYY-MM-DD'))) {
+				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
 			}
+
+			requestedStats = iterateStats(dateIterator, null, to, (iterator, startDate, endDate) => { // eslint-disable-line arrow-body-style
+				return moment(iterator.format('YYYY-MM-DD')).isSameOrBefore(endDate);
+			});
 		}
 		else if (req.query.from && req.query.to) {
 			const from = moment(req.query.from), to = moment(req.query.to);
+			const dateIterator = from.clone();
 
 			if (from.isAfter(to)) return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
 
-			statistics.forEach((count, date) => {
-				if (moment(date).isBetween(from, to, null, [])) requestedStats[date] = count;
+			if (to.isAfter(moment().format('YYYY-MM-DD'))) {
+				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
+			}
+
+			requestedStats = iterateStats(dateIterator, from, to, (iterator, startDate, endDate) => { // eslint-disable-line arrow-body-style
+				return moment(iterator).isBetween(startDate, endDate, null, []);
 				// null & [] parameters given for including first and last day of range (see moment docs)
 			});
-
-			while (from.add(1, 'days').diff(to) <= 0) {
-				if (!requestedStats.hasOwnProperty(from.format('YYYY-MM-DD'))) requestedStats[from.format('YYYY-MM-DD')] = 0;
-				// adding the dates that there aren't any statistics for into the object with value 0
-			}
 		}
 	}
 	else {
-		statistics.forEach((count, date) => requestedStats[date] = count);
+		const statStartDate = moment(Object.keys(statistics)[0]);
+		const statEndDate = moment(); // today
+
+		requestedStats = iterateStats(statStartDate, null, statEndDate);
 	}
 
 	return res.json(requestedStats);
@@ -426,7 +454,7 @@ socketServer.on('connection', socket => {
 			++weekly; ++monthly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
-			statistics.set(currentDate, daily);
+			statistics[currentDate] = daily;
 
 			return emitUpdate('counterUpdate', ['counter', 'statistics']);
 		}
@@ -485,7 +513,7 @@ scheduleJob('0 0 * * 1', () => {
 scheduleJob('0 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
 	average = Math.round(monthly / fetchedDaysAmount);
-	statistics.set(moment().format('YYYY-MM-DD'), 0);
+	statistics[moment().format('YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
 	return emitUpdate('counterUpdate', ['statistics']);
