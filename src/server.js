@@ -135,7 +135,8 @@ const upload = multer({
 	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
 	would not work if the difference between current stats iteration and date iterator is bigger than one.
 */
-function iterateStats(iterator, startDate, endDate, statsCondition) {
+function filterStats(startDate, endDate, statsCondition) {
+	const iterator = startDate.clone();
 	const result = {};
 
 	if (!statsCondition) statsCondition = () => true; // if no condition provided, default to true
@@ -191,15 +192,13 @@ server.get('/stats', (req, res) => { // eslint-disable-line complexity
 		}
 		else if (!req.query.from && req.query.to) {
 			const to = moment(req.query.to);
-			const dateIterator = moment(Object.keys(statistics)[0]);
+			const firstStatDate = moment(Object.keys(statistics)[0]);
 
-			if (to.isAfter(moment().format('YYYY-MM-DD'))) {
+			if (to.isAfter(moment())) {
 				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
 			}
 
-			requestedStats = iterateStats(dateIterator, null, to, (iterator, startDate, endDate) => { // eslint-disable-line arrow-body-style
-				return moment(iterator.format('YYYY-MM-DD')).isSameOrBefore(endDate);
-			});
+			requestedStats = filterStats(firstStatDate, to, (iterator, startDate, endDate) => moment(iterator).isSameOrBefore(endDate));
 		}
 		else if (req.query.from && req.query.to) {
 			const from = moment(req.query.from), to = moment(req.query.to);
@@ -207,21 +206,19 @@ server.get('/stats', (req, res) => { // eslint-disable-line complexity
 
 			if (from.isAfter(to)) return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
 
-			if (to.isAfter(moment().format('YYYY-MM-DD'))) {
+			if (to.isAfter(moment())) {
 				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
 			}
 
-			requestedStats = iterateStats(dateIterator, from, to, (iterator, startDate, endDate) => { // eslint-disable-line arrow-body-style
-				return moment(iterator).isBetween(startDate, endDate, null, []);
-				// null & [] parameters given for including first and last day of range (see moment docs)
-			});
+			requestedStats = filterStats(from, to, (iterator, startDate, endDate) => moment(iterator).isBetween(startDate, endDate, null, []));
+			// null & [] parameters given for including first and last day of range (see moment docs)
 		}
 	}
 	else {
 		const statStartDate = moment(Object.keys(statistics)[0]);
 		const statEndDate = moment(); // today
 
-		requestedStats = iterateStats(statStartDate, null, statEndDate);
+		requestedStats = filterStats(statStartDate, statEndDate);
 	}
 
 	return res.json(requestedStats);
