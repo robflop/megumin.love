@@ -181,44 +181,39 @@ server.get('/counter', (req, res) => {
 
 server.get('/stats', (req, res) => { // eslint-disable-line complexity
 	let requestedStats = {};
+	const firstStatDate = moment(Object.keys(statistics)[0]);
 
 	if (req.query.from || req.query.to) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
+		const to = req.query.to ? moment(req.query.to) : null;
+		const from = req.query.from ? moment(req.query.from) : null;
+
+		if (to && to.isAfter(moment()) || from && from.isAfter(moment())) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates can not be in the future.' });
+		}
+
+		if ((to && from) && from.isAfter(to)) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
+		}
+
 		if (req.query.from && !req.query.to) {
 			requestedStats[req.query.from] = statistics[req.query.from] || 0;
 		}
 		else if (!req.query.from && req.query.to) {
-			const to = moment(req.query.to);
-			const firstStatDate = moment(Object.keys(statistics)[0]);
-
-			if (to.isAfter(moment())) {
-				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
-			}
-
 			requestedStats = filterStats(firstStatDate, to, (iterator, startDate, endDate) => moment(iterator).isSameOrBefore(endDate));
 		}
 		else if (req.query.from && req.query.to) {
-			const from = moment(req.query.from), to = moment(req.query.to);
-			const dateIterator = from.clone();
-
-			if (from.isAfter(to)) return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
-
-			if (to.isAfter(moment())) {
-				return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'End date can not be in the future.' });
-			}
-
 			requestedStats = filterStats(from, to, (iterator, startDate, endDate) => moment(iterator).isBetween(startDate, endDate, null, []));
 			// null & [] parameters given for including first and last day of range (see moment docs)
 		}
 	}
 	else {
-		const statStartDate = moment(Object.keys(statistics)[0]);
-		const statEndDate = moment(); // today
+		const latestStatDate = moment(); // today
 
-		requestedStats = filterStats(statStartDate, statEndDate);
+		requestedStats = filterStats(firstStatDate, latestStatDate);
 	}
 
 	return res.json(requestedStats);
