@@ -2,7 +2,7 @@ $(document).ready(() => {
 	const background = (document.cookie.split(';').find(cookie => cookie.trim().startsWith('background')) || '').trim().substr(11) || 'rotate';
 	// the 11 in the substring is the length of "background=" to get the cookie value
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6'];
-	const randomBg = backgrounds[Math.round(Math.random() * backgrounds.length)];
+	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	$('body').css('background-image', `url(/images/backgrounds/${background !== 'rotate' ? background : randomBg}.jpg)`);
 
