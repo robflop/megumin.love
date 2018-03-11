@@ -254,6 +254,7 @@ server.get('/stats', (req, res) => { // eslint-disable-line complexity
 			});
 			// null & [] parameters given for including first and last day of range (see moment docs)
 		}
+		else requestedStats = countFiltered;
 
 		if (countFiltered) {
 			for (const entryKey in requestedStats) {
