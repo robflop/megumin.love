@@ -108,7 +108,7 @@
     "template-tag-spacing": "error",
     "unicode-bom": "error",
 
-    "arrow-body-style": "error",
+    "arrow-body-style": "off",
     "arrow-parens": ["error", "as-needed"],
     "arrow-spacing": "error",
     "no-duplicate-imports": "error",
