@@ -135,7 +135,7 @@ const upload = multer({
 	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
 	would not work if the difference between current stats iteration and date iterator is bigger than one.
 */
-function filterStats(startDate, endDate, statsCondition) {
+function filterStats(statsObj, startDate, endDate, statsCondition) {
 	const iterator = startDate.clone();
 	const result = {};
 
@@ -144,10 +144,10 @@ function filterStats(startDate, endDate, statsCondition) {
 	while (iterator.diff(endDate) <= 0) {
 		const formattedDate = iterator.format('YYYY-MM-DD');
 
-		if (!statistics.hasOwnProperty(formattedDate)) result[formattedDate] = 0;
+		if (!statsObj.hasOwnProperty(formattedDate)) result[formattedDate] = 0;
 		// check for days missing in statistics and insert value for those
-		if (statistics.hasOwnProperty(formattedDate) && statsCondition(iterator, startDate, endDate)) {
-			result[formattedDate] = statistics[formattedDate];
+		if (statsObj.hasOwnProperty(formattedDate) && statsCondition(iterator, startDate, endDate)) {
+			result[formattedDate] = statsObj[formattedDate];
 		}
 
 		iterator.add(1, 'days');
@@ -180,40 +180,89 @@ server.get('/counter', (req, res) => {
 });
 
 server.get('/stats', (req, res) => { // eslint-disable-line complexity
-	let requestedStats = {};
+	let requestedStats, countFiltered, dateFiltered;
 	const firstStatDate = moment(Object.keys(statistics)[0]);
 	const latestStatDate = moment(Object.keys(statistics)[Object.keys(statistics).length - 1]);
 	// grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
-	if (req.query.from || req.query.to) {
+	if (['from', 'to', 'equals', 'over', 'under'].some(selector => Object.keys(req.query).includes(selector))) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
 		const to = req.query.to ? moment(req.query.to) : null;
 		const from = req.query.from ? moment(req.query.from) : null;
+		const equals = req.query.equals ? parseInt(req.query.equals) : null;
+		const over = req.query.over ? parseInt(req.query.over) : null;
+		const under = req.query.under ? parseInt(req.query.under) : null;
 
-		if (to && to.isAfter(latestStatDate) || from && from.isAfter(latestStatDate)) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates can not be in the future.' });
+		if ((to && to.isAfter(latestStatDate)) || (from && from.isAfter(latestStatDate))) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
 		if ((to && from) && from.isAfter(to)) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Start date must be before end date.' });
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
-		if (req.query.from && !req.query.to) {
-			requestedStats[req.query.from] = statistics[req.query.from] || 0;
+		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" selectors must be numbers.' });
 		}
-		else if (!req.query.from && req.query.to) {
-			requestedStats = filterStats(firstStatDate, to, (iterator, startDate, endDate) => moment(iterator).isSameOrBefore(endDate));
+
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" selector must be bigger than the "over" selector.' });
 		}
-		else if (req.query.from && req.query.to) {
-			requestedStats = filterStats(from, to, (iterator, startDate, endDate) => moment(iterator).isBetween(startDate, endDate, null, []));
+
+		// count filtering
+		if (equals || over || under) {
+			if (equals) {
+				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator.format('YYYY-MM-DD')] === equals;
+				});
+			}
+			else if (over && !under) {
+				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator.format('YYYY-MM-DD')] > over;
+				});
+			}
+			else if (!over && under) {
+				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator.format('YYYY-MM-DD')] < under;
+				});
+			}
+			else if (over && under) {
+				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator.format('YYYY-MM-DD')] > over && statistics[iterator.format('YYYY-MM-DD')] < under;
+				});
+			}
+		}
+
+		// date filtering
+		const formattedFrom = from ? from.format('YYYY-MM-DD') : null;
+		const formattedTo = to ? to.format('YYYY-MM-DD') : null;
+
+		if (formattedFrom && !formattedTo) {
+			requestedStats[formattedFrom] = statistics[formattedFrom] || 0;
+		}
+		else if (!formattedFrom && formattedTo) {
+			requestedStats = filterStats(countFiltered ? countFiltered : statistics, firstStatDate, to, (iterator, startDate, endDate) => {
+				return moment(iterator).isSameOrBefore(endDate);
+			});
+		}
+		else if (formattedFrom && formattedTo) {
+			requestedStats = filterStats(countFiltered ? countFiltered : statistics, from, to, (iterator, startDate, endDate) => {
+				return moment(iterator).isBetween(startDate, endDate, null, []);
+			});
 			// null & [] parameters given for including first and last day of range (see moment docs)
+		}
+
+		if (countFiltered) {
+			for (const entryKey in requestedStats) {
+				if (requestedStats[entryKey] === 0) delete requestedStats[entryKey];
+			} // filter padded entries if a count filter is used
 		}
 	}
 	else {
-		requestedStats = filterStats(firstStatDate, latestStatDate);
+		requestedStats = filterStats(statistics, firstStatDate, latestStatDate);
 	}
 
 	return res.json(requestedStats);
