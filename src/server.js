@@ -102,7 +102,9 @@ readdirSync(pagePath).forEach(file => {
 	// last array item because during current iteration it will be the last (adds root-dir route for index)
 });
 
-server.use(helmet());
+server.use(helmet({
+	hsts: false // hsts sent via nginx
+}));
 server.set('trust proxy', 1);
 server.use(express.urlencoded({ extended: false }));
 server.use(session({
