@@ -32,7 +32,7 @@ form {
 	padding: 5px;
 }
 
-form input, form select, form label {
+#container form input, #container form select, #container form label {
 	display: block;
 	margin-top: 5px;
 	width: 185px;

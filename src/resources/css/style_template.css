@@ -36,7 +36,10 @@ footer {
 
 #bg-select-wrapper {
 	white-space: nowrap;
-	text-align: center
+}
+
+#bg-select-wrapper p {
+	text-align: center;
 }
 
 #credits {
@@ -82,7 +85,7 @@ img {
 	flex-direction: column;
 	position: relative;
 	max-width: 310px;
-	max-height: 450px;
+	max-height: 460px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 	overflow-y: auto;
