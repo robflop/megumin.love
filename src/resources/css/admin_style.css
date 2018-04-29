@@ -27,16 +27,26 @@
 	float: right;
 }
 
-form {
+#container form {
 	display: inline-block;
 	padding: 5px;
 }
 
-#container form input, #container form select, #container form label {
+form input, form select, form label {
 	display: block;
 	margin-top: 5px;
 	width: 185px;
 	box-sizing: border-box;
+}
+
+label[for="bg-select"], select[id="bg-select"] {
+	display: inline;
+	width: initial;
+	/*
+		You may think the width attribute will be ignored,
+		as pointed out by VSCode, but it will not actually be.
+		Don't remove it cuz things will break otherwise, kthx.
+	*/
 }
 
 form input[type="file"] {
