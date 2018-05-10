@@ -89,7 +89,7 @@ body {
 		margin-left: 10px;   
 	}
 
-	#version.mobile-scale {
+	#version {
 		display: inline-block;
 		-webkit-transform: scale(1.5);
 		transform: scale(1.5);   
@@ -116,7 +116,7 @@ body {
 		margin-left: 10px;   
 	}
 
-	#version.mobile-scale {
+	#version {
 		display: inline-block;
 		-webkit-transform: scale(1.5);
 		transform: scale(1.5);
