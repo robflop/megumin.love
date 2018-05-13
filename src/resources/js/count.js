@@ -64,10 +64,14 @@ $(document).ready(() => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
+					if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.sounds) return loadSounds(data.sounds);
-					else if (data.type === 'counterUpdate' && data.counter) return $('#counter').html(formatNumber(data.counter));
+					if (data.type === 'soundUpdate' && data.sounds) loadSounds(data.sounds);
+					if (data.type === 'counterUpdate' && data.counter) $('#counter').html(formatNumber(data.counter));
+					if (data.type === 'notification' && data.notification) {
+						$('#notification').text(data.notification.text);
+						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+					}
 				});
 
 				$('#button').click(() => {

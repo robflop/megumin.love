@@ -34,11 +34,15 @@ $(document).ready(() => {
 					data = {};
 				}
 
-				if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
+				if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
 
-				if (data.sounds) return updateRanking(data.sounds);
+				if (data.sounds) updateRanking(data.sounds);
 				// no need to differentiate soundUpdate and counterUpdate because list gets rebuilt each update either way,
 				// so it'll automatically include both new numbers and entirely new sounds
+				if (data.type === 'notification' && data.notification) {
+					$('#notification').text(data.notification.text);
+					$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+				}
 			});
 		});
 	});

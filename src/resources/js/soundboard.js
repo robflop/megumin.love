@@ -98,9 +98,13 @@ $(document).ready(() => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
+					if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.sounds) return loadSoundboard(data.sounds);
+					if (data.type === 'soundUpdate' && data.sounds) loadSoundboard(data.sounds);
+					if (data.type === 'notification' && data.notification) {
+						$('#notification').text(data.notification.text);
+						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+					}
 				});
 			});
 		});

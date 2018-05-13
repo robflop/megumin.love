@@ -439,6 +439,16 @@ server.post('/api/delete', (req, res) => {
 	}
 });
 
+server.post('/api/notification', (req, res) => {
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+
+	const data = req.body;
+
+	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
+	emitUpdate({ type: 'notification', notification: data });
+	return res.json({ code: 200, message: 'Notification sent.' });
+});
+
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
@@ -494,7 +504,7 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			return emitUpdate({ type: 'counterUpdate', counter, statistics });
+			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, average } });
 		}
 
 		if (data.type === 'sbClick') {
@@ -538,14 +548,14 @@ scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate({ type: 'counterUpdate', statistics });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
 }); // reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', statistics });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
 }); // reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
@@ -554,5 +564,5 @@ scheduleJob('0 0 * * *', () => {
 	statistics[moment().format('YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate({ type: 'counterUpdate', statistics });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
 }); // reset daily counter and update local statistics map at each midnight

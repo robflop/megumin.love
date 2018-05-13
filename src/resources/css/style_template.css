@@ -26,6 +26,27 @@ footer {
 	color: azure;
 }
 
+#notification-wrapper { 
+	position: fixed;
+	top: 10%;
+	left: 0;
+	right: 0;
+	text-align: center;
+	display: none;
+}
+
+
+#notification {
+	display: inline-block;
+	text-align: left;
+	background: #dd0000;
+	color: #ff8080;
+	font-size: 30px;
+	max-width: 1400px;
+	padding: 5px;
+	border-radius: 10px;
+}
+
 .backlink {
 	color: #dd0000;   
 }
