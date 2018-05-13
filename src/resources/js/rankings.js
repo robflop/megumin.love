@@ -36,7 +36,7 @@ $(document).ready(() => {
 
 				if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-				if (data.values.sounds) return updateRanking(data.values.sounds);
+				if (data.sounds) return updateRanking(data.sounds);
 				// no need to differentiate soundUpdate and counterUpdate because list gets rebuilt each update either way,
 				// so it'll automatically include both new numbers and entirely new sounds
 			});

@@ -100,7 +100,7 @@ $(document).ready(() => {
 
 					if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.values.sounds) return loadSoundboard(data.values.sounds);
+					if (data.type === 'soundUpdate' && data.sounds) return loadSoundboard(data.sounds);
 				});
 			});
 		});

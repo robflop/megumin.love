@@ -66,8 +66,8 @@ $(document).ready(() => {
 
 					if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.values.sounds) return loadSounds(data.values.sounds);
-					else if (data.type === 'counterUpdate' && data.values.counter) return $('#counter').html(formatNumber(data.values.counter));
+					if (data.type === 'soundUpdate' && data.sounds) return loadSounds(data.sounds);
+					else if (data.type === 'counterUpdate' && data.counter) return $('#counter').html(formatNumber(data.counter));
 				});
 
 				$('#button').click(() => {

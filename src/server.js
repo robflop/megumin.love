@@ -328,7 +328,7 @@ server.post('/api/upload', (req, res) => {
 					Logger.info(`(${++step}/2) Rankings/Sound cache successfully entry created.`);
 
 					setTimeout(() => {
-						emitUpdate('soundUpdate', ['sounds']);
+						emitUpdate({ type: 'soundUpdate', sounds });
 					}, 1000 * 0.5); // allow time for server to keep up and send actual new data
 
 					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
@@ -391,7 +391,7 @@ server.post('/api/rename', (req, res) => {
 				});
 			});
 			setTimeout(() => {
-				emitUpdate('soundUpdate', ['sounds']);
+				emitUpdate({ type: 'soundUpdate', sounds });
 			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully renamed.' });
@@ -431,7 +431,7 @@ server.post('/api/delete', (req, res) => {
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
-				emitUpdate('soundUpdate', ['sounds']);
+				emitUpdate({ type: 'soundUpdate', sounds });
 			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.' });
@@ -465,15 +465,9 @@ for (const error of config.errorTemplates) {
 const socketServer = new uws.Server({ server: http });
 const sockets = new Set();
 
-function emitUpdate(event, types, socket) {
-	const values = {
-		counter: types.includes('counter') ? counter : null,
-		statistics: types.includes('statistics') ? { alltime: counter, daily, weekly, monthly, average } : null,
-		sounds: types.includes('sounds') ? sounds : null
-	};
-
-	if (socket) return socket.send(JSON.stringify({ type: event, values }));
-	else return sockets.forEach(socket => socket.send(JSON.stringify({ type: event, values })));
+function emitUpdate(eventData, socket) {
+	if (socket) return socket.send(JSON.stringify(eventData));
+	else return sockets.forEach(socket => socket.send(JSON.stringify(eventData)));
 }
 
 socketServer.on('connection', socket => {
@@ -500,7 +494,7 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			return emitUpdate('counterUpdate', ['counter', 'statistics']);
+			return emitUpdate({ type: 'counterUpdate', counter, statistics });
 		}
 
 		if (data.type === 'sbClick') {
@@ -514,7 +508,7 @@ socketServer.on('connection', socket => {
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
 
-			return emitUpdate('counterUpdate', ['sounds']);
+			return emitUpdate({ type: 'counterUpdate', sounds });
 		}
 	});
 
@@ -544,14 +538,14 @@ scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate('counterUpdate', ['statistics']);
+	return emitUpdate({ type: 'counterUpdate', statistics });
 }); // reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate('counterUpdate', ['statistics']);
+	return emitUpdate({ type: 'counterUpdate', statistics });
 }); // reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
@@ -560,5 +554,5 @@ scheduleJob('0 0 * * *', () => {
 	statistics[moment().format('YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate('counterUpdate', ['statistics']);
+	return emitUpdate({ type: 'counterUpdate', statistics });
 }); // reset daily counter and update local statistics map at each midnight

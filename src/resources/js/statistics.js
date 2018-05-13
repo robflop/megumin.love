@@ -28,7 +28,7 @@ $(document).ready(() => {
 
 				if (!['counterUpdate', 'soundUpdate'].includes(data.type)) return;
 
-				if (data.values.statistics) return updateStatistics(data.values.statistics);
+				if (data.statistics) return updateStatistics(data.statistics);
 				// only numbers ever get updated here, no need to differentiate the two events
 			});
 		});
