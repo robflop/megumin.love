@@ -1,44 +1,44 @@
 {
-  "name": "megumin.love",
-  "version": "5.0.1",
-  "description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
-  "main": "src/server.js",
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
-    "helmet": "^3.12.1",
-    "moment": "^2.22.1",
-    "multer": "^1.3.0",
-    "node-schedule": "^1.3.0",
-    "sqlite3": "^4.0.0",
-    "uws": "^9.148.0"
-  },
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "htmlhint": "^0.9.13"
-  },
-  "scripts": {
-    "test": "eslint src/server.js src/resources/js && htmlhint src/pages"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/robflop/megumin.love.git"
-  },
-  "keywords": [
-    "megumin",
-    "konosuba",
-    "anime",
-    "soundboard",
-    "node"
-  ],
-  "author": "robflop",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/robflop/megumin.love/issues"
-  },
-  "homepage": "https://github.com/robflop/megumin.love#readme",
-  "engines": {
-    "node": ">=7.6.0"
-  }
+	"name": "megumin.love",
+	"version": "5.0.1",
+	"description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
+	"main": "src/server.js",
+	"dependencies": {
+		"chalk": "^2.4.1",
+		"express": "^4.16.3",
+		"express-session": "^1.15.6",
+		"helmet": "^3.12.1",
+		"moment": "^2.22.2",
+		"multer": "^1.3.1",
+		"node-schedule": "^1.3.0",
+		"sqlite3": "^4.0.1",
+		"uws": "^10.148.1"
+	},
+	"devDependencies": {
+		"eslint": "^5.1.0",
+		"htmlhint": "^0.9.13"
+	},
+	"scripts": {
+		"test": "eslint src/server.js src/resources/js && htmlhint src/pages"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/robflop/megumin.love.git"
+	},
+	"keywords": [
+		"megumin",
+		"konosuba",
+		"anime",
+		"soundboard",
+		"node"
+	],
+	"author": "robflop",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/robflop/megumin.love/issues"
+	},
+	"homepage": "https://github.com/robflop/megumin.love#readme",
+	"engines": {
+		"node": ">=7.6.0"
+	}
 }
