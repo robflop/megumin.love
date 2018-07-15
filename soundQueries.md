@@ -7,4 +7,4 @@ Use these queries starting at version 5.0.0 when updating to any version beyond 
 The [sqlite3 CLI tool](https://sqlite.org/cli.html) is recommended to be used alongside these queries.
 
 ### Version 5.1.0
-- No update available (yet)
+- No queries necessary
