@@ -8,13 +8,13 @@ Returns an object containing the website's statistics, mapped by their correspon
 
 ## Parameters
 
-| Key    | Description                            | Format      | Example    |
-|--------|----------------------------------------|-------------|------------|
-| from   | First day of statistics to be returned | YYYY-MM-DD  | 2017-05-27 |
-| to     | Last day of statistics to be returned  | YYYY-MM-DD  | 2017-06-05 |
-| equals | The exact  amount an entry must have   | Any number  | 5000       |
-| over   | The amount an entry must at least have | Any number  | 9000       |
-| under  | The amount an entry must at max have   | Any number  | 7000       |
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| from   | First day of statistics to be returned | YYYY-MM-DD | 2017-05-27 |
+| to     | Last day of statistics to be returned  | YYYY-MM-DD | 2017-06-05 |
+| equals | The exact  amount an entry must have   | Any number | 5000       |
+| over   | The amount an entry must at least have | Any number | 9000       |
+| under  | The amount an entry must at max have   | Any number | 7000       |
 
 Supplying only the `from` parameter will result in the output only returning the specified date.
 
@@ -32,16 +32,16 @@ Output:
 
 ```js
 {
-  "2017-05-27":529745,
-  "2017-05-28":3694,
-  "2017-05-29":3148,
-  "2017-05-30":3296,
-  "2017-05-31":2725,
-  "2017-06-01":14945,
-  "2017-06-02":12012,
-  "2017-06-03":1518,
-  "2017-06-04":2214,
-  "2017-06-05":14534
+	"2017-05-27":529745,
+	"2017-05-28":3694,
+	"2017-05-29":3148,
+	"2017-05-30":3296,
+	"2017-05-31":2725,
+	"2017-06-01":14945,
+	"2017-06-02":12012,
+	"2017-06-03":1518,
+	"2017-06-04":2214,
+	"2017-06-05":14534
 }
 ```
 
@@ -51,11 +51,11 @@ Output:
 
 ```js
 {
-  "2017-11-26": 895102,
-  "2017-11-29": 137571,
-  "2017-11-30": 65460,
-  "2017-12-13": 471346,
-  "2017-12-15": 25590
+	"2017-11-26": 895102,
+	"2017-11-29": 137571,
+	"2017-11-30": 65460,
+	"2017-12-13": 471346,
+	"2017-12-15": 25590
 }
 ```
 
@@ -63,7 +63,7 @@ Output:
 
 `GET /counter?statistics`
 
-Returns an object containing the overall statistics, seperated into all-time clicks, today's clicks, this week's clicks, this month's clicks and average clicks this month. Not available for any other time than the current.
+Returns an object containing the overall statistics, seperated into all-time clicks, today's clicks, this week's clicks, this month's clicks, this year's clicks and average clicks this month. Not available for any other time than the current.
 
 ## Parameters
 
@@ -77,11 +77,12 @@ Output:
 
 ```js
 {
-  "alltime": 21198920,
-  "today": 558,
-  "week": 17430,
-  "month": 8489,
-  "average": 4245
+	"alltime": 59168052,
+	"daily": 408,
+	"weekly": 0,
+	"monthly": 364407,
+	"yearly": 1668792,
+	"average": 24294
 }
 ```
 

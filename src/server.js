@@ -15,8 +15,9 @@ const bootDate = moment().format('YYYY-MM-DD');
 const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
 // add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
+const startOfBootYear = moment().startOf('year'), endOfBootYear = moment().endOf('year');
 
-let counter = 0, daily = 0, weekly = 0, monthly = 0, average = 0, fetchedDaysAmount = 1;
+let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
 const sounds = [], statistics = {};
 
 // on-boot database interaction
@@ -65,11 +66,13 @@ db.serialize(() => {
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
 		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfBootMonth, endOfBootMonth, null, []));
+		const thisYear = rows.filter(row => moment(row.date).isBetween(startOfBootYear, endOfBootYear, null, []));
 		// null & [] parameters given for including first and last day of range (see moment docs)
 
 		daily = rows.find(row => row.date === bootDate).count;
 		weekly = thisWeek.reduce((total, date) => total += date.count, 0);
 		monthly = thisMonth.reduce((total, date) => total += date.count, 0);
+		yearly = thisYear.reduce((total, date) => total += date.count, 0);
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(monthly / thisMonth.length);
 
@@ -174,6 +177,7 @@ server.get('/counter', (req, res) => {
 			daily,
 			weekly,
 			monthly,
+			yearly,
 			average
 		});
 	}
@@ -498,13 +502,14 @@ socketServer.on('connection', socket => {
 
 		if (data.type === 'click') {
 			const currentDate = moment().format('YYYY-MM-DD');
-			++counter; ++daily;
-			++weekly; ++monthly;
+			++counter;
+			++daily; ++weekly;
+			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
 			statistics[currentDate] = daily;
 
-			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, average } });
+			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 		}
 
 		if (data.type === 'sbClick') {
@@ -544,18 +549,25 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	return Logger.info('Database updated.');
 }); // update db at every n-th minute
 
+scheduleJob('0 0 1 1 *', () => {
+	yearly = 0;
+
+	Logger.info('Yearly counter reset.');
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+}); // reset yearly counter at the start of each year
+
 scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
@@ -564,5 +576,5 @@ scheduleJob('0 0 * * *', () => {
 	statistics[moment().format('YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, average } });
+	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // reset daily counter and update local statistics map at each midnight

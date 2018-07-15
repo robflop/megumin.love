@@ -3,9 +3,10 @@ $(document).ready(() => {
 
 	const updateStatistics = statistics => {
 		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
-		$('#today').html(`Today's clicks: ${formatNumber(statistics.daily)}`);
-		$('#week').html(`This week's clicks: ${formatNumber(statistics.weekly)}`);
-		$('#month').html(`This month's clicks: ${formatNumber(statistics.monthly)}`);
+		$('#daily').html(`Today's clicks: ${formatNumber(statistics.daily)}`);
+		$('#weekly').html(`This week's clicks: ${formatNumber(statistics.weekly)}`);
+		$('#monthly').html(`This month's clicks: ${formatNumber(statistics.monthly)}`);
+		$('#yearly').html(`This year's clicks: ${formatNumber(statistics.yearly)}`);
 		$('#average').html(`Average clicks a day (in this month): ~${formatNumber(statistics.average)}`);
 	};
 
