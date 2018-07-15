@@ -24,6 +24,20 @@ $(document).ready(() => {
 							data: clicks,
 							label: 'Clicks'
 						}]
+					},
+					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									callback: value => value.toLocaleString('de-DE'),
+								}
+							}]
+						},
+						tooltips: {
+							callbacks: {
+								label: (tItems, data) => `${data.datasets[0].data[tItems.index].toLocaleString('de-DE')}`
+							}
+						}
 					}
 				});
 			}
