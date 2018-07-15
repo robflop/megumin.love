@@ -17,7 +17,7 @@ const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek =
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 const startOfBootYear = moment().startOf('year'), endOfBootYear = moment().endOf('year');
 
-let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
+let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1, chartData = {};
 const sounds = [], statistics = {};
 
 // on-boot database interaction
@@ -78,6 +78,11 @@ db.serialize(() => {
 
 		rows.map(date => statistics[date.date] = date.count);
 		return Logger.info('Statistics loaded.');
+	});
+
+	db.all('SELECT sum(count) AS clicks, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (error, rows) => {
+		chartData = rows;
+		return Logger.info('Chart data loaded.');
 	});
 });
 
@@ -453,6 +458,10 @@ server.post('/api/notification', (req, res) => {
 	return res.json({ code: 200, message: 'Notification sent.' });
 });
 
+server.get('/api/chartData', (req, res) => {
+	return res.json(chartData);
+});
+
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
@@ -506,6 +515,8 @@ socketServer.on('connection', socket => {
 			++daily; ++weekly;
 			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
+
+			chartData[chartData.length - 1].clicks++;
 
 			statistics[currentDate] = daily;
 

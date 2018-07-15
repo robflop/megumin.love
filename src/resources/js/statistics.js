@@ -1,5 +1,6 @@
 $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	let chart;
 
 	const updateStatistics = statistics => {
 		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
@@ -8,6 +9,30 @@ $(document).ready(() => {
 		$('#monthly').html(`This month's clicks: ${formatNumber(statistics.monthly)}`);
 		$('#yearly').html(`This year's clicks: ${formatNumber(statistics.yearly)}`);
 		$('#average').html(`Average clicks a day (in this month): ~${formatNumber(statistics.average)}`);
+
+		$.get('/api/chartData').done(data => {
+			const months = data.map(entry => entry = entry.month);
+			const clicks = data.map(entry => entry = entry.clicks);
+
+			const ctx = $('#monthly-chart');
+			if (!chart) {
+				chart = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: months,
+						datasets: [{
+							data: clicks,
+							label: 'Clicks'
+						}]
+					}
+				});
+			}
+			else {
+				chart.data.labels = months;
+				chart.data.datasets[0].data = clicks;
+				chart.update();
+			}
+		});
 	};
 
 	$.get('/conInfo').done(con => {

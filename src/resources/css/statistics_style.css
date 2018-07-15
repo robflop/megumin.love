@@ -8,7 +8,7 @@ body {
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;
-	margin: 225px auto auto auto;
+	margin: 50px auto;
 }
 
 #header {
@@ -19,6 +19,19 @@ body {
 .statistics {
 	font-size: 25px;
 	text-align: center;
+	padding: 8px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-color: #9c9c9c;
+}
+
+#box :nth-last-child(2).statistics {
+	border-style: none;
+}
+
+#monthly-chart {
+	width: 552px;
+	height: 283px;
 }
 
 @media only screen and (max-width: 360px) {
