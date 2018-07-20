@@ -1,6 +1,7 @@
 $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	let chart;
+	const tickArray = [50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 1000000, 2500000, 5000000, 10000000, 20000000, 40000000];
 
 	const updateStatistics = statistics => {
 		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
@@ -22,15 +23,19 @@ $(document).ready(() => {
 						labels: months,
 						datasets: [{
 							data: clicks,
-							label: 'Clicks'
+							label: 'Clicks',
 						}]
 					},
 					options: {
 						scales: {
 							yAxes: [{
+								type: 'logarithmic',
 								ticks: {
-									callback: value => value.toLocaleString('de-DE'),
-								}
+									callback: tick => tick.toLocaleString('de-DE'),
+									min: 30000,
+									max: 50000000
+								},
+								afterBuildTicks: axis => axis.ticks = tickArray
 							}]
 						},
 						tooltips: {
