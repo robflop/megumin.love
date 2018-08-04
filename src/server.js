@@ -25,11 +25,11 @@ const db = new Database(config.databasePath);
 
 db.serialize(() => {
 	db.run(`
-		CREATE TABLE IF NOT EXISTS sounds ( 
-			id INTEGER PRIMARY KEY, 
-			filename TEXT NOT NULL UNIQUE, 
-			displayname TEXT NOT NULL, 
-			source TEXT NOT NULL, 
+		CREATE TABLE IF NOT EXISTS sounds (
+			id INTEGER PRIMARY KEY,
+			filename TEXT NOT NULL UNIQUE,
+			displayname TEXT NOT NULL,
+			source TEXT NOT NULL,
 			count INTEGER NOT NULL
 		)
 	`);
@@ -511,12 +511,14 @@ socketServer.on('connection', socket => {
 
 		if (data.type === 'click') {
 			const currentDate = moment().format('YYYY-MM-DD');
+			const currentMonthData = chartData.find(data => data.month === currentDate.substring(0, 7));
 			++counter;
 			++daily; ++weekly;
 			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
-			chartData[chartData.length - 1].clicks++;
+			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentDate.substring(0, 7) });
+			// if chart data for this month exists, increment it -- if not, create it and start counting at 1
 
 			statistics[currentDate] = daily;
 
