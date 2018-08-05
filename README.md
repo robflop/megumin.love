@@ -78,6 +78,8 @@ There are two ways to add custom sounds starting with version 5.0.0 -- via inter
 
 - It is also advised to check out the [Wiki](https://github.com/robflop/megumin.love/wiki) for more information.
 
+- uws version 10.148.1 or earlier needs to be installed as newer versions are blank repos. No support provided for these cases.
+
 #### Important for proxying to 443 (SSL)
 
 If you want to proxy the website to the SSL port (443), so that users can access the site via `https://<domain>` instead of `http://<domain>:<port>`, then flip on the `SSLproxy` setting in the config.
