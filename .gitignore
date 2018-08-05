@@ -5,7 +5,7 @@ npm-debug.log*
 
 # ignore some files
 src/config.json
-src/db/megumin_yamero.db
+src/db/megumin_love.db
 .vscode
 
 # Runtime data
