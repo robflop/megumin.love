@@ -83,7 +83,7 @@ $(document).ready(() => {
 			});
 		});
 
-		$.get('/api/counter').done(res => $('#counter').html(formatNumber(res)));
+		$.get('/api/counter').done(res => $('#counter').html(formatNumber(res.counter)));
 		// load initial counter
 
 		loadSounds(sounds);

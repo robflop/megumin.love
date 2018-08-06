@@ -176,7 +176,7 @@ server.get('/api/counter', (req, res) => {
 		});
 	}
 
-	return res.send(counter.toString());
+	return res.json({ counter });
 });
 
 server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
