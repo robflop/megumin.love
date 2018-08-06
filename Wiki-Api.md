@@ -1,12 +1,56 @@
-# Website statistics
+# Website API
 
-Base domain for all requests is ``megumin.love/api/``.
+Base domain for all requests is ``megumin.love/api``.
+Response format for all routes is JSON.
+
+---
+
+`GET /counter`
+
+Returns the current global counter.
+
+## Parameters
+
+| Key          | Description                                             | Format | Example |
+| ------------ | ------------------------------------------------------- | ------ | ------- |
+| statistics   | Whether to output current statistics instead of counter | N/A    | N/A     |
+
+When the statistics parameter is provided, summarized counter statistics, such as all-time clicks, today's clicks, this week's clicks, this month's clicks, this year's clicks and average clicks this month will be provided all in one.
+
+This summary is not available for any other time than the current (use the data from the `/statistics` endpoint for that).
+
+### Example requests
+
+`/counter`
+
+Output:
+
+```js
+{
+    "counter": 59206101
+}
+```
+
+`/counter?statistics`
+
+Output:
+
+```js
+{
+    "alltime": 59206101,
+    "daily": 336,
+    "weekly": 336,
+    "monthly": 26462,
+    "yearly": 1706841,
+    "average": 4410
+}
+```
 
 ---
 
 `GET /statistics`
 
-Returns an object containing the website's statistics, mapped by their corresponding date.
+Returns an object containing the website's statistics, mapped by their corresponding date (JSON).
 
 ## Parameters
 
@@ -62,32 +106,3 @@ Output:
     "2017-12-15": 25590
 }
 ```
-
----
-
-`GET /counter?statistics`
-
-Returns an object containing the overall statistics, seperated into all-time clicks, today's clicks, this week's clicks, this month's clicks, this year's clicks and average clicks this month. Not available for any other time than the current.
-
-## Parameters
-
-- None
-
-### Example request
-
-`/counter?statistics`
-
-Output:
-
-```js
-{
-    "alltime": 59206100,
-    "daily": 335,
-    "weekly": 335,
-    "monthly": 26461,
-    "yearly": 1706840,
-    "average": 4410
-}
-```
-
----
