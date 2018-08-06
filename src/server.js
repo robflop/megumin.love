@@ -466,10 +466,10 @@ if (!maintenanceMode) {
 
 for (const error of config.errorTemplates) {
 	if (maintenanceMode) {
-		return server.get(/.*/, (req, res) => res.status(503).sendFile('503.html', { root: './pages/errorTemplates/' }));
+		return server.get(/.*/, (req, res) => res.status(503).sendFile('503.html', { root: errorPath }));
 	}
 	else {
-		server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: './pages/errorTemplates/' }));
+		server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: errorPath }));
 	}
 }
 
