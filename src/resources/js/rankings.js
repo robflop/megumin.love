@@ -17,7 +17,7 @@ $(document).ready(() => {
 		if ($('#loading')) $('#loading').remove();
 	};
 
-	$.get('/conInfo').done(con => {
+	$.get('/api/conInfo').done(con => {
 		const domainOrIP = document.URL.split('/')[2].split(':')[0];
 		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
@@ -47,5 +47,5 @@ $(document).ready(() => {
 		});
 	});
 
-	$.get('/sounds').done(sounds => updateRanking(sounds));
+	$.get('/api/sounds').done(sounds => updateRanking(sounds));
 });

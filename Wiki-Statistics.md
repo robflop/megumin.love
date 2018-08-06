@@ -1,8 +1,10 @@
 # Website statistics
 
-Base domain for all requests is ``megumin.love``.
+Base domain for all requests is ``megumin.love/api/``.
 
-`GET /stats`
+---
+
+`GET /statistics`
 
 Returns an object containing the website's statistics, mapped by their corresponding date.
 
@@ -26,36 +28,38 @@ Time (from, to) and amount (equals, over, under) filtering can be used together.
 
 ### Example requests
 
-`/stats?from=2017-05-27&to=2017-06-05`
+`/statistics?from=2017-05-27&to=2017-06-05`
 
 Output:
 
 ```js
 {
-	"2017-05-27":529745,
-	"2017-05-28":3694,
-	"2017-05-29":3148,
-	"2017-05-30":3296,
-	"2017-05-31":2725,
-	"2017-06-01":14945,
-	"2017-06-02":12012,
-	"2017-06-03":1518,
-	"2017-06-04":2214,
-	"2017-06-05":14534
+    "2017-05-27": 529745,
+    "2017-05-28": 3694,
+    "2017-05-29": 3148,
+    "2017-05-30": 3296,
+    "2017-05-31": 2725,
+    "2017-06-01": 14945,
+    "2017-06-02": 12012,
+    "2017-06-03": 1518,
+    "2017-06-04": 2214,
+    "2017-06-05": 14534
 }
 ```
 
-`/stats?from=2017-11-26&to=2017-12-20&over=10000&under=1000000`
+`/statistics?from=2017-11-26&to=2017-12-20&over=10000&under=1000000`
 
 Output:
 
 ```js
 {
-	"2017-11-26": 895102,
-	"2017-11-29": 137571,
-	"2017-11-30": 65460,
-	"2017-12-13": 471346,
-	"2017-12-15": 25590
+    "2017-11-26": 895102,
+    "2017-11-29": 137571,
+    "2017-11-30": 65460,
+    "2017-12-05": 66553,
+    "2017-12-10": 19278,
+    "2017-12-13": 471346,
+    "2017-12-15": 25590
 }
 ```
 
@@ -77,12 +81,12 @@ Output:
 
 ```js
 {
-	"alltime": 59168052,
-	"daily": 408,
-	"weekly": 0,
-	"monthly": 364407,
-	"yearly": 1668792,
-	"average": 24294
+    "alltime": 59206100,
+    "daily": 335,
+    "weekly": 335,
+    "monthly": 26461,
+    "yearly": 1706840,
+    "average": 4410
 }
 ```
 

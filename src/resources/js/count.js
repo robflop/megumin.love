@@ -41,13 +41,13 @@ $(document).ready(() => {
 		}
 	}
 
-	$.get('/sounds').done(s => {
+	$.get('/api/sounds').done(s => {
 		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
 		sounds = s;
 
 		if (sounds.length === 0) toggleButton();
 
-		$.get('/conInfo').done(con => {
+		$.get('/api/conInfo').done(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
@@ -83,7 +83,7 @@ $(document).ready(() => {
 			});
 		});
 
-		$.get('/counter').done(res => $('#counter').html(formatNumber(res)));
+		$.get('/api/counter').done(res => $('#counter').html(formatNumber(res)));
 		// load initial counter
 
 		loadSounds(sounds);

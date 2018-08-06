@@ -160,11 +160,11 @@ http.listen(config.port, () => {
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
-server.get('/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
+server.get('/api/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
-server.get('/sounds', (req, res) => res.json(sounds));
+server.get('/api/sounds', (req, res) => res.json(sounds));
 
-server.get('/counter', (req, res) => {
+server.get('/api/counter', (req, res) => {
 	if (req.query.statistics === '') {
 		return res.json({
 			alltime: counter,
@@ -179,7 +179,7 @@ server.get('/counter', (req, res) => {
 	return res.send(counter.toString());
 });
 
-server.get('/stats', (req, res) => { // eslint-disable-line complexity
+server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStats, countFiltered, dateFiltered;
 	const firstStatDate = moment(Object.keys(statistics)[0]);
 	const latestStatDate = moment(Object.keys(statistics)[Object.keys(statistics).length - 1]);
