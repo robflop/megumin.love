@@ -19,49 +19,38 @@ const startOfBootYear = moment().startOf('year'), endOfBootYear = moment().endOf
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1, chartData = {};
 const sounds = [], statistics = {};
+let hasOldTableValue = false;
 
 // on-boot database interaction
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
-	db.run(`
-		CREATE TABLE IF NOT EXISTS sounds (
-			id INTEGER PRIMARY KEY,
-			filename TEXT NOT NULL UNIQUE,
-			displayname TEXT NOT NULL,
-			source TEXT NOT NULL,
-			count INTEGER NOT NULL
-		)
-	`);
+	db.get('SELECT name FROM sqlite_master WHERE type="table" AND name="yamero_counter"', [], (error, tableNameRow) => {
+		if (tableNameRow) {
+			hasOldTableValue = true;
+			db.serialize(() => {
+				db.get('SELECT counter FROM yamero_counter', [], (error, row) => counter = row.counter);
+				db.run('ALTER TABLE yamero_counter RENAME TO main_counter');
+			});
+		}
+	});
+	// the above operation is purely for migrating the old name of the table
+
+	db.get('SELECT counter FROM main_counter', [], (error, row) => {
+		if (!row && !hasOldTableValue) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
+		// only assume there's no proper counter entry if counter hasn't already been set above
+		if (row) counter = row.counter;
+
+		return Logger.info('Main counter loaded.');
+	});
 
 	db.all('SELECT * FROM sounds', [], (error, rows) => {
 		rows.map(sound => sounds.push(sound));
 		return Logger.info('Sounds & rankings loaded.');
 	});
 
-	db.run(`
-		CREATE TABLE IF NOT EXISTS yamero_counter (
-			counter INT NOT NULL
-		)
-	`);
-
-	db.run(`
-		CREATE TABLE IF NOT EXISTS statistics (
-			id INTEGER PRIMARY KEY,
-			date TEXT NOT NULL UNIQUE,
-			count INTEGER NOT NULL
-		)
-	`);
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
-
-	db.get('SELECT counter FROM yamero_counter', [], (error, row) => {
-		if (!row) db.run(`INSERT INTO yamero_counter ( counter ) VALUES ( 0 )`);
-
-		counter = row ? row.counter : 0;
-		return Logger.info('Main counter loaded.');
-	});
-
-	// make sure all necessary tables with at least one necessary column exist
+	// statistics entry for the boot day
 
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
@@ -549,7 +538,7 @@ socketServer.on('connection', socket => {
 // database updates
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	db.serialize(() => {
-		db.run(`UPDATE yamero_counter SET \`counter\` = ${counter}`);
+		db.run(`UPDATE main_counter SET \`counter\` = ${counter}`);
 
 		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${daily} )`);
 		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
