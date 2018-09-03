@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"eslint": "^5.3.0",
-		"htmlhint": "^0.9.13"
+		"htmlhint": "^0.10.0"
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages"
