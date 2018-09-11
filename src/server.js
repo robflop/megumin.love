@@ -475,15 +475,22 @@ for (const error of config.errorTemplates) {
 
 // Socket server
 const socketServer = new uws.Server({ server: http });
-const sockets = new Set();
 
-function emitUpdate(eventData, socket) {
-	if (socket) return socket.send(JSON.stringify(eventData));
-	else return sockets.forEach(socket => socket.send(JSON.stringify(eventData)));
+function emitUpdate(eventData, options = {}) {
+	if (options.excludeSocket) {
+		return socketServer.clients.forEach(socket => {
+			if (socket === options.excludeSocket) return; // eslint-disable-line no-useless-return
+			else return socket.send(JSON.stringify(eventData));
+		});
+	}
+	if (options.targetSocket) {
+		return options.targetSocket.send(JSON.stringify(eventData));
+	}
+
+	return socketServer.clients.forEach(socket => socket.send(JSON.stringify(eventData)));
 }
 
 socketServer.on('connection', socket => {
-	sockets.add(socket);
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
 	socket.on('message', message => {
@@ -499,6 +506,9 @@ socketServer.on('connection', socket => {
 		if (!['click', 'sbClick'].includes(data.type)) return;
 
 		if (data.type === 'click') {
+			if ((data.crazyMode && data.sound) && !sounds.find(s => data.sound.filename === s.filename)) return;
+			// Safeguard against crazy mode requests with invalid sound name
+
 			const currentDate = moment().format('YYYY-MM-DD');
 			const currentMonthData = chartData.find(data => data.month === currentDate.substring(0, 7));
 			++counter;
@@ -511,19 +521,24 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
+			if (data.sound) emitUpdate({ type: 'crazyMode', sound: data.sound }, { excludeSocket: socket });
+
 			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 		}
 
 		if (data.type === 'sbClick') {
 			if (!data.sound) return;
 
-			let soundEntry = sounds.find(sound => sound.filename === data.sound.filename);
-			if (!soundEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
+			let soundEntry = sounds.find(sound => sound.filename === data.sound);
+			if (!soundEntry && !sounds.find(s => data.sound === s.filename)) return;
 			// Safeguard against requests with sounds that don't exist from being saved serverside
 			// No need to check other props because if it's found, only count will be incremented (no user input)
 
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
+
+			emitUpdate({ type: 'crazyMode', sound: data.sound }, { excludeSocket: socket });
+			// Check if data.sound exists already done above
 
 			return emitUpdate({ type: 'counterUpdate', sounds });
 		}
@@ -531,7 +546,6 @@ socketServer.on('connection', socket => {
 
 	socket.on('close', (code, reason) => {
 		clearInterval(socket.pingInterval);
-		sockets.delete(socket);
 	});
 });
 

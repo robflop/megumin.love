@@ -24,13 +24,13 @@
 		<title>Megumin is love! - Version History</title>
 
 		<link rel="apple-touch-icon" href="/images/favicons/apple-touch-icon.png" sizes="180x180">
-        <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
 		<link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
-        <link rel="manifest" href="/images/favicons/manifest.json">
+		<link rel="manifest" href="/images/favicons/manifest.json">
 		<link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#adadad">
 		<link rel="shortcut icon" href="/images/favicons/favicon.ico">
 		<meta name="msapplication-config" content="/images/favicons/browserconfig.xml">
-        <meta name="theme-color" content="#adadad">
+		<meta name="theme-color" content="#adadad">
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Courgette|Open+Sans">
 		<link rel="stylesheet" href="/css/style_template.css">
@@ -234,13 +234,19 @@
 				</p>
 				<p>Also check out the <a href="https://discord.gg/v3fghcV">r/megumin Discord server</a>.</p>
 				<hr>
-				<form>
+				<form id="config">
 					<div id="bg-select-wrapper">
 						<label for="bg-select">Background selection:</label>
 						<select name="bg-select" id="bg-select">
 							<!-- Options are auto-generated -->
 						</select>
 						<p>(Some browsers only change bg on refresh.)</p>
+					</div>
+					<hr>
+					<div id="crazymode-toggle-wrapper">
+						<label for="crazymode-toggle">Crazy Mode?:</label>
+						<input name="crazymode-toggle" id="crazymode-toggle" type="checkbox">
+						<p>(Play sound when others click any button)</p>
 					</div>
 				</form>
 			</div>

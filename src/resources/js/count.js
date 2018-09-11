@@ -3,6 +3,16 @@ $(document).ready(() => {
 	let sounds = [];
 	let howlerList = {};
 
+	let crazyMode = document.cookie.split(';').find(cookie => cookie.trim().startsWith('crazyMode')) ? true : false;
+	$('#crazymode-toggle').change(function() {
+		/* eslint-disable no-invalid-this */
+		if (!this.checked) document.cookie = 'crazyMode=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+		else document.cookie = 'crazyMode=true';
+
+		return crazyMode = this.checked;
+		/* eslint-enable no-invalid-this */
+	});
+
 	function toggleButton() {
 		if ($('#button').text() === 'No sounds available.') {
 			$('#button').text('やめろ!!');
@@ -25,7 +35,6 @@ $(document).ready(() => {
 	}
 
 	function loadSounds(s) {
-		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
 		howlerList = {}; // Wipe before (re)load
 		sounds = s; // Reassign new sounds array
 
@@ -33,8 +42,6 @@ $(document).ready(() => {
 		if (sounds.length === 0 && $('#button').text() === 'やめろ!!') toggleButton();
 
 		for (const sound of sounds) {
-			if (sound.filename === 'realname') continue;
-
 			howlerList[sound.filename] = new Howl({
 				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`]
 			});
@@ -42,7 +49,6 @@ $(document).ready(() => {
 	}
 
 	$.get('/api/sounds').done(s => {
-		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
 		sounds = s;
 
 		if (sounds.length === 0) toggleButton();
@@ -64,10 +70,11 @@ $(document).ready(() => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
+					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) loadSounds(data.sounds);
 					if (data.type === 'counterUpdate' && data.counter) $('#counter').html(formatNumber(data.counter));
+					if (data.type === 'crazyMode' && crazyMode) howlerList[data.sound].play();
 					if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
 						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
@@ -76,7 +83,8 @@ $(document).ready(() => {
 
 				$('#button').click(() => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
-					ws.send(JSON.stringify({ type: 'click' }));
+					if (sound.filename === 'realname') sound.filename = 'name';
+					ws.send(JSON.stringify({ type: 'click', sound: sound.filename }));
 
 					return howlerList[sound.filename].play();
 				});

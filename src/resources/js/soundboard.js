@@ -3,6 +3,16 @@ $(document).ready(() => {
 	let howlerList = {};
 	let ws;
 
+	let crazyMode = document.cookie.split(';').find(cookie => cookie.trim().startsWith('crazyMode')) ? true : false;
+	$('#crazymode-toggle').change(function() {
+		/* eslint-disable no-invalid-this */
+		if (!this.checked) document.cookie = 'crazyMode=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+		else document.cookie = 'crazyMode=true';
+
+		return crazyMode = this.checked;
+		/* eslint-enable no-invalid-this */
+	});
+
 	function loadSoundboard(s) {
 		howlerList = {}; // Wipe before (re)load
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
@@ -25,8 +35,6 @@ $(document).ready(() => {
 
 		// Create buttons and make them play corresponding sounds
 		for (const sound of sounds) {
-			if (sound.filename === 'realname') continue;
-			// Don't create button for this one
 
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			const sourceButtonWrapper = $(`div.buttons-wrapper#${sourceName}-buttons`);
@@ -47,17 +55,20 @@ $(document).ready(() => {
 				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
 			});
 
+			if (sound.filename === 'realname') continue;
+			// Don't create button for this one
+
 			if (sound.filename === 'name') {
 				$('#name').click(() => {
 					const rsound = Math.floor(Math.random() * 100) + 1;
 
 					if (rsound === 42) {
 						howlerList.realname.play();
-						ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(s => s.filename === 'realname') }));
+						ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
 					}
 					else {
 						howlerList.name.play();
-						ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(s => s.filename === 'name') }));
+						ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
 					}
 				});
 
@@ -67,8 +78,7 @@ $(document).ready(() => {
 
 			$(`#${sound.filename}`).click(() => {
 				howlerList[sound.filename].play();
-
-				ws.send(JSON.stringify({ type: 'sbClick', sound: sounds.find(snd => snd.filename === sound.filename) }));
+				ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
 			});
 
 			$(`#${sound.filename}`).keypress(key => {
@@ -102,9 +112,10 @@ $(document).ready(() => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
+					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) loadSoundboard(data.sounds);
+					if (data.type === 'crazyMode' && crazyMode) howlerList[data.sound].play();
 					if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
 						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);

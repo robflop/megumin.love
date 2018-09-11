@@ -26,7 +26,7 @@ footer {
 	color: azure;
 }
 
-#notification-wrapper { 
+#notification-wrapper {
 	position: fixed;
 	top: 10%;
 	left: 0;
@@ -48,19 +48,23 @@ footer {
 }
 
 .backlink {
-	color: #dd0000;   
+	color: #dd0000;
 }
 
 #backlink-bottom {
 	text-align: right;
 }
 
-#bg-select-wrapper {
+form#config div {
 	white-space: nowrap;
 }
 
-#bg-select-wrapper p {
+form#config p {
 	text-align: center;
+}
+
+#crazymode-toggle {
+	vertical-align: middle;
 }
 
 #credits {
@@ -106,7 +110,7 @@ img {
 	flex-direction: column;
 	position: relative;
 	max-width: 310px;
-	max-height: 460px;
+	max-height: 410px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 	overflow-y: auto;
