@@ -74,7 +74,7 @@ $(document).ready(() => {
 				if (!['counterUpdate', 'notification'].includes(data.type)) return;
 
 				if (data.statistics) updateStatistics(data.statistics);
-				// only numbers ever get updated here, no need to differentiate the events
+				// Only numbers ever get updated here, no need to differentiate the events
 				else if (data.type === 'notification' && data.notification) {
 					$('#notification').text(data.notification.text);
 					$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);

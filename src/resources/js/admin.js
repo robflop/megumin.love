@@ -2,7 +2,7 @@ $(document).ready(() => {
 	const updateSounds = () => {
 		$.get('/api/sounds').done(sounds => {
 			sounds = sounds.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
-			// sort primarily by season and secondarily alphabetically within seasons
+			// Sort primarily by season and secondarily alphabetically within seasons
 			const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
 
 			$('#rename-select').html(options.join(''));
@@ -42,7 +42,7 @@ $(document).ready(() => {
 			mimeType: 'multipart/form-data',
 			data: formData
 		}).done(res => {
-			res = JSON.parse(res); // idk why it sends a string
+			res = JSON.parse(res); // IDK why it sends a string
 			if (res.code === 200) {
 				$('#upload-form').trigger('reset');
 
@@ -50,7 +50,7 @@ $(document).ready(() => {
 					$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
-				// use a timeout to give server necessary time to update data
+				// Use a timeout to give server necessary time to update data
 			}
 			else {
 				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
@@ -76,7 +76,7 @@ $(document).ready(() => {
 					$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
-				// use a timeout to give server necessary time to update data
+				// Use a timeout to give server necessary time to update data
 			}
 			else {
 				return $('#rename-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
@@ -97,7 +97,7 @@ $(document).ready(() => {
 					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
 					return updateSounds();
 				}, 1000 * 0.5);
-				// use a timeout to give server necessary time to update data
+				// Use a timeout to give server necessary time to update data
 			}
 			else {
 				return $('#delete-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);

@@ -26,8 +26,8 @@ $(document).ready(() => {
 
 	function loadSounds(s) {
 		if (s.find(sound => sound.filename === 'realname')) s.splice(s.findIndex(sound => sound.filename === 'realname'), 1);
-		howlerList = {}; // wipe before (re)load
-		sounds = s; // reassign new sounds array
+		howlerList = {}; // Wipe before (re)load
+		sounds = s; // Reassign new sounds array
 
 		if (sounds.length > 0 && $('#button').text() === 'No sounds available.') toggleButton();
 		if (sounds.length === 0 && $('#button').text() === 'やめろ!!') toggleButton();
@@ -84,14 +84,14 @@ $(document).ready(() => {
 		});
 
 		$.get('/api/counter').done(res => $('#counter').html(formatNumber(res.counter)));
-		// load initial counter
+		// Load initial counter
 
 		loadSounds(sounds);
-		// load initial sounds
+		// Load initial sounds
 
 		$('#button').keypress(key => {
 			if (key.which === 13) return key.preventDefault();
-			// don't trigger the button on 'enter' keypress
+			// Don't trigger the button on 'enter' keypress
 		});
 	});
 });

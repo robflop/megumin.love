@@ -1,11 +1,11 @@
 $(document).ready(() => {
 	const background = (document.cookie.split(';').find(cookie => cookie.trim().startsWith('background')) || '').trim().substr(11) || 'random';
-	// the 11 in the substring is the length of "background=" to get the cookie value
+	// The 11 in the substring is the length of "background=" to get the cookie value
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	$('body').css('background-image', `url(/images/backgrounds/${background !== 'random' && background !== 'rotate' ? background : randomBg}.jpg)`);
-	// remove the "rotate" backwards compatibility thing somewhen later
+	// Remove the "rotate" backwards compatibility thing somewhen later
 
 	$('#bg-select').change(function() {
 		/* eslint-disable no-invalid-this */

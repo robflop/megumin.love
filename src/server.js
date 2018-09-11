@@ -13,7 +13,7 @@ const config = require('./config.json');
 
 const bootDate = moment().format('YYYY-MM-DD');
 const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
-// add 1 day because moment sees sunday as start and saturday as end of week and i don't
+// Add 1 day because moment sees sunday as start and saturday as end of week and i don't
 const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
 const startOfBootYear = moment().startOf('year'), endOfBootYear = moment().endOf('year');
 
@@ -21,7 +21,7 @@ let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fe
 const sounds = [], statistics = {};
 let hasOldTableValue = false;
 
-// on-boot database interaction
+// On-boot database interaction
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
@@ -34,11 +34,11 @@ db.serialize(() => {
 			});
 		}
 	});
-	// the above operation is purely for migrating the old name of the table
+	// The above operation is purely for migrating the old name of the table
 
 	db.get('SELECT counter FROM main_counter', [], (error, row) => {
 		if (!row && !hasOldTableValue) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
-		// only assume there's no proper counter entry if counter hasn't already been set above
+		// Only assume there's no proper counter entry if counter hasn't already been set above
 		if (row) counter = row.counter;
 
 		return Logger.info('Main counter loaded.');
@@ -50,7 +50,7 @@ db.serialize(() => {
 	});
 
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
-	// statistics entry for the boot day
+	// Statistics entry for the boot day
 
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
 		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
@@ -75,7 +75,7 @@ db.serialize(() => {
 	});
 });
 
-// webserver
+// Webserver
 const server = express();
 const http = require('http').Server(server);
 const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
@@ -96,11 +96,11 @@ readdirSync(pagePath).forEach(file => {
 	});
 
 	if (page === 'index') pages[pages.length - 1].route.push('/');
-	// last array item because during current iteration it will be the last (adds root-dir route for index)
+	// Last array item because during current iteration it will be the last (adds root-dir route for index)
 });
 
 server.use(helmet({
-	hsts: false // hsts sent via nginx
+	hsts: false // HSTS sent via nginx
 }));
 server.set('trust proxy', 1);
 server.use(express.urlencoded({ extended: false }));
@@ -138,13 +138,13 @@ function filterStats(statsObj, startDate, endDate, statsCondition) {
 	const iterator = startDate.clone();
 	const result = {};
 
-	if (!statsCondition) statsCondition = () => true; // if no condition provided, default to true
+	if (!statsCondition) statsCondition = () => true; // If no condition provided, default to true
 
 	while (iterator.diff(endDate) <= 0) {
 		const formattedDate = iterator.format('YYYY-MM-DD');
 
 		if (!statsObj.hasOwnProperty(formattedDate)) result[formattedDate] = 0;
-		// check for days missing in statistics and insert value for those
+		// Check for days missing in statistics and insert value for those
 		if (statsObj.hasOwnProperty(formattedDate) && statsCondition(iterator, startDate, endDate)) {
 			result[formattedDate] = statsObj[formattedDate];
 		}
@@ -183,7 +183,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStats, countFiltered, dateFiltered;
 	const firstStatDate = moment(Object.keys(statistics)[0]);
 	const latestStatDate = moment(Object.keys(statistics)[Object.keys(statistics).length - 1]);
-	// grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
+	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (['from', 'to', 'equals', 'over', 'under'].some(selector => Object.keys(req.query).includes(selector))) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
@@ -212,7 +212,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" selector must be bigger than the "over" selector.' });
 		}
 
-		// count filtering
+		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
 				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
@@ -236,7 +236,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			}
 		}
 
-		// date filtering
+		// Date filtering
 		const formattedFrom = from ? from.format('YYYY-MM-DD') : null;
 		const formattedTo = to ? to.format('YYYY-MM-DD') : null;
 
@@ -259,7 +259,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 		if (countFiltered) {
 			for (const entryKey in requestedStats) {
 				if (requestedStats[entryKey] === 0) delete requestedStats[entryKey];
-			} // filter padded entries if a count filter is used
+			} // Filter padded entries if a count filter is used
 		}
 	}
 	else {
@@ -327,7 +327,7 @@ server.post('/api/upload', (req, res) => {
 
 					setTimeout(() => {
 						emitUpdate({ type: 'soundUpdate', sounds });
-					}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
 				});
@@ -390,7 +390,7 @@ server.post('/api/rename', (req, res) => {
 			});
 			setTimeout(() => {
 				emitUpdate({ type: 'soundUpdate', sounds });
-			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully renamed.' });
 		});
@@ -430,7 +430,7 @@ server.post('/api/delete', (req, res) => {
 
 			setTimeout(() => {
 				emitUpdate({ type: 'soundUpdate', sounds });
-			}, 1000 * 0.5); // allow time for server to keep up and send actual new data
+			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.' });
 		});
@@ -473,7 +473,7 @@ for (const error of config.errorTemplates) {
 	}
 }
 
-// socket server
+// Socket server
 const socketServer = new uws.Server({ server: http });
 const sockets = new Set();
 
@@ -507,7 +507,7 @@ socketServer.on('connection', socket => {
 			average = Math.round(monthly / fetchedDaysAmount);
 
 			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentDate.substring(0, 7) });
-			// if chart data for this month exists, increment it -- if not, create it and start counting at 1
+			// If chart data for this month exists, increment it -- if not, create it and start counting at 1
 
 			statistics[currentDate] = daily;
 
@@ -519,8 +519,8 @@ socketServer.on('connection', socket => {
 
 			let soundEntry = sounds.find(sound => sound.filename === data.sound.filename);
 			if (!soundEntry && !sounds.find(s => data.sound.filename === s.filename)) return;
-			// safeguard against requests with sounds that don't exist from being saved serverside
-			// no need to check other props because if it's found, only count will be incremented (no user input)
+			// Safeguard against requests with sounds that don't exist from being saved serverside
+			// No need to check other props because if it's found, only count will be incremented (no user input)
 
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
@@ -535,7 +535,7 @@ socketServer.on('connection', socket => {
 	});
 });
 
-// database updates
+// Database updates
 scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	db.serialize(() => {
 		db.run(`UPDATE main_counter SET \`counter\` = ${counter}`);
@@ -549,28 +549,28 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	});
 
 	return Logger.info('Database updated.');
-}); // update db at every n-th minute
+}); // Update db at every n-th minute
 
 scheduleJob('0 0 1 1 *', () => {
 	yearly = 0;
 
 	Logger.info('Yearly counter reset.');
 	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
-}); // reset yearly counter at the start of each year
+}); // Reset yearly counter at the start of each year
 
 scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
 	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
-}); // reset monthly counter at the start of each month
+}); // Reset monthly counter at the start of each month
 
 scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
 	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
-}); // reset weekly counter at the start of each week (1 = monday)
+}); // Reset weekly counter at the start of each week (1 = monday)
 
 scheduleJob('0 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
@@ -579,4 +579,4 @@ scheduleJob('0 0 * * *', () => {
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
 	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
-}); // reset daily counter and update local statistics map at each midnight
+}); // Reset daily counter and update local statistics map at each midnight
