@@ -126,7 +126,7 @@
 		"error",
 		"always",
 		{
-			"ignorePattern": "null"
+			"ignorePattern": "null|const|var|let|return|if|else"
 		}
 	]
   }
