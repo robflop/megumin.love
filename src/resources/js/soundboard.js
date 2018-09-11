@@ -4,9 +4,9 @@ $(document).ready(() => {
 	let ws;
 
 	function loadSoundboard(s) {
-		howlerList = {}; // wipe before (re)load
+		howlerList = {}; // Wipe before (re)load
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
-		// sort primarily by season and secondarily alphabetically within seasons
+		// Sort primarily by season and secondarily alphabetically within seasons
 
 		$('#container').html('<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>'); // reset container
 
@@ -24,24 +24,27 @@ $(document).ready(() => {
 
 		// Create buttons and make them play corresponding sounds
 		for (const sound of sounds) {
-			const source = $(`div.buttons-wrap.source-${sound.source.replace(/\s/g, '-').toLowerCase()}`);
+			if (sound.filename === 'realname') continue;
+			// Don't create button for this one
+
+			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
+			const sourceButtonWrapper = $(`div.buttons-wrapper#${sourceName}-buttons`);
+			// Source as in "Season 1", "Season 1 OVA", etc
+
+			if (sourceButtonWrapper.length) {
+				sourceButtonWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
+			}
+			else {
+				// Use appendTo below to get reference to newly created elements to append other elements to
+				const sourceWrapper = $(`<div class="source-wrappers"></div>`).appendTo('#container');
+				sourceWrapper.append(`<h1 class="titles">${sound.source}:</h1>`);
+				const sourceButtonsWrapper = $(`<div class="buttons-wrapper" id="${sourceName}-buttons">`).appendTo(sourceWrapper);
+				if (!$(`#${sound.filename}`).length) sourceButtonsWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
+			}
 
 			howlerList[sound.filename] = new Howl({
 				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
 			});
-
-			if (sound.filename === 'realname') continue;
-			// don't create button for this one
-
-			if (source.length) {
-				source.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
-			}
-			else {
-				$('#container').append(`<h1 class="titles">${sound.source}:</h1>`);
-				const buttonsWrap = $(`<div class="buttons-wrap source-${sound.source.replace(/\s/g, '-').toLowerCase()}">`).appendTo('#container');
-				// use appendTo to get reference to newly-created wrapper in return value which is then appended to
-				if (!$(`#${sound.filename}`).length) buttonsWrap.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
-			}
 
 			if (sound.filename === 'name') {
 				$('#name').click(() => {
@@ -58,7 +61,7 @@ $(document).ready(() => {
 				});
 
 				continue;
-				// create button but don't use standard click function
+				// Create button but don't use standard click function
 			}
 
 			$(`#${sound.filename}`).click(() => {
@@ -69,7 +72,7 @@ $(document).ready(() => {
 
 			$(`#${sound.filename}`).keypress(key => {
 				if (key.which === 13) return key.preventDefault();
-				// don't trigger the button on 'enter' keypress
+				// Don't trigger the button on 'enter' keypress
 			});
 		}
 
