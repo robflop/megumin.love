@@ -3,16 +3,6 @@ $(document).ready(() => {
 	let howlerList = {};
 	let ws;
 
-	let crazyMode = document.cookie.split(';').find(cookie => cookie.trim().startsWith('crazyMode')) ? true : false;
-	$('#crazymode-toggle').change(function() {
-		/* eslint-disable no-invalid-this */
-		if (!this.checked) document.cookie = 'crazyMode=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-		else document.cookie = 'crazyMode=true';
-
-		return crazyMode = this.checked;
-		/* eslint-enable no-invalid-this */
-	});
-
 	function loadSoundboard(s) {
 		howlerList = {}; // Wipe before (re)load
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
@@ -115,7 +105,7 @@ $(document).ready(() => {
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) loadSoundboard(data.sounds);
-					if (data.type === 'crazyMode' && crazyMode) howlerList[data.sound].play();
+					if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) howlerList[data.sound].play();
 					if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
 						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
