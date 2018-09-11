@@ -25,10 +25,16 @@ $(document).ready(() => {
 
 		// Create buttons and make them play corresponding sounds
 		for (const sound of sounds) {
-
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			const sourceButtonWrapper = $(`div.buttons-wrapper#${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
+
+			howlerList[sound.filename] = new Howl({
+				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
+			});
+
+			if (sound.filename === 'realname') continue;
+			// Don't create button for this one
 
 			if (sourceButtonWrapper.length) {
 				sourceButtonWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
@@ -40,13 +46,6 @@ $(document).ready(() => {
 				const sourceButtonsWrapper = $(`<div class="buttons-wrapper" id="${sourceName}-buttons">`).appendTo(sourceWrapper);
 				if (!$(`#${sound.filename}`).length) sourceButtonsWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
 			}
-
-			howlerList[sound.filename] = new Howl({
-				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
-			});
-
-			if (sound.filename === 'realname') continue;
-			// Don't create button for this one
 
 			if (sound.filename === 'name') {
 				$('#name').click(() => {

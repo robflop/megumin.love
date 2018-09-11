@@ -13,7 +13,7 @@ $(document).ready(() => {
 	$('#bg-select').change(function() {
 		/* eslint-disable no-invalid-this */
 		if (this.value !== 'random') $('body').css('background-image', `url(/images/backgrounds/${this.value}.jpg)`);
-		return localStorage.setItem('background', this.value)
+		return localStorage.setItem('background', this.value);
 		// return document.cookie = `background=${this.value}`;
 		/* eslint-enable no-invalid-this */
 	});
