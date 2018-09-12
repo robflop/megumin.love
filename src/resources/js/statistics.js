@@ -83,5 +83,5 @@ $(document).ready(() => {
 		});
 	});
 
-	$.get('/api/counter?statistics').done(statistics => updateStatistics(statistics));
+	$.get('/api/statistics/summary').done(statistics => updateStatistics(statistics));
 });

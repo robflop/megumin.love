@@ -165,17 +165,6 @@ server.get('/api/conInfo', (req, res) => res.json({ port: config.port, ssl: conf
 server.get('/api/sounds', (req, res) => res.json(sounds));
 
 server.get('/api/counter', (req, res) => {
-	if (req.query.statistics === '') {
-		return res.json({
-			alltime: counter,
-			daily,
-			weekly,
-			monthly,
-			yearly,
-			average
-		});
-	}
-
 	return res.json({ counter });
 });
 
@@ -267,6 +256,17 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 	}
 
 	return res.json(requestedStats);
+});
+
+server.get('/api/statistics/summary', (req, res) => {
+	return res.json({
+		alltime: counter,
+		daily,
+		weekly,
+		monthly,
+		yearly,
+		average
+	});
 });
 
 server.post('/api/login', (req, res) => {

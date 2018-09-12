@@ -11,13 +11,9 @@ Returns the current global counter.
 
 ## Parameters
 
-| Key          | Description                                             | Format | Example |
-| ------------ | ------------------------------------------------------- | ------ | ------- |
-| statistics   | Whether to output current statistics instead of counter | N/A    | N/A     |
-
-When the statistics parameter is provided, summarized counter statistics, such as all-time clicks, today's clicks, this week's clicks, this month's clicks, this year's clicks and average clicks this month will be provided all in one.
-
-This summary is not available for any other time than the current (use the data from the `/statistics` endpoint for that).
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
 
 ### Example requests
 
@@ -28,21 +24,6 @@ Output:
 ```js
 {
     "counter": 59206101
-}
-```
-
-`/counter?statistics`
-
-Output:
-
-```js
-{
-    "alltime": 59206101,
-    "daily": 336,
-    "weekly": 336,
-    "monthly": 26462,
-    "yearly": 1706841,
-    "average": 4410
 }
 ```
 
@@ -104,5 +85,38 @@ Output:
     "2017-12-10": 19278,
     "2017-12-13": 471346,
     "2017-12-15": 25590
+}
+```
+
+---
+
+`GET /statistics/summary`
+
+Returns a summary of various counter statistics containing:
+
+- All-time clicks
+- Today's clicks
+- This week's clicks
+- This month's clicks
+- This year's clicks
+- Average clicks this month.
+
+This summary is not available for any other time than the time of the request, but you can use the data from the `/statistics` endpoint and aggregate it like this endpoint's output format to achieve the same result for a different point in time.
+
+
+### Example requests
+
+`/statistics/summary`
+
+Output:
+
+```js
+{
+    "alltime": 59206101,
+    "daily": 336,
+    "weekly": 336,
+    "monthly": 26462,
+    "yearly": 1706841,
+    "average": 4410
 }
 ```
