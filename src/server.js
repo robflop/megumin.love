@@ -3,41 +3,23 @@ const session = require('express-session');
 const helmet = require('helmet');
 const multer = require('multer');
 const { Database } = require('sqlite3');
-const { scheduleJob } = require('node-schedule');
+const { schedule } = require('node-cron');
 const uws = require('uws');
-const moment = require('moment');
+const dateFns = require('date-fns');
 const { join } = require('path');
 const { readdirSync, unlink, rename, copyFile } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 
-const bootDate = moment().format('YYYY-MM-DD');
-const startOfBootWeek = moment().startOf('week').add(1, 'days'), endOfBootWeek = moment().endOf('week').add(1, 'days');
-// Add 1 day because moment sees sunday as start and saturday as end of week and i don't
-const startOfBootMonth = moment().startOf('month'), endOfBootMonth = moment().endOf('month');
-const startOfBootYear = moment().startOf('year'), endOfBootYear = moment().endOf('year');
-
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1, chartData = {};
 const sounds = [], statistics = {};
-let hasOldTableValue = false;
 
 // On-boot database interaction
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
-	db.get('SELECT name FROM sqlite_master WHERE type="table" AND name="yamero_counter"', [], (error, tableNameRow) => {
-		if (tableNameRow) {
-			hasOldTableValue = true;
-			db.serialize(() => {
-				db.get('SELECT counter FROM yamero_counter', [], (error, row) => counter = row.counter);
-				db.run('ALTER TABLE yamero_counter RENAME TO main_counter');
-			});
-		}
-	});
-	// The above operation is purely for migrating the old name of the table
-
 	db.get('SELECT counter FROM main_counter', [], (error, row) => {
-		if (!row && !hasOldTableValue) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
+		if (!row) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
 		// Only assume there's no proper counter entry if counter hasn't already been set above
 		if (row) counter = row.counter;
 
@@ -53,12 +35,16 @@ db.serialize(() => {
 	// Statistics entry for the boot day
 
 	db.all('SELECT * FROM statistics', [], (error, rows) => {
-		const thisWeek = rows.filter(row => moment(row.date).isBetween(startOfBootWeek, endOfBootWeek, null, []));
-		const thisMonth = rows.filter(row => moment(row.date).isBetween(startOfBootMonth, endOfBootMonth, null, []));
-		const thisYear = rows.filter(row => moment(row.date).isBetween(startOfBootYear, endOfBootYear, null, []));
-		// null & [] parameters given for including first and last day of range (see moment docs)
+		const startOfBootWeek = dateFns.addDays(dateFns.startOfWeek(new Date()), 1), endOfBootWeek = dateFns.addDays(dateFns.endOfWeek(new Date()), 1);
+		// Add 1 day because I don't believe sunday to be the start of the week
+		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
+		const startOfBootYear = dateFns.startOfYear(new Date()), endOfBootYear = dateFns.endOfYear(new Date());
 
-		daily = rows.find(row => row.date === bootDate).count;
+		const thisWeek = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootWeek, endOfBootWeek));
+		const thisMonth = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootMonth, endOfBootMonth));
+		const thisYear = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootYear, endOfBootYear));
+
+		daily = rows.find(row => row.date === dateFns.format(new Date(), 'YYYY-MM-DD')).count;
 		weekly = thisWeek.reduce((total, date) => total += date.count, 0);
 		monthly = thisMonth.reduce((total, date) => total += date.count, 0);
 		yearly = thisYear.reduce((total, date) => total += date.count, 0);
@@ -79,7 +65,6 @@ db.serialize(() => {
 const server = express();
 const http = require('http').Server(server);
 const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance' ? true : false; // eslint-disable-line no-unneeded-ternary
-const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 
 const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
@@ -135,21 +120,19 @@ const upload = multer({
 	would not work if the difference between current stats iteration and date iterator is bigger than one.
 */
 function filterStats(statsObj, startDate, endDate, statsCondition) {
-	const iterator = startDate.clone();
+	let iterator = startDate;
 	const result = {};
 
-	if (!statsCondition) statsCondition = () => true; // If no condition provided, default to true
+	if (!statsCondition) statsCondition = () => true; // If no condition provided default to true
 
-	while (iterator.diff(endDate) <= 0) {
-		const formattedDate = iterator.format('YYYY-MM-DD');
-
-		if (!statsObj.hasOwnProperty(formattedDate)) result[formattedDate] = 0;
+	while (!dateFns.isSameDay(iterator, endDate)) {
+		if (!statsObj.hasOwnProperty(iterator)) result[iterator] = 0;
 		// Check for days missing in statistics and insert value for those
-		if (statsObj.hasOwnProperty(formattedDate) && statsCondition(iterator, startDate, endDate)) {
-			result[formattedDate] = statsObj[formattedDate];
+		if (statsObj.hasOwnProperty(iterator) && statsCondition(iterator, startDate, endDate)) {
+			result[iterator] = statsObj[iterator];
 		}
 
-		iterator.add(1, 'days');
+		iterator = dateFns.format(dateFns.addDays(iterator, 1), 'YYYY-MM-DD');
 	}
 
 	return result;
@@ -169,9 +152,10 @@ server.get('/api/counter', (req, res) => {
 });
 
 server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
-	let requestedStats, countFiltered, dateFiltered;
-	const firstStatDate = moment(Object.keys(statistics)[0]);
-	const latestStatDate = moment(Object.keys(statistics)[Object.keys(statistics).length - 1]);
+	let requestedStats = {}, countFiltered, dateFiltered;
+	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
+	const firstStatDate = Object.keys(statistics)[0];
+	const latestStatDate = Object.keys(statistics)[Object.keys(statistics).length - 1];
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (['from', 'to', 'equals', 'over', 'under'].some(selector => Object.keys(req.query).includes(selector))) {
@@ -179,21 +163,21 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
-		const to = req.query.to ? moment(req.query.to) : null;
-		const from = req.query.from ? moment(req.query.from) : null;
-		const equals = req.query.equals ? parseInt(req.query.equals) : null;
+		const to = req.query.to;
+		const from = req.query.from;
+		const equals = req.query.equals ? parseInt(req.query.equals) : null; // TODO look into these assignments
 		const over = req.query.over ? parseInt(req.query.over) : null;
 		const under = req.query.under ? parseInt(req.query.under) : null;
 
-		if ((to && to.isAfter(latestStatDate)) || (from && from.isAfter(latestStatDate))) {
+		if ((to && dateFns.isAfter(to, latestStatDate)) || (from && dateFns.isAfter(from, latestStatDate))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
-		if ((to && from) && from.isAfter(to)) {
+		if ((to && from) && dateFns.isAfter(from, to)) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
-		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
+		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) { // TODO look into this one
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" selectors must be numbers.' });
 		}
 
@@ -205,43 +189,39 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 		if (equals || over || under) {
 			if (equals) {
 				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator.format('YYYY-MM-DD')] === equals;
+					return statistics[iterator] === equals;
 				});
 			}
 			else if (over && !under) {
 				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator.format('YYYY-MM-DD')] > over;
+					return statistics[iterator] > over;
 				});
 			}
 			else if (!over && under) {
 				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator.format('YYYY-MM-DD')] < under;
+					return statistics[iterator] < under;
 				});
 			}
 			else if (over && under) {
 				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator.format('YYYY-MM-DD')] > over && statistics[iterator.format('YYYY-MM-DD')] < under;
+					return statistics[iterator] > over && statistics[iterator] < under;
 				});
 			}
 		}
 
 		// Date filtering
-		const formattedFrom = from ? from.format('YYYY-MM-DD') : null;
-		const formattedTo = to ? to.format('YYYY-MM-DD') : null;
-
-		if (formattedFrom && !formattedTo) {
-			requestedStats[formattedFrom] = statistics[formattedFrom] || 0;
+		if (from && !to) {
+			requestedStats[from] = countFiltered ? countFiltered[from] || 0 : statistics[from] || 0;
 		}
-		else if (!formattedFrom && formattedTo) {
+		else if (!from && to) {
 			requestedStats = filterStats(countFiltered ? countFiltered : statistics, firstStatDate, to, (iterator, startDate, endDate) => {
-				return moment(iterator).isSameOrBefore(endDate);
+				return dateFns.isSameDay(iterator) && dateFns.isBefore(iterator);
 			});
 		}
-		else if (formattedFrom && formattedTo) {
+		else if (from && to) {
 			requestedStats = filterStats(countFiltered ? countFiltered : statistics, from, to, (iterator, startDate, endDate) => {
-				return moment(iterator).isBetween(startDate, endDate, null, []);
+				return dateFns.isWithinRange(iterator, startDate, endDate);
 			});
-			// null & [] parameters given for including first and last day of range (see moment docs)
 		}
 		else requestedStats = countFiltered;
 
@@ -509,7 +489,7 @@ socketServer.on('connection', socket => {
 			if ((data.crazyMode && data.sound) && !sounds.find(s => data.sound.filename === s.filename)) return;
 			// Safeguard against crazy mode requests with invalid sound name
 
-			const currentDate = moment().format('YYYY-MM-DD');
+			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
 			const currentMonthData = chartData.find(data => data.month === currentDate.substring(0, 7));
 			++counter;
 			++daily; ++weekly;
@@ -550,7 +530,7 @@ socketServer.on('connection', socket => {
 });
 
 // Database updates
-scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
+schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	db.serialize(() => {
 		db.run(`UPDATE main_counter SET \`counter\` = ${counter}`);
 
@@ -565,32 +545,32 @@ scheduleJob(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	return Logger.info('Database updated.');
 }); // Update db at every n-th minute
 
-scheduleJob('0 0 1 1 *', () => {
+schedule('0 0 1 1 *', () => {
 	yearly = 0;
 
 	Logger.info('Yearly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // Reset yearly counter at the start of each year
 
-scheduleJob('0 0 1 * *', () => {
+schedule('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // Reset monthly counter at the start of each month
 
-scheduleJob('0 0 * * 1', () => {
+schedule('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // Reset weekly counter at the start of each week (1 = monday)
 
-scheduleJob('0 0 * * *', () => {
+schedule('0 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
 	average = Math.round(monthly / fetchedDaysAmount);
-	statistics[moment().format('YYYY-MM-DD')] = 0;
+	statistics[dateFns.format(new Date(), 'YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate({ type: 'counterUpdate', 	statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 }); // Reset daily counter and update local statistics map at each midnight
