@@ -145,7 +145,36 @@ http.listen(config.port, () => {
 
 server.get('/api/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
-server.get('/api/sounds', (req, res) => res.json(sounds));
+server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
+	let requestedSounds = sounds;
+
+	if (['source', 'over', 'under', 'equals'].some(parameter => Object.keys(req.query).includes(parameter))) {
+		const equals = req.query.equals ? parseInt(req.query.equals) : null; // TODO look into these assignments
+		const over = req.query.over ? parseInt(req.query.over) : null;
+		const under = req.query.under ? parseInt(req.query.under) : null;
+
+		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) { // TODO look into this one
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
+		}
+
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
+		}
+
+		// Source filtering
+		if (req.query.source) requestedSounds = requestedSounds.filter(sound => sound.source.toLowerCase() === req.query.source.toLowerCase());
+
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
+			else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
+			else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
+			else if (over && under) requestedSounds = requestedSounds.filter(sound => sound.count > over && sound.count < under);
+		}
+	}
+
+	return res.json(requestedSounds);
+});
 
 server.get('/api/counter', (req, res) => {
 	return res.json({ counter });
