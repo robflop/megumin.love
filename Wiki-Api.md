@@ -103,6 +103,12 @@ Returns a summary of various counter statistics containing:
 
 This summary is not available for any other time than the time of the request, but you can use the data from the `/statistics` endpoint and aggregate it like this endpoint's output format to achieve the same result for a different point in time.
 
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
 
 ### Example requests
 
