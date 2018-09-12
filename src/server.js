@@ -149,11 +149,11 @@ server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
 	if (['source', 'over', 'under', 'equals'].some(parameter => Object.keys(req.query).includes(parameter))) {
-		const equals = req.query.equals ? parseInt(req.query.equals) : null; // TODO look into these assignments
+		const equals = req.query.equals ? parseInt(req.query.equals) : null;
 		const over = req.query.over ? parseInt(req.query.over) : null;
 		const under = req.query.under ? parseInt(req.query.under) : null;
 
-		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) { // TODO look into this one
+		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
@@ -181,7 +181,7 @@ server.get('/api/counter', (req, res) => {
 });
 
 server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
-	let requestedStats = {}, countFiltered;
+	let requestedStats = statistics;
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 	const firstStatDate = Object.keys(statistics)[0];
 	const latestStatDate = Object.keys(statistics)[Object.keys(statistics).length - 1];
@@ -194,7 +194,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 
 		const to = req.query.to;
 		const from = req.query.from;
-		const equals = req.query.equals ? parseInt(req.query.equals) : null; // TODO look into these assignments
+		const equals = req.query.equals ? parseInt(req.query.equals) : null;
 		const over = req.query.over ? parseInt(req.query.over) : null;
 		const under = req.query.under ? parseInt(req.query.under) : null;
 
@@ -206,7 +206,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
-		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) { // TODO look into this one
+		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
@@ -214,54 +214,51 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
 		}
 
-		// Count filtering
-		if (equals || over || under) {
-			if (equals) {
-				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] === equals;
-				});
-			}
-			else if (over && !under) {
-				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] > over;
-				});
-			}
-			else if (!over && under) {
-				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] < under;
-				});
-			}
-			else if (over && under) {
-				countFiltered = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] > over && statistics[iterator] < under;
-				});
-			}
-		}
-
 		// Date filtering
 		if (from && !to) {
-			requestedStats[from] = countFiltered ? countFiltered[from] || 0 : statistics[from] || 0;
+			requestedStats[from] = requestedStats[from] || 0;
 		}
 		else if (!from && to) {
-			requestedStats = filterStats(countFiltered ? countFiltered : statistics, firstStatDate, to, (iterator, startDate, endDate) => {
+			requestedStats = filterStats(requestedStats, firstStatDate, to, (iterator, startDate, endDate) => {
 				return dateFns.isSameDay(iterator, endDate) || dateFns.isBefore(iterator, endDate);
 			});
 		}
 		else if (from && to) {
-			requestedStats = filterStats(countFiltered ? countFiltered : statistics, from, to, (iterator, startDate, endDate) => {
+			requestedStats = filterStats(requestedStats, from, to, (iterator, startDate, endDate) => {
 				return dateFns.isWithinRange(iterator, startDate, endDate);
 			});
 		}
-		else requestedStats = countFiltered;
 
-		if (countFiltered) {
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) {
+				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator] === equals;
+				});
+			}
+			else if (over && !under) {
+				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator] > over;
+				});
+			}
+			else if (!over && under) {
+				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator] < under;
+				});
+			}
+			else if (over && under) {
+				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return statistics[iterator] > over && statistics[iterator] < under;
+				});
+			}
+
 			for (const entryKey in requestedStats) {
 				if (requestedStats[entryKey] === 0) delete requestedStats[entryKey];
 			} // Filter padded entries if a count filter is used
 		}
 	}
 	else {
-		requestedStats = filterStats(statistics, firstStatDate, latestStatDate);
+		requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate);
 	}
 
 	return res.json(requestedStats);
