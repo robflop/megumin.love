@@ -145,15 +145,18 @@ http.listen(config.port, () => {
 
 server.get('/api/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
 
+server.get('/api/counter', (req, res) => {
+	return res.json({ counter });
+});
+
 server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
 	if (['source', 'over', 'under', 'equals'].some(parameter => Object.keys(req.query).includes(parameter))) {
-		const equals = req.query.equals ? parseInt(req.query.equals) : null;
-		const over = req.query.over ? parseInt(req.query.over) : null;
-		const under = req.query.under ? parseInt(req.query.under) : null;
+		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially supplied, and if it was if the input wasn't a number
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
@@ -176,10 +179,6 @@ server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
 	return res.json(requestedSounds);
 });
 
-server.get('/api/counter', (req, res) => {
-	return res.json({ counter });
-});
-
 server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStats = statistics;
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -192,11 +191,8 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
-		const to = req.query.to;
-		const from = req.query.from;
-		const equals = req.query.equals ? parseInt(req.query.equals) : null;
-		const over = req.query.over ? parseInt(req.query.over) : null;
-		const under = req.query.under ? parseInt(req.query.under) : null;
+		const { to, from } = req.query;
+		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
 		if ((to && dateFns.isAfter(to, latestStatDate)) || (from && dateFns.isAfter(from, latestStatDate))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
@@ -206,7 +202,8 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
-		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) {
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially supplied, and if it was if the input wasn't a number
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
