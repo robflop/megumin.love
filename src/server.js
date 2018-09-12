@@ -125,7 +125,7 @@ function filterStats(statsObj, startDate, endDate, statsCondition) {
 
 	if (!statsCondition) statsCondition = () => true; // If no condition provided default to true
 
-	while (!dateFns.isSameDay(iterator, endDate)) {
+	while (dateFns.differenceInDays(endDate, iterator) >= 0) {
 		if (!statsObj.hasOwnProperty(iterator)) result[iterator] = 0;
 		// Check for days missing in statistics and insert value for those
 		if (statsObj.hasOwnProperty(iterator) && statsCondition(iterator, startDate, endDate)) {
@@ -152,13 +152,13 @@ server.get('/api/counter', (req, res) => {
 });
 
 server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
-	let requestedStats = {}, countFiltered, dateFiltered;
+	let requestedStats = {}, countFiltered;
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 	const firstStatDate = Object.keys(statistics)[0];
 	const latestStatDate = Object.keys(statistics)[Object.keys(statistics).length - 1];
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
-	if (['from', 'to', 'equals', 'over', 'under'].some(selector => Object.keys(req.query).includes(selector))) {
+	if (['from', 'to', 'equals', 'over', 'under'].some(parameter => Object.keys(req.query).includes(parameter))) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
@@ -178,11 +178,11 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 		}
 
 		if ((equals && isNaN(equals)) || (over && isNaN(over)) || (under && isNaN(under))) { // TODO look into this one
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" selectors must be numbers.' });
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
 		if ((over && under) && over > under) {
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" selector must be bigger than the "over" selector.' });
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
 		}
 
 		// Count filtering
@@ -215,7 +215,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 		}
 		else if (!from && to) {
 			requestedStats = filterStats(countFiltered ? countFiltered : statistics, firstStatDate, to, (iterator, startDate, endDate) => {
-				return dateFns.isSameDay(iterator) && dateFns.isBefore(iterator);
+				return dateFns.isSameDay(iterator, endDate) || dateFns.isBefore(iterator, endDate);
 			});
 		}
 		else if (from && to) {
