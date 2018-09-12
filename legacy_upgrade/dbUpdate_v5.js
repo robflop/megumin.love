@@ -1,21 +1,21 @@
 const { Database } = require('sqlite3');
 const { join } = require('path');
 const { copyFile } = require('fs');
-const config = require('./src/config.json');
+const { databasePath } = require('../src/config.json');
 let sounds;
 
 try {
-	sounds = require('./src/resources/js/sounds');
+	sounds = require('../src/resources/js/sounds');
 }
 catch (e) {
-	console.log('The sounds.js file could not be found! Did you already update?');
+	console.log('The sounds.js file could not be found! Did you already migrate?');
 	return console.log(e.message);
 }
 
-const db = new Database(join('src', config.databasePath));
+const db = new Database(join('..', 'src', databasePath));
 const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayName}", "${sound.source}", 0 )`);
 
-console.log('Database adjustment now in progress. Do not manually exit or things will break.');
+console.log('Database adjustment now in progress. Do not manually exit or your database will get corrupted and not work again.');
 console.log('Once this is complete you may delete the "sounds.js" file located at "/src/resources/sounds.js"');
 console.log('(It is complete once the command line input shows up again.)');
 
@@ -25,11 +25,11 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 
 	db.serialize(() => {
 		db.run(`
-		CREATE TABLE IF NOT EXISTS sounds ( 
-			id INTEGER PRIMARY KEY, 
-			filename TEXT NOT NULL UNIQUE, 
-			displayname TEXT NOT NULL, 
-			source TEXT NOT NULL, 
+		CREATE TABLE IF NOT EXISTS sounds (
+			id INTEGER PRIMARY KEY,
+			filename TEXT NOT NULL UNIQUE,
+			displayname TEXT NOT NULL,
+			source TEXT NOT NULL,
 			count INTEGER NOT NULL
 		)
 		`);
