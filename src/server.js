@@ -232,23 +232,23 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
-				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] === equals;
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return requestedStats[iterator] === equals;
 				});
 			}
 			else if (over && !under) {
-				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] > over;
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return requestedStats[iterator] > over;
 				});
 			}
 			else if (!over && under) {
-				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] < under;
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return requestedStats[iterator] < under;
 				});
 			}
 			else if (over && under) {
-				requestedStats = filterStats(statistics, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
-					return statistics[iterator] > over && statistics[iterator] < under;
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+					return requestedStats[iterator] > over && requestedStats[iterator] < under;
 				});
 			}
 
