@@ -30,6 +30,7 @@ Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs
 ### Adding custom sounds
 
 There are two ways to add custom sounds starting with version 5.0.0 -- via interface or manually.
+If done via interface then no restart is required, if done manually changes only take effect on restart.
 
 #### Interface:
 1) Open the admin panel at the `/admin` page and log in
@@ -63,6 +64,7 @@ There are two ways to add custom sounds starting with version 5.0.0 -- via inter
 1) Delete the files in the `src/resources/sounds` folder
 2) Run this query with with the value for the sound you want to delete:
 	- `DELETE FROM sounds WHERE filename = <your value here>;`
+3) Restart the website
 
 ### Important Information
 
