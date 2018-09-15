@@ -26,7 +26,6 @@ $(document).ready(() => {
 
 	function loadSounds(s) {
 		howlerList = {}; // Wipe before (re)load
-		sounds = s; // Reassign new sounds array
 
 		if (sounds.length > 0 && $('#button').text() === 'No sounds available.') toggleButton();
 		if (sounds.length === 0 && $('#button').text() === 'やめろ!!') toggleButton();
@@ -62,12 +61,22 @@ $(document).ready(() => {
 
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.sounds) loadSounds(data.sounds);
-					if (data.type === 'counterUpdate' && data.counter) $('#counter').html(formatNumber(data.counter));
-					if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) howlerList[data.sound].play();
-					if (data.type === 'notification' && data.notification) {
+					if (data.type === 'soundUpdate' && data.sounds) {
+						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(s => s.filename === changedSound.filename)] = changedSound);
+						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(s => s.filename === deletedSound.filename), 1));
+						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
+
+						return loadSounds(sounds); // Reload with now-modified sounds array
+					}
+					else if (data.type === 'counterUpdate' && data.counter) {
+						return $('#counter').html(formatNumber(data.counter));
+					}
+					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
+						return howlerList[data.sound].play();
+					}
+					else if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
-						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+						return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
 					}
 				});
 

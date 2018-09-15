@@ -5,13 +5,13 @@ $(document).ready(() => {
 
 	function loadSoundboard(s) {
 		howlerList = {}; // Wipe before (re)load
-		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
 
 		$('#container').html('<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>');
 		// Reset container
 
-		if (sounds.length === 0) {
+		if (s.length === 0) {
 			return $('#container').html(`
 			<div id="backlink-top"><a class="backlink" href="/">Back</a></div>
 			<a href="rankings" id="rankings">Rankings</a>
@@ -24,7 +24,7 @@ $(document).ready(() => {
 		$('#container').append('<a href="rankings" id="rankings">Rankings</a>');
 
 		// Create buttons and make them play corresponding sounds
-		for (const sound of sounds) {
+		for (const sound of s) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			const sourceButtonWrapper = $(`div.buttons-wrapper#${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
@@ -103,11 +103,19 @@ $(document).ready(() => {
 
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
-					if (data.type === 'soundUpdate' && data.sounds) loadSoundboard(data.sounds);
-					if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) howlerList[data.sound].play();
-					if (data.type === 'notification' && data.notification) {
+					if (data.type === 'soundUpdate' && data.sounds) {
+						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(s => s.filename === changedSound.filename)] = changedSound);
+						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(s => s.filename === deletedSound.filename), 1)); // eslint-disable-line max-nested-callbacks, max-len
+						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
+
+						return loadSoundboard(sounds); // Reload with now-modified sounds array
+					}
+					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
+						return howlerList[data.sound].play();
+					}
+					else if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
-						$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+						return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
 					}
 				});
 			});

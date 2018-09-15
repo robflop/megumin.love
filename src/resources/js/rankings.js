@@ -1,14 +1,15 @@
 $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	let sounds = [];
 
-	const updateRanking = sounds => {
-		sounds = sounds.sort((a, b) => b.count - a.count);
+	const updateRanking = s => {
+		s = s.sort((a, b) => b.count - a.count);
 
 		$('#rankings').children().detach();
 
-		if (sounds.length === 0) $('#rankings').append('<h1 id="warning">No sounds available.</h1>');
+		if (s.length === 0) $('#rankings').append('<h1 id="warning">No sounds available.</h1>');
 
-		for (const sound of sounds) {
+		for (const sound of s) {
 			if (sound.filename === 'realname') continue;
 
 			$('#rankings').append(`<li id=${sound.filename}>${sound.displayname}: ${formatNumber(sound.count)} clicks</li>`);
@@ -34,18 +35,25 @@ $(document).ready(() => {
 					data = {};
 				}
 
-				if (!['counterUpdate', 'soundUpdate', 'notification'].includes(data.type)) return;
+				if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
-				if (data.sounds) updateRanking(data.sounds);
-				// No need to differentiate soundUpdate and counterUpdate because list gets rebuilt each update either way,
-				// So it'll automatically include both new numbers and entirely new sounds
-				if (data.type === 'notification' && data.notification) {
+				if (data.type === 'soundUpdate' && data.sounds) {
+					data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(s => s.filename === changedSound.filename)] = changedSound);
+					data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(s => s.filename === deletedSound.filename), 1));
+					data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
+
+					return updateRanking(sounds);
+				}
+				else if (data.type === 'notification' && data.notification) {
 					$('#notification').text(data.notification.text);
-					$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+					return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
 				}
 			});
 		});
 	});
 
-	$.get('/api/sounds').done(sounds => updateRanking(sounds));
+	$.get('/api/sounds').done(s => {
+		sounds = s;
+		updateRanking(sounds);
+	});
 });

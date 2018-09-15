@@ -300,6 +300,7 @@ server.get('/api/logout', (req, res) => {
 
 server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+	let newSound;
 
 	upload(req, res, err => {
 		if (err) return res.json({ code: 400, message: err });
@@ -324,12 +325,13 @@ server.post('/api/upload', (req, res) => {
 					}
 					Logger.info(`(${++step}/2) Database entry successfully created.`);
 
-					sounds.push({ id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 });
+					newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
+					sounds.push(newSound);
 
 					Logger.info(`(${++step}/2) Rankings/Sound cache successfully entry created.`);
 
 					setTimeout(() => {
-						emitUpdate({ type: 'soundUpdate', sounds });
+						emitUpdate({ type: 'soundUpdate', sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] } });
 					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
@@ -342,12 +344,12 @@ server.post('/api/rename', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	const data = req.body;
-	const sound = sounds.find(sound => sound.filename === data.oldSound);
-	const newValues = [data.newFilename, data.newDisplayname, data.newSource, data.oldSound];
+	const sound = sounds.find(sound => sound.filename === data.oldSoundName);
+	const newValues = [data.newFilename, data.newDisplayname, data.newSource, data.oldSoundName];
 
 	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${data.oldSound}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
+		Logger.info(`Renaming process for sound '${data.oldSoundName}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
 		let step = 0;
 
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?', newValues, err => {
@@ -364,17 +366,17 @@ server.post('/api/rename', (req, res) => {
 			Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
 			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
-				return copyFile(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.oldSound}.${ext}.bak`, err => {
+				return copyFile(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
 					if (err) {
 						Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, err);
 						return res.json({ code: 400, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
 
-					rename(`./resources/sounds/${data.oldSound}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
+					rename(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
 						if (err) {
 							Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, err);
-							rename(`./resources/sounds/${data.oldSound}.${ext}.bak`, `./resources/sounds/${data.oldSound}.${ext}`, err => {
+							rename(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, `./resources/sounds/${data.oldSoundName}.${ext}`, err => {
 								if (err) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
 							});
 
@@ -382,7 +384,7 @@ server.post('/api/rename', (req, res) => {
 						}
 						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
 
-						unlink(`./resources/sounds/${data.oldSound}.${ext}.bak`, err => {
+						unlink(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
 							if (err) {
 								Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
 							}
@@ -392,7 +394,7 @@ server.post('/api/rename', (req, res) => {
 				});
 			});
 			setTimeout(() => {
-				emitUpdate({ type: 'soundUpdate', sounds });
+				emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [sound], addedSounds: [], deletedSounds: [] } });
 			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully renamed.' });
@@ -432,7 +434,7 @@ server.post('/api/delete', (req, res) => {
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
-				emitUpdate({ type: 'soundUpdate', sounds });
+				emitUpdate({ type: 'soundUpdate', sounds: { deletedSounds: [sound], changedSounds: [], addedSounds: [] } });
 			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.' });
@@ -543,7 +545,7 @@ socketServer.on('connection', socket => {
 			emitUpdate({ type: 'crazyMode', sound: data.sound }, { excludeSocket: socket });
 			// Check if data.sound exists already done above
 
-			return emitUpdate({ type: 'counterUpdate', sounds });
+			return emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] } });
 		}
 	});
 

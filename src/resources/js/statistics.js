@@ -71,13 +71,14 @@ $(document).ready(() => {
 					data = {};
 				}
 
-				if (!['counterUpdate', 'notification'].includes(data.type)) return;
+				if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
-				if (data.statistics) updateStatistics(data.statistics);
-				// Only numbers ever get updated here, no need to differentiate the events
+				if (data.type === 'counterUpdate' && data.statistics) {
+					return updateStatistics(data.statistics);
+				}
 				else if (data.type === 'notification' && data.notification) {
 					$('#notification').text(data.notification.text);
-					$('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+					return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
 				}
 			});
 		});
