@@ -3,7 +3,7 @@ body {
 }
 
 #creditsbox {
-	width: 510px;
+	width: 700px;
 	background: #F2E6E6;
 	margin: 10vh auto;
 	padding: 16px;
@@ -35,7 +35,7 @@ h1 {
 		margin-left: 430px;
 		display: inline-block;
 		-webkit-transform: scale(1.5);
-		transform: scale(1.5);   
+		transform: scale(1.5);
 	}
 
 	footer {
@@ -52,7 +52,7 @@ h1 {
 	}
 
 	body {
-		height: 300px;   
+		height: 300px;
 	}
 
 	.backlink {
@@ -60,6 +60,6 @@ h1 {
 		margin-left: 430px;
 		display: inline-block;
 		-webkit-transform: scale(1.5);
-		transform: scale(1.5);   
+		transform: scale(1.5);
 	}
 }
