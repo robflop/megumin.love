@@ -6,7 +6,7 @@
 		"500"
 	],
 	"databasePath": "./db/default.db",
-	"updateInterval": 30,
+	"updateInterval": 15,
 	"adminPassword": "pathOfExplosions",
 	"sessionSecret": "someKindOfSecret"
 }
