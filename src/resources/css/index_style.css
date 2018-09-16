@@ -42,15 +42,24 @@ body {
 	background: #ff3338;
 }
 
+#box > div {
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
 #version {
 	color: #dd0000;
-	margin-top: 5px;
-	margin-left: 5px;
+	display: inline-block;
 }
 
 #share-buttons-frame {
-	margin-left: 120px;
-	margin-top: 6px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 125px;
+}
+
+.share-buttons > a {
+	text-decoration: none;
 }
 
 #counter {
