@@ -62,9 +62,10 @@ $(document).ready(() => {
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) {
-						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.filename === changedSound.filename)] = changedSound);
-						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.filename === deletedSound.filename), 1));
+						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.id === changedSound.id)] = changedSound);
+						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.id === deletedSound.id), 1));
 						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
+						// Compare IDs because all other fields may have changed, id the only constant
 
 						return loadSounds(sounds); // Reload with now-modified sounds array
 					}
@@ -72,7 +73,7 @@ $(document).ready(() => {
 						return $('#counter').html(formatNumber(data.counter));
 					}
 					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
-						return howlerList[data.sound].play();
+						return howlerList[data.soundFilename].play();
 					}
 					else if (data.type === 'notification' && data.notification) {
 						$('#notification').text(data.notification.text);
@@ -83,7 +84,7 @@ $(document).ready(() => {
 				$('#button').click(() => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
-					ws.send(JSON.stringify({ type: 'click', sound: sound.filename }));
+					ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
 
 					return howlerList[sound.filename].play();
 				});

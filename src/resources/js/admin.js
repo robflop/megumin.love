@@ -72,7 +72,8 @@ $(document).ready(() => {
 			if (res.code === 200) {
 				$('#rename-form').trigger('reset');
 				$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
-				sounds[sounds.findIndex(s => s.id === res.sound.id)] = res.sound;
+				sounds[sounds.findIndex(snd => snd.id === res.sound.id)] = res.sound;
+				// Compare IDs because all other fields may have changed, id the only constant
 
 				return updateSounds(sounds);
 			}
@@ -87,11 +88,12 @@ $(document).ready(() => {
 
 		const data = $('#delete-form').serializeArray();
 
-		$.post('/api/delete', { sound: data[0].value }).done(res => {
+		$.post('/api/delete', { soundFilename: data[0].value }).done(res => {
 			if (res.code === 200) {
 				$('#delete-form').trigger('reset');
 				$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
-				sounds.splice(sounds.findIndex(s => s.id === res.sound.id), 1);
+				sounds.splice(sounds.findIndex(snd => snd.id === res.sound.id), 1);
+				// Compare IDs because all other fields may have changed, id the only constant
 
 				return updateSounds(sounds);
 			}

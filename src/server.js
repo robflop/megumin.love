@@ -410,11 +410,11 @@ server.post('/api/delete', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	const data = req.body;
-	const deletedSound = sounds.find(sound => sound.filename === data.sound);
+	const deletedSound = sounds.find(sound => sound.filename === data.soundFilename);
 
 	if (!deletedSound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
-		Logger.info(`Deletion process for sound '${data.sound}' initiated.`);
+		Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`);
 		let step = 0;
 
 		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
@@ -515,8 +515,10 @@ socketServer.on('connection', socket => {
 		if (!['click', 'sbClick'].includes(data.type)) return;
 
 		if (data.type === 'click') {
-			if ((data.crazyMode && data.sound) && !sounds.find(s => data.sound.filename === s.filename)) return;
-			// Safeguard against crazy mode requests with invalid sound name
+			const crazyModeSound = data.soundFilename ? sounds.find(s => s.filename === data.soundFilename) : null;
+
+			if (data.crazyMode && !crazyModeSound) return;
+			// Safeguard against crazy mode requests with invalid sound filename
 
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
 			const currentMonthData = chartData.find(d => d.month === currentDate.substring(0, 7));
@@ -530,23 +532,22 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			if (data.sound) emitUpdate({ type: 'crazyMode', sound: data.sound }, { excludeSocket: socket });
+			if (data.soundID) emitUpdate({ type: 'crazyMode', soundFilename: crazyModeSound.filename }, { excludeSocket: socket });
 
 			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 		}
 
 		if (data.type === 'sbClick') {
-			if (!data.sound) return;
+			if (!data.soundFilename) return;
 
-			let soundEntry = sounds.find(sound => sound.filename === data.sound);
-			if (!soundEntry && !sounds.find(s => data.sound === s.filename)) return;
+			let soundEntry = sounds.find(sound => sound.filename === data.soundFilename);
 			// Safeguard against requests with sounds that don't exist from being saved serverside
 			// No need to check other props because if it's found, only count will be incremented (no user input)
 
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
 
-			emitUpdate({ type: 'crazyMode', sound: soundEntry.filename }, { excludeSocket: socket });
+			emitUpdate({ type: 'crazyMode', soundFilename: soundEntry.filename }, { excludeSocket: socket });
 			// Check if data.sound exists already done above
 
 			return emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] } });

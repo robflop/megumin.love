@@ -7,7 +7,7 @@ $(document).ready(() => {
 
 		$('#rankings').children().detach();
 
-		if (s.length === 0) $('#rankings').append('<h1 id="warning">No sounds available.</h1>');
+		if (s.length === 0) return $('#rankings').append('<h1 id="warning">No sounds available.</h1>');
 
 		for (const sound of s) {
 			if (sound.filename === 'realname') continue;
@@ -38,9 +38,10 @@ $(document).ready(() => {
 				if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 				if (data.type === 'soundUpdate' && data.sounds) {
-					data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.filename === changedSound.filename)] = changedSound);
-					data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.filename === deletedSound.filename), 1));
+					data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.id === changedSound.id)] = changedSound);
+					data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.id === deletedSound.id), 1));
 					data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
+					// Compare IDs because all other fields may have changed, id the only constant
 
 					return updateRanking(sounds);
 				}
@@ -54,6 +55,6 @@ $(document).ready(() => {
 
 	$.get('/api/sounds').done(s => {
 		sounds = s;
-		updateRanking(sounds);
+		return updateRanking(sounds);
 	});
 });
