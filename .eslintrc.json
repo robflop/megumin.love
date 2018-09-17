@@ -145,6 +145,14 @@
 			{
 				"ignorePattern": "null|const|var|let|return|if|else|[\\w]+\\(|\\t|\\s"
 			}
+		],
+		"no-shadow": [
+			"error",
+			{
+				"builtinGlobals": false,
+				"hoist": "functions",
+				"allow": []
+			}
 		]
 	}
 }

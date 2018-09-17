@@ -64,7 +64,7 @@ $(document).ready(() => {
 		const data = $('#rename-form').serializeArray();
 
 		$.post('/api/rename', {
-			oldSoundName: data[0].value,
+			oldFilename: data[0].value,
 			newFilename: data[1].value,
 			newDisplayname: data[2].value,
 			newSource: data[3].value

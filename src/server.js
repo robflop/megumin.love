@@ -18,7 +18,7 @@ const sounds = [], statistics = {};
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
-	db.get('SELECT counter FROM main_counter', [], (error, row) => {
+	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
 		if (!row) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
 		// Only assume there's no proper counter entry if counter hasn't already been set above
 		if (row) counter = row.counter;
@@ -26,7 +26,7 @@ db.serialize(() => {
 		return Logger.info('Main counter loaded.');
 	});
 
-	db.all('SELECT * FROM sounds', [], (error, rows) => {
+	db.all('SELECT * FROM sounds', [], (selectErr, rows) => {
 		rows.map(sound => sounds.push(sound));
 		return Logger.info('Sounds & rankings loaded.');
 	});
@@ -34,7 +34,7 @@ db.serialize(() => {
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
 	// Statistics entry for the boot day
 
-	db.all('SELECT * FROM statistics', [], (error, rows) => {
+	db.all('SELECT * FROM statistics', [], (selectErr, rows) => {
 		const startOfBootWeek = dateFns.addDays(dateFns.startOfWeek(new Date()), 1), endOfBootWeek = dateFns.addDays(dateFns.endOfWeek(new Date()), 1);
 		// Add 1 day because I don't believe sunday to be the start of the week
 		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
@@ -55,7 +55,7 @@ db.serialize(() => {
 		return Logger.info('Statistics loaded.');
 	});
 
-	db.all('SELECT sum(count) AS clicks, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (error, rows) => {
+	db.all('SELECT sum(count) AS clicks, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
 		chartData = rows;
 		return Logger.info('Chart data loaded.');
 	});
@@ -302,8 +302,8 @@ server.post('/api/upload', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 	let newSound;
 
-	upload(req, res, err => {
-		if (err) return res.json({ code: 400, message: err });
+	upload(req, res, uploadErr => {
+		if (uploadErr) return res.json({ code: 400, message: uploadErr });
 
 		const data = req.body;
 		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
@@ -318,9 +318,9 @@ server.post('/api/upload', (req, res) => {
 
 			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
 				data.filename, data.displayname, data.source, 0,
-				err => {
-					if (err) {
-						Logger.error(`An error occurred creating the database entry, upload aborted.`, err);
+				insertErr => {
+					if (insertErr) {
+						Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
 						return res.json({ code: 500, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/2) Database entry successfully created.`);
@@ -344,18 +344,18 @@ server.post('/api/rename', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	const data = req.body;
-	const changedSound = sounds.find(sound => sound.filename === data.oldSoundName);
+	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
 	if (!changedSound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${data.oldSoundName}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
+		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
 		let step = 0;
 
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
-			data.newFilename, data.newDisplayname, data.newSource, data.oldSoundName,
-			err => {
-				if (err) {
-					Logger.error(`An error occurred updating the database entry, renaming aborted.`, err);
+			data.newFilename, data.newDisplayname, data.newSource, changedSound.filename,
+			updateErr => {
+				if (updateErr) {
+					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
 					return res.json({ code: 400, message: 'An unexpected error occurred.' });
 				}
 				Logger.info(`(${++step}/8) Database entry successfully updated.`);
@@ -367,27 +367,30 @@ server.post('/api/rename', (req, res) => {
 				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
 				['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
-					return copyFile(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
-						if (err) {
-							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, err);
+					const oldSoundPath = `./resources/sounds/${data.oldFilename}.${ext}`;
+					const newSoundPath = `./resources/sounds/${data.newFilename}.${ext}`;
+
+					return copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
+						if (copyErr) {
+							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, copyErr);
 							return res.json({ code: 400, message: 'An unexpected error occurred.' });
 						}
 						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
 
-						rename(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
-							if (err) {
-								Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, err);
-								rename(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, `./resources/sounds/${data.oldSoundName}.${ext}`, err => {
-									if (err) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
+						rename(oldSoundPath, newSoundPath, renameErr => {
+							if (renameErr) {
+								Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, renameErr);
+								rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
+									if (backupResErr) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
 								});
 
 								return res.json({ code: 400, message: 'An unexpected error occurred.' });
 							}
 							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
 
-							unlink(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
-								if (err) {
-									Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
+							unlink(`${oldSoundPath}.bak`, unlinkErr => {
+								if (unlinkErr) {
+									Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr);
 								}
 								Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
 							});
@@ -414,24 +417,24 @@ server.post('/api/delete', (req, res) => {
 		Logger.info(`Deletion process for sound '${data.sound}' initiated.`);
 		let step = 0;
 
-		db.run('DELETE FROM sounds WHERE filename = ?', data.sound, err => {
-			if (err) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.', err);
+		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
+			if (deleteErr) {
+				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
 				return res.json({ code: 500, message: 'An unexpected error occurred.' });
 			}
 			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
 
 			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
-				return unlink(`./resources/sounds/${data.sound}.${ext}`, err => {
-					if (err) {
-						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, err);
+				return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
+					if (unlinkErr) {
+						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
 						return res.json({ code: 500, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
 				});
 			});
 
-			sounds.splice(sounds.findIndex(sound => sound.filename === data.sound), 1);
+			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
@@ -516,7 +519,7 @@ socketServer.on('connection', socket => {
 			// Safeguard against crazy mode requests with invalid sound name
 
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
-			const currentMonthData = chartData.find(data => data.month === currentDate.substring(0, 7));
+			const currentMonthData = chartData.find(d => d.month === currentDate.substring(0, 7));
 			++counter;
 			++daily; ++weekly;
 			++monthly; ++yearly;
@@ -543,7 +546,7 @@ socketServer.on('connection', socket => {
 			if (soundEntry) ++soundEntry.count;
 			else soundEntry = Object.assign(data.sound, { count: 1 });
 
-			emitUpdate({ type: 'crazyMode', sound: data.sound }, { excludeSocket: socket });
+			emitUpdate({ type: 'crazyMode', sound: soundEntry.filename }, { excludeSocket: socket });
 			// Check if data.sound exists already done above
 
 			return emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] } });

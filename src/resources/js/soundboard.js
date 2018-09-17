@@ -53,11 +53,11 @@ $(document).ready(() => {
 
 					if (rsound === 42) {
 						howlerList.realname.play();
-						ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
+						ws.send(JSON.stringify({ type: 'sbClick', soundID: sound.id }));
 					}
 					else {
 						howlerList.name.play();
-						ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
+						ws.send(JSON.stringify({ type: 'sbClick', soundID: sound.id }));
 					}
 				});
 
@@ -67,7 +67,7 @@ $(document).ready(() => {
 
 			$(`#${sound.filename}`).click(() => {
 				howlerList[sound.filename].play();
-				ws.send(JSON.stringify({ type: 'sbClick', sound: sound.filename }));
+				ws.send(JSON.stringify({ type: 'sbClick', soundID: sound.id }));
 			});
 
 			$(`#${sound.filename}`).keypress(key => {
@@ -104,8 +104,8 @@ $(document).ready(() => {
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) {
-						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(s => s.filename === changedSound.filename)] = changedSound); // eslint-disable-line max-nested-callbacks, max-len
-						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(s => s.filename === deletedSound.filename), 1)); // eslint-disable-line max-nested-callbacks, max-len
+						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.filename === changedSound.filename)] = changedSound); // eslint-disable-line max-nested-callbacks, max-len
+						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.filename === deletedSound.filename), 1)); // eslint-disable-line max-nested-callbacks, max-len
 						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
 
 						return loadSoundboard(sounds); // Reload with now-modified sounds array

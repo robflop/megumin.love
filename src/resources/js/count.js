@@ -62,8 +62,8 @@ $(document).ready(() => {
 					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
 
 					if (data.type === 'soundUpdate' && data.sounds) {
-						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(s => s.filename === changedSound.filename)] = changedSound);
-						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(s => s.filename === deletedSound.filename), 1));
+						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.filename === changedSound.filename)] = changedSound);
+						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.filename === deletedSound.filename), 1));
 						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
 
 						return loadSounds(sounds); // Reload with now-modified sounds array
