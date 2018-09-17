@@ -44,7 +44,7 @@ $(document).ready(() => {
 			mimeType: 'multipart/form-data',
 			data: formData
 		}).done(res => {
-			res = JSON.parse(res);
+			res = JSON.parse(res); // No clue why it doesn't parse the reponse
 			if (res.code === 200) {
 				$('#upload-form').trigger('reset');
 				$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
