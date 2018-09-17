@@ -354,52 +354,52 @@ server.post('/api/rename', (req, res) => {
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
 			data.newFilename, data.newDisplayname, data.newSource, data.oldSoundName,
 			err => {
-			if (err) {
-				Logger.error(`An error occurred updating the database entry, renaming aborted.`, err);
-				return res.json({ code: 400, message: 'An unexpected error occurred.' });
-			}
-			Logger.info(`(${++step}/8) Database entry successfully updated.`);
+				if (err) {
+					Logger.error(`An error occurred updating the database entry, renaming aborted.`, err);
+					return res.json({ code: 400, message: 'An unexpected error occurred.' });
+				}
+				Logger.info(`(${++step}/8) Database entry successfully updated.`);
 
 				changedSound.filename = data.newFilename;
 				changedSound.displayname = data.newDisplayname;
 				changedSound.source = data.newSource;
 
-			Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
+				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
-			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
-				return copyFile(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
-					if (err) {
-						Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, err);
-						return res.json({ code: 400, message: 'An unexpected error occurred.' });
-					}
-					Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
-
-					rename(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
+				['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
+					return copyFile(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
 						if (err) {
-							Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, err);
-							rename(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, `./resources/sounds/${data.oldSoundName}.${ext}`, err => {
-								if (err) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
-							});
-
+							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, err);
 							return res.json({ code: 400, message: 'An unexpected error occurred.' });
 						}
-						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
+						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
 
-						unlink(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
+						rename(`./resources/sounds/${data.oldSoundName}.${ext}`, `./resources/sounds/${data.newFilename}.${ext}`, err => {
 							if (err) {
-								Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
+								Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, err);
+								rename(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, `./resources/sounds/${data.oldSoundName}.${ext}`, err => {
+									if (err) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
+								});
+
+								return res.json({ code: 400, message: 'An unexpected error occurred.' });
 							}
-							Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
+							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
+
+							unlink(`./resources/sounds/${data.oldSoundName}.${ext}.bak`, err => {
+								if (err) {
+									Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, err);
+								}
+								Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
+							});
 						});
 					});
 				});
-			});
-			setTimeout(() => {
+				setTimeout(() => {
 					emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] } });
-			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
-		});
+			});
 	}
 });
 
