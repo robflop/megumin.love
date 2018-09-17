@@ -1,16 +1,18 @@
 $(document).ready(() => {
-	const updateSounds = () => {
-		$.get('/api/sounds').done(sounds => {
-			sounds = sounds.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
-			// Sort primarily by season and secondarily alphabetically within seasons
-			const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
+	let sounds = [];
 
-			$('#rename-select').html(options.join(''));
-			$('#delete-select').html(options.join(''));
-		});
+	const updateSounds = s => {
+		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+		// Sort primarily by season and secondarily alphabetically within seasons
+		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
+
+		$('#rename-select').html(options.join(''));
+		$('#delete-select').html(options.join(''));
 	};
 
-	updateSounds();
+	$.get('/api/sounds').done(s => {
+		updateSounds(s);
+	});
 
 	$('#logout').click(e => {
 		e.preventDefault();
@@ -42,15 +44,13 @@ $(document).ready(() => {
 			mimeType: 'multipart/form-data',
 			data: formData
 		}).done(res => {
-			res = JSON.parse(res); // IDK why it sends a string
+			res = JSON.parse(res);
 			if (res.code === 200) {
 				$('#upload-form').trigger('reset');
+				$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
+				sounds.push(res.sound);
 
-				setTimeout(() => {
-					$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
-					return updateSounds();
-				}, 1000 * 0.5);
-				// Use a timeout to give server necessary time to update data
+				return updateSounds(sounds);
 			}
 			else {
 				return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
@@ -71,12 +71,10 @@ $(document).ready(() => {
 		}).done(res => {
 			if (res.code === 200) {
 				$('#rename-form').trigger('reset');
+				$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
+				sounds[sounds.findIndex(s => s.id === res.sound.id)] = res.sound;
 
-				setTimeout(() => {
-					$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
-					return updateSounds();
-				}, 1000 * 0.5);
-				// Use a timeout to give server necessary time to update data
+				return updateSounds(sounds);
 			}
 			else {
 				return $('#rename-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
@@ -92,12 +90,10 @@ $(document).ready(() => {
 		$.post('/api/delete', { sound: data[0].value }).done(res => {
 			if (res.code === 200) {
 				$('#delete-form').trigger('reset');
+				$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
+				sounds.splice(sounds.findIndex(s => s.id === res.sound.id), 1);
 
-				setTimeout(() => {
-					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
-					return updateSounds();
-				}, 1000 * 0.5);
-				// Use a timeout to give server necessary time to update data
+				return updateSounds(sounds);
 			}
 			else {
 				return $('#delete-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);

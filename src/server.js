@@ -316,8 +316,8 @@ server.post('/api/upload', (req, res) => {
 			let step = 0;
 			const latestID = sounds.length ? sounds.reduce((prev, cur) => prev.id > cur.y ? prev : cur).id : 0;
 
-			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, 0 )',
-				data.filename, data.displayname, data.source,
+			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
+				data.filename, data.displayname, data.source, 0,
 				err => {
 					if (err) {
 						Logger.error(`An error occurred creating the database entry, upload aborted.`, err);
@@ -334,7 +334,7 @@ server.post('/api/upload', (req, res) => {
 						emitUpdate({ type: 'soundUpdate', sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] } });
 					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
-					return res.json({ code: 200, message: 'Sound successfully uploaded.' });
+					return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
 				});
 		}
 	});
@@ -344,24 +344,25 @@ server.post('/api/rename', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	const data = req.body;
-	const sound = sounds.find(sound => sound.filename === data.oldSoundName);
-	const newValues = [data.newFilename, data.newDisplayname, data.newSource, data.oldSoundName];
+	const changedSound = sounds.find(sound => sound.filename === data.oldSoundName);
 
-	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
+	if (!changedSound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
 		Logger.info(`Renaming process for sound '${data.oldSoundName}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
 		let step = 0;
 
-		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?', newValues, err => {
+		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
+			data.newFilename, data.newDisplayname, data.newSource, data.oldSoundName,
+			err => {
 			if (err) {
 				Logger.error(`An error occurred updating the database entry, renaming aborted.`, err);
 				return res.json({ code: 400, message: 'An unexpected error occurred.' });
 			}
 			Logger.info(`(${++step}/8) Database entry successfully updated.`);
 
-			sound.filename = data.newFilename;
-			sound.displayname = data.newDisplayname;
-			sound.source = data.newSource;
+				changedSound.filename = data.newFilename;
+				changedSound.displayname = data.newDisplayname;
+				changedSound.source = data.newSource;
 
 			Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
@@ -394,10 +395,10 @@ server.post('/api/rename', (req, res) => {
 				});
 			});
 			setTimeout(() => {
-				emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [sound], addedSounds: [], deletedSounds: [] } });
+					emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] } });
 			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
-			return res.json({ code: 200, message: 'Sound successfully renamed.' });
+				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
 		});
 	}
 });
@@ -406,9 +407,9 @@ server.post('/api/delete', (req, res) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 
 	const data = req.body;
-	const sound = sounds.find(sound => sound.filename === data.sound);
+	const deletedSound = sounds.find(sound => sound.filename === data.sound);
 
-	if (!sound) return res.json({ code: 400, message: 'Sound not found.' });
+	if (!deletedSound) return res.json({ code: 400, message: 'Sound not found.' });
 	else {
 		Logger.info(`Deletion process for sound '${data.sound}' initiated.`);
 		let step = 0;
@@ -434,10 +435,10 @@ server.post('/api/delete', (req, res) => {
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
-				emitUpdate({ type: 'soundUpdate', sounds: { deletedSounds: [sound], changedSounds: [], addedSounds: [] } });
+				emitUpdate({ type: 'soundUpdate', sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] } });
 			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
-			return res.json({ code: 200, message: 'Sound successfully deleted.' });
+			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
 		});
 	}
 });
