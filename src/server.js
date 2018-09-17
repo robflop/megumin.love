@@ -532,7 +532,7 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			if (data.soundID) emitUpdate({ type: 'crazyMode', soundFilename: crazyModeSound.filename }, { excludeSocket: socket });
+			if (data.soundFilename) emitUpdate({ type: 'crazyMode', soundFilename: crazyModeSound.filename }, { excludeSocket: socket });
 
 			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
 		}
