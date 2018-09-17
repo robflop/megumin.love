@@ -40,7 +40,7 @@ $(document).ready(() => {
 						},
 						tooltips: {
 							callbacks: {
-								label: (tItems, data) => `${data.datasets[0].data[tItems.index].toLocaleString('de-DE')}`
+								label: (tItems, lData) => `${lData.datasets[0].data[tItems.index].toLocaleString('de-DE')}`
 							}
 						}
 					}
