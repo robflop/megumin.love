@@ -13,4 +13,5 @@
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
 ga('create', 'UA-77860870-1', 'auto');
+ga('set', 'anonymizeIp', true);
 ga('send', 'pageview');
