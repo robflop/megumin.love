@@ -4,9 +4,58 @@ Base domain for all requests is ``megumin.love/api``. Response format for all ro
 
 ---
 
+`GET /conInfo`
+
+Returns necessary data for the client to properly connect to the server, such as whether the website is proxied to SSL and what port it is being run on.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/conInfo`
+
+Output:
+
+```js
+{
+    "port": 5959,
+    "ssl": false
+}
+```
+
+---
+
 `GET /counter`
 
 Returns the current global counter.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
 
 ## Parameters
 
@@ -28,9 +77,120 @@ Output:
 
 ---
 
+`GET /sounds`
+
+Returns an array of objects containing the following information on all of the website's sounds:
+- ID
+- filename
+- displayname
+- source
+- count
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
+
+## Parameters
+
+| Key    | Description                                       | Format     | Example    |
+| ------ | ------------------------------------------------- | ---------- | ---------- |
+| source | Source a sound must be from to be returned        | Any string | Season 1   |
+| equals | The exact amount of clicks a sound must have      | Any number | 51840      |
+| over   | The amount of clicks a sound must at least have   | Any number | 25000      |
+| under  | The amount of clicks a sound must at max have     | Any number | 50000      |
+
+All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
+
+### Example requests
+
+`/sounds?source=Season 1`
+
+Output:
+
+```js
+[
+    {
+        "id": 1,
+        "filename": "eugh1",
+        "displayname": "Eugh #1",
+        "source": "Season 1",
+        "count": 15532
+    },
+    {
+        "id": 2,
+        "filename": "eugh2",
+        "displayname": "Eugh #2",
+        "source": "Season 1",
+        "count": 12671
+    },
+// ...
+]
+```
+
+`/sounds?source=Season 2&over=25000&under=50000`
+
+Output:
+
+```js
+[
+    {
+        "id": 38,
+        "filename": "lalala",
+        "displayname": "♬Explosions♬",
+        "source": "Season 2",
+        "count": 28496
+    },
+    {
+        "id": 40,
+        "filename": "mywin",
+        "displayname": "My Win!",
+        "source": "Season 2",
+        "count": 27933
+    }
+]
+```
+
+`/sounds?source=Season 1&equals=51840`
+
+Output:
+
+```js
+[
+    {
+        "id": 5,
+        "filename": "explosion",
+        "displayname": "Explosion!",
+        "source": "Season 1",
+        "count": 51840
+    }
+]
+```
+
+---
+
 `GET /statistics`
 
 Returns an object containing the website's statistics, mapped by their corresponding date.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
 
 ## Parameters
 
@@ -112,6 +272,18 @@ Returns a summary of the following counter statistics:
 
 This summary is not available for any other time than the time of the request, but you can use the data from the `/statistics` endpoint and aggregate it like this endpoint's output format to achieve the same result for a different point in time.
 
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
+
 ## Parameters
 
 | Key    | Description                            | Format     | Example    |
@@ -138,87 +310,314 @@ Output:
 
 ---
 
-`GET /sounds`
+`GET /statistics/chartData`
 
-Returns an array of objects containing the following information on all of the website's sounds:
-- ID
-- filename
-- displayname
-- source
-- count
+Returns data necessary for constructing the monthly click distribution chart displayed on the Statistics page.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
 
 ## Parameters
 
-| Key    | Description                                       | Format     | Example    |
-| ------ | ------------------------------------------------- | ---------- | ---------- |
-| source | Source a sound must be from to be returned        | Any string | Season 1   |
-| equals | The exact amount of clicks a sound must have      | Any number | 51840      |
-| over   | The amount of clicks a sound must at least have   | Any number | 25000      |
-| under  | The amount of clicks a sound must at max have     | Any number | 50000      |
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
 
-All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
 
 ### Example requests
 
-`/sounds?source=Season 1`
+`/statistics/chartData`
 
 Output:
 
 ```js
 [
     {
-        "id": 1,
-        "filename": "eugh1",
-        "displayname": "Eugh #1",
-        "source": "Season 1",
-        "count": 15532
+        "clicks": 1099355,
+        "month": "2017-04"
     },
     {
-        "id": 2,
-        "filename": "eugh2",
-        "displayname": "Eugh #2",
-        "source": "Season 1",
-        "count": 12671
+        "clicks": 3652240,
+        "month": "2017-05"
     },
 // ...
 ]
 ```
 
-`/sounds?source=Season 2&over=25000&under=50000`
+---
+
+`POST /login`
+
+Login route for the purpose of being able to access admin-only routes.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| password     | The password configured in the website settings.            | Any string |
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/login` with wrong password
 
 Output:
 
 ```js
-[
-    {
-        "id": 38,
-        "filename": "lalala",
-        "displayname": "♬Explosions♬",
-        "source": "Season 2",
-        "count": 28496
-    },
-    {
-        "id": 40,
-        "filename": "mywin",
-        "displayname": "My Win!",
-        "source": "Season 2",
-        "count": 27933
-    }
-]
+{
+    "code": 401,
+    "message": "Invalid password provided."
+}
 ```
 
-`/sounds?source=Season 1&equals=51840`
-
-Output:
+`/login` with correct password
 
 ```js
-[
-    {
-        "id": 5,
-        "filename": "explosion",
-        "displayname": "Explosion!",
-        "source": "Season 1",
-        "count": 51840
-    }
-]
+{
+    "code": 200,
+    "message": "Successfully logged in!"
+}
+```
+
+---
+
+`GET /admin/*` and `POST /admin/*`
+
+Admin routes for various tasks.
+
+If any of these routes are accessed while not logged in, the following response will be sent:
+
+```js
+{
+    "code": 401,
+    "message": "Not logged in."
+}
+```
+
+Otherwise, responses vary by route.
+
+---
+
+`GET /admin/logout`
+
+Logout route to stop being able to access admin-only routes.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+| ------------ | ----------------------------------------------------------- | ---------- |
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/admin/logout` while being logged in:
+
+```js
+{
+    "code": 200,
+    "message": "Successfully logged out!"
+}
+```
+
+`/admin/logout` while being logged out:
+
+```js
+{
+    "code": 401,
+    "message": "Not logged in."
+}
+```
+
+---
+
+`POST /admin/upload`
+
+Upload a new song to the website.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+|      |             |  |
+
+// TODO
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/admin/upload` with:
+- Files called `test.mp3` and `test.ogg`
+- Sound filename `testfilename`
+- Sound displayname `testdisplayname`
+- Sound source `testsource`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Sound successfully uploaded."
+}
+```
+
+Output when filename is already in use:
+
+```js
+{
+    "code": 400,
+    "message": "Sound filename already in use."
+}
+```
+
+Output for other errors:
+
+```js
+{
+    "code": 400,
+    "message": "An unexpected error occurred."
+}
+```
+
+---
+
+`POST /admin/rename`
+
+Modify an existing sound on the website.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+|      |             |  |
+
+// TODO
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/admin/rename` with:
+- Chosen dropdown song `testdisplayname (testfilename, testsource)`
+- New Sound filename `newtestfilename`
+- New Sound displayname `newtestdisplayname`
+- New Sound source `newtestsource`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Sound successfully renamed."
+}
+```
+
+Output for misc. errors:
+
+```js
+{
+    "code": 400,
+    "message": "An unexpected error occurred."
+}
+```
+
+---
+
+`POST /admin/delete`
+
+Delete an existing sound from the website.
+
+## Headers
+
+| Key          | Value                                        |
+| ------------ | -------------------------------------------- |
+| Content-Type | application/x-www-form-urlencoded            |
+
+## Body
+
+| Key          | Description                                                 | Format     |
+| ------------ | ----------------------------------------------------------- | ---------- |
+|      |             |  |
+
+// TODO
+
+## Parameters
+
+| Key    | Description                            | Format     | Example    |
+| ------ | -------------------------------------- | ---------- | ---------- |
+| ------ | -------------------------------------- | ---------- | ---------- |
+
+### Example requests
+
+`/admin/upload` with:
+- Chosen dropdown song `newtestdisplayname (newtestfilename, newtestsource)`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Sound successfully deleted."
+}
+```
+
+Output for other errors:
+
+```js
+{
+    "code": 400,
+    "message": "An unexpected error occurred."
+}
 ```
