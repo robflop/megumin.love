@@ -28,7 +28,7 @@ $(document).ready(() => {
 
 			$.ajax({
 				async: true,
-				url: 'http://localhost:5959/api/upload',
+				url: 'http://localhost:5959/api/admin/upload',
 				method: 'POST',
 				processData: false,
 				contentType: false,
@@ -54,7 +54,7 @@ $(document).ready(() => {
 
 			const data = $('#rename-form').serializeArray();
 
-			$.post('/api/rename', {
+			$.post('/api/admin/rename', {
 				oldFilename: data[0].value,
 				newFilename: data[1].value,
 				newDisplayname: data[2].value,
@@ -79,7 +79,7 @@ $(document).ready(() => {
 
 			const data = $('#delete-form').serializeArray();
 
-			$.post('/api/delete', { soundFilename: data[0].value }).done(res => {
+			$.post('/api/admin/delete', { soundFilename: data[0].value }).done(res => {
 				if (res.code === 200) {
 					$('#delete-form').trigger('reset');
 					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
@@ -98,7 +98,7 @@ $(document).ready(() => {
 	$('#logout').click(e => {
 		e.preventDefault();
 
-		$.get('/api/logout').done(res => {
+		$.get('/api/admin/logout').done(res => {
 			if (res.code === 200) return window.location.href = '/';
 		});
 	});

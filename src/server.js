@@ -109,7 +109,7 @@ const upload = multer({
 	}),
 	fileFilter(req, file, cb) {
 		if (!['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
-		cb(null, true);
+		return cb(null, true);
 	}
 }).array('files[]', 2);
 
@@ -401,7 +401,7 @@ server.post('/api/admin/rename', (req, res) => {
 
 							unlink(`${oldSoundPath}.bak`, unlinkErr => {
 								if (unlinkErr) {
-									Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr);
+									return Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr);
 								}
 								Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
 							});
@@ -530,7 +530,6 @@ socketServer.on('connection', socket => {
 			const crazyModeSound = data.soundFilename ? sounds.find(s => s.filename === data.soundFilename) : null;
 
 			if (!crazyModeSound) return;
-			// Safeguard against requests with invalid sound data
 
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
 			const currentMonth = currentDate.substring(0, 7);
@@ -541,7 +540,6 @@ socketServer.on('connection', socket => {
 			average = Math.round(monthly / fetchedDaysAmount);
 
 			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentMonth });
-			// If chart data for this month exists, increment it -- if not, create it and start counting at 1
 
 			statistics[currentDate] = daily;
 

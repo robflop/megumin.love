@@ -49,11 +49,11 @@ $(document).ready(() => {
 
 	$.when(
 		$.get('/api/statistics/summary', summary => {
-			statistics.summary = summary;
+			return statistics.summary = summary;
 		}),
 
 		$.get('/api/statistics/chartData').done(cData => {
-			statistics.chartData = cData;
+			return statistics.chartData = cData;
 		})
 	).then(() => {
 		updateStatistics(statistics);

@@ -9,7 +9,6 @@ $(document).ready(() => {
 		// Sort primarily by season and secondarily alphabetically within seasons
 
 		$('#container').html('<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>');
-		// Reset container
 
 		if (s.length === 0) {
 			return $('#container').html(`
