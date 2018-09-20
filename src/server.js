@@ -555,9 +555,7 @@ socketServer.on('connection', socket => {
 				counter,
 				statistics: {
 					summary: { alltime: counter, daily, weekly, monthly, yearly, average },
-					chartData: {
-						[currentMonth]: currentMonthData
-					}
+					newChartData: currentMonthData
 				},
 			});
 		}
