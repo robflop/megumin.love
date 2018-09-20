@@ -143,8 +143,6 @@ http.listen(config.port, () => {
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
-server.get('/api/conInfo', (req, res) => res.json({ port: config.port, ssl: config.SSLproxy }));
-
 server.get('/api/conInfo', (req, res) => {
 	return res.json({ port: config.port, ssl: config.SSLproxy });
 });
@@ -276,6 +274,10 @@ server.get('/api/statistics/summary', (req, res) => {
 	});
 });
 
+server.get('/api/statistics/chartData', (req, res) => {
+	return res.json(chartData);
+});
+
 server.post('/api/login', (req, res) => {
 	if (req.session.loggedIn) {
 		return res.json({ code: 401, message: 'Already logged in.' });
@@ -291,19 +293,23 @@ server.post('/api/login', (req, res) => {
 	}
 });
 
-server.get('/api/logout', (req, res) => {
-	if (req.session.loggedIn) {
+server.get('/api/admin/*', (req, res, next) => {
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+	else return next();
+});
+
+server.post('/api/admin/*', (req, res, next) => {
+	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+	else return next();
+});
+
+server.get('/api/admin/logout', (req, res) => {
 		req.session.destroy();
 		Logger.info('A user has logged out of the admin panel.');
 		return res.json({ code: 200, message: 'Successfully logged out!' });
-	}
-	else {
-		return res.json({ code: 401, message: 'Not logged in.' });
-	}
 });
 
-server.post('/api/upload', (req, res) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+server.post('/api/admin/upload', (req, res) => {
 	let newSound;
 
 	upload(req, res, uploadErr => {
@@ -344,9 +350,7 @@ server.post('/api/upload', (req, res) => {
 	});
 });
 
-server.post('/api/rename', (req, res) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
-
+server.post('/api/admin/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
@@ -410,9 +414,7 @@ server.post('/api/rename', (req, res) => {
 	}
 });
 
-server.post('/api/delete', (req, res) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
-
+server.post('/api/admin/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.soundFilename);
 
@@ -450,18 +452,12 @@ server.post('/api/delete', (req, res) => {
 	}
 });
 
-server.post('/api/notification', (req, res) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
-
+server.post('/api/admin/notification', (req, res) => {
 	const data = req.body;
 
 	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
 	emitUpdate({ type: 'notification', notification: data });
 	return res.json({ code: 200, message: 'Notification sent.' });
-});
-
-server.get('/api/chartData', (req, res) => {
-	return res.json(chartData);
 });
 
 if (!maintenanceMode) {
