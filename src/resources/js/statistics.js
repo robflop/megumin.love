@@ -1,88 +1,96 @@
 $(document).ready(() => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-	let chart;
+	const statistics = {};
+	const chartContext = $('#monthly-chart');
 	const tickArray = [50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 1000000, 2500000, 5000000, 10000000, 20000000, 40000000];
 
-	const updateStatistics = statistics => {
-		$('#alltime').html(`All-time clicks: ${formatNumber(statistics.alltime)}`);
-		$('#daily').html(`Today's clicks: ${formatNumber(statistics.daily)}`);
-		$('#weekly').html(`This week's clicks: ${formatNumber(statistics.weekly)}`);
-		$('#monthly').html(`This month's clicks: ${formatNumber(statistics.monthly)}`);
-		$('#yearly').html(`This year's clicks: ${formatNumber(statistics.yearly)}`);
-		$('#average').html(`Average clicks a day (in this month): ~${formatNumber(statistics.average)}`);
-
-		$.get('/api/chartData').done(data => {
-			const months = data.map(entry => entry = entry.month);
-			const clicks = data.map(entry => entry = entry.clicks);
-
-			const ctx = $('#monthly-chart');
-			if (!chart) {
-				chart = new Chart(ctx, {
-					type: 'line',
-					data: {
-						labels: months,
-						datasets: [{
-							data: clicks,
-							label: 'Clicks',
-						}]
+	// Establish basic chart model without data
+	const chart = new Chart(chartContext, {
+		type: 'line',
+		data: {
+			labels: [],
+			datasets: [{
+				data: [],
+				label: 'Clicks',
+			}]
+		},
+		options: {
+			scales: {
+				yAxes: [{
+					type: 'logarithmic',
+					ticks: {
+						callback: tick => tick.toLocaleString('de-DE'),
+						min: 30000,
+						max: 50000000
 					},
-					options: {
-						scales: {
-							yAxes: [{
-								type: 'logarithmic',
-								ticks: {
-									callback: tick => tick.toLocaleString('de-DE'),
-									min: 30000,
-									max: 50000000
-								},
-								afterBuildTicks: axis => axis.ticks = tickArray
-							}]
-						},
-						tooltips: {
-							callbacks: {
-								label: (tItems, lData) => `${lData.datasets[0].data[tItems.index].toLocaleString('de-DE')}`
-							}
-						}
-					}
-				});
+					afterBuildTicks: axis => axis.ticks = tickArray
+				}]
+			},
+			tooltips: {
+				callbacks: {
+					label: (tItems, lData) => `${lData.datasets[0].data[tItems.index].toLocaleString('de-DE')}`
+				}
 			}
-			else {
-				chart.data.labels = months;
-				chart.data.datasets[0].data = clicks;
-				chart.update();
-			}
-		});
+		}
+	});
+
+	const updateStatistics = stats => {
+		$('#alltime').html(`All-time clicks: ${formatNumber(stats.summary.alltime)}`);
+		$('#daily').html(`Today's clicks: ${formatNumber(stats.summary.daily)}`);
+		$('#weekly').html(`This week's clicks: ${formatNumber(stats.summary.weekly)}`);
+		$('#monthly').html(`This month's clicks: ${formatNumber(stats.summary.monthly)}`);
+		$('#yearly').html(`This year's clicks: ${formatNumber(stats.summary.yearly)}`);
+		$('#average').html(`Average clicks a day (in this month): ~${formatNumber(stats.summary.average)}`);
+
+		chart.data.labels = stats.chartData.map(entry => entry = entry.month);
+		chart.data.datasets[0].data = stats.chartData.map(entry => entry = entry.clicks);
+		chart.update();
 	};
 
-	$.get('/api/conInfo').done(con => {
-		const domainOrIP = document.URL.split('/')[2].split(':')[0];
-		const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+	$.when(
+		$.get('/api/statistics/summary', summary => {
+			statistics.summary = summary;
+		}),
 
-		const ws = new WebSocket(host);
+		$.get('/api/statistics/chartData').done(cData => {
+			statistics.chartData = cData;
+		})
+	).then(() => {
+		updateStatistics(statistics);
 
-		ws.addEventListener('open', event => {
-			ws.addEventListener('message', message => {
-				let data;
+		$.get('/api/conInfo').done(con => {
+			const domainOrIP = document.URL.split('/')[2].split(':')[0];
+			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
-				try {
-					data = JSON.parse(message.data);
-				}
-				catch (e) {
-					data = {};
-				}
+			const ws = new WebSocket(host);
 
-				if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
+			ws.addEventListener('open', event => {
+				ws.addEventListener('message', message => {
+					let data;
 
-				if (data.type === 'counterUpdate' && data.statistics) {
-					return updateStatistics(data.statistics);
-				}
-				else if (data.type === 'notification' && data.notification) {
-					$('#notification').text(data.notification.text);
-					return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
-				}
+					try {
+						data = JSON.parse(message.data);
+					}
+					catch (e) {
+						data = {};
+					}
+
+					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
+
+					if (data.type === 'counterUpdate' && data.statistics) {
+						if (data.statistics.newChartData) {
+							statistics.chartData[statistics.chartData.length - 1] = data.statistics.newChartData;
+						}
+						statistics.summary = data.statistics.summary;
+
+						return updateStatistics(statistics);
+					}
+					else if (data.type === 'notification' && data.notification) {
+						$('#notification').text(data.notification.text);
+						return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+					}
+				});
 			});
 		});
 	});
-
-	$.get('/api/statistics/summary').done(statistics => updateStatistics(statistics));
 });

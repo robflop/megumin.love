@@ -83,7 +83,7 @@ $(document).ready(() => {
 	$.get('/api/sounds').done(s => {
 		sounds = s;
 		loadSoundboard(sounds);
-
+	}).then(() => {
 		$.get('/api/conInfo').done(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;

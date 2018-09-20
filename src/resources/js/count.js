@@ -37,11 +37,12 @@ $(document).ready(() => {
 		}
 	}
 
+	$.get('/api/counter').done(res => $('#counter').html(formatNumber(res.counter)));
+
 	$.get('/api/sounds').done(s => {
 		sounds = s;
-
-		if (sounds.length === 0) toggleButton();
-
+		loadSounds(sounds);
+	}).then(() => {
 		$.get('/api/conInfo').done(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
@@ -90,16 +91,10 @@ $(document).ready(() => {
 				});
 			});
 		});
+	});
 
-		$.get('/api/counter').done(res => $('#counter').html(formatNumber(res.counter)));
-		// Load initial counter
-
-		loadSounds(sounds);
-		// Load initial sounds
-
-		$('#button').keypress(key => {
-			if (key.which === 13) return key.preventDefault();
-			// Don't trigger the button on 'enter' keypress
-		});
+	$('#button').keypress(key => {
+		if (key.which === 13) return key.preventDefault();
+		// Don't trigger the button on 'enter' keypress
 	});
 });
