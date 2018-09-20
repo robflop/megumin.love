@@ -304,9 +304,9 @@ server.post('/api/admin/*', (req, res, next) => {
 });
 
 server.get('/api/admin/logout', (req, res) => {
-		req.session.destroy();
-		Logger.info('A user has logged out of the admin panel.');
-		return res.json({ code: 200, message: 'Successfully logged out!' });
+	req.session.destroy();
+	Logger.info('A user has logged out of the admin panel.');
+	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
 server.post('/api/admin/upload', (req, res) => {
@@ -341,7 +341,10 @@ server.post('/api/admin/upload', (req, res) => {
 					Logger.info(`(${++step}/2) Rankings/Sound cache successfully entry created.`);
 
 					setTimeout(() => {
-						emitUpdate({ type: 'soundUpdate', sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] } });
+						emitUpdate({
+							type: 'soundUpdate',
+							sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
+						});
 					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 					return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
@@ -406,7 +409,10 @@ server.post('/api/admin/rename', (req, res) => {
 					});
 				});
 				setTimeout(() => {
-					emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] } });
+					emitUpdate({
+						type: 'soundUpdate',
+						sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
+					});
 				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
@@ -444,7 +450,10 @@ server.post('/api/admin/delete', (req, res) => {
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			setTimeout(() => {
-				emitUpdate({ type: 'soundUpdate', sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] } });
+				emitUpdate({
+					type: 'soundUpdate',
+					sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
+				});
 			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
@@ -456,7 +465,10 @@ server.post('/api/admin/notification', (req, res) => {
 	const data = req.body;
 
 	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
-	emitUpdate({ type: 'notification', notification: data });
+	emitUpdate({
+		type: 'notification',
+		notification: data
+	});
 	return res.json({ code: 200, message: 'Notification sent.' });
 });
 
@@ -521,20 +533,33 @@ socketServer.on('connection', socket => {
 			// Safeguard against requests with invalid sound data
 
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
-			const currentMonthData = chartData.find(d => d.month === currentDate.substring(0, 7));
+			const currentMonth = currentDate.substring(0, 7);
+			const currentMonthData = chartData.find(d => d.month === currentMonth);
 			++counter;
 			++daily; ++weekly;
 			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
-			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentDate.substring(0, 7) });
+			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentMonth });
 			// If chart data for this month exists, increment it -- if not, create it and start counting at 1
 
 			statistics[currentDate] = daily;
 
-			emitUpdate({ type: 'crazyMode', soundFilename: crazyModeSound.filename }, { excludeSocket: socket });
+			emitUpdate({
+				type: 'crazyMode',
+				soundFilename: crazyModeSound.filename
+			}, { excludeSocket: socket });
 
-			return emitUpdate({ type: 'counterUpdate', counter, statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+			return emitUpdate({
+				type: 'counterUpdate',
+				counter,
+				statistics: {
+					summary: { alltime: counter, daily, weekly, monthly, yearly, average },
+					chartData: {
+						[currentMonth]: currentMonthData
+					}
+				},
+			});
 		}
 
 		if (data.type === 'sbClick') {
@@ -543,9 +568,15 @@ socketServer.on('connection', socket => {
 			if (soundEntry) ++soundEntry.count;
 			else return;
 
-			emitUpdate({ type: 'crazyMode', soundFilename: soundEntry.filename }, { excludeSocket: socket });
+			emitUpdate({
+				type: 'crazyMode',
+				soundFilename: soundEntry.filename
+			}, { excludeSocket: socket });
 
-			return emitUpdate({ type: 'soundUpdate', sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] } });
+			return emitUpdate({
+				type: 'soundUpdate',
+				sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] }
+			});
 		}
 	});
 
@@ -574,21 +605,39 @@ schedule('0 0 1 1 *', () => {
 	yearly = 0;
 
 	Logger.info('Yearly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({
+		type: 'counterUpdate',
+		counter,
+		statistics: {
+			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
+		},
+	});
 }); // Reset yearly counter at the start of each year
 
 schedule('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
-	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({
+		type: 'counterUpdate',
+		counter,
+		statistics: {
+			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
+		},
+	});
 }); // Reset monthly counter at the start of each month
 
 schedule('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
-	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({
+		type: 'counterUpdate',
+		counter,
+		statistics: {
+			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
+		},
+	});
 }); // Reset weekly counter at the start of each week (1 = monday)
 
 schedule('0 0 * * *', () => {
@@ -597,5 +646,11 @@ schedule('0 0 * * *', () => {
 	statistics[dateFns.format(new Date(), 'YYYY-MM-DD')] = 0;
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
-	return emitUpdate({ type: 'counterUpdate', statistics: { alltime: counter, daily, weekly, monthly, yearly, average } });
+	return emitUpdate({
+		type: 'counterUpdate',
+		counter,
+		statistics: {
+			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
+		},
+	});
 }); // Reset daily counter and update local statistics map at each midnight
