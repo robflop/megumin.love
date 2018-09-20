@@ -4,29 +4,29 @@ Base domain for all requests is ``megumin.love/api``. Response format for all ro
 
 ---
 
-`GET /conInfo`
+## `GET /conInfo`
 
 Returns necessary data for the client to properly connect to the server, such as whether the website is proxied to SSL and what port it is being run on.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+##### Example requests
 
 `/conInfo`
 
@@ -41,29 +41,29 @@ Output:
 
 ---
 
-`GET /counter`
+## `GET /counter`
 
 Returns the current global counter.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/counter`
 
@@ -86,19 +86,19 @@ Returns an array of objects containing the following information on all of the w
 - source
 - count
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                                       | Format     | Example    |
 | ------ | ------------------------------------------------- | ---------- | ---------- |
@@ -109,7 +109,7 @@ Returns an array of objects containing the following information on all of the w
 
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
 
-### Example requests
+#### Example requests
 
 `/sounds?source=Season 1`
 
@@ -176,23 +176,23 @@ Output:
 
 ---
 
-`GET /statistics`
+## `GET /statistics`
 
 Returns an object containing the website's statistics, mapped by their corresponding date.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                                        | Format     | Example    |
 | ------ | -------------------------------------------------- | ---------- | ---------- |
@@ -210,7 +210,7 @@ Omitting both the `from` and `to` parameter will return the entirety of the stat
 
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the time (from, to) filter.
 
-### Example requests
+#### Example requests
 
 `/statistics?from=2017-05-27&to=2017-06-05`
 
@@ -272,26 +272,26 @@ Returns a summary of the following counter statistics:
 
 This summary is not available for any other time than the time of the request, but you can use the data from the `/statistics` endpoint and aggregate it like this endpoint's output format to achieve the same result for a different point in time.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
 
-### Example requests
+#### Example requests
 
 `/statistics/summary`
 
@@ -310,30 +310,30 @@ Output:
 
 ---
 
-`GET /statistics/chartData`
+## `GET /statistics/chartData`
 
 Returns data necessary for constructing the monthly click distribution chart displayed on the Statistics page.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
 
-### Example requests
+#### Example requests
 
 `/statistics/chartData`
 
@@ -355,29 +355,29 @@ Output:
 
 ---
 
-`POST /login`
+## `POST /login`
 
 Login route for the purpose of being able to access admin-only routes.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | password     | The password configured in the website settings.            | Any string |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/login` with wrong password
 
@@ -401,7 +401,7 @@ Output:
 
 ---
 
-`GET /admin/*` and `POST /admin/*`
+## `GET /admin/*` and `POST /admin/*`
 
 Admin routes for various tasks.
 
@@ -418,29 +418,29 @@ Otherwise, responses vary by route.
 
 ---
 
-`GET /admin/logout`
+## `GET /admin/logout`
 
 Logout route to stop being able to access admin-only routes.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
 | ------------ | ----------------------------------------------------------- | ---------- |
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/admin/logout` while being logged in:
 
@@ -462,17 +462,17 @@ Logout route to stop being able to access admin-only routes.
 
 ---
 
-`POST /admin/upload`
+## `POST /admin/upload`
 
 Upload a new song to the website.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
@@ -480,13 +480,13 @@ Upload a new song to the website.
 
 // TODO
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/admin/upload` with:
 - Files called `test.mp3` and `test.ogg`
@@ -523,17 +523,17 @@ Output for other errors:
 
 ---
 
-`POST /admin/rename`
+## `POST /admin/rename`
 
 Modify an existing sound on the website.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
@@ -541,13 +541,13 @@ Modify an existing sound on the website.
 
 // TODO
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/admin/rename` with:
 - Chosen dropdown song `testdisplayname (testfilename, testsource)`
@@ -575,17 +575,17 @@ Output for misc. errors:
 
 ---
 
-`POST /admin/delete`
+## `POST /admin/delete`
 
 Delete an existing sound from the website.
 
-## Headers
+### Headers
 
 | Key          | Value                                        |
 | ------------ | -------------------------------------------- |
 | Content-Type | application/x-www-form-urlencoded            |
 
-## Body
+### Body
 
 | Key          | Description                                                 | Format     |
 | ------------ | ----------------------------------------------------------- | ---------- |
@@ -593,13 +593,13 @@ Delete an existing sound from the website.
 
 // TODO
 
-## Parameters
+### Parameters
 
 | Key    | Description                            | Format     | Example    |
 | ------ | -------------------------------------- | ---------- | ---------- |
 | ------ | -------------------------------------- | ---------- | ---------- |
 
-### Example requests
+#### Example requests
 
 `/admin/upload` with:
 - Chosen dropdown song `newtestdisplayname (newtestfilename, newtestsource)`
