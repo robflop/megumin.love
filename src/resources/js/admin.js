@@ -43,9 +43,8 @@ $(document).ready(() => {
 
 					return updateSounds(sounds);
 				}
-				else {
-					return $('#upload-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
-				}
+			}).fail(res => {
+				return $('#upload-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
 			});
 		});
 
@@ -68,9 +67,8 @@ $(document).ready(() => {
 
 					return updateSounds(sounds);
 				}
-				else {
-					return $('#rename-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
-				}
+			}).fail(res => {
+				return $('#rename-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
 			});
 		});
 
@@ -79,7 +77,9 @@ $(document).ready(() => {
 
 			const data = $('#delete-form').serializeArray();
 
-			$.post('/api/admin/delete', { filename: data[0].value }).done(res => {
+			$.post('/api/admin/delete', {
+				filename: data[0].value
+			}).done(res => {
 				if (res.code === 200) {
 					$('#delete-form').trigger('reset');
 					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
@@ -88,9 +88,8 @@ $(document).ready(() => {
 
 					return updateSounds(sounds);
 				}
-				else {
-					return $('#delete-res').text(`An Error occurred (Code ${res.code}): ${res.message}`).fadeIn().fadeOut(5000);
-				}
+			}).fail(res => {
+				return $('#delete-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
 			});
 		});
 	});
