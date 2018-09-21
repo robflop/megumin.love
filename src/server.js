@@ -143,7 +143,7 @@ http.listen(config.port, () => {
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
-server.all('/api/*', (req, res, next) => {
+server.all(['/api/', '/api/*'], (req, res, next) => {
 	const apiRoutes = server._router.stack.filter(st => {
 		if (!st.route) return false;
 
@@ -151,7 +151,7 @@ server.all('/api/*', (req, res, next) => {
 		else return st.route.path.startsWith('/api') ? true : false;
 	}).map(r => r.route.path);
 
-	if (!apiRoutes.includes(req.path)) return res.json({ code: 404, message: 'Route not found.' });
+	if (!apiRoutes.includes(req.path)) return res.status(404).json({ code: 404, message: 'Route not found.' });
 	else return next();
 });
 
@@ -292,7 +292,7 @@ server.get('/api/statistics/chartData', (req, res) => {
 
 server.post('/api/login', (req, res) => {
 	if (req.session.loggedIn) {
-		return res.json({ code: 401, message: 'Already logged in.' });
+		return res.status(401).json({ code: 401, message: 'Already logged in.' });
 	}
 
 	if (config.adminPassword === req.body.password) {
@@ -301,12 +301,12 @@ server.post('/api/login', (req, res) => {
 		return res.json({ code: 200, message: 'Successfully logged in!' });
 	}
 	else {
-		return res.json({ code: 401, message: 'Invalid password provided.' });
+		return res.status(401).json({ code: 401, message: 'Invalid password provided.' });
 	}
 });
 
-server.all('/api/admin/*', (req, res, next) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
+server.all(['/api/admin/', '/api/admin/*'], (req, res, next) => {
+	if (!req.session.loggedIn) return res.status(401).json({ code: 401, message: 'Not logged in.' });
 	else return next();
 });
 
@@ -320,14 +320,14 @@ server.post('/api/admin/upload', (req, res) => {
 	let newSound;
 
 	upload(req, res, uploadErr => {
-		if (uploadErr) return res.json({ code: 400, message: uploadErr });
+		if (uploadErr) return res.status(400).json({ code: 400, message: uploadErr });
 
 		const data = req.body;
 		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
 
 		if (sounds.find(sound => sound.filename === data.filename)) {
 			Logger.error(`Sound with filename '${data.filename}' already exists, upload aborted.`);
-			return res.json({ code: 400, message: 'Sound filename already in use.' });
+			return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
 		}
 		else {
 			let step = 0;
@@ -338,7 +338,7 @@ server.post('/api/admin/upload', (req, res) => {
 				insertErr => {
 					if (insertErr) {
 						Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
-						return res.json({ code: 500, message: 'An unexpected error occurred.' });
+						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/2) Database entry successfully created.`);
 
@@ -364,7 +364,7 @@ server.post('/api/admin/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
-	if (!changedSound) return res.json({ code: 400, message: 'Sound not found.' });
+	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
 		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
 		let step = 0;
@@ -374,7 +374,7 @@ server.post('/api/admin/rename', (req, res) => {
 			updateErr => {
 				if (updateErr) {
 					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
-					return res.json({ code: 400, message: 'An unexpected error occurred.' });
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 				}
 				Logger.info(`(${++step}/8) Database entry successfully updated.`);
 
@@ -391,7 +391,7 @@ server.post('/api/admin/rename', (req, res) => {
 					return copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
 						if (copyErr) {
 							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, copyErr);
-							return res.json({ code: 400, message: 'An unexpected error occurred.' });
+							return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 						}
 						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
 
@@ -402,7 +402,7 @@ server.post('/api/admin/rename', (req, res) => {
 									if (backupResErr) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
 								});
 
-								return res.json({ code: 400, message: 'An unexpected error occurred.' });
+								return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 							}
 							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
 
@@ -431,7 +431,7 @@ server.post('/api/admin/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.soundFilename);
 
-	if (!deletedSound) return res.json({ code: 400, message: 'Sound not found.' });
+	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
 		Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`);
 		let step = 0;
@@ -439,7 +439,7 @@ server.post('/api/admin/delete', (req, res) => {
 		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
 			if (deleteErr) {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
-				return res.json({ code: 500, message: 'An unexpected error occurred.' });
+				return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 			}
 			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
 
@@ -447,7 +447,7 @@ server.post('/api/admin/delete', (req, res) => {
 				return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
 					if (unlinkErr) {
 						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
-						return res.json({ code: 500, message: 'An unexpected error occurred.' });
+						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 					}
 					Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
 				});
