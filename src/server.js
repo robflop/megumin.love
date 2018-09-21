@@ -143,6 +143,18 @@ http.listen(config.port, () => {
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
+server.all('/api/*', (req, res, next) => {
+	const apiRoutes = server._router.stack.filter(st => {
+		if (!st.route) return false;
+
+		if (typeof st.route.path === 'object') return st.route.path.every(p => p.startsWith('/api')) ? true : false;
+		else return st.route.path.startsWith('/api') ? true : false;
+	}).map(r => r.route.path);
+
+	if (!apiRoutes.includes(req.path)) return res.json({ code: 404, message: 'Route not found.' });
+	else return next();
+});
+
 server.get('/api/conInfo', (req, res) => {
 	return res.json({ port: config.port, ssl: config.SSLproxy });
 });
@@ -293,12 +305,7 @@ server.post('/api/login', (req, res) => {
 	}
 });
 
-server.get('/api/admin/*', (req, res, next) => {
-	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
-	else return next();
-});
-
-server.post('/api/admin/*', (req, res, next) => {
+server.all('/api/admin/*', (req, res, next) => {
 	if (!req.session.loggedIn) return res.json({ code: 401, message: 'Not logged in.' });
 	else return next();
 });
