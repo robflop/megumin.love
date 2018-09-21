@@ -7,6 +7,7 @@ Base domain for all requests is ``megumin.love/api``. Response format for all ro
 ## `GET /conInfo`
 
 Returns necessary data for the client to properly connect to the server, such as whether the website is proxied to SSL and what port it is being run on.
+(Mostly used by the browser to connect to websocket server etc, very likely not necessary for API use outside of that)
 
 ### Headers
 
@@ -202,7 +203,7 @@ Returns an object containing the website's statistics, mapped by their correspon
 | over   | The amount of clicks an entry must at least have | Any number | 10000      |
 | under  | The amount of clicks an entry must at max have   | Any number | 1000000    |
 
-Supplying only the `from` parameter will result in the output starting at the specified date and return everything upto the lastest known date.
+Supplying only the `from` parameter will result in the output starting at the specified date and return everything up to the latest known date.
 
 Supplying only the `to` parameter will result in the output starting at the earliest known date and return everything up to the specified date.
 
@@ -359,7 +360,7 @@ Output:
 
 ## `POST /login`
 
-Login route for the purpose of being able to access admin-only routes.
+Login route for the purpose of being able to access admin-only routes. Works via sessions that are stored serverside.
 
 ### Headers
 
@@ -431,7 +432,7 @@ Otherwise, responses vary by route.
 
 ## `GET /admin/logout`
 
-Logout route to stop being able to access admin-only routes.
+Logout route that disables access to admin-only routes upon use.
 
 ### Headers
 
@@ -487,7 +488,7 @@ Upload a new sound to the website.
 
 | Key         | Description                                                           | Type |
 | ----------- | --------------------------------------------------------------------- | ---- |
-| files[]     | The two sound files (ogg and mp3) that contain the sound to be played | File |
+| files[]     | The two sound files (mp3 and ogg) that contain the sound to be played | File |
 | filename    | The filename the sound files should be saved under                    | Text |
 | displayname | The name the sound should be displayed under on the website           | Text |
 | source      | The origin of the soundclips (i.e. Season, OVA, Movie, etc)           | Text |
@@ -551,7 +552,7 @@ Output for other errors:
 
 ```js
 {
-    "code": 400,
+    "code": 500,
     "message": "An unexpected error occurred."
 }
 ```
@@ -619,7 +620,7 @@ Output for misc. errors:
 
 ```js
 {
-    "code": 400,
+    "code": 500,
     "message": "An unexpected error occurred."
 }
 ```
@@ -681,7 +682,7 @@ Output for other errors:
 
 ```js
 {
-    "code": 400,
+    "code": 500,
     "message": "An unexpected error occurred."
 }
 ```
