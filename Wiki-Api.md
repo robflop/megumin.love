@@ -473,7 +473,7 @@ Logout route to stop being able to access admin-only routes.
 
 ## `POST /admin/upload`
 
-Upload a new song to the website.
+Upload a new sound to the website.
 
 ### Headers
 
@@ -519,6 +519,22 @@ Output when filename is already in use:
 {
     "code": 400,
     "message": "Sound filename already in use."
+}
+```
+
+Output when files with different extension than mp3 and ogg are submitted:
+```js
+{
+    "code": 400,
+    "message": "Only mp3 and ogg files are accepted."
+}
+```
+
+Output when no files are supplied (not applicable to this example):
+```js
+{
+    "code": 400,
+    "message": "An mp3 and ogg file must be supplied."
 }
 ```
 
