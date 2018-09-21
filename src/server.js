@@ -101,11 +101,6 @@ const upload = multer({
 	dest: './resources/temp/',
 	storage: multer.diskStorage({
 		destination: './resources/sounds',
-		filename(req, file, cb) {
-			if (file.mimetype === 'audio/ogg') return cb(null, `${req.body.filename}.ogg`);
-			else if (['audio/mpeg', 'audio/mp3'].includes(file.mimetype)) return cb(null, `${req.body.filename}.mp3`);
-			else return cb(null, false);
-		}
 	}),
 	fileFilter(req, file, cb) {
 		if (!['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
@@ -321,6 +316,7 @@ server.post('/api/admin/upload', (req, res) => {
 
 	upload(req, res, uploadErr => {
 		if (uploadErr) return res.status(400).json({ code: 400, message: uploadErr });
+		if (req.files.length < 2) return res.status(400).json({ code: 400, message: 'An mp3 and ogg file must be supplied.' });
 
 		const data = req.body;
 		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
@@ -333,6 +329,15 @@ server.post('/api/admin/upload', (req, res) => {
 			let step = 0;
 			const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
+			['.mp3', '.ogg'].forEach(ext => {
+				const file = req.files.find(f => f.originalname.endsWith(ext));
+
+				rename(file.path, join(file.destination, data.filename + ext), renameErr => {
+					if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					else Logger.info(`(${++step}/4) Uploaded '${ext}' file successfully renamed to requested filename.`);
+				});
+			});
+
 			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
 				data.filename, data.displayname, data.source, 0,
 				insertErr => {
@@ -340,12 +345,12 @@ server.post('/api/admin/upload', (req, res) => {
 						Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
 						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 					}
-					Logger.info(`(${++step}/2) Database entry successfully created.`);
+					Logger.info(`(${++step}/4) Database entry successfully created.`);
 
 					newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
 					sounds.push(newSound);
 
-					Logger.info(`(${++step}/2) Rankings/Sound cache successfully entry created.`);
+					Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
 
 					setTimeout(() => {
 						emitUpdate({
@@ -384,7 +389,7 @@ server.post('/api/admin/rename', (req, res) => {
 
 				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
-				['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
+				['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
 					const oldSoundPath = `./resources/sounds/${data.oldFilename}.${ext}`;
 					const newSoundPath = `./resources/sounds/${data.newFilename}.${ext}`;
 
@@ -443,7 +448,7 @@ server.post('/api/admin/delete', (req, res) => {
 			}
 			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
 
-			['ogg', 'mp3'].map(ext => { // eslint-disable-line arrow-body-style
+			['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
 				return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
 					if (unlinkErr) {
 						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
