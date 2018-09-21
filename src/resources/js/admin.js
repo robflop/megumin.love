@@ -79,7 +79,7 @@ $(document).ready(() => {
 
 			const data = $('#delete-form').serializeArray();
 
-			$.post('/api/admin/delete', { soundFilename: data[0].value }).done(res => {
+			$.post('/api/admin/delete', { filename: data[0].value }).done(res => {
 				if (res.code === 200) {
 					$('#delete-form').trigger('reset');
 					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);

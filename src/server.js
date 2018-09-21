@@ -429,7 +429,7 @@ server.post('/api/admin/rename', (req, res) => {
 
 server.post('/api/admin/delete', (req, res) => {
 	const data = req.body;
-	const deletedSound = sounds.find(sound => sound.filename === data.soundFilename);
+	const deletedSound = sounds.find(sound => sound.filename === data.filename);
 
 	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {

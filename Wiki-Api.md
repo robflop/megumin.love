@@ -10,21 +10,21 @@ Returns necessary data for the client to properly connect to the server, such as
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ##### Example requests
 
@@ -47,21 +47,21 @@ Returns the current global counter.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
@@ -88,24 +88,24 @@ Returns an array of objects containing the following information on all of the w
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                                       | Format     | Example    |
-| ------ | ------------------------------------------------- | ---------- | ---------- |
-| source | Source a sound must be from to be returned        | Any string | Season 1   |
-| equals | The exact amount of clicks a sound must have      | Any number | 51840      |
-| over   | The amount of clicks a sound must at least have   | Any number | 25000      |
-| under  | The amount of clicks a sound must at max have     | Any number | 50000      |
+| Key    | Description                                     | Format     | Example  |
+| ------ | ----------------------------------------------- | ---------- | -------- |
+| source | Source a sound must be from to be returned      | Any string | Season 1 |
+| equals | The exact amount of clicks a sound must have    | Any number | 51840    |
+| over   | The amount of clicks a sound must at least have | Any number | 25000    |
+| under  | The amount of clicks a sound must at max have   | Any number | 50000    |
 
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
 
@@ -182,25 +182,25 @@ Returns an object containing the website's statistics, mapped by their correspon
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                                        | Format     | Example    |
-| ------ | -------------------------------------------------- | ---------- | ---------- |
-| from   | First day of statistics to be returned             | YYYY-MM-DD | 2017-05-27 |
-| to     | Last day of statistics to be returned              | YYYY-MM-DD | 2017-06-05 |
-| equals | The exact amount of clicks an entry must have      | Any number | 684826     |
-| over   | The amount of clicks an entry must at least have   | Any number | 10000      |
-| under  | The amount of clicks an entry must at max have     | Any number | 1000000    |
+| Key    | Description                                      | Format     | Example    |
+| ------ | ------------------------------------------------ | ---------- | ---------- |
+| from   | First day of statistics to be returned           | YYYY-MM-DD | 2017-05-27 |
+| to     | Last day of statistics to be returned            | YYYY-MM-DD | 2017-06-05 |
+| equals | The exact amount of clicks an entry must have    | Any number | 684826     |
+| over   | The amount of clicks an entry must at least have | Any number | 10000      |
+| under  | The amount of clicks an entry must at max have   | Any number | 1000000    |
 
 Supplying only the `from` parameter will result in the output only returning the specified date.
 
@@ -274,21 +274,21 @@ This summary is not available for any other time than the time of the request, b
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 
 #### Example requests
@@ -316,21 +316,21 @@ Returns data necessary for constructing the monthly click distribution chart dis
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 
 #### Example requests
@@ -361,25 +361,25 @@ Login route for the purpose of being able to access admin-only routes.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| password     | The password configured in the website settings.            | Any string |
+| Key      | Description                                     | Format     |
+| -------- | ----------------------------------------------- | ---------- |
+| password | The password configured in the website settings | Any string |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
-`/login` with wrong password
+`/login` with wrong password:
 
 Output:
 
@@ -390,12 +390,21 @@ Output:
 }
 ```
 
-`/login` with correct password
+`/login` with correct password:
 
 ```js
 {
     "code": 200,
     "message": "Successfully logged in!"
+}
+```
+
+`/login` while already logged in:
+
+```js
+{
+    "code": 401,
+    "message": "Already logged in."
 }
 ```
 
@@ -424,21 +433,21 @@ Logout route to stop being able to access admin-only routes.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-| ------------ | ----------------------------------------------------------- | ---------- |
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
@@ -451,7 +460,7 @@ Logout route to stop being able to access admin-only routes.
 }
 ```
 
-`/admin/logout` while being logged out:
+`/admin/logout` while not logged in:
 
 ```js
 {
@@ -468,31 +477,32 @@ Upload a new song to the website.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value               |
+| ------------ | ------------------- |
+| Content-Type | multipart/form-data |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-|      |             |  |
-
-// TODO
+| Key         | Description                                                           | Type |
+| ----------- | --------------------------------------------------------------------- | ---- |
+| files[]     | The two sound files (ogg and mp3) that contain the sound to be played | File |
+| filename    | The filename the sound files should be saved under                    | Text |
+| displayname | The name the sound should be displayed under on the website           | Text |
+| source      | The origin of the soundclips (i.e. Season, OVA, Movie, etc)           | Text |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
 `/admin/upload` with:
-- Files called `test.mp3` and `test.ogg`
-- Sound filename `testfilename`
-- Sound displayname `testdisplayname`
-- Sound source `testsource`
+- files[] including `test.mp3` and `test.ogg`
+- filename `testfilename`
+- displayname `testdisplayname`
+- source `testsource`
 
 Output when there is no error:
 
@@ -529,31 +539,32 @@ Modify an existing sound on the website.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-|      |             |  |
-
-// TODO
+| Key            | Description                                | Format     |
+| -------------- | ------------------------------------------ | ---------- |
+| oldFilename    | Old filename of the sound to be renamed    | Any string |
+| newFilename    | New filename of the sound to be renamed    | Any string |
+| newDisplayname | New displayname of the sound to be renamed | Any string |
+| newSource      | New source of the sound to be renamed      | Any string |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
 `/admin/rename` with:
-- Chosen dropdown song `testdisplayname (testfilename, testsource)`
-- New Sound filename `newtestfilename`
-- New Sound displayname `newtestdisplayname`
-- New Sound source `newtestsource`
+- oldFilename `testfilename`
+- newFilename `newtestfilename`
+- newDisplayname `newtestdisplayname`
+- newSource `newtestsource`
 
 Output when there is no error:
 
@@ -561,6 +572,14 @@ Output when there is no error:
 {
     "code": 200,
     "message": "Sound successfully renamed."
+}
+```
+
+Output when the requested sound (oldFilename) was not found:
+```js
+{
+    "code": 404,
+    "message": "Sound not found."
 }
 ```
 
@@ -581,28 +600,26 @@ Delete an existing sound from the website.
 
 ### Headers
 
-| Key          | Value                                        |
-| ------------ | -------------------------------------------- |
-| Content-Type | application/x-www-form-urlencoded            |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
-| Key          | Description                                                 | Format     |
-| ------------ | ----------------------------------------------------------- | ---------- |
-|      |             |  |
-
-// TODO
+| Key      | Description                         | Format     |
+| -------- | ----------------------------------- | ---------- |
+| filename | Filename of the sound to be deleted | Any string |
 
 ### Parameters
 
-| Key    | Description                            | Format     | Example    |
-| ------ | -------------------------------------- | ---------- | ---------- |
-| ------ | -------------------------------------- | ---------- | ---------- |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 #### Example requests
 
 `/admin/upload` with:
-- Chosen dropdown song `newtestdisplayname (newtestfilename, newtestsource)`
+- filename `newtestfilename`
 
 Output when there is no error:
 
@@ -610,6 +627,14 @@ Output when there is no error:
 {
     "code": 200,
     "message": "Sound successfully deleted."
+}
+```
+
+Output when the requested sound (filename) was not found:
+```js
+{
+    "code": 404,
+    "message": "Sound not found."
 }
 ```
 
