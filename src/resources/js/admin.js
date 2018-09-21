@@ -28,7 +28,7 @@ $(document).ready(() => {
 
 			$.ajax({
 				async: true,
-				url: 'http://localhost:5959/api/admin/upload',
+				url: '/api/admin/upload',
 				method: 'POST',
 				processData: false,
 				contentType: false,

@@ -202,11 +202,13 @@ Returns an object containing the website's statistics, mapped by their correspon
 | over   | The amount of clicks an entry must at least have | Any number | 10000      |
 | under  | The amount of clicks an entry must at max have   | Any number | 1000000    |
 
-Supplying only the `from` parameter will result in the output only returning the specified date.
+Supplying only the `from` parameter will result in the output starting at the specified date and return everything upto the lastest known date.
 
 Supplying only the `to` parameter will result in the output starting at the earliest known date and return everything up to the specified date.
 
 Omitting both the `from` and `to` parameter will return the entirety of the statistics from beginning to end (assuming no count filter is used).
+
+If only a single day of statistics is wanted, set both the `from` and `to` parameters to the same date.
 
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the time (from, to) filter.
 

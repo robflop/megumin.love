@@ -222,7 +222,9 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 
 		// Date filtering
 		if (from && !to) {
-			requestedStats[from] = requestedStats[from] || 0;
+			requestedStats = filterStats(requestedStats, from, latestStatDate, (iterator, startDate, endDate) => {
+				return dateFns.isWithinRange(iterator, startDate, endDate);
+			});
 		}
 		else if (!from && to) {
 			requestedStats = filterStats(requestedStats, firstStatDate, to, (iterator, startDate, endDate) => {
