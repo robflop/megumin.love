@@ -7,6 +7,8 @@ npm-debug.log*
 src/config.json
 src/db/megumin_love.db
 .vscode
+src/resources/testfile.mp3
+src/resources/testfile.ogg
 
 # Runtime data
 pids
