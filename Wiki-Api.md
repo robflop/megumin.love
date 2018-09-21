@@ -509,7 +509,14 @@ Output when there is no error:
 ```js
 {
     "code": 200,
-    "message": "Sound successfully uploaded."
+    "message": "Sound successfully uploaded.",
+    "sound": {
+        "id": 60,
+        "filename": "testfilename",
+        "displayname": "testdisplayname",
+        "source": "testsource",
+        "count": 0
+    }
 }
 ```
 
@@ -587,7 +594,14 @@ Output when there is no error:
 ```js
 {
     "code": 200,
-    "message": "Sound successfully renamed."
+    "message": "Sound successfully renamed.",
+    "sound": {
+        "id": 60,
+        "filename": "newtestfilename",
+        "displayname": "newtestdisplayname",
+        "source": "newtestsource",
+        "count": 0
+    }
 }
 ```
 
@@ -642,7 +656,14 @@ Output when there is no error:
 ```js
 {
     "code": 200,
-    "message": "Sound successfully deleted."
+    "message": "Sound successfully deleted.",
+    "sound": {
+        "id": 60,
+        "filename": "newtestfilename",
+        "displayname": "newtestdisplayname",
+        "source": "newtestsource",
+        "count": 0
+    }
 }
 ```
 
