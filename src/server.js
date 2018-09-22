@@ -287,24 +287,37 @@ server.get('/api/statistics/chartData', (req, res) => {
 	return res.json(chartData);
 });
 
-server.post('/api/login', (req, res) => {
-	if (req.session.loggedIn) {
-		return res.status(401).json({ code: 401, message: 'Already logged in.' });
-	}
+// Browser Authorization / sessions only
 
-	if (config.adminPassword === req.body.password) {
+server.post('/api/login', (req, res) => {
+	if (config.adminToken === req.body.token) {
 		req.session.loggedIn = true;
-		Logger.info('A user has logged into the admin panel.');
-		return res.json({ code: 200, message: 'Successfully logged in!' });
+		Logger.info('A user has authenticated on the \'/login\' endpoint.');
+
+		return res.json({ code: 200, message: 'Successfully authenticated!' });
 	}
 	else {
-		return res.status(401).json({ code: 401, message: 'Invalid password provided.' });
+		return res.status(401).json({ code: 401, message: 'Invalid token provided.' });
 	}
 });
 
+server.get('/admin', (req, res) => { // Control panel page, not API route
+	if (req.session.loggedIn) {
+		return res.sendFile(join(__dirname, './pages/admin.html'));
+	}
+	else return res.sendFile(join(__dirname, './pages/errorTemplates/401.html'));
+});
+
+// Browser Authorization / sessions end
+
 server.all(['/api/admin/', '/api/admin/*'], (req, res, next) => {
-	if (!req.session.loggedIn) return res.status(401).json({ code: 401, message: 'Not logged in.' });
-	else return next();
+	if (config.adminToken === req.headers.authorization) { // For browser & non-browser API calls
+		Logger.info(`A user has sent a request to the '${req.path}' route.`);
+		return next();
+	}
+	else {
+		return res.status(401).json({ code: 401, message: 'Invalid token provided.' });
+	}
 });
 
 server.get('/api/admin/logout', (req, res) => {
@@ -489,11 +502,7 @@ server.post('/api/admin/notification', (req, res) => {
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
-			server.get(page.route, (req, res) => {
-				if (!req.session.loggedIn) return res.sendFile(page.path.replace('admin', 'login'));
-				else return res.sendFile(page.path);
-			});
-			continue;
+			continue; // Handled above already
 		}
 		server.get(page.route, (req, res) => res.sendFile(page.path));
 	}

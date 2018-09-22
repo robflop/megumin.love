@@ -27,13 +27,13 @@ $(document).ready(() => {
 			formData.append('files[]', fileData[1]);
 
 			$.ajax({
-				async: true,
 				url: '/api/admin/upload',
 				method: 'POST',
 				processData: false,
 				contentType: false,
 				mimeType: 'multipart/form-data',
-				data: formData
+				data: formData,
+				headers: { Authorization: localStorage.getItem('token') }
 			}).done(res => {
 				res = JSON.parse(res); // No clue why it doesn't parse the reponse
 				if (res.code === 200) {
@@ -53,11 +53,16 @@ $(document).ready(() => {
 
 			const data = $('#rename-form').serializeArray();
 
-			$.post('/api/admin/rename', {
-				oldFilename: data[0].value,
-				newFilename: data[1].value,
-				newDisplayname: data[2].value,
-				newSource: data[3].value
+			$.ajax({
+				url: '/api/admin/rename',
+				method: 'POST',
+				data: {
+					oldFilename: data[0].value,
+					newFilename: data[1].value,
+					newDisplayname: data[2].value,
+					newSource: data[3].value
+				},
+				headers: { Authorization: localStorage.getItem('token') }
 			}).done(res => {
 				if (res.code === 200) {
 					$('#rename-form').trigger('reset');
@@ -77,8 +82,13 @@ $(document).ready(() => {
 
 			const data = $('#delete-form').serializeArray();
 
-			$.post('/api/admin/delete', {
-				filename: data[0].value
+			$.ajax({
+				url: '/api/admin/delete',
+				method: 'POST',
+				data: {
+					filename: data[0].value
+				},
+				headers: { Authorization: localStorage.getItem('token') }
 			}).done(res => {
 				if (res.code === 200) {
 					$('#delete-form').trigger('reset');

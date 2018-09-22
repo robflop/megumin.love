@@ -370,9 +370,9 @@ Login route for the purpose of being able to access admin-only routes. Works via
 
 ### Body
 
-| Key      | Description                                     | Format     |
-| -------- | ----------------------------------------------- | ---------- |
-| password | The password configured in the website settings | Any string |
+| Key   | Description                                       | Format     |
+| ----- | ------------------------------------------------- | ---------- |
+| token | The auth token configured in the website settings | Any string |
 
 ### Parameters
 
@@ -382,32 +382,23 @@ Login route for the purpose of being able to access admin-only routes. Works via
 
 #### Example requests
 
-`/login` with wrong password:
+`/login` with wrong token:
 
 Output:
 
 ```js
 {
     "code": 401,
-    "message": "Invalid password provided."
+    "message": "Invalid token provided."
 }
 ```
 
-`/login` with correct password:
+`/login` with correct token:
 
 ```js
 {
     "code": 200,
     "message": "Successfully logged in!"
-}
-```
-
-`/login` while already logged in:
-
-```js
-{
-    "code": 401,
-    "message": "Already logged in."
 }
 ```
 
@@ -417,12 +408,21 @@ Output:
 
 Admin routes for various tasks.
 
-If any of these routes are accessed while not logged in, the following response will be sent:
+### Headers
+
+| Key           | Value                  |
+| ------------- | ---------------------- |
+| Authorization | Configured admin token |
+
+The Authorization header **must** be provided for every admin route.
+Body and Parameters vary by route.
+
+If either no Authorization header or an incorrect one is provided, the following response will be returned:
 
 ```js
 {
     "code": 401,
-    "message": "Not logged in."
+    "message": "Invalid token provided."
 }
 ```
 
@@ -460,15 +460,6 @@ Logout route that disables access to admin-only routes upon use.
 {
     "code": 200,
     "message": "Successfully logged out!"
-}
-```
-
-`/admin/logout` while not logged in:
-
-```js
-{
-    "code": 401,
-    "message": "Not logged in."
 }
 ```
 
