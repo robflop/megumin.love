@@ -360,7 +360,9 @@ Output:
 
 ## `POST /login`
 
-Login route for the purpose of being able to access admin-only routes. Works via sessions that are stored serverside.
+Login route for the purpose of being able to access the admin panel page.
+
+Admin routes can be accessed by providing an Authorization header, so this is usually not needed for anything but the actual website's browser representation.
 
 ### Headers
 
