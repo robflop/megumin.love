@@ -82,7 +82,7 @@ img {
 }
 
 .megu-sidebar {
-	background-color: #A09A9A;
+	background-color: #a09a9a;
 	position: fixed;
 	top: 80px;
 	left: -345px;
@@ -90,7 +90,7 @@ img {
 	min-height: 410px;
 	font-family: "Courgette", cursive;
 	transition-duration: 0.3s;
-	border: 4px solid #F9CA65;
+	border: 4px solid #f9ca65;
 	border-radius: 3px;
 	z-index: 100;
 }

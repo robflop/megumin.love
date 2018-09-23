@@ -119,7 +119,7 @@ form input[type="checkbox"] {
 		margin-left: 400px;
 		display: inline-block;
 		-webkit-transform: scale(1.5);
-		transform: scale(1.5);   
+		transform: scale(1.5);
 	}
 
 	footer {
@@ -136,7 +136,7 @@ form input[type="checkbox"] {
 	}
 
 	body {
-		height: 620px;   
+		height: 620px;
 	}
 
 	.backlink {
@@ -144,6 +144,6 @@ form input[type="checkbox"] {
 		margin-left: 400px;
 		display: inline-block;
 		-webkit-transform: scale(1.5);
-		transform: scale(1.5);   
+		transform: scale(1.5);
 	}
 }
