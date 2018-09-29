@@ -55,7 +55,7 @@ footer {
 	text-align: right;
 }
 
-#crazymode-toggle-wrapper p > p{
+#crazymode-warning {
 	font-style: italic;
 	color: #dd0000;
 }
