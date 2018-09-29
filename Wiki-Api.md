@@ -552,7 +552,7 @@ Output for other errors:
 
 ---
 
-## `POST /admin/rename`
+## `PATCH /admin/rename`
 
 Modify an existing sound on the website.
 
@@ -620,7 +620,7 @@ Output for misc. errors:
 
 ---
 
-## `POST /admin/delete`
+## `DELETE /admin/delete`
 
 Delete an existing sound from the website.
 

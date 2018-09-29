@@ -376,7 +376,7 @@ server.post('/api/admin/upload', multer({ dest: './resources/temp' }).array('fil
 	}
 });
 
-server.post('/api/admin/rename', (req, res) => {
+server.patch('/api/admin/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
@@ -443,7 +443,7 @@ server.post('/api/admin/rename', (req, res) => {
 	}
 });
 
-server.post('/api/admin/delete', (req, res) => {
+server.delete('/api/admin/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.filename);
 

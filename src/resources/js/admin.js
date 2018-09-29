@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			};
 
 			fetch('/api/admin/rename', {
-				method: 'POST',
+				method: 'PATCH',
 				headers: {
 					'Authorization': localStorage.getItem('token'),
 					'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			};
 
 			fetch('/api/admin/delete', {
-				method: 'POST',
+				method: 'DELETE',
 				headers: {
 					'Authorization': localStorage.getItem('token'),
 					'Content-Type': 'application/json'
