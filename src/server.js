@@ -88,7 +88,8 @@ server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
 server.set('trust proxy', 1);
-server.use(express.urlencoded({ extended: false }));
+server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
@@ -380,113 +381,121 @@ server.post('/api/admin/upload', (req, res) => {
 	});
 });
 
+/* eslint-disable max-nested-callbacks */
 server.post('/api/admin/rename', (req, res) => {
-	const data = req.body;
-	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
+	upload(req, res, rErr => {
+		const data = req.body;
+		const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
-	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
-	else {
-		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
-		let step = 0;
+		if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
+		else {
+			Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
+			let step = 0;
 
-		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
-			data.newFilename, data.newDisplayname, data.newSource, changedSound.filename,
-			updateErr => {
-				if (updateErr) {
-					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-				}
-				Logger.info(`(${++step}/8) Database entry successfully updated.`);
+			db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
+				data.newFilename, data.newDisplayname, data.newSource, changedSound.filename,
+				updateErr => {
+					if (updateErr) {
+						Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
+						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					}
+					Logger.info(`(${++step}/8) Database entry successfully updated.`);
 
-				changedSound.filename = data.newFilename;
-				changedSound.displayname = data.newDisplayname;
-				changedSound.source = data.newSource;
+					changedSound.filename = data.newFilename;
+					changedSound.displayname = data.newDisplayname;
+					changedSound.source = data.newSource;
 
-				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
+					Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
-				['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
-					const oldSoundPath = `./resources/sounds/${data.oldFilename}.${ext}`;
-					const newSoundPath = `./resources/sounds/${data.newFilename}.${ext}`;
+					['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
+						const oldSoundPath = `./resources/sounds/${data.oldFilename}.${ext}`;
+						const newSoundPath = `./resources/sounds/${data.newFilename}.${ext}`;
 
-					return copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
-						if (copyErr) {
-							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, copyErr);
-							return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-						}
-						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
-
-						rename(oldSoundPath, newSoundPath, renameErr => {
-							if (renameErr) {
-								Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, renameErr);
-								rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
-									if (backupResErr) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
-								});
-
+						return copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
+							if (copyErr) {
+								Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, copyErr);
 								return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 							}
-							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
+							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
 
-							unlink(`${oldSoundPath}.bak`, unlinkErr => {
-								if (unlinkErr) {
-									return Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr);
+							rename(oldSoundPath, newSoundPath, renameErr => {
+								if (renameErr) {
+									Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, renameErr);
+									rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
+										if (backupResErr) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
+									});
+
+									return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 								}
-								Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
+								Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
+
+								unlink(`${oldSoundPath}.bak`, unlinkErr => {
+									if (unlinkErr) {
+										return Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr); // eslint-disable-line max-len
+									}
+									Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
+								});
 							});
 						});
 					});
+					setTimeout(() => {
+						emitUpdate({
+							type: 'soundUpdate',
+							sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
+						});
+					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+
+					return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
 				});
+		}
+	});
+});
+/* eslint-enable max-nested-callbacks */
+
+/* eslint-disable max-nested-callbacks */
+server.post('/api/admin/delete', (req, res) => {
+	upload(req, res, dErr => {
+		const data = req.body;
+		const deletedSound = sounds.find(sound => sound.filename === data.filename);
+
+		if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
+		else {
+			Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`);
+			let step = 0;
+
+			db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
+				if (deleteErr) {
+					Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+				}
+				Logger.info(`(${++step}/4) Database entry successfully deleted.`);
+
+				['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
+					return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
+						if (unlinkErr) {
+							Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
+							return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+						}
+						Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
+					});
+				});
+
+				sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
+				Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
+
 				setTimeout(() => {
 					emitUpdate({
 						type: 'soundUpdate',
-						sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
+						sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
 					});
 				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
 
-				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
+				return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
 			});
-	}
+		}
+	});
 });
-
-server.post('/api/admin/delete', (req, res) => {
-	const data = req.body;
-	const deletedSound = sounds.find(sound => sound.filename === data.filename);
-
-	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
-	else {
-		Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`);
-		let step = 0;
-
-		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
-			if (deleteErr) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-			}
-			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
-
-			['mp3', 'ogg'].map(ext => { // eslint-disable-line arrow-body-style
-				return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
-					if (unlinkErr) {
-						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
-						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-					}
-					Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
-				});
-			});
-
-			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
-			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
-
-			setTimeout(() => {
-				emitUpdate({
-					type: 'soundUpdate',
-					sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
-				});
-			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
-
-			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
-		});
-	}
-});
+/* eslint-enable max-nested-callbacks */
 
 server.post('/api/admin/notification', (req, res) => {
 	const data = req.body;

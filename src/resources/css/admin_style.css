@@ -53,12 +53,12 @@ form input[type="file"] {
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
-#delete-confirmation label {
+#delete-confirm-wrappern label {
 	background-color: rgba(255, 255, 255, 0.5);
 	margin-right: 10px;
 }
 
-#delete-confirmation input[type="checkbox"] {
+#delete-confirm-wrapper input[type="checkbox"] {
 	vertical-align: bottom;
 }
 

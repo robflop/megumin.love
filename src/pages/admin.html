@@ -62,7 +62,7 @@
 				<div id="rename">
 					<h2 class="titles">Sound renaming</h2>
 					<form id="rename-form" method="post">
-						<select name="rename-select" id="rename-select">
+						<select name="oldFilename" id="rename-select">
 							<!-- Auto-created -->
 						</select>
 						<input type="text" name="newFilename" placeholder="New filename" required>
@@ -75,12 +75,12 @@
 				<div id="delete">
 					<h2 class="titles">Sound deletion</h2>
 					<form id="delete-form" method="post">
-						<select name="delete-select" id="delete-select">
+						<select name="filename" id="delete-select">
 							<!-- Auto-created -->
 						</select>
-						<div id="delete-confirmation">
+						<div id="delete-confirm-wrapper">
 							<label for="delete-checkbox">
-								<input type="checkbox" name="delete-checkbox" required>
+								<input type="checkbox" name="delete-confirmation" required>
 								Confirm deletion
 							</label>
 						</div>
@@ -136,7 +136,6 @@
 		</footer>
 		<!--Resource loading-->
 		<script src="/js/googleanalytics.js" async></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="/js/extras.js"></script>
 		<script src="/js/admin.js"></script>
 	</body>

@@ -1,34 +1,33 @@
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	let sounds = [];
 	let howlerList = {};
 
 	function toggleButton() {
-		if ($('#button').text() === 'No sounds available.') {
-			$('#button').text('やめろ!!');
-			$('#button').css({
-				'font-size': '65px',
-				'background-color': '#dd0000',
-				'color': '#ff8080' // eslint-disable-line quote-props
-			});
-			$('#button').prop('disabled', false);
+		const button = document.getElementById('button');
+
+		if (button.innerText === 'No sounds available.') {
+			button.innerText = 'やめろ!!';
+			button.style.fontSize = '65px';
+			button.style.backgroundColor = '#dd0000';
+			button.style.color = 'ff8080';
+			button.disabled = false;
 		}
 		else {
-			$('#button').css({
-				'font-size': '40px',
-				'background-color': 'rgba(96,96,96,1)',
-				'color': 'rgba(56,56,56,1)' // eslint-disable-line quote-props
-			});
-			$('#button').text('No sounds available.');
-			$('#button').prop('disabled', true);
+			button.style.fontSize = '40px';
+			button.style.backgroundColor = 'rgba(96,96,96,1)';
+			button.style.color = 'rgba(56,56,56,1)';
+			button.innerText === 'No sounds available.';
+			button.disabled = true;
 		}
 	}
 
 	function loadSounds(s) {
+		const button = document.getElementById('button');
 		howlerList = {}; // Wipe before (re)load
 
-		if (sounds.length > 0 && $('#button').text() === 'No sounds available.') toggleButton();
-		if (sounds.length === 0 && $('#button').text() === 'やめろ!!') toggleButton();
+		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton();
+		if (sounds.length === 0 && button.innerText === 'やめろ!!') toggleButton();
 
 		for (const sound of sounds) {
 			howlerList[sound.filename] = new Howl({
@@ -37,13 +36,13 @@ $(document).ready(() => {
 		}
 	}
 
-	$.get('/api/counter').done(res => $('#counter').html(formatNumber(res.counter)));
+	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
 
-	$.get('/api/sounds').done(s => {
+	fetch('/api/sounds').then(res => res.json()).then(s => {
 		sounds = s;
 		loadSounds(sounds);
 	}).then(() => {
-		$.get('/api/conInfo').done(con => {
+		fetch('/api/conInfo').then(res => res.json()).then(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
@@ -71,18 +70,18 @@ $(document).ready(() => {
 						return loadSounds(sounds); // Reload with now-modified sounds array
 					}
 					else if (data.type === 'counterUpdate' && data.counter) {
-						return $('#counter').html(formatNumber(data.counter));
+						return document.getElementById('counter').innerText = formatNumber(data.counter);
 					}
 					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
 						return howlerList[data.soundFilename].play();
 					}
 					else if (data.type === 'notification' && data.notification) {
-						$('#notification').text(data.notification.text);
-						return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+						document.getElementById('notification').innerText = data.notification.text;
+						return util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 					}
 				});
 
-				$('#button').click(() => {
+				document.getElementById('button').addEventListener('click', e => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
 					ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
@@ -93,8 +92,7 @@ $(document).ready(() => {
 		});
 	});
 
-	$('#button').keypress(key => {
-		if (key.which === 13) return key.preventDefault();
-		// Don't trigger the button on 'enter' keypress
+	document.getElementById('button').addEventListener('keypress', e => {
+		if (e.key === 'Enter') return e.preventDefault();
 	});
 });

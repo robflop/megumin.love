@@ -1,4 +1,4 @@
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 
 	const updateSounds = s => {
@@ -6,108 +6,110 @@ $(document).ready(() => {
 		// Sort primarily by season and secondarily alphabetically within seasons
 		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
 
-		$('#rename-select').html(options.join(''));
-		$('#delete-select').html(options.join(''));
+		document.getElementById('rename-select').innerHTML = options.join('');
+		document.getElementById('delete-select').innerHTML = options.join('');
 	};
 
-	$.get('/api/sounds').done(s => {
+	fetch('/api/sounds').then(res => res.json()).then(s => {
 		updateSounds(s);
 	}).then(() => {
-		$('#upload-form').submit(e => {
+		const uploadForm = document.getElementById('upload-form');
+		const uploadRes = document.getElementById('upload-res');
+		uploadForm.addEventListener('submit', e => {
 			e.preventDefault();
 
-			const textData = $('#upload-form').serializeArray();
-			const fileData = $('#files')[0].files;
-			const formData = new FormData();
+			const formData = new FormData(uploadForm);
 
-			formData.append('filename', textData[0].value);
-			formData.append('displayname', textData[1].value);
-			formData.append('source', textData[2].value);
-			formData.append('files[]', fileData[0]);
-			formData.append('files[]', fileData[1]);
-
-			$.ajax({
-				url: '/api/admin/upload',
+			fetch('/api/admin/upload', {
 				method: 'POST',
-				processData: false,
-				contentType: false,
-				mimeType: 'multipart/form-data',
-				data: formData,
-				headers: { Authorization: localStorage.getItem('token') }
-			}).done(res => {
-				res = JSON.parse(res); // No clue why it doesn't parse the reponse
+				headers: {
+					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
+				},
+				body: formData
+			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
-					$('#upload-form').trigger('reset');
-					$('#upload-res').text('Sound successfully uploaded!').fadeIn().fadeOut(5000);
-					sounds.push(res.sound);
+					uploadForm.reset();
 
+					uploadRes.innerText = 'Sound successfully uploaded!';
+					util.fade(uploadRes, 5000);
+
+					sounds.push(res.sound);
 					return updateSounds(sounds);
 				}
-			}).fail(res => {
-				return $('#upload-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
+				else {
+					uploadRes.innerText = `An Error occurred (Code ${res.code}): ${res.message}`;
+					return util.fade(uploadRes, 5000);
+				}
 			});
 		});
 
-		$('#rename-form').submit(e => {
+		const renameForm = document.getElementById('rename-form');
+		const renameRes = document.getElementById('rename-res');
+		document.getElementById('rename-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			const data = $('#rename-form').serializeArray();
+			const formData = new FormData(renameForm);
 
-			$.ajax({
-				url: '/api/admin/rename',
+			fetch('/api/admin/rename', {
 				method: 'POST',
-				data: {
-					oldFilename: data[0].value,
-					newFilename: data[1].value,
-					newDisplayname: data[2].value,
-					newSource: data[3].value
+				headers: {
+					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
 				},
-				headers: { Authorization: localStorage.getItem('token') }
-			}).done(res => {
+				body: formData
+			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
-					$('#rename-form').trigger('reset');
-					$('#rename-res').text('Sound successfully renamed!').fadeIn().fadeOut(5000);
+					renameForm.reset();
+
+					renameRes.innerText = 'Sound successfully renamed!';
+					util.fade(renameRes, 5000);
+
 					sounds[sounds.findIndex(snd => snd.id === res.sound.id)] = res.sound;
 					// Compare IDs because all other fields may have changed, id the only constant
-
 					return updateSounds(sounds);
 				}
-			}).fail(res => {
-				return $('#rename-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
+				else {
+					renameRes.innerText = `An Error occurred (Code ${res.code}): ${res.message}`;
+					return util.fade(renameRes, 5000);
+				}
 			});
 		});
 
-		$('#delete-form').submit(e => {
+		const deleteForm = document.getElementById('delete-form');
+		const deleteRes = document.getElementById('delete-res');
+		document.getElementById('delete-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			const data = $('#delete-form').serializeArray();
+			const formData = new FormData(deleteForm);
 
-			$.ajax({
-				url: '/api/admin/delete',
+			fetch('/api/admin/delete', {
 				method: 'POST',
-				data: {
-					filename: data[0].value
+				headers: {
+					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
 				},
-				headers: { Authorization: localStorage.getItem('token') }
-			}).done(res => {
+				body: formData
+			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
-					$('#delete-form').trigger('reset');
-					$('#delete-res').text('Sound successfully deleted!').fadeIn().fadeOut(5000);
+					deleteForm.reset();
+
+					deleteRes.innerText = 'Sound successfully deleted!';
+					util.fade(deleteRes, 5000);
+
 					sounds.splice(sounds.findIndex(snd => snd.id === res.sound.id), 1);
 					// Compare IDs because all other fields may have changed, id the only constant
-
 					return updateSounds(sounds);
 				}
-			}).fail(res => {
-				return $('#delete-res').text(`An Error occurred (Code ${res.responseJSON.code}): ${res.responseJSON.message}`).fadeIn().fadeOut(5000);
+				else {
+					deleteRes.innerText = `An Error occurred (Code ${res.code}): ${res.message}`;
+					return util.fade(deleteRes, 5000);
+				}
 			});
 		});
 	});
 
-	$('#logout').click(e => {
+	document.getElementById('logout').addEventListener('click', e => {
 		e.preventDefault();
 
-		$.get('/api/admin/logout').done(res => {
+		fetch('/api/admin/logout').then(res => res.json()).then(res => {
 			if (res.code === 200) return window.location.href = '/';
 		});
 	});

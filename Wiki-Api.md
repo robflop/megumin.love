@@ -558,9 +558,9 @@ Modify an existing sound on the website.
 
 ### Headers
 
-| Key          | Value                             |
-| ------------ | --------------------------------- |
-| Content-Type | application/x-www-form-urlencoded |
+| Key          | Value               |
+| ------------ | ------------------- |
+| Content-Type | multipart/form-data |
 
 ### Body
 
@@ -626,9 +626,9 @@ Delete an existing sound from the website.
 
 ### Headers
 
-| Key          | Value                             |
-| ------------ | --------------------------------- |
-| Content-Type | application/x-www-form-urlencoded |
+| Key          | Value               |
+| ------------ | ------------------- |
+| Content-Type | multipart/form-data |
 
 ### Body
 
