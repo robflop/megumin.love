@@ -55,8 +55,9 @@ footer {
 	text-align: right;
 }
 
-form#config div {
-	white-space: nowrap;
+#crazymode-toggle-wrapper p > p{
+	font-style: italic;
+	color: #dd0000;
 }
 
 form#config p {
