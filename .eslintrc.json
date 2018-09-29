@@ -109,7 +109,7 @@
 		"object-curly-spacing": ["error", "always"],
 		"operator-linebreak": ["error", "before"],
 		"padded-blocks": ["error", "never"],
-		"quote-props": ["error", "consistent-as-needed"],
+		"quote-props": ["error", "as-needed"],
 		"quotes": ["error", "single", {
 			"avoidEscape": true,
 			"allowTemplateLiterals": true
