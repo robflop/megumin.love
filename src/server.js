@@ -88,7 +88,8 @@ server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
 server.set('trust proxy', 1);
-server.use(express.urlencoded({ extended: false }));
+server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
@@ -96,17 +97,6 @@ server.use(session({
 	cookie: { secure: 'auto' }
 }));
 server.use(express.static('./resources'));
-
-const upload = multer({
-	dest: './resources/temp/',
-	storage: multer.diskStorage({
-		destination: './resources/sounds',
-	}),
-	fileFilter(req, file, cb) {
-		if (!['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)) return cb('Only mp3 and ogg files are accepted.');
-		return cb(null, true);
-	}
-}).array('files[]', 2);
 
 /*
 	Using a date iterator instead of simply looping over the statistics because I also want to fill out
@@ -326,58 +316,64 @@ server.get('/api/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
-server.post('/api/admin/upload', (req, res) => {
+server.post('/api/admin/upload', multer({ dest: './resources/temp' }).array('files', 2), (req, res) => {
 	let newSound;
 
-	upload(req, res, uploadErr => {
-		if (uploadErr) return res.status(400).json({ code: 400, message: uploadErr });
-		if (req.files.length < 2) return res.status(400).json({ code: 400, message: 'An mp3 and ogg file must be supplied.' });
-
-		const data = req.body;
-		Logger.info(`Upload process for sound '${data.filename}' initiated.`);
-
-		if (sounds.find(sound => sound.filename === data.filename)) {
-			Logger.error(`Sound with filename '${data.filename}' already exists, upload aborted.`);
-			return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
-		}
-		else {
-			let step = 0;
-			const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
-
-			['.mp3', '.ogg'].forEach(ext => {
-				const file = req.files.find(f => f.originalname.endsWith(ext));
-
-				rename(file.path, join(file.destination, data.filename + ext), renameErr => {
-					if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-					else Logger.info(`(${++step}/4) Uploaded '${ext}' file successfully renamed to requested filename.`);
-				});
+	if (req.files.length < 2 || (req.files.length && req.files.some(file => !['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)))) {
+		req.files.map(file => {
+			return unlink(file.path, delError => {
+				if (delError) return Logger.error(`An error occurred deleting the temporary file '${file.filename}', please check manually.`, delError);
 			});
+		}); // Delete temp files on rejection
 
-			db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
-				data.filename, data.displayname, data.source, 0,
-				insertErr => {
-					if (insertErr) {
-						Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
-						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-					}
-					Logger.info(`(${++step}/4) Database entry successfully created.`);
+		return res.status(400).json({ code: 400, message: 'An mp3 and ogg file must be supplied.' });
+	}
 
-					newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
-					sounds.push(newSound);
+	const data = req.body;
+	Logger.info(`Upload process for sound '${data.filename}' initiated.`);
 
-					Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
+	if (sounds.find(sound => sound.filename === data.filename)) {
+		Logger.error(`Sound with filename '${data.filename}' already exists, upload aborted.`);
+		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
+	}
+	else {
+		let step = 0;
+		const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
-					setTimeout(() => {
-						emitUpdate({
-							type: 'soundUpdate',
-							sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
-						});
-					}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+		['mp3', 'ogg'].forEach(ext => {
+			const file = req.files.find(f => f.originalname.endsWith(ext));
 
-					return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
-				});
-		}
-	});
+			rename(file.path, `./resources/sounds/${data.filename}.${ext}`, renameErr => {
+				if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+				else Logger.info(`(${++step}/4) Uploaded '${ext}' file successfully renamed to requested filename.`);
+			});
+		});
+
+		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
+			data.filename, data.displayname, data.source, 0,
+			insertErr => {
+				if (insertErr) {
+					Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+				}
+				Logger.info(`(${++step}/4) Database entry successfully created.`);
+
+				newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
+				sounds.push(newSound);
+
+				Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
+
+				setTimeout(() => {
+					emitUpdate({
+						type: 'soundUpdate',
+						sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
+					});
+				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+
+				return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
+			}
+		);
+	}
 });
 
 server.post('/api/admin/rename', (req, res) => {

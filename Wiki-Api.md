@@ -481,7 +481,7 @@ Upload a new sound to the website.
 
 | Key         | Description                                                           | Type |
 | ----------- | --------------------------------------------------------------------- | ---- |
-| files[]     | The two sound files (mp3 and ogg) that contain the sound to be played | File |
+| files       | The two sound files (mp3 and ogg) that contain the sound to be played | File |
 | filename    | The filename the sound files should be saved under                    | Text |
 | displayname | The name the sound should be displayed under on the website           | Text |
 | source      | The origin of the soundclips (i.e. Season, OVA, Movie, etc)           | Text |
@@ -495,7 +495,7 @@ Upload a new sound to the website.
 #### Example requests
 
 `/admin/upload` with:
-- files[] including `test.mp3` and `test.ogg`
+- files including `test.mp3` and `test.ogg`
 - filename `testfilename`
 - displayname `testdisplayname`
 - source `testsource`
@@ -558,9 +558,9 @@ Modify an existing sound on the website.
 
 ### Headers
 
-| Key          | Value               |
-| ------------ | ------------------- |
-| Content-Type | multipart/form-data |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 
@@ -626,9 +626,9 @@ Delete an existing sound from the website.
 
 ### Headers
 
-| Key          | Value               |
-| ------------ | ------------------- |
-| Content-Type | multipart/form-data |
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
 
 ### Body
 

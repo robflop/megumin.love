@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				method: 'POST',
 				headers: {
 					Authorization: localStorage.getItem('token')
+					// Content-Type not set because of boundary
 				},
 				body: formData
 			}).then(res => res.json()).then(res => {
@@ -48,14 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('rename-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			const formData = new FormData(renameForm);
+			const data = {
+				oldFilename: renameForm[0].value,
+				newFilename: renameForm[1].value,
+				newDisplayname: renameForm[2].value,
+				newSource: renameForm[3].value
+			};
 
 			fetch('/api/admin/rename', {
 				method: 'POST',
 				headers: {
-					Authorization: localStorage.getItem('token')
+					'Authorization': localStorage.getItem('token'),
+					'Content-Type': 'application/json'
 				},
-				body: formData
+				body: JSON.stringify(data)
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					renameForm.reset();
@@ -79,14 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('delete-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			const formData = new FormData(deleteForm);
+			const data = {
+				filename: deleteForm[0].value
+			};
 
 			fetch('/api/admin/delete', {
 				method: 'POST',
 				headers: {
-					Authorization: localStorage.getItem('token')
+					'Authorization': localStorage.getItem('token'),
+					'Content-Type': 'application/json'
 				},
-				body: formData
+				body: JSON.stringify(data)
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					deleteForm.reset();
