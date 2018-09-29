@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Sort primarily by season and secondarily alphabetically within seasons
 
 		const container = document.getElementById('container');
-		container.innerHTML = '<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>';
 
 		if (s.length === 0) {
 			return container.innerHtml = `
@@ -20,28 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			`;
 		}
 
-		const topBacklinkDiv = document.createElement('div');
-		const topBacklinkAnchor = document.createElement('a');
-
-		topBacklinkDiv.id = 'backlink-top';
-		topBacklinkAnchor.classList.add('backlink');
-		topBacklinkAnchor.href = '/';
-		topBacklinkAnchor.innerText = 'Back';
-		topBacklinkDiv.appendChild(topBacklinkAnchor);
-
-		container.appendChild(topBacklinkDiv);
-
-		const rankingsAnchor = document.createElement('a');
-		rankingsAnchor.id = 'rankings';
-		rankingsAnchor.href = 'rankings';
-		rankingsAnchor.innerText = 'Rankings';
-
-		container.appendChild(rankingsAnchor);
+		const soundboard = document.getElementById('soundboard');
+		soundboard.innerHTML = ''; // Reset to re-populate
 
 		// Create buttons and make them play corresponding sounds
 		for (const sound of s) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
-			const sourceButtonWrapper = document.getElementById(`${sourceName}-buttons`);
+			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
 
 			howlerList[sound.filename] = new Howl({
@@ -51,18 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (sound.filename === 'realname') continue;
 			// Don't create button for this one
 
-			if (sourceButtonWrapper) {
+			if (buttonsWrapper) {
 				const soundButton = document.createElement('button');
 				soundButton.id = sound.filename;
 				soundButton.innerText = sound.displayname;
 
-				sourceButtonWrapper.appendChild(soundButton);
+				buttonsWrapper.appendChild(soundButton);
 			}
 			else {
 				const sourceWrapper = document.createElement('div');
-				sourceWrapper.classList.add('source-wrappers');
+				sourceWrapper.classList.add('source-wrapper');
 
-				container.appendChild(sourceWrapper);
+				soundboard.appendChild(sourceWrapper);
 
 				const sourceTitle = document.createElement('h1');
 				sourceTitle.classList.add('titles');
@@ -70,18 +54,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				sourceWrapper.appendChild(sourceTitle);
 
-				const sourceButtonsWrapper = document.createElement('div');
-				sourceButtonsWrapper.classList.add('buttons-wrapper');
-				sourceButtonsWrapper.id = `${sourceName}-buttons`;
+				buttonsWrapper = document.createElement('div'); // Redefined from above check
+				buttonsWrapper.classList.add('buttons-wrapper');
+				buttonsWrapper.id = `${sourceName}-buttons`;
 
-				sourceWrapper.appendChild(sourceButtonsWrapper);
+				sourceWrapper.appendChild(buttonsWrapper);
 
 				if (!document.getElementById(`${sound.filename}`)) {
 					const soundButton = document.createElement('button');
 					soundButton.id = sound.filename;
 					soundButton.innerText = sound.displayname;
 
-					sourceButtonsWrapper.appendChild(soundButton);
+					buttonsWrapper.appendChild(soundButton);
 				}
 			}
 
@@ -114,18 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 
-		const bottomBacklinkDiv = document.createElement('div');
-		const bottomBacklinkAnchor = document.createElement('a');
-
-		bottomBacklinkDiv.id = 'backlink-bottom';
-		bottomBacklinkAnchor.classList.add('backlink');
-		bottomBacklinkAnchor.href = '/';
-		bottomBacklinkAnchor.innerText = 'Back';
-		bottomBacklinkDiv.appendChild(bottomBacklinkAnchor);
-
-		container.appendChild(bottomBacklinkDiv);
-
-		document.getElementById('loading').remove();
+		if (document.getElementById('loading')) document.getElementById('loading').remove();
 	}
 
 	fetch('/api/sounds').then(res => res.json()).then(s => {
