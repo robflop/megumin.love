@@ -132,8 +132,8 @@ server.all(['/api/', '/api/*'], (req, res, next) => {
 	const apiRoutes = server._router.stack.filter(st => {
 		if (!st.route) return false;
 
-		if (typeof st.route.path === 'object') return st.route.path.every(p => p.startsWith('/api')) ? true : false;
-		else return st.route.path.startsWith('/api') ? true : false;
+		if (typeof st.route.path === 'object') return st.route.path.every(p => p.startsWith('/api'));
+		else return st.route.path.startsWith('/api');
 	}).map(r => r.route.path);
 
 	if (!apiRoutes.includes(req.path)) return res.status(404).json({ code: 404, message: 'Route not found.' });
