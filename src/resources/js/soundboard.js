@@ -1,4 +1,4 @@
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 	let howlerList = {};
 	let ws;
@@ -8,24 +8,24 @@ $(document).ready(() => {
 		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
 
-		$('#container').html('<p id="loading" style="text-align:center;font-size:48px;margin:0 auto;">Loading...</p>');
+		const container = document.getElementById('container');
 
 		if (s.length === 0) {
-			return $('#container').html(`
+			return container.innerHtml = `
 			<div id="backlink-top"><a class="backlink" href="/">Back</a></div>
 			<a href="rankings" id="rankings">Rankings</a>
 			<p id="warning" class="titles" style="font-size:50px">No sounds available.</p>
 			<div id="backlink-bottom"><a class="backlink" href="/">Back</a></div>
-			`);
+			`;
 		}
 
-		$('#container').append('<div id="backlink-top"><a class="backlink" href="/">Back</a></div>');
-		$('#container').append('<a href="rankings" id="rankings">Rankings</a>');
+		const soundboard = document.getElementById('soundboard');
+		soundboard.innerHTML = ''; // Reset to re-populate
 
 		// Create buttons and make them play corresponding sounds
 		for (const sound of s) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
-			const sourceButtonWrapper = $(`div.buttons-wrapper#${sourceName}-buttons`);
+			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
 
 			howlerList[sound.filename] = new Howl({
@@ -35,19 +35,42 @@ $(document).ready(() => {
 			if (sound.filename === 'realname') continue;
 			// Don't create button for this one
 
-			if (sourceButtonWrapper.length) {
-				sourceButtonWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
+			if (buttonsWrapper) {
+				const soundButton = document.createElement('button');
+				soundButton.id = sound.filename;
+				soundButton.innerText = sound.displayname;
+
+				buttonsWrapper.appendChild(soundButton);
 			}
 			else {
-				// Use appendTo below to get reference to newly created elements to append other elements to
-				const sourceWrapper = $(`<div class="source-wrappers"></div>`).appendTo('#container');
-				sourceWrapper.append(`<h1 class="titles">${sound.source}:</h1>`);
-				const sourceButtonsWrapper = $(`<div class="buttons-wrapper" id="${sourceName}-buttons">`).appendTo(sourceWrapper);
-				if (!$(`#${sound.filename}`).length) sourceButtonsWrapper.append(`<button id=${sound.filename}>${sound.displayname}</button>`);
+				const sourceWrapper = document.createElement('div');
+				sourceWrapper.classList.add('source-wrapper');
+
+				soundboard.appendChild(sourceWrapper);
+
+				const sourceTitle = document.createElement('h1');
+				sourceTitle.classList.add('titles');
+				sourceTitle.innerText = `${sound.source}:`;
+
+				sourceWrapper.appendChild(sourceTitle);
+
+				buttonsWrapper = document.createElement('div'); // Redefined from above check
+				buttonsWrapper.classList.add('buttons-wrapper');
+				buttonsWrapper.id = `${sourceName}-buttons`;
+
+				sourceWrapper.appendChild(buttonsWrapper);
+
+				if (!document.getElementById(`${sound.filename}`)) {
+					const soundButton = document.createElement('button');
+					soundButton.id = sound.filename;
+					soundButton.innerText = sound.displayname;
+
+					buttonsWrapper.appendChild(soundButton);
+				}
 			}
 
 			if (sound.filename === 'name') {
-				$('#name').click(() => {
+				document.getElementById('name').addEventListener('click', e => {
 					const rsound = Math.floor(Math.random() * 100) + 1;
 
 					if (rsound === 42) {
@@ -64,26 +87,25 @@ $(document).ready(() => {
 				// Create button but don't use standard click function
 			}
 
-			$(`#${sound.filename}`).click(() => {
+			document.getElementById(sound.filename).addEventListener('click', e => {
 				howlerList[sound.filename].play();
 				return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 			});
 
-			$(`#${sound.filename}`).keypress(key => {
-				if (key.which === 13) return key.preventDefault();
+			document.getElementById(sound.filename).addEventListener('keypress', e => {
+				if (e.key === 'Enter') return e.preventDefault();
 				// Don't trigger the button on 'enter' keypress
 			});
 		}
 
-		$('#container').append('<div id="backlink-bottom"><a class="backlink" href="/">Back</a></div>');
-		$('#loading').remove();
+		if (document.getElementById('loading')) document.getElementById('loading').remove();
 	}
 
-	$.get('/api/sounds').done(s => {
+	fetch('/api/sounds').then(res => res.json()).then(s => {
 		sounds = s;
 		loadSoundboard(sounds);
 	}).then(() => {
-		$.get('/api/conInfo').done(con => {
+		fetch('/api/conInfo').then(res => res.json()).then(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 
@@ -114,8 +136,8 @@ $(document).ready(() => {
 						return howlerList[data.soundFilename].play();
 					}
 					else if (data.type === 'notification' && data.notification) {
-						$('#notification').text(data.notification.text);
-						return $('#notification-wrapper').fadeIn().fadeOut(data.notification.duration * 1000);
+						document.getElementById('notification').innerText = data.notification.text;
+						return util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 					}
 				});
 			});
