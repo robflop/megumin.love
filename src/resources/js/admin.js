@@ -119,7 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('logout').addEventListener('click', e => {
 		e.preventDefault();
 
-		fetch('/api/admin/logout').then(res => res.json()).then(res => {
+		fetch('/api/admin/logout', {
+			method: 'GET',
+			headers: {
+				Authorization: localStorage.getItem('token'),
+			}
+		}).then(res => res.json()).then(res => {
 			if (res.code === 200) return window.location.href = '/';
 		});
 	});
