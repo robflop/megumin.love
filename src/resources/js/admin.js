@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			fetch('/api/admin/upload', {
 				method: 'POST',
 				headers: {
-					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
+					Authorization: localStorage.getItem('token')
 				},
 				body: formData
 			}).then(res => res.json()).then(res => {
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			fetch('/api/admin/rename', {
 				method: 'POST',
 				headers: {
-					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
+					Authorization: localStorage.getItem('token')
 				},
 				body: formData
 			}).then(res => res.json()).then(res => {
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			fetch('/api/admin/delete', {
 				method: 'POST',
 				headers: {
-					'Authorization': localStorage.getItem('token'), // eslint-disable-line quote-props
+					Authorization: localStorage.getItem('token')
 				},
 				body: formData
 			}).then(res => res.json()).then(res => {
