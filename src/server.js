@@ -111,7 +111,7 @@ function filterStats(statsObj, startDate, endDate, statsCondition) {
 	while (dateFns.differenceInDays(endDate, iterator) >= 0) {
 		if (!statsObj.hasOwnProperty(iterator)) result[iterator] = 0;
 		// Check for days missing in statistics and insert value for those
-		if (statsObj.hasOwnProperty(iterator) && statsCondition(iterator, startDate, endDate)) {
+		if (statsObj.hasOwnProperty(iterator) && statsCondition(iterator)) {
 			result[iterator] = statsObj[iterator];
 		}
 
@@ -214,40 +214,40 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 
 		// Date filtering
 		if (from && !to) {
-			requestedStats = filterStats(requestedStats, from, latestStatDate, (iterator, startDate, endDate) => {
-				return dateFns.isWithinRange(iterator, startDate, endDate);
+			requestedStats = filterStats(requestedStats, from, latestStatDate, iterator => {
+				return dateFns.isWithinRange(iterator, from, latestStatDate);
 			});
 		}
 		else if (!from && to) {
-			requestedStats = filterStats(requestedStats, firstStatDate, to, (iterator, startDate, endDate) => {
-				return dateFns.isSameDay(iterator, endDate) || dateFns.isBefore(iterator, endDate);
+			requestedStats = filterStats(requestedStats, firstStatDate, to, iterator => {
+				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
 			});
 		}
 		else if (from && to) {
-			requestedStats = filterStats(requestedStats, from, to, (iterator, startDate, endDate) => {
-				return dateFns.isWithinRange(iterator, startDate, endDate);
+			requestedStats = filterStats(requestedStats, from, to, iterator => {
+				return dateFns.isWithinRange(iterator, from, to);
 			});
 		}
 
 		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
 					return requestedStats[iterator] === equals;
 				});
 			}
 			else if (over && !under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
 					return requestedStats[iterator] > over;
 				});
 			}
 			else if (!over && under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
 					return requestedStats[iterator] < under;
 				});
 			}
 			else if (over && under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, (iterator, startDate, endDate) => {
+				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
 					return requestedStats[iterator] > over && requestedStats[iterator] < under;
 				});
 			}
