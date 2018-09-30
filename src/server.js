@@ -495,7 +495,7 @@ server.use('/api', apiRouter);
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
-			server.get(page.route, (req, res, next) => {
+			server.get(page.route, (req, res) => {
 				if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
 				else return res.sendFile(page.path);
 			});
@@ -520,8 +520,7 @@ const socketServer = new uws.Server({ server: http });
 function emitUpdate(eventData, options = {}) {
 	if (options.excludeSocket) {
 		return socketServer.clients.forEach(socket => {
-			if (socket === options.excludeSocket) return;
-			return socket.send(JSON.stringify(eventData));
+			if (socket !== options.excludeSocket) return socket.send(JSON.stringify(eventData));
 		});
 	}
 	if (options.targetSocket) {
@@ -597,7 +596,7 @@ socketServer.on('connection', socket => {
 	});
 
 	socket.on('close', (code, reason) => {
-		clearInterval(socket.pingInterval);
+		return clearInterval(socket.pingInterval);
 	});
 });
 
