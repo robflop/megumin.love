@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_christmas', displayName: 'Christmas', month: 12 },
 		// { filename: 'bg1_halloween', displayName: 'Halloween', month: 9 },
 		// { filename: 'bg1_easter', displayName: 'Easter', month: 4 },
+		// { filename: 'bg1_birthday', displayName: 'Birthday', month: 1} // No canon confirmation of the month, January is speculation
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
