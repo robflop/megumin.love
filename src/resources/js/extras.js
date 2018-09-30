@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
 	const seasonalBackgrounds = [
 		{ filename: 'bg1_independence', displayName: 'Independence Day' },
-		{ filename: 'bg1_christmas', displayName: 'Christmas' }
+		{ filename: 'bg1_christmas', displayName: 'Christmas' },
+		// { filename: 'bg1_halloween', displayName: 'Halloween' }
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
