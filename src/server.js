@@ -87,7 +87,7 @@ readdirSync(pagePath).forEach(file => {
 server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
-server.set('trust proxy', 1);
+if (config.SSLproxy) server.set('trust proxy', 1);
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
