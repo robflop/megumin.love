@@ -88,8 +88,6 @@ server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
 server.set('trust proxy', 1);
-server.use(express.urlencoded({ extended: true }));
-server.use(express.json());
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
@@ -128,27 +126,31 @@ http.listen(config.port, () => {
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
-server.all(['/api/', '/api/*'], (req, res, next) => {
-	const apiRoutes = server._router.stack.filter(st => {
-		if (!st.route) return false;
+const apiRouter = express.Router();
 
-		if (typeof st.route.path === 'object') return st.route.path.every(p => p.startsWith('/api'));
-		else return st.route.path.startsWith('/api');
-	}).map(r => r.route.path);
+apiRouter.use(express.urlencoded({ extended: true }));
+apiRouter.use(express.json());
+
+apiRouter.all(['/*'], (req, res, next) => {
+	const apiRoutes = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
 	if (!apiRoutes.includes(req.path)) return res.status(404).json({ code: 404, message: 'Route not found.' });
 	else return next();
 });
 
-server.get('/api/conInfo', (req, res) => {
+apiRouter.get('/', (req, res) => {
+	return res.json({ code: 200, message: 'You have reached the megumin.love API.' });
+});
+
+apiRouter.get('/conInfo', (req, res) => {
 	return res.json({ port: config.port, ssl: config.SSLproxy });
 });
 
-server.get('/api/counter', (req, res) => {
+apiRouter.get('/counter', (req, res) => {
 	return res.json({ counter });
 });
 
-server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
+apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
 	if (['source', 'over', 'under', 'equals'].some(parameter => Object.keys(req.query).includes(parameter))) {
@@ -178,7 +180,7 @@ server.get('/api/sounds', (req, res) => { // eslint-disable-line complexity
 	return res.json(requestedSounds);
 });
 
-server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
+apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStats = statistics;
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 	const firstStatDate = Object.keys(statistics)[0];
@@ -262,7 +264,7 @@ server.get('/api/statistics', (req, res) => { // eslint-disable-line complexity
 	return res.json(requestedStats);
 });
 
-server.get('/api/statistics/summary', (req, res) => {
+apiRouter.get('/statistics/summary', (req, res) => {
 	return res.json({
 		alltime: counter,
 		daily,
@@ -273,13 +275,13 @@ server.get('/api/statistics/summary', (req, res) => {
 	});
 });
 
-server.get('/api/statistics/chartData', (req, res) => {
+apiRouter.get('/statistics/chartData', (req, res) => {
 	return res.json(chartData);
 });
 
 // Browser Authorization / sessions only
 
-server.post('/api/login', (req, res) => {
+apiRouter.post('/login', (req, res) => {
 	if (config.adminToken === req.body.token) {
 		req.session.loggedIn = true;
 		Logger.info('A user has authenticated on the \'/login\' endpoint.');
@@ -291,16 +293,9 @@ server.post('/api/login', (req, res) => {
 	}
 });
 
-server.get('/admin', (req, res) => { // Control panel page, not API route
-	if (req.session.loggedIn) {
-		return res.sendFile(join(__dirname, './pages/admin.html'));
-	}
-	else return res.sendFile(join(__dirname, './pages/errorTemplates/401.html'));
-});
-
 // Browser Authorization / sessions end
 
-server.all(['/api/admin/', '/api/admin/*'], (req, res, next) => {
+apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
 	if (config.adminToken === req.headers.authorization) { // For browser & non-browser API calls
 		Logger.info(`A user has sent a request to the '${req.path}' route.`);
 		return next();
@@ -310,13 +305,13 @@ server.all(['/api/admin/', '/api/admin/*'], (req, res, next) => {
 	}
 });
 
-server.get('/api/admin/logout', (req, res) => {
+apiRouter.get('/admin/logout', (req, res) => {
 	req.session.destroy();
 	Logger.info('A user has logged out of the admin panel.');
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
-server.post('/api/admin/upload', multer({ dest: './resources/temp' }).array('files', 2), (req, res) => {
+apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).array('files', 2), (req, res) => {
 	let newSound;
 
 	if (req.files.length < 2 || (req.files.length && req.files.some(file => !['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)))) {
@@ -376,7 +371,7 @@ server.post('/api/admin/upload', multer({ dest: './resources/temp' }).array('fil
 	}
 });
 
-server.patch('/api/admin/rename', (req, res) => {
+apiRouter.patch('/admin/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
@@ -443,7 +438,7 @@ server.patch('/api/admin/rename', (req, res) => {
 	}
 });
 
-server.delete('/api/admin/delete', (req, res) => {
+apiRouter.delete('/admin/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.filename);
 
@@ -484,7 +479,7 @@ server.delete('/api/admin/delete', (req, res) => {
 	}
 });
 
-server.post('/api/admin/notification', (req, res) => {
+apiRouter.post('/admin/notification', (req, res) => {
 	const data = req.body;
 
 	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
@@ -495,9 +490,15 @@ server.post('/api/admin/notification', (req, res) => {
 	return res.json({ code: 200, message: 'Notification sent.' });
 });
 
+server.use('/api', apiRouter);
+
 if (!maintenanceMode) {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
+			server.get(page.route, (req, res, next) => {
+				if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
+				else return res.sendFile(page.path);
+			});
 			continue; // Handled above already
 		}
 		server.get(page.route, (req, res) => res.sendFile(page.path));
