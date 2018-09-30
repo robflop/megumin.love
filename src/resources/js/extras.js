@@ -1,19 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
-	const background = localStorage.getItem('background') || 'random';
+	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
 	const seasonalBackgrounds = [
-		{ filename: 'bg1_independence', displayName: 'Independence Day' },
-		{ filename: 'bg1_christmas', displayName: 'Christmas' },
-		// { filename: 'bg1_halloween', displayName: 'Halloween' }
+		{ filename: 'bg1_independence', displayName: 'Independence Day', month: 7 },
+		{ filename: 'bg1_christmas', displayName: 'Christmas', month: 12 },
+		// { filename: 'bg1_halloween', displayName: 'Halloween', month: 9 },
+		// { filename: 'bg1_easter', displayName: 'Easter', month: 4 },
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	const bodyElem = document.getElementsByTagName('body')[0];
 	const bgSelect = document.getElementById('bg-select');
 
-	bodyElem.style.backgroundImage = `url(/images/backgrounds/${background === 'random' ? randomBg : background}.jpg)`;
+	if (!backgroundSetting) {
+		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => sBg.month === new Date().getMonth() + 1);
+		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
+		else backgroundSetting = 'random';
+	}
+
+	bodyElem.style.backgroundImage = `url(/images/backgrounds/${backgroundSetting === 'random' ? randomBg : backgroundSetting}.jpg)`;
 
 	bgSelect.addEventListener('change', function() {
 		/* eslint-disable no-invalid-this */
@@ -27,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	bgOptions.unshift('<option value="random">Randomize (on F5)</option>');
 
 	bgSelect.innerHTML = bgOptions.join('');
-	bgSelect.value = background;
+	bgSelect.value = backgroundSetting;
 
 	/* Crazy mode */
 
