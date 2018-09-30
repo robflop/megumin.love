@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const background = localStorage.getItem('background') || 'random';
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
+	const seasonalBackgrounds = [
+		{ filename: 'bg1_independence', displayName: 'Independence Day' },
+		{ filename: 'bg1_christmas', displayName: 'Christmas' }
+	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	const bodyElem = document.getElementsByTagName('body')[0];
@@ -17,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		/* eslint-enable no-invalid-this */
 	});
 
-	const bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
+	let bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
+	bgOptions = bgOptions.concat(seasonalBackgrounds.map(seasonal => `<option value=${seasonal.filename}>${seasonal.displayName}</option>`));
 	bgOptions.unshift('<option value="random">Randomize (on F5)</option>');
 
 	bgSelect.innerHTML = bgOptions.join('');
