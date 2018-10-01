@@ -3,7 +3,7 @@ logs
 *.log
 npm-debug.log*
 
-# ignore some files
+# ignore debug and env files
 src/config.json
 src/db/megumin_love.db
 .vscode
