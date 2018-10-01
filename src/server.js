@@ -61,6 +61,8 @@ db.serialize(() => {
 	});
 });
 
+require('../minifyAssets')(); // Minify HTML, CSS and JS files before serving them
+
 // Webserver
 const server = express();
 const http = require('http').Server(server);
@@ -70,8 +72,8 @@ const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
 
-readdirSync(pagePath).forEach(file => {
-	const page = file.slice(0, -5).toLowerCase();
+readdirSync(pagePath).filter(f => f.endsWith('.min.html')).forEach(file => {
+	const page = file.slice(0, -9).toLowerCase(); // 9 for cutting '.min.html'
 	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
 
 	pages.push({
