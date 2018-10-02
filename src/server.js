@@ -494,25 +494,23 @@ apiRouter.post('/admin/notification', (req, res) => {
 
 server.use('/api', apiRouter);
 
-if (!maintenanceMode) {
+if (maintenanceMode) {
+	server.get(/^(?!.*api).*$/, (req, res) => res.status(503).sendFile('503.html', { root: errorPath })); // All routes except API ones
+	server.all(/^(?=.*api).*$/, (req, res) => res.status(503).send({ code: 503, message: 'Currently in maintenance mode.' })); // API routes only
+}
+else {
 	for (const page of pages) {
 		if (page.name === 'admin.html') {
 			server.get(page.route, (req, res) => {
 				if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
 				else return res.sendFile(page.path);
 			});
-			continue; // Handled above already
+			continue;
 		}
 		server.get(page.route, (req, res) => res.sendFile(page.path));
 	}
-}
 
-for (const error of config.errorTemplates) {
-	if (maintenanceMode) {
-		server.get(/.*/, (req, res) => res.status(503).sendFile('503.html', { root: errorPath }));
-		break;
-	}
-	else {
+	for (const error of config.errorTemplates) {
 		server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: errorPath }));
 	}
 }
