@@ -71,8 +71,8 @@ const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
 
-readdirSync(pagePath).filter(f => f.endsWith('.min.html')).forEach(file => {
-	const page = file.slice(0, -9).toLowerCase(); // 9 for cutting '.min.html'
+readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
+	const page = file.slice(0, -5).toLowerCase(); // 5 for cutting '.html'
 	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
 
 	pages.push({

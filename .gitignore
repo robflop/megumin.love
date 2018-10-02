@@ -11,7 +11,6 @@ src/resources/testfile.mp3
 src/resources/testfile.ogg
 
 # Ignore minified files (created automatically anyway)
-/**/*.min.html
 /**/*.min.css
 /**/*.min.js
 

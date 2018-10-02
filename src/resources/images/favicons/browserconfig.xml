@@ -3,6 +3,7 @@
     <msapplication>
         <tile>
             <square150x150logo src="/images/favicons/mstile-150x150.png"/>
+            <square150x150logo src="/images/favicons/mstile-310x310.png"/>
             <TileColor>#da532c</TileColor>
         </tile>
     </msapplication>
