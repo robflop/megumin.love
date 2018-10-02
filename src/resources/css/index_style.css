@@ -21,13 +21,13 @@ body {
 	text-align: center;
 	top: -10px;
 	font-size: 50px;
-	color: #dd0000;
+	color: #ab0000;
 	margin: auto;
 }
 
 #button {
 	font-size: 65px;
-	background: #dd0000;
+	background: #ab0000;
 	color: #ff8080;
 	border-radius: 20px;
 	width: 100%;
@@ -48,7 +48,7 @@ body {
 }
 
 #version {
-	color: #dd0000;
+	color: #ab0000;
 	display: inline-block;
 }
 
@@ -67,7 +67,7 @@ body {
 }
 
 #soundboard, #statistics {
-	color: #dd0000;
+	color: #ab0000;
 }
 
 #statistics {

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (button.innerText === 'No sounds available.') {
 			button.innerText = 'やめろ!!';
 			button.style.fontSize = '65px';
-			button.style.backgroundColor = '#dd0000';
+			button.style.backgroundColor = '#ab0000';
 			button.style.color = 'ff8080';
 			button.disabled = false;
 		}
