@@ -66,7 +66,6 @@ require('../minifyAssets')(); // Minify HTML, CSS and JS files before serving th
 // Webserver
 const server = express();
 const http = require('http').Server(server);
-const maintenanceMode = (process.argv.slice(2)[0] || '') === '--maintenance';
 
 const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
@@ -122,11 +121,6 @@ function filterStats(statsObj, startDate, endDate, statsCondition) {
 
 	return result;
 }
-
-http.listen(config.port, () => {
-	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}${maintenanceMode ? ' (in Maintenance mode!)' : ''}`;
-	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
-});
 
 const apiRouter = express.Router();
 
@@ -494,26 +488,25 @@ apiRouter.post('/admin/notification', (req, res) => {
 
 server.use('/api', apiRouter);
 
-if (maintenanceMode) {
-	server.get(/^(?!.*api).*$/, (req, res) => res.status(503).sendFile('503.html', { root: errorPath })); // All routes except API ones
-	server.all(/^(?=.*api).*$/, (req, res) => res.status(503).send({ code: 503, message: 'Currently in maintenance mode.' })); // API routes only
-}
-else {
-	for (const page of pages) {
-		if (page.name === 'admin.html') {
-			server.get(page.route, (req, res) => {
-				if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
-				else return res.sendFile(page.path);
-			});
-			continue;
-		}
-		server.get(page.route, (req, res) => res.sendFile(page.path));
+for (const page of pages) {
+	if (page.name === 'admin.html') {
+		server.get(page.route, (req, res) => {
+			if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
+			else return res.sendFile(page.path);
+		});
+		continue;
 	}
+	server.get(page.route, (req, res) => res.sendFile(page.path));
+}
 
-	for (const error of config.errorTemplates) {
-		server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: errorPath }));
-	}
+for (const error of config.errorTemplates) {
+	server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: errorPath }));
 }
+
+http.listen(config.port, () => {
+	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}`;
+	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
+});
 
 // Socket server
 const socketServer = new uws.Server({ server: http });

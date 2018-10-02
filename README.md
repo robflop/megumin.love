@@ -19,10 +19,6 @@ Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs
 - Start the website using `node server.js` (or `pm2 start server.js` if you use pm2)
 - Click!
 
-		A maintenance mode that will route every request to a 503 page is also
-		available. Simply pass "--maintenance" as node arg when launching the
-		server.
-
 ## Updating the website
 - Always check by the [Upgrading](https://github.com/robflop/megumin.love/blob/master/Upgrading.md) file for instructions on adding new sounds and migration notices.
 - In addition, read the relevant release notes in the GitHub releases section.
