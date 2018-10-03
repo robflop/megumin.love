@@ -20,7 +20,7 @@ body {
 }
 
 #loading, #warning {
-	background: #ab0000;
+	background: #dd0000;
 	color: #ff8080;
 	border-radius: 20px;
 	width: 40%;

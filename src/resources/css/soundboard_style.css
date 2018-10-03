@@ -26,7 +26,7 @@ body {
 .titles {
 	margin: 0 auto;
 	text-align: center;
-	background-color: #ab0000;
+	background-color: #dd0000;
 	color: #ff8080;
 	border-radius: 15px;
 	width: 50%;
@@ -45,7 +45,7 @@ body {
 	margin-top: 10px;
 	/* margin-left: 5px; */
 	font-size: 35px;
-	background: #ab0000;
+	background: #dd0000;
 	color: #ff8080;
 	border-radius: 20px;
 	width: 24%;
@@ -67,7 +67,7 @@ body {
 }
 
 #rankings {
-	color: #ab0000;
+	color: #dd0000;
 	text-align: center;
 	display: block;
 	font-size: 30px;

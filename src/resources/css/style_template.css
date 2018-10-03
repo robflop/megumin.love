@@ -39,7 +39,7 @@ footer {
 #notification {
 	display: inline-block;
 	text-align: left;
-	background: #ab0000;
+	background: #dd0000;
 	color: #ff8080;
 	font-size: 30px;
 	max-width: 1400px;
@@ -48,7 +48,7 @@ footer {
 }
 
 .backlink {
-	color: #ab0000;
+	color: #dd0000;
 }
 
 #backlink-bottom {
@@ -57,7 +57,7 @@ footer {
 
 #crazymode-warning {
 	font-style: italic;
-	color: #ab0000;
+	color: #dd0000;
 }
 
 form#config p {

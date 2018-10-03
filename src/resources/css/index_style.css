@@ -21,7 +21,7 @@ body {
 	text-align: center;
 	top: -10px;
 	font-size: 50px;
-	color: #ab0000;
+	color: #dd0000;
 	margin: auto;
 }
 
@@ -48,7 +48,7 @@ body {
 }
 
 #version {
-	color: #ab0000;
+	color: #dd0000;
 	display: inline-block;
 }
 
@@ -67,7 +67,7 @@ body {
 }
 
 #soundboard, #statistics {
-	color: #ab0000;
+	color: #dd0000;
 }
 
 #statistics {
