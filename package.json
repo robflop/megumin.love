@@ -12,12 +12,12 @@
 		"multer": "^1.4.0",
 		"node-cron": "^2.0.1",
 		"sqlite3": "^4.0.2",
-		"uws": "10.148.1"
+		"uws": "10.148.1",
+		"node-minify": "^3.5.0"
 	},
 	"devDependencies": {
 		"eslint": "^5.6.1",
-		"htmlhint": "^0.10.1",
-		"node-minify": "^3.5.0"
+		"htmlhint": "^0.10.1"
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages",
