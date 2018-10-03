@@ -50,178 +50,187 @@
 			<h1 id="header">Version History</h1>
 			<div class="version-box">
 				<h2>Version P1 (Prototype 1) -- 03.05.2016</h2>
-				<p>First prototype of the website! Features simple sound and a counter (non-saved).</p>
+				<ul>
+					<li>First prototype of the website</li>
+					<li>Simple sound and a counter (non-saved)</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version P2 (Prototype 2) -- 15.05.2016</h2>
-				<p>Second prototype of the website! Features more complex sound (multiplay, ..) and a saved counter via PHP/JS.</p>
+				<ul>
+					<li>Second prototype of the website</li>
+					<li>Multiplay sounds</li>
+					<li>Saved counter via PHP/JS</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version P3 (Prototype 3) -- 24.05.2016</h2>
-				<p>The third prototype, woo! Features SQL implementation via PHP, with the help of Kagumi (see credits).</p>
+				<ul>
+					<li>Third prototype of the website</li>
+					<li>SQL implementation via PHP (with help from Kagumi, see credits)</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 1.0 (!) -- 04.06.2016</h2>
-				<p>
-					Woohoo, initial release! Features a sidebar with contact info as well as links to partner sites. Also, counter is now
-					saved in cache (background), while the counter seen on the page is instantly updated. (Meaning that even if cache gets
-					under load, the button will keep up for you personally, and update in the background. This may result in discrepancies
-					if you press the button fast and instantly refresh, but don't worry!)
-				</p>
+				<ul>
+					<li>First release version</li>
+					<li>Sidebar with contact information and partner sites</li>
+					<li>Cached background counter</li>
+					<li>Instant on-page counter updates</li>
+					<li>Possible discrepancies when pressing fast and instantly reloading</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 1.1 -- 28.06.2016</h2>
-				<p>
-					At last, finals are over! This version adds sound randomization for the button, so you'll no longer exclusively hear
-					"yamero", but also various others such as her name intro! (Currently 5 different sounds have been implemented. I am
-					open to add more if I am provided with a theme-fitting crop of the sound in mp3 format.)
-				</p>
+				<ul>
+					<li>Sound randomization for the button</li>
+					<li>Various other sounds like Megumin's introduction</li>
+					<li>Currently 5 different sounds, open to implement more</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 1.2 -- 05.11.2016</h2>
-				<p>
-					Well, I sure haven't done anything in a long time. This update makes the switch from MySQL to SQLite, introduces a whole
-					bunch of new sounds as well as minor improvements to the CSS and HTML. And a little information: I plan on adding more
-					sounds once Season 2 goes live, so stay tuned for that!
-				</p>
+				<ul>
+					<li>Switch MySQL for SQLite</li>
+					<li>A bunch of new sounds</li>
+					<li>Minor HTML/CSS improvements</li>
+					<li>More sounds once Season 2 goes live</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 1.3 - 18.12.2016</h2>
-				<p>
-					It is finally time -- the website now has live updates for the counter! Never refresh the page just to see if anyone
-					besides you has clicked the button ever again, just sit back and watch! This version also adds a soundboard for all
-					your megumin needs, whenever and wherever you want, so go wild with your favorites. In addition several minor adjustments
-					have been made, which however do not add any extra functionality.
-				</p>
+				<ul>
+					<li>Live updates for the counter</li>
+					<li>Counter will update globally for all users at the same time</li>
+					<li>Soundboard to play sounds without randomization</li>
+					<li>Several minor adjustments that do not add functionality</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 2.0 - 16.04.2017</h2>
-				<p>
-					A complete rewrite of the website's backend from PHP to Node.js! The website now has a real live-updating counter, no
-					more simulated updating after 1,5 seconds. In addition, two template error pages (404 &amp; 500) have been added, ion.sound
-					was replaced with howler.js. The counter should now also operate faster, as memcached caching has been removed. The
-					counter is from here on out cached directly in the server's memory, meaning no additional time-consuming requests have
-					to be made.
-				</p>
+				<ul>
+					<li>Complete backend rewrite from PHP to Node.js</li>
+					<li>Real live updates for the counter, no longer simulated</li>
+					<li>Error template pages for 404 (Not Found) &amp; 500 (Internal Server Error)</li>
+					<li>ion.sound replaced with howler.js for sounds playback</li>
+					<li>Increases in performance for the counter due to caching optimization</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 2.1 - 01.06.2017</h2>
-				<p>
-					Statistics, hooray! No longer will the questions "I wonder how many clicks there have been today/this week/this month?"
-					go unanswered! Statistics are automatically updated into database and also live-update along with the front page counter.
-					Also, "/x.html" links such as "megumin.love/x.html" are now redirected to just "/x", e.g. "megumin.love/x", provided
-					the page actually exists. This is because previously that is how the pages were accessed, as early visitors may know.
-					Oh, and pretty formatted counters in "x.xxx.xxx" format! Plus some minor changes that do not affect the user.
-				</p>
+				<ul>
+					<li>Statistics page to answer questions about click frequency</li>
+					<li>Statistics are saved in database and page is updated live</li>
+					<li>"/x.html" page links redirected to "/x" format</li>
+					<li>Counters are now displayed in "x.xxx.xxx" format</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 2.2 - 03.06.2017</h2>
-				<p>
-					Actually not that many changes here, but wanted to write this for the sake of consistency. This update only changes things
-					unrelated to the user, such as using object deconstruction on various modules, moving all code-related files to a source
-					folder away from environment files such as travis or eslint. Also, minor non-breaking dependency updates.
-				</p>
+				<ul>
+					<li>Only changes the user will not notice</li>
+					<li>Development environment changes</li>
+					<li>Code refactorization</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 2.3 - 24.06.2017</h2>
-				<p>
-					The soundboard is finally adjusted to work on mobile, hooray! This is thanks to GitHub User Danktuary, as noted in the credits.
-					In addition to that, the inner workings of the website have been further optimized. And lastly, you can now get more precise
-					statistics from dates before today! So if anyone wants to somehow integrate the website's statistics in an app of their
-					own, they now can, using the '/statistics' endpoint (https://megumin.love/api/statistics). Check out the website's Wiki on the GitHub
-					Repo (or click the link on the statistics page of the website itself) for more information.
-				</p>
+				<ul>
+					<li>Soundboard now adjusted for mobile thanks to Danktuary (see credits)</li>
+					<li>Background website code optimized</li>
+					<li>API statistics endpoint to get more data (see Wiki in GitHub repo linked in sidebar)</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 2.4 - 31.07.2017</h2>
-				<p>
-					Another improvement of the soundboard -- this time one more focused on the development side, rather than the user's side.
-					All of the soundboard's content is now dynamically created based on the registered sounds, without having to manually create
-					all of the required HTML elements such as the titles, the button wrapper or the buttons themselves. Adding new categories
-					(seasons) is also done automatically, meaning developers only have to change a single file instead of multiple ones.
-					See the updated README / the GitHub release for details on new usage.
-				</p>
+				<ul>
+					<li>Dynamic creation of all soundboard-related components</li>
+					<li>Details on how new sounds are added described in the GitHub releases notes</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 3.0 - 21.09.2017</h2>
-				<p>
-					Major version, breaking changes, woop. This release adds a ranking for the soundboard! Ever wondered which button on the soundboard
-					is the most popular? Your question shall be answered! (As soon as some time after the implementation of this passes...)
-					In addition, some various fixes such as typos or small design errors have been applied. The firstRun setting has been removed and
-					the server now always makes sure the database both exists and is fit for usage with the website! Yay for less user configuration!
-					Lastly, various behind-the-scenes changes have been made to make the code less repetitive and more reusable (also colorful logs!).
-				</p>
+				<ul>
+					<li>Soundboard click rankings</li>
+					<li>Various typo or design fixes</li>
+					<li>Automatic database adjustment on boot</li>
+					<li>Code refactorization</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 4.0 - 06.12.2017</h2>
-				<p>
-					Another major version. A lot of background changes in this one, but there's a few user features too. Background changes include
-					reducing the information that is sent on each counter update (reducing bandwidth usage for the user and my server), the "season"
-					setting being renamed to "source" so that you can add sounds from other sources easier than you could before, replacing the mp3
-					default sounds with ogg versions and falling back to mp3 format (aac completely removed) as well as a safeguard for non-existing
-					sound events being emitted from the soundboard -- the biggest background change however would the switch from socket.io to uws.
-					There's a lot more, you can check the GitHub release for that. Changes visible to the user include higher-quality images
-					(backgrounds, sidebar), with the sidebar even transitioning to a vector graphic for that beautiful scaling. Also, some design
-					adjustments have been made so the website looks more unified and better on most modern browsers. The biggest feature coming in
-					this release however are the randomized backgrounds! Currently the website randomizes which background will be shown to the user
-					out of six in total, but there is also an option to stop the randomization and instead use one of the backgrounds of your choice.
-					And lastly, the "version" page you are on as you are reading this has been renamed to "versions", which makes more sense. Again,
-					more changes are listed on the <a href="https://github.com/robflop/megumin.love/releases/tag/v4.0.0">GitHub releases page</a>.
-				</p>
+				<ul>
+					<li>A lot of background changes the user does not see</li>
+					<li>Reducing the information sent between server and client to save data</li>
+					<li>"Season" setting renamed to "Source" for soundboard</li>
+					<li>ogg soundfiles with mp3 fallback, aac support removed</li>
+					<li>Safeguard for emitting clicks for non-existing sounds</li>
+					<li>Socket.IO replaced with uws</li>
+					<li>Higher quality images like sidebar and background</li>
+					<li>Sidebar now a vector graphic (thanks to fudgepop01, see credits)</li>
+					<li>Design adjustment to be more unified and constant across browsers</li>
+					<li>Randomized website backgrounds with user preference setting in sidebar</li>
+					<li>Six total backgrounds to choose from as of now</li>
+					<li>"Version" page (this one) renamed to be the "Versions" page</li>
+					<li>More concrete changes listed in the GitHub release notes</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 5.0 - 28.01.2018</h2>
-				<p>
-					Third time's the charm, major update. The main backend feature which the user doesn't see is that how the website saves data has
-					been restructured, so information about sounds isn't saved in JSON anymore but in the database. The amount of soundboard clicks
-					(i.e. rankings) are	now stored alongside the sound's filename, displayname and source, which should be more efficient. This change
-					requires you to run a database migration script which I have provided in the repository. Use it before trying to boot the website.
-					The major frontend feature, which the user (or in this case, the admin) does see is the new admin panel. Using this panel you
-					can do three things: Upload new sounds, rename existing ones or delete sounds. Each action will also be live-updated onto the
-					soundboard, the rankings and the main page -- so currently visiting users will be served new sounds as soon as they are uploaded,
-					the soundboard will be rebuilt to adjust itself for potential new sections or renamed/deleted sounds and the rankings list will
-					adjust itself to account for the change done via the admin panel. Absolutely no code is required to use the panel, only text and
-					file input in a form which you submit and the server then processes. Logging into the admin panel requires a login token you can
-					configure in the website's configuration file (see the instructions provided in the GitHub Repository). Besides this, various
-					small adjustments have been made that do not have a big impact on user or admin.
-				</p>
+				<ul>
+					<li>Restructured the way data is saved serverside</li>
+					<li>Information about sounds now saved in database, not JSON</li>
+					<li>Individual soundboard entry clicks now saved alongside respective filename, displayname, source</li>
+					<li>Database migration script for this move provided</li>
+					<li>Admin panel page</li>
+					<li>Upload, rename or delete sounds from within the website</li>
+					<li>Main page, soundboard and rankings will live update when admin panel is used</li>
+					<li>Zero programming knowledge required to use this functionality</li>
+					<li>Logging in as admin requires a login token set in the website configuration</li>
+					<li>Various small adjustments that have no impact on user / admin</li>
+					<li>See GitHub release notes for detailed information on website configuration</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 5.1 - 16.07.2018</h2>
-				<p>
-					This update brings a few statistical features. The statistics api endpoint now supports the "over", "under" and "equals" arguments to
-					capture only dates that match the given numbers. In addition to this, a yearly counter as well as a chart showcasing the monthly clicks
-					over time have been added to the statistics page. Besides that, two new backgrounds have been added to the randomization / the choice.
-					Some refactoring and updating has been done behind the scenes too, but users aren't directly affected by this.
-				</p>
+				<ul>
+					<li>Statistics endpoint now supports "over", "under" and "equals" filters</li>
+					<li>Yearly counter added to statistics page</li>
+					<li>Chart visualizing the monthly click distribution added</li>
+					<li>Two new backgrounds added to randomization</li>
+					<li>Code refactorization that does not affect the user</li>
+				</ul>
 			</div>
 			<hr>
 			<div class="version-box">
 				<h2>Version 6.0 - 12.09.2018</h2>
-				<p>
-					I like breaking things because my code is bad, so woop, version 6.0 is here. There are a lot of changes in this version like changing the
-					name of some database tables in the background to make more sense, as well as actually restructuring the API routes to not be horribly
-					structured. In addition to this, some modules this website uses to run have been replaced with more lightweight ones. For the changes
-					that actually affect the person using the page, there is now a "crazy mode". This mode makes it so that whenever someone that is currently
-					viewing the page presses a sound on the main page or soundboard while you have this mode enabled the same sound that played for them played
-					for you -- and this applies to every person clicking. If there were 100 people clicking different buttons, you would hear 100 sounds playing,
-					thus I dubbed it "crazy mode". There's also a newly documented sounds endpoint to get info on all available sounds (see GitHub repo Wiki)
-				</p>
+				<ul>
+					<li>Some database table names adjusted</li>
+					<li>API routes restructured to make more sense</li>
+					<li>Proper documentation for available API routes</li>
+					<li>Details on this in GitHub release notes</li>
+					<li>moment.js replaced with date-fns</li>
+					<li>node-schedule replaced with node-cron</li>
+					<li>"Crazy mode" added, available in sidebar</li>
+					<li>Activation will make it so you hear the same sound when someone else presses any sound button</li>
+					<li style="color:red">WARNING: Use at your own risk. Possibly extremely loud and may crash your browser under extreme button spam</li>
+					<li>Above warning as the reason for its name</li>
+				</ul>
 			</div>
 			<hr>
 			<div id="backlink-bottom">
