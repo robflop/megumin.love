@@ -19,7 +19,6 @@ body {
 #counter {
 	position: relative;
 	text-align: center;
-	top: -10px;
 	font-size: 50px;
 	color: #dd0000;
 	margin: auto;
@@ -32,6 +31,7 @@ body {
 	border-radius: 20px;
 	width: 100%;
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	margin: 10px 0;
 }
 
 #button:focus {
@@ -42,8 +42,7 @@ body {
 	background: #ff3338;
 }
 
-#box > div {
-	margin-top: 5px;
+#version-social-anchors {
 	margin-bottom: 10px;
 }
 
@@ -88,7 +87,7 @@ body {
 
 	#share-buttons-frame {
 		position: absolute;
-		margin-left: 23px;
+		margin-left: 40px;
 		margin-top: 120px;
 		-webkit-transform: scale(2.2);
 		transform: scale(2.2);
@@ -117,7 +116,7 @@ body {
 		position: absolute;
 		-webkit-transform: scale(2.2);
 		transform: scale(2.2);
-		margin-left: 23px;
+		margin-left: 40px;
 		margin-top: 120px;
 	}
 
