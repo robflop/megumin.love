@@ -8,7 +8,7 @@ body {
 }
 
 #box {
-	width: 300px;
+	width: 360px;
 	background: rgba(0, 0, 0, 0.5);
 	padding: 16px;
 	box-sizing: border-box;
@@ -55,7 +55,7 @@ body {
 #share-buttons-frame {
 	display: inline-block;
 	vertical-align: middle;
-	margin-left: 125px;
+	margin-left: 185px;
 }
 
 .share-buttons > a {
@@ -70,12 +70,12 @@ body {
 	color: #dd0000;
 }
 
-#statistics {
-	margin-left: 45px;
+#soundboard {
+	margin-left: 50px;
 }
 
-#soundboard {
-	margin-left: 30px;
+#statistics {
+	margin-left: 65px;
 }
 
 @media only screen and (max-width: 360px) {
