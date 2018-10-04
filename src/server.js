@@ -72,16 +72,15 @@ const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
 
 readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
-	const page = file.slice(0, -5).toLowerCase(); // 5 for cutting '.html'
-	if (file.substr(-5, 5) !== '.html' || config.errorTemplates.includes(page)) return;
+	const pageName = file.slice(0, -5).toLowerCase(); // 5 for cutting '.html'
 
 	pages.push({
 		name: file,
 		path: join(pagePath, file),
-		route: [`/${page}`, `/${page}.html`]
+		route: [`/${pageName}`, `/${pageName}.html`]
 	});
 
-	if (page === 'index') pages[pages.length - 1].route.push('/');
+	if (pageName === 'index') pages[pages.length - 1].route.push('/');
 	// Last array item because during current iteration it will be the last (adds root-dir route for index)
 });
 
@@ -127,7 +126,7 @@ const apiRouter = express.Router();
 apiRouter.use(express.urlencoded({ extended: true }));
 apiRouter.use(express.json());
 
-apiRouter.all(['/*'], (req, res, next) => {
+apiRouter.all('/*', (req, res, next) => {
 	const apiRoutes = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
 	if (!apiRoutes.includes(req.path)) return res.status(404).json({ code: 404, message: 'Route not found.' });
