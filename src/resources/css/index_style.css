@@ -1,5 +1,6 @@
-body {
-	overflow: hidden;
+footer {
+	position: absolute;
+	bottom: 0;
 }
 
 .share-buttons img {
@@ -80,7 +81,7 @@ body {
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	#box {
-		margin-top: 80px;
+		margin-top: 0px;
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
 	}
@@ -106,10 +107,18 @@ body {
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
+	footer {
+		position: relative;
+	}
+
 	#box {
-		margin-top: 50px;
+		margin-top: 0;
 		-webkit-transform: scale(0.5);
 		transform: scale(0.5);
+	}
+
+	#versions-social-anchors {
+		margin-bottom: 20px;
 	}
 
 	#share-buttons-frame {
