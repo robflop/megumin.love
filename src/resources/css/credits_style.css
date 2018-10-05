@@ -27,43 +27,15 @@ li {
 	}
 
 	#creditsbox {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
-		margin-left: -82px;
-		font-size: 20px;
-		margin-top: -50px;
-	}
-
-	.backlink {
-		position: relative;
-		margin-left: 430px;
-		display: inline-block;
-		-webkit-transform: scale(1.5);
-		transform: scale(1.5);
-	}
-
-	footer {
-		width: auto;
+		max-width: 320px;
+		margin: 10px 20px;
 	}
 }
 
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
 	#creditsbox {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
-		margin-top: 20px;
-	}
-
-	body {
-		height: 300px;
-	}
-
-	.backlink {
-		position: relative;
-		margin-left: 430px;
-		display: inline-block;
-		-webkit-transform: scale(1.5);
-		transform: scale(1.5);
+		max-width: 600px;
+		margin: 10px 20px;
 	}
 }
