@@ -25,22 +25,7 @@
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	#container {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
-		left: -80px;
-		top: -500px;
-	}
-
-	body {
-		height: 620px;
-	}
-
-	.backlink {
-		position: relative;
-		margin-left: 400px;
-		display: inline-block;
-		-webkit-transform: scale(1.5);
-		transform: scale(1.5);
+		max-width: 320px;
 	}
 
 	footer {
@@ -51,20 +36,6 @@
 @media only screen and (max-height: 360px) {
 	/* Landscape mode */
 	#container {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
-		top: -500px;
-	}
-
-	body {
-		height: 620px;
-	}
-
-	.backlink {
-		position: relative;
-		margin-left: 400px;
-		display: inline-block;
-		-webkit-transform: scale(1.5);
-		transform: scale(1.5);
+		max-width: 600px;
 	}
 }
