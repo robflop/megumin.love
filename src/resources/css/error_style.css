@@ -31,18 +31,16 @@ p > a {
 	text-align: center;
 }
 
-@media only screen and (max-width: 481px) {
+@media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	#box {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
+		max-width: 320px;
 	}
 }
 
-@media only screen and (max-height: 481px) {
+@media only screen and (max-height: 360px) {
 	/* Landscape mode */
 	#box {
-		-webkit-transform: scale(0.5);
-		transform: scale(0.5);
+		max-width: 600px;
 	}
 }
