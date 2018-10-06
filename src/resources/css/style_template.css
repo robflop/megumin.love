@@ -29,6 +29,57 @@ footer {
 	color: azure;
 }
 
+.bg1 {
+	background-image: url('/images/backgrounds/bg1.jpg');
+}
+
+.bg2 {
+	background-image: url('/images/backgrounds/bg2.jpg');
+}
+
+.bg3 {
+	background-image: url('/images/backgrounds/bg3.jpg');
+}
+
+.bg4 {
+	background-image: url('/images/backgrounds/bg4.jpg');
+}
+
+.bg5 {
+	background-image: url('/images/backgrounds/bg5.jpg');
+}
+
+.bg6 {
+	background-image: url('/images/backgrounds/bg6.jpg');
+}
+
+.bg7 {
+	background-image: url('/images/backgrounds/bg7.jpg');
+}
+
+.bg8 {
+	background-image: url('/images/backgrounds/bg8.jpg');
+}
+
+.bg1_independence {
+	background-image: url('/images/backgrounds/bg1_independence.jpg');
+}
+
+.bg1_christmas {
+	background-image: url('/images/backgrounds/bg1_christmas.jpg');
+}
+
+.bg1_halloween {
+	background-image: url('/images/backgrounds/bg1_halloween.jpg');
+}
+
+.bg1_easter {
+	background-image: url('/images/backgrounds/bg1_easter.jpg');
+}
+
+.bg1_birthday {
+	background-image: url('/images/backgrounds/bg1_birthday.jpg');
+}
 .backlink {
 	color: #dd0000;
 }
@@ -163,6 +214,10 @@ form#config p {
 		position: relative;
 		max-width: 320px;
 		text-align: center;
+	}
+
+	.bg4 {
+		background-position: -140px;
 	}
 
 	.megu-sidebar {

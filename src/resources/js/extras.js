@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_christmas', displayName: 'Christmas', month: 12 },
 		// { filename: 'bg1_halloween', displayName: 'Halloween', month: 9 },
 		{ filename: 'bg1_easter', displayName: 'Easter', month: 4 },
-		// { filename: 'bg1_birthday', displayName: 'Birthday', month: 1} // No canon confirmation of the month, January is speculation
+		// { filename: 'bg1_birthday', displayName: 'Birthday', month: 1 } // No canon confirmation of the month, January is speculation
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -18,21 +18,27 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (!backgroundSetting) {
 		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => sBg.month === new Date().getMonth() + 1);
 		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
-		else backgroundSetting = 'random';
+		else backgroundSetting = 'randomBg';
 	}
 
-	bodyElem.style.backgroundImage = `url(/images/backgrounds/${backgroundSetting === 'random' ? randomBg : backgroundSetting}.jpg)`;
+	if (!backgroundSetting === 'randomBg') bodyElem.classList.add(backgroundSetting);
+	else bodyElem.classList.add(randomBg);
 
-	bgSelect.addEventListener('change', function() {
-		/* eslint-disable no-invalid-this */
-		if (this.value !== 'random') bodyElem.style.backgroundImage = `url(/images/backgrounds/${this.value}.jpg)`;
-		return localStorage.setItem('background', this.value);
-		/* eslint-enable no-invalid-this */
+	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
+
+	bgSelect.addEventListener('change', e => {
+		if (e.target.value !== 'randomBg') {
+			bodyElem.classList.remove(currentBg);
+			bodyElem.classList.add(e.target.value);
+
+			currentBg = e.target.value;
+		}
+		return localStorage.setItem('background', e.target.value);
 	});
 
 	let bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
 	bgOptions = bgOptions.concat(seasonalBackgrounds.map(seasonal => `<option value=${seasonal.filename}>${seasonal.displayName}</option>`));
-	bgOptions.unshift('<option value="random">Randomize (on F5)</option>');
+	bgOptions.unshift('<option value="randomBg">Randomize (on F5)</option>');
 
 	bgSelect.innerHTML = bgOptions.join('');
 	bgSelect.value = backgroundSetting;
