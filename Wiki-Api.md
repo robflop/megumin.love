@@ -78,7 +78,7 @@ Output:
 
 ---
 
-`GET /sounds`
+## `GET /sounds`
 
 Returns an array of objects containing the following information on all of the website's sounds:
 - ID
@@ -262,7 +262,7 @@ Output:
 
 ---
 
-`GET /statistics/summary`
+## `GET /statistics/summary`
 
 Returns a summary of the following counter statistics:
 
