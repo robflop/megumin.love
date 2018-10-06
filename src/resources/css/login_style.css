@@ -7,6 +7,11 @@
 	border-radius: 20px;
 }
 
+#backlink-top {
+	display: inline-block;
+	margin-right: 10px;
+}
+
 #login, #login-res {
 	text-align: center;
 	display: inline-block;
@@ -18,16 +23,8 @@
 	color: red;
 }
 
-#backlink-top {
-	display: inline-block;
-	margin-right: 10px;
-}
-
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	#container {
-	}
-
 	body {
 		height: 620px;
 	}

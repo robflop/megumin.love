@@ -1,3 +1,42 @@
+form input, form select, form label {
+	display: block;
+	margin-top: 5px;
+	width: 185px;
+	box-sizing: border-box;
+}
+
+form input[type="file"] {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+form input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	width: 16px;
+	height: 16px;
+}
+
+label[for="bg-select"], select[id="bg-select"] {
+	display: inline;
+	width: initial;
+	/*
+		You may think the width attribute will be ignored,
+		as pointed out by VSCode, but it will not actually be.
+		Don't remove it cuz things will break otherwise, kthx.
+	*/
+}
+
+.titles {
+	margin: 20px auto 10px auto;
+	text-align: center;
+	background-color: #dd0000;
+	color: #ff8080;
+	border-radius: 15px;
+	width: 55%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+}
+
+
 #container {
 	width: 1175px;
 	margin: 0 auto;
@@ -5,6 +44,15 @@
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;
+}
+
+#container form {
+	display: inline-block;
+	padding: 5px;
+}
+
+#logout {
+	float: right;
 }
 
 #panel {
@@ -23,36 +71,6 @@
 	color: red;
 }
 
-#logout {
-	float: right;
-}
-
-#container form {
-	display: inline-block;
-	padding: 5px;
-}
-
-form input, form select, form label {
-	display: block;
-	margin-top: 5px;
-	width: 185px;
-	box-sizing: border-box;
-}
-
-label[for="bg-select"], select[id="bg-select"] {
-	display: inline;
-	width: initial;
-	/*
-		You may think the width attribute will be ignored,
-		as pointed out by VSCode, but it will not actually be.
-		Don't remove it cuz things will break otherwise, kthx.
-	*/
-}
-
-form input[type="file"] {
-	background-color: rgba(255, 255, 255, 0.5);
-}
-
 #delete-confirm-wrapper label {
 	background-color: rgba(255, 255, 255, 0.5);
 	margin-right: 10px;
@@ -62,25 +80,11 @@ form input[type="file"] {
 	vertical-align: bottom;
 }
 
-form input[type="checkbox"] {
-	display: inline-block;
-	vertical-align: middle;
-	width: 16px;
-	height: 16px;
-}
-
-.titles {
-	margin: 20px auto 10px auto;
-	text-align: center;
-	background-color: #dd0000;
-	color: #ff8080;
-	border-radius: 15px;
-	width: 55%;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
-}
-
-
 @media only screen and (max-width: 1150px) {
+	footer {
+		width: 95%;
+	}
+
 	#container {
 		width: 90%;
 	}
@@ -95,20 +99,16 @@ form input[type="checkbox"] {
 		margin-left: 5%;
 		width: 90%;
 	}
-
-	footer {
-		width: 95%;
-	}
 }
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	#container {
-		max-width: 320px;
-	}
-
 	.titles {
 		width: auto;
+	}
+
+	#container {
+		max-width: 320px;
 	}
 }
 

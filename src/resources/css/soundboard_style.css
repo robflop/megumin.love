@@ -1,20 +1,3 @@
-#container {
-	width: 1175px;
-	margin: 0 auto;
-	background-color: rgba(0, 0, 0, 0.5);
-	padding: 16px;
-	box-sizing: border-box;
-	border-radius: 20px;
-}
-
-#container::after {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-}
-
 .source-wrapper {
 	margin-top: 25px;
 }
@@ -39,7 +22,6 @@
 
 .buttons-wrapper button, #loading {
 	margin-top: 10px;
-	/* margin-left: 5px; */
 	font-size: 35px;
 	background: #dd0000;
 	color: #ff8080;
@@ -54,6 +36,23 @@
 
 .buttons-wrapper button:hover {
 	background: #ff3338;
+}
+
+#container {
+	width: 1175px;
+	margin: 0 auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
+}
+
+#container::after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 #warning {
@@ -72,12 +71,12 @@
 }
 
 @media only screen and (max-width: 1150px) {
-	#container {
-		width: 90%;
-	}
-
 	.buttons-wrapper button {
 		width: 32%;
+	}
+
+	#container {
+		width: 90%;
 	}
 }
 

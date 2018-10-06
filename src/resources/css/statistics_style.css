@@ -2,20 +2,6 @@ body {
 	vertical-align: baseline;
 }
 
-#box {
-	width: 600px;
-	background: #F2E6E6;
-	padding: 16px;
-	box-sizing: border-box;
-	border-radius: 20px;
-	margin: 50px auto;
-}
-
-#header {
-	text-decoration: underline;
-	text-align: center;
-}
-
 .statistics {
 	margin: 0;
 	font-size: 25px;
@@ -26,8 +12,22 @@ body {
 	border-color: #9c9c9c;
 }
 
+#box {
+	width: 600px;
+	background: #F2E6E6;
+	padding: 16px;
+	box-sizing: border-box;
+	border-radius: 20px;
+	margin: 50px auto;
+}
+
 #box :nth-last-child(2).statistics {
 	border-style: none;
+}
+
+#header {
+	text-decoration: underline;
+	text-align: center;
 }
 
 #chart-wrapper {
@@ -41,15 +41,15 @@ body {
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
-	#box :nth-last-child(2).statistics {
-		font-size: 16px;
-		padding: 0;
-	}
-
 	#box {
 		max-width: 320px;
 		margin-top: 10px;
 		margin-bottom: 0;
+	}
+
+	#box :nth-last-child(2).statistics {
+		font-size: 16px;
+		padding: 0;
 	}
 
 	#chart-wrapper {

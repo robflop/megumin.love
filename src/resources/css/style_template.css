@@ -17,6 +17,11 @@ body {
 	font-family: "Open Sans", sans-serif;
 }
 
+img {
+	backface-visibility: hidden;
+	transform: translateZ(0);
+}
+
 footer {
 	display: block;
 	font-family: "Courgette", cursive;
@@ -24,55 +29,8 @@ footer {
 	color: azure;
 }
 
-#notification-wrapper {
-	position: fixed;
-	top: 10%;
-	left: 0;
-	right: 0;
-	text-align: center;
-	display: none;
-}
-
-
-#notification {
-	display: inline-block;
-	text-align: left;
-	background: #dd0000;
-	color: #ff8080;
-	font-size: 30px;
-	max-width: 1400px;
-	padding: 5px;
-	border-radius: 10px;
-}
-
 .backlink {
 	color: #dd0000;
-}
-
-#backlink-bottom {
-	text-align: right;
-}
-
-#crazymode-warning {
-	font-style: italic;
-	color: #dd0000;
-}
-
-form#config p {
-	text-align: center;
-}
-
-#crazymode-toggle {
-	vertical-align: middle;
-}
-
-#credits {
-	color: azure;
-}
-
-img {
-	backface-visibility: hidden;
-	transform: translateZ(0);
 }
 
 .hangumin {
@@ -154,14 +112,57 @@ img {
 	margin: 10px 0 0;
 }
 
-/* .sidebar-content > *:last-child {
-	padding-bottom: 10px;
-} */
+#notification-wrapper {
+	position: fixed;
+	top: 10%;
+	left: 0;
+	right: 0;
+	text-align: center;
+	display: none;
+}
+
+#notification {
+	display: inline-block;
+	text-align: left;
+	background: #dd0000;
+	color: #ff8080;
+	font-size: 30px;
+	max-width: 1400px;
+	padding: 5px;
+	border-radius: 10px;
+}
+
+form#config p {
+	text-align: center;
+}
+
+#crazymode-toggle {
+	vertical-align: middle;
+}
+
+#crazymode-warning {
+	font-style: italic;
+	color: #dd0000;
+}
+
+#credits {
+	color: azure;
+}
+
+#backlink-bottom {
+	text-align: right;
+}
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode*/
 	body {
 		overflow: scroll;
+	}
+
+	footer {
+		position: relative;
+		max-width: 320px;
+		text-align: center;
 	}
 
 	.megu-sidebar {
@@ -172,12 +173,6 @@ img {
 
 	.megu-sidebar:hover {
 		left: -68px;
-	}
-
-	footer {
-		position: relative;
-		max-width: 320px;
-		text-align: center;
 	}
 }
 
@@ -187,6 +182,12 @@ img {
 		overflow: scroll;
 	}
 
+	footer {
+		position: relative;
+		font-size: 16px;
+		text-align: center;
+	}
+
 	.megu-sidebar {
 		transform: scale(0.6);
 		left: -275px;
@@ -195,11 +196,5 @@ img {
 
 	.megu-sidebar:hover {
 		left: -68px;
-	}
-
-	footer {
-		position: relative;
-		font-size: 16px;
-		text-align: center;
 	}
 }

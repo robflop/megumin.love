@@ -1,3 +1,8 @@
+.header {
+	text-decoration: underline;
+	text-align: center;
+}
+
 #container {
 	width: 660px;
 	background: #F2E6E6;
@@ -29,11 +34,6 @@
 	background-color:rgba(96,96,96,1);
 	color:rgba(56,56,56,1);
 	box-shadow: initial;
-}
-
-.header {
-	text-decoration: underline;
-	text-align: center;
 }
 
 #rankings-wrap ol > li {

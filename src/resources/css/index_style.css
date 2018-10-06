@@ -8,6 +8,10 @@ footer {
 	width: 24px;
 }
 
+.share-buttons > a {
+	text-decoration: none;
+}
+
 #box {
 	width: 360px;
 	background: rgba(0, 0, 0, 0.5);
@@ -23,6 +27,7 @@ footer {
 	font-size: 50px;
 	color: #dd0000;
 	margin: auto;
+	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
 #button {
@@ -43,27 +48,19 @@ footer {
 	background: #ff3338;
 }
 
-#versions-social-anchors {
-	margin-bottom: 20px;
-}
-
 #version {
 	color: #dd0000;
 	display: inline-block;
+}
+
+#versions-social-anchors {
+	margin-bottom: 20px;
 }
 
 #share-buttons-frame {
 	display: inline-block;
 	vertical-align: middle;
 	margin-left: 185px;
-}
-
-.share-buttons > a {
-	text-decoration: none;
-}
-
-#counter {
-	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
 #soundboard, #statistics {
@@ -80,6 +77,10 @@ footer {
 
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
+	.share-buttons {
+		margin-left: 10px;
+	}
+
 	#box {
 		max-width: 320px;
 		margin-top: 35px;
@@ -87,10 +88,6 @@ footer {
 
 	#share-buttons-frame {
 		margin-left: 115px;
-	}
-
-	.share-buttons {
-		margin-left: 10px;
 	}
 
 	#soundboard {
@@ -108,6 +105,10 @@ footer {
 		bottom: -100px;
 	}
 
+	.share-buttons {
+		margin-left: 10px;
+	}
+
 	#box {
 		max-width: 360px;
 		margin-top: 0;
@@ -115,10 +116,6 @@ footer {
 
 	#share-buttons-frame {
 		margin-left: 155px;
-	}
-
-	.share-buttons {
-		margin-left: 10px;
 	}
 
 	#soundboard {
