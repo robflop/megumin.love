@@ -80,6 +80,7 @@ footer {
 .bg1_birthday {
 	background-image: url('/images/backgrounds/bg1_birthday.jpg');
 }
+
 .backlink {
 	color: #dd0000;
 }
@@ -229,6 +230,10 @@ form#config p {
 	.megu-sidebar:hover {
 		left: -68px;
 	}
+
+	.sidebar-content {
+		max-height: 395px;
+	}
 }
 
 @media only screen and (max-height: 360px) {
@@ -251,5 +256,9 @@ form#config p {
 
 	.megu-sidebar:hover {
 		left: -68px;
+	}
+
+	.sidebar-content {
+		max-height: 395px;
 	}
 }

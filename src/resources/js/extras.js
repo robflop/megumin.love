@@ -49,20 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
 	let crazyMode = localStorage.getItem('crazyMode');
 
 	crazyModeToggle.checked = crazyMode;
-	crazyModeToggle.addEventListener('change', function() {
-		/* eslint-disable no-invalid-this */
-		if (!this.checked) localStorage.removeItem('crazyMode');
+	crazyModeToggle.addEventListener('change', e => {
+		if (!e.target.checked) localStorage.removeItem('crazyMode');
 		else localStorage.setItem('crazyMode', true);
 
-		return crazyMode = this.checked;
-		/* eslint-enable no-invalid-this */
+		return crazyMode = e.target.checked;
 	});
 
 	/* Util funcs */
 
 	const util = {};
 
-	util.fade = function(elem, duration = 2000, step = 0.1) {
+	util.fade = function(elem, displayDuration = 2000, step = 0.1) {
 		elem.style.display = 'block';
 		elem.style.opacity = 0;
 		let fadedIn = false;
@@ -70,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const fadeInterval = setInterval(() => {
 			if (elem.style.opacity === '1') {
-				fadedIn = true; // So it doesn't increase opacity beyond 1
-				if (!delayOver) setTimeout(() => delayOver = true, duration);
+				fadedIn = true; // So it doesn't increase opacity infinitely beyond 1
+				if (!delayOver) setTimeout(() => delayOver = true, displayDuration);
 			}
 			if (elem.style.opacity < 1 && !fadedIn) elem.style.opacity = parseFloat(elem.style.opacity) + step;
 
