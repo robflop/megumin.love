@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		else backgroundSetting = 'randomBg';
 	}
 
-	if (!backgroundSetting === 'randomBg') bodyElem.classList.add(backgroundSetting);
+	if (backgroundSetting !== 'randomBg') bodyElem.classList.add(backgroundSetting);
 	else bodyElem.classList.add(randomBg);
 
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
