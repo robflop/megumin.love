@@ -203,60 +203,48 @@ form#config p {
 	text-align: right;
 }
 
-@media only screen and (max-width: 360px) {
-	/* Portrait mode*/
-	body {
-		overflow: scroll;
-	}
+@media only screen and (max-width: 960px) {
+	/* Nothing yet */
+}
 
-	footer {
-		position: relative;
-		max-width: 320px;
-		text-align: center;
-	}
-
-	.bg4 {
-		background-position: -140px;
-	}
-
+@media only screen and (max-width: 720px) {
 	.megu-sidebar {
-		transform: scale(0.6);
-		left: -275px;
-		top: -60px;
+		min-width: 240px;
+		left: -251px;
 	}
 
-	.megu-sidebar:hover {
-		left: -68px;
+	.hangumin {
+		right: -189px;
+		top: -34px;
+		height: 320px;
+		width: 207px;
 	}
 
 	.sidebar-content {
-		max-height: 395px;
+		max-width: 220px;
+		font-size: 12px;
+	}
+
+	.sidebar-content h1 {
+		font-size: 1.1rem;
 	}
 }
 
-@media only screen and (max-height: 360px) {
-	/* Landscape mode*/
-	body {
-		overflow: scroll;
-	}
-
-	footer {
-		position: relative;
-		font-size: 16px;
-		text-align: center;
-	}
-
+@media only screen and (max-width: 490px) {
 	.megu-sidebar {
-		transform: scale(0.6);
-		left: -275px;
-		top: -60px;
+		min-width: 180px;
+		left: -188px;
 	}
 
-	.megu-sidebar:hover {
-		left: -68px;
+	.hangumin {
+		right: -148px;
+		top: -27px;
+		height: 250px;
+		width: 162px;
 	}
 
 	.sidebar-content {
-		max-height: 395px;
+		max-width: 160px;
+		font-size: 12px;
 	}
 }
