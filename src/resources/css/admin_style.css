@@ -80,6 +80,11 @@ label[for="bg-select"], select[id="bg-select"] {
 	vertical-align: bottom;
 }
 
+@media only screen and (max-width: 960px) {
+	footer {
+		bottom: -50px;
+	}
+}
 @media only screen and (max-width: 1150px) {
 	footer {
 		width: 95%;
