@@ -248,3 +248,22 @@ form#config p {
 		font-size: 12px;
 	}
 }
+
+@media only screen and (max-width: 360px) {
+	.megu-sidebar {
+		min-width: 120px;
+		left: -128px;
+	}
+
+	.hangumin {
+		right: -108px;
+		top: -21px;
+		height: 180px;
+		width: 117px;
+	}
+
+	.sidebar-content {
+		max-width: 100px;
+		font-size: 12px;
+	}
+}
