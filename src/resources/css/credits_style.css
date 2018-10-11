@@ -1,13 +1,9 @@
-body {
-	vertical-align: baseline;
-}
-
 h1 {
 	text-decoration: underline;
 }
 
 li {
-	margin: 10px;
+	margin-top: 10px;
 }
 
 #creditsbox {
@@ -20,22 +16,26 @@ li {
 	border-radius: 20px;
 }
 
-@media only screen and (max-width: 360px) {
-	/* Portrait mode */
-	body {
-		overflow: scroll;
-	}
-
+@media only screen and (max-width: 960px) {
 	#creditsbox {
-		max-width: 320px;
-		margin: 10px 20px;
+		max-width: 500px;
 	}
 }
 
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
+@media only screen and (max-width: 720px) {
 	#creditsbox {
-		max-width: 600px;
-		margin: 10px 20px;
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#creditsbox {
+		max-width: 300px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	#creditsbox {
+		max-width: 200px;
 	}
 }

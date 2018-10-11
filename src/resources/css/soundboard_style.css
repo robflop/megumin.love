@@ -40,7 +40,7 @@
 
 #container {
 	width: 1175px;
-	margin: 0 auto;
+	margin: 20px auto;
 	background-color: rgba(0, 0, 0, 0.5);
 	padding: 16px;
 	box-sizing: border-box;
@@ -73,25 +73,43 @@
 footer {
 	bottom: -50px;
 }
-@media only screen and (max-width: 1150px) {
+
+@media only screen and (max-width: 960px) {
 	.buttons-wrapper button {
-		width: 32%;
+		width: 47%;
 	}
 
 	#container {
-		width: 90%;
+		max-width: 700px;
 	}
 }
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 720px) {
 	.buttons-wrapper button {
 		width: 49%;
 	}
+
+	#container {
+		max-width: 600px;
+	}
 }
 
-@media only screen and (max-width: 650px) {
-	.buttons-wrapper button,
-	.titles {
+@media only screen and (max-width: 490px) {
+	.buttons-wrapper button {
 		width: 100%;
+	}
+
+	#container {
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	.buttons-wrapper button, .titles {
+		width: 100%;
+	}
+
+	#container {
+		max-width: 300px;
 	}
 }

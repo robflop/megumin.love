@@ -70,54 +70,30 @@
 	margin-left: 65px;
 }
 
+/* Only 360px needs adjustment, since container is 360px wide */
+
 @media only screen and (max-width: 360px) {
-	/* Portrait mode */
 	.share-buttons {
 		margin-left: 10px;
 	}
 
 	#box {
-		max-width: 320px;
-		margin-top: 35px;
+		max-width: 300px;
+	}
+
+	#counter {
+		font-size: 40px;
 	}
 
 	#share-buttons-frame {
-		margin-left: 115px;
+		margin-left: 95px;
 	}
 
 	#soundboard {
-		margin-left: 40px;
+		margin-left: 30px;
 	}
 
 	#statistics {
-		margin-left: 50px;
-	}
-}
-
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
-	footer {
-		bottom: -100px;
-	}
-
-	.share-buttons {
-		margin-left: 10px;
-	}
-
-	#box {
-		max-width: 360px;
-		margin-top: 0;
-	}
-
-	#share-buttons-frame {
-		margin-left: 155px;
-	}
-
-	#soundboard {
-		margin-left: 40px;
-	}
-
-	#statistics {
-		margin-left: 50px;
+		margin-left: 45px;
 	}
 }

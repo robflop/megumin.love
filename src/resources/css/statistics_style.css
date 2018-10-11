@@ -39,31 +39,54 @@ body {
 	padding: 0;
 }
 
-@media only screen and (max-width: 360px) {
-	/* Portrait mode */
+@media only screen and (max-width: 960px) {
 	#box {
-		max-width: 320px;
-		margin-top: 10px;
-		margin-bottom: 0;
-	}
-
-	#box :nth-last-child(2).statistics {
-		font-size: 16px;
-		padding: 0;
+		max-width: 500px;
 	}
 
 	#chart-wrapper {
-		max-width: 320px;
+		max-width: 500px;
 		width: auto;
 		height: auto;
 	}
 }
 
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
+@media only screen and (max-width: 720px) {
 	#box {
-		max-width: 600px;
-		margin-top: 10px;
-		margin-bottom: 0;
+		max-width: 400px;
+	}
+
+	#chart-wrapper {
+		max-width: 400px;
+		width: auto;
+		height: auto;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#box {
+		max-width: 300px;
+	}
+
+	#chart-wrapper {
+		max-width: 300px;
+		width: auto;
+		height: auto;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	footer {
+		bottom: -50px;
+	}
+
+	#box {
+		max-width: 220px;
+	}
+
+	#chart-wrapper {
+		max-width: 220px;
+		width: auto;
+		height: auto;
 	}
 }

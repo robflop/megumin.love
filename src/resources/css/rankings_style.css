@@ -4,7 +4,7 @@
 }
 
 #container {
-	width: 660px;
+	width: 600px;
 	background: #F2E6E6;
 	margin: 3vh auto 0 auto;
 	padding: 16px;
@@ -44,9 +44,31 @@
 footer {
 	bottom: -50px;
 }
-@media only screen and (max-width: 1150px) {
+
+@media only screen and (max-width: 960px) {
 	#container {
-		width: 90%;
-		margin: 15vh auto 0 auto;
+		max-width: 500px;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	#container {
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#container {
+		max-width: 300px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	footer {
+		bottom: -70px;
+	}
+
+	#container {
+		max-width: 300px;
 	}
 }

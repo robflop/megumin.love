@@ -23,17 +23,4 @@
 	color: red;
 }
 
-@media only screen and (max-width: 360px) {
-	/* Portrait mode */
-	body {
-		height: 620px;
-	}
-
-	footer {
-		width: auto;
-	}
-}
-
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
-}
+/* No media queries needed as container is only 320px wide */

@@ -22,7 +22,7 @@ p > a {
 }
 
 #box {
-	width: 500px;
+	width: 600px;
 	background: rgba(0, 0, 0, 0.7);
 	padding: 16px;
 	box-sizing: border-box;
@@ -31,16 +31,26 @@ p > a {
 	margin-right: auto;
 }
 
-@media only screen and (max-width: 360px) {
-	/* Portrait mode */
+@media only screen and (max-width: 960px) {
 	#box {
-		max-width: 320px;
+		max-width: 600px;
 	}
 }
 
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
+@media only screen and (max-width: 720px) {
 	#box {
-		max-width: 600px;
+		max-width: 500px;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#box {
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	#box {
+		max-width: 320px;
 	}
 }

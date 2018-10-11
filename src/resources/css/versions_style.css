@@ -8,7 +8,7 @@
 }
 
 #container {
-	width: 500px;
+	width: 600px;
 	height: auto;
 	background: #F2E6E6;
 	margin: 0 auto;
@@ -25,20 +25,31 @@
 footer {
 	bottom: -50px;
 }
-@media only screen and (max-width: 360px) {
-	/* Portrait mode */
-	footer {
-		width: auto;
-	}
 
+@media only screen and (max-width: 960px) {
 	#container {
-		max-width: 320px;
+		max-width: 500px;
 	}
 }
 
-@media only screen and (max-height: 360px) {
-	/* Landscape mode */
+@media only screen and (max-width: 720px) {
 	#container {
-		max-width: 600px;
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#container {
+		max-width: 300px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	footer {
+		bottom: -70px;
+	}
+
+	#container {
+		max-width: 200px;
 	}
 }
