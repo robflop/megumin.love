@@ -22,6 +22,9 @@
 	text-decoration: underline;
 }
 
+footer {
+	bottom: -50px;
+}
 @media only screen and (max-width: 360px) {
 	/* Portrait mode */
 	footer {

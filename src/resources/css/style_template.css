@@ -86,11 +86,6 @@ footer {
 	color: #dd0000;
 }
 
-.hangumin {
-	height: 410px;
-	width: 272px;
-}
-
 .megu-sidebar {
 	background-color: #a09a9a;
 	position: fixed;
@@ -109,10 +104,12 @@ footer {
 	left: 0;
 }
 
-.megu-sidebar .hangumin {
+.hangumin {
 	position: absolute;
 	right: -244px;
 	top: -42px;
+	height: 410px;
+	width: 272px;
 }
 
 .sidebar-content {
