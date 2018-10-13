@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const seasonalBackgrounds = [
 		{ filename: 'bg1_independence', displayName: 'Independence Day', month: 7 },
 		{ filename: 'bg1_christmas', displayName: 'Christmas', month: 12 },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', month: 9 },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', month: 10 },
 		{ filename: 'bg1_easter', displayName: 'Easter', month: 4 },
 		// { filename: 'bg1_birthday', displayName: 'Birthday', month: 1 } // No canon confirmation of the month, January is speculation
 	];
