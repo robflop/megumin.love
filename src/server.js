@@ -19,9 +19,11 @@ const db = new Database(config.databasePath);
 
 db.serialize(() => {
 	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
-		if (!row) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
-		// Only assume there's no proper counter entry if counter hasn't already been set above
-		if (row) counter = row.counter;
+		if (!row) {
+			db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
+			counter = 0;
+		}
+		else counter = row.counter;
 
 		return Logger.info('Main counter loaded.');
 	});
@@ -32,7 +34,7 @@ db.serialize(() => {
 	});
 
 	db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date( \'now\', \'localtime\'), 0 )');
-	// Statistics entry for the boot day
+	// Insert statistics entry for the boot day if it does not exist
 
 	db.all('SELECT * FROM statistics', [], (selectErr, rows) => {
 		const startOfBootWeek = dateFns.addDays(dateFns.startOfWeek(new Date()), 1), endOfBootWeek = dateFns.addDays(dateFns.endOfWeek(new Date()), 1);
@@ -72,7 +74,7 @@ const errorPath = join(pagePath, '/errorTemplates');
 const pages = [];
 
 readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
-	const pageName = file.slice(0, -5).toLowerCase(); // 5 for cutting '.html'
+	const pageName = file.slice(0, -5).toLowerCase(); // -5 for cutting '.html'
 
 	pages.push({
 		name: file,
@@ -274,9 +276,7 @@ apiRouter.get('/statistics/chartData', (req, res) => {
 	return res.json(chartData);
 });
 
-// Browser Authorization / sessions only
-
-apiRouter.post('/login', (req, res) => {
+apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses this route
 	if (config.adminToken === req.body.token) {
 		req.session.loggedIn = true;
 		Logger.info('A user has authenticated on the \'/login\' endpoint.');
@@ -288,10 +288,8 @@ apiRouter.post('/login', (req, res) => {
 	}
 });
 
-// Browser Authorization / sessions end
-
 apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
-	if (config.adminToken === req.headers.authorization) { // For browser & non-browser API calls
+	if (config.adminToken === req.headers.authorization) {
 		Logger.info(`A user has sent a request to the '${req.path}' route.`);
 		return next();
 	}
