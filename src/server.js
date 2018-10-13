@@ -353,12 +353,10 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).array('file
 
 				Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
 
-				setTimeout(() => {
-					emitUpdate({
-						type: 'soundUpdate',
-						sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
-					});
-				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+				emitUpdate({
+					type: 'soundUpdate',
+					sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
+				});
 
 				return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
 			}
@@ -421,12 +419,11 @@ apiRouter.patch('/admin/rename', (req, res) => {
 						});
 					});
 				});
-				setTimeout(() => {
-					emitUpdate({
-						type: 'soundUpdate',
-						sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
-					});
-				}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+
+				emitUpdate({
+					type: 'soundUpdate',
+					sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
+				});
 
 				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
 			});
@@ -462,12 +459,10 @@ apiRouter.delete('/admin/delete', (req, res) => {
 			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
-			setTimeout(() => {
-				emitUpdate({
-					type: 'soundUpdate',
-					sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
-				});
-			}, 1000 * 0.5); // Allow time for server to keep up and send actual new data
+			emitUpdate({
+				type: 'soundUpdate',
+				sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
+			});
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
 		});
