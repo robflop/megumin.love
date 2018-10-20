@@ -26,14 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		const button = document.getElementById('button');
 		howlerList = {}; // Wipe before (re)load
 
-		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton();
-		if (sounds.length === 0 && button.innerText === 'やめろ!!') toggleButton();
-
 		for (const sound of sounds) {
 			howlerList[sound.filename] = new Howl({
 				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`]
 			});
 		}
+
+		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton();
+		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton();
 	}
 
 	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
