@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
 	bgOptions = bgOptions.concat(seasonalBackgrounds.map(seasonal => `<option value=${seasonal.filename}>${seasonal.displayName}</option>`));
-	bgOptions.unshift('<option value="randomBg">Randomize (Default)</option>');
+	bgOptions.unshift('<option value="randomBg">Random (Default)</option>');
 	bgOptions.unshift('<option value="reset">Reset Preference</option>');
 
 	bgSelect.innerHTML = bgOptions.join('');
