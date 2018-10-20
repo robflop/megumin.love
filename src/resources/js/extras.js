@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
 
 	bgSelect.addEventListener('change', e => {
+		if (e.target.value === 'reset') {
+			return localStorage.removeItem('background');
+		}
 		if (e.target.value !== 'randomBg') {
 			bodyElem.classList.remove(currentBg);
 			bodyElem.classList.add(e.target.value);
@@ -38,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
 	bgOptions = bgOptions.concat(seasonalBackgrounds.map(seasonal => `<option value=${seasonal.filename}>${seasonal.displayName}</option>`));
-	bgOptions.unshift('<option value="randomBg">Randomize (on F5)</option>');
+	bgOptions.unshift('<option value="randomBg">Randomize (Default)</option>');
+	bgOptions.unshift('<option value="reset">Reset Preference</option>');
 
 	bgSelect.innerHTML = bgOptions.join('');
 	bgSelect.value = backgroundSetting;
