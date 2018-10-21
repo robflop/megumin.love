@@ -2,18 +2,22 @@ body {
 	background-image: url(/images/backgrounds/error_bg.jpg);
 }
 
-p {
-	text-align: center;
-	color: white;
+h1, p {
+	margin: 0;
 }
 
-p > a {
-	color: white;
+p, a {
+	text-align: center;
+	color: azure;
+	display: block;
+}
+
+a {
+	margin-top: 30px;
 }
 
 .big-red {
-	margin: 0;
-	color: #a50000;
+	color: #dd0000;
 	font-size: 72px;
 	text-align: center;
 }
@@ -26,6 +30,15 @@ p > a {
 	border-radius: 20px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#contact { /* 500 page */
+	margin-top: 20px;
+}
+
+#contact a {
+	margin-top: 0;
+	display: inline-block;
 }
 
 @media only screen and (max-width: 960px) {
