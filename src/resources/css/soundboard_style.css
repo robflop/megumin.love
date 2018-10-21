@@ -23,7 +23,7 @@
 .buttons-wrapper button, #loading {
 	margin-top: 10px;
 	font-size: 35px;
-	background: #dd0000;
+	background-color: #dd0000;
 	color: #ff8080;
 	border-radius: 20px;
 	width: 24%;
@@ -35,7 +35,7 @@
 }
 
 .buttons-wrapper button:hover {
-	background: #ff3338;
+	background-color: #ff3338;
 }
 
 #container {

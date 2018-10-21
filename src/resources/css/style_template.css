@@ -174,7 +174,7 @@ footer {
 #notification {
 	display: inline-block;
 	text-align: left;
-	background: #dd0000;
+	background-color: #dd0000;
 	color: #ff8080;
 	font-size: 30px;
 	max-width: 1400px;

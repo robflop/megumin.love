@@ -1,6 +1,6 @@
 #container {
 	width: 320px;
-	background: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.5);
 	margin: 0 auto;
 	padding: 16px;
 	box-sizing: border-box;

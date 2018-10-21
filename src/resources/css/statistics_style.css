@@ -14,7 +14,7 @@ body {
 
 #box {
 	width: 600px;
-	background: #F2E6E6;
+	background-color: #F2E6E6;
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;

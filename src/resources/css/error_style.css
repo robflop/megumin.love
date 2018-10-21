@@ -20,7 +20,7 @@ p > a {
 
 #box {
 	width: 600px;
-	background: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;

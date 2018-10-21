@@ -40,7 +40,7 @@ label[for="bg-select"], select[id="bg-select"] {
 #container {
 	width: 1175px;
 	margin: 0 auto;
-	background: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.5);
 	padding: 16px;
 	box-sizing: border-box;
 	border-radius: 20px;
