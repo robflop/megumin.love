@@ -20,7 +20,7 @@
 #login-res {
 	display: none;
 	font-size: 16px;
-	color: red;
+	color: #dd0000;
 }
 
 /* No media queries needed as container is only 320px wide */

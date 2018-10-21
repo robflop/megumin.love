@@ -68,7 +68,7 @@ label[for="bg-select"], select[id="bg-select"] {
 #upload-res, #delete-res, #rename-res {
 	display: none;
 	font-size: 16px;
-	color: red;
+	color: #dd0000;
 }
 
 #delete-confirm-wrapper label {
