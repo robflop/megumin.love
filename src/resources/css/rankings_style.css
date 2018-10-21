@@ -28,11 +28,11 @@
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
 }
 
-#warning {
+#warning { /* Warning element is created when no sounds are available */
 	text-align:center;
 	width: 100%;
-	background-color:rgba(96,96,96,1);
-	color:rgba(56,56,56,1);
+	background-color:#606060;
+	color:#383838;
 	box-shadow: initial;
 }
 

@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		else {
 			button.style.fontSize = '40px';
-			button.style.backgroundColor = 'rgba(96,96,96,1)';
-			button.style.color = 'rgba(56,56,56,1)';
+			button.style.backgroundColor = '#606060';
+			button.style.color = '#383838;';
 			button.innerText === 'No sounds available.';
 			button.disabled = true;
 		}

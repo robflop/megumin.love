@@ -55,10 +55,10 @@
 	visibility: hidden;
 }
 
-#warning {
+#warning { /* Warning element is created when no sounds are available */
 	font-size: 40px;
-	background-color: rgba(96,96,96,1);
-	color: rgba(56,56,56,1);
+	background-color: #606060;
+	color: #383838;
 }
 
 #rankings {
