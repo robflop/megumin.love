@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	const statistics = {};
 	const chartContext = document.getElementById('monthly-chart');
-	const tickArray = [50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000, 100000000];
+	const tickArray = [25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000, 100000000];
 
 	// Establish basic chart model without data
 	const chart = new Chart(chartContext, {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					type: 'logarithmic',
 					ticks: {
 						callback: tick => tick.toLocaleString('de-DE'),
-						min: 30000,
+						min: 25000,
 						max: 100000000
 					},
 					afterBuildTicks: axis => axis.ticks = tickArray
