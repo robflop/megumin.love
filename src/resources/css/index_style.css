@@ -7,7 +7,7 @@
 	text-decoration: none;
 }
 
-#box {
+#container {
 	width: 360px;
 	background-color: rgba(0, 0, 0, 0.5);
 	padding: 16px;
@@ -77,7 +77,7 @@
 		margin-left: 10px;
 	}
 
-	#box {
+	#container {
 		max-width: 300px;
 	}
 

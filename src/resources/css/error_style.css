@@ -22,7 +22,7 @@ a {
 	text-align: center;
 }
 
-#box {
+#container {
 	width: 600px;
 	background-color: rgba(0, 0, 0, 0.7);
 	padding: 16px;
@@ -42,25 +42,25 @@ a {
 }
 
 @media only screen and (max-width: 960px) {
-	#box {
+	#container {
 		max-width: 600px;
 	}
 }
 
 @media only screen and (max-width: 720px) {
-	#box {
+	#container {
 		max-width: 500px;
 	}
 }
 
 @media only screen and (max-width: 490px) {
-	#box {
+	#container {
 		max-width: 400px;
 	}
 }
 
 @media only screen and (max-width: 360px) {
-	#box {
+	#container {
 		max-width: 320px;
 	}
 }
