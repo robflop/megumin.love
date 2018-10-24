@@ -162,6 +162,14 @@ footer {
 	margin: 10px 0 0;
 }
 
+#container {
+	box-sizing: border-box;
+	border-radius: 20px;
+	padding: 16px;
+	margin: 3vh auto 0 auto;
+	height: auto;
+}
+
 #notification-wrapper {
 	position: fixed;
 	top: 10%;

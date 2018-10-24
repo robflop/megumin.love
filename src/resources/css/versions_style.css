@@ -9,13 +9,8 @@
 
 #container {
 	width: 600px;
-	height: auto;
 	background-color: #F2E6E6;
-	margin: 0 auto;
-	padding: 16px;
-	box-sizing: border-box;
 	position: relative;
-	border-radius: 20px;
 }
 
 #header {

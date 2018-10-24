@@ -42,9 +42,6 @@
 	width: 1175px;
 	margin: 20px auto;
 	background-color: rgba(0, 0, 0, 0.5);
-	padding: 16px;
-	box-sizing: border-box;
-	border-radius: 20px;
 }
 
 #container::after {

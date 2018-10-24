@@ -6,10 +6,6 @@
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
-	margin: 3vh auto 0 auto;
-	padding: 16px;
-	box-sizing: border-box;
-	border-radius: 20px;
 }
 
 #container::after {

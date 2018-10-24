@@ -6,36 +6,33 @@ li {
 	margin-top: 10px;
 }
 
-#creditsbox {
+#container {
 	width: 700px;
 	background-color: #F2E6E6;
 	margin: 10vh auto;
-	padding: 16px;
-	box-sizing: border-box;
 	position: relative;
-	border-radius: 20px;
 }
 
 @media only screen and (max-width: 960px) {
-	#creditsbox {
+	#container {
 		max-width: 500px;
 	}
 }
 
 @media only screen and (max-width: 720px) {
-	#creditsbox {
+	#container {
 		max-width: 400px;
 	}
 }
 
 @media only screen and (max-width: 490px) {
-	#creditsbox {
+	#container {
 		max-width: 300px;
 	}
 }
 
 @media only screen and (max-width: 360px) {
-	#creditsbox {
+	#container {
 		max-width: 200px;
 	}
 }

@@ -15,9 +15,6 @@ body {
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
-	padding: 16px;
-	box-sizing: border-box;
-	border-radius: 20px;
 	margin: 50px auto;
 }
 
