@@ -15,7 +15,6 @@ body {
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
-	margin: 50px auto;
 }
 
 #container :nth-last-child(2).statistics {

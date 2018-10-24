@@ -9,8 +9,6 @@ li {
 #container {
 	width: 700px;
 	background-color: #F2E6E6;
-	margin: 10vh auto;
-	position: relative;
 }
 
 @media only screen and (max-width: 960px) {
