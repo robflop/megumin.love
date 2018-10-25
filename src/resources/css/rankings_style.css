@@ -1,3 +1,7 @@
+footer {
+	bottom: -50px;
+}
+
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
@@ -29,10 +33,6 @@
 #rankings-wrap ol > li {
 	margin-top: 10px;
 	text-align: center;
-}
-
-footer {
-	bottom: -50px;
 }
 
 @media only screen and (max-width: 960px) {

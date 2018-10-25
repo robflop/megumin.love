@@ -1,3 +1,38 @@
+button {
+	font-size: 65px;
+	background-color: #ab0000;
+	color: #ff8080;
+	border-radius: 20px;
+	width: 100%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	margin: 10px 0;
+}
+
+button:focus {
+	outline: 0;
+}
+
+button:hover {
+	background-color: #ff3338;
+}
+
+a[href="/versions"] {
+	color: #dd0000;
+	display: inline-block;
+}
+
+a[href="/soundboard"], a[href="/statistics"] {
+	color: #dd0000;
+}
+
+a[href="/soundboard"] {
+	margin-left: 50px;
+}
+
+a[href="/statistics"] {
+	margin-left: 65px;
+}
+
 .share-buttons img {
 	height: 24px;
 	width: 24px;
@@ -22,29 +57,6 @@
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
-#container button {
-	font-size: 65px;
-	background-color: #ab0000;
-	color: #ff8080;
-	border-radius: 20px;
-	width: 100%;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
-	margin: 10px 0;
-}
-
-#container button:focus {
-	outline: 0;
-}
-
-#container button:hover {
-	background-color: #ff3338;
-}
-
-a[href="/versions"] {
-	color: #dd0000;
-	display: inline-block;
-}
-
 #versions-social-anchors {
 	margin-bottom: 20px;
 }
@@ -53,18 +65,6 @@ a[href="/versions"] {
 	display: inline-block;
 	vertical-align: middle;
 	margin-left: 185px;
-}
-
-a[href="/soundboard"], a[href="/statistics"] {
-	color: #dd0000;
-}
-
-a[href="/soundboard"] {
-	margin-left: 50px;
-}
-
-a[href="/statistics"] {
-	margin-left: 65px;
 }
 
 /* Only 360px needs adjustment, since container is 360px wide */

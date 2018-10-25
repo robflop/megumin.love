@@ -1,3 +1,8 @@
+form, #login-res {
+	text-align: center;
+	display: inline-block;
+}
+
 #container {
 	width: 320px;
 	background-color: rgba(0, 0, 0, 0.5);
@@ -6,11 +11,6 @@
 #backlink-top {
 	display: inline-block;
 	margin-right: 10px;
-}
-
-form, #login-res {
-	text-align: center;
-	display: inline-block;
 }
 
 #login-res {

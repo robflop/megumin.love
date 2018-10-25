@@ -1,4 +1,4 @@
-ol {
+a[href="/rankings"] {
 	color: #dd0000;
 	text-align: center;
 	display: block;
@@ -67,15 +67,6 @@ footer {
 	font-size: 40px;
 	background-color: #606060;
 	color: #383838;
-}
-
-a[href="/rankings"] {
-	color: #dd0000;
-	text-align: center;
-	display: block;
-	font-size: 30px;
-	margin: 0 auto;
-	width: 130px;
 }
 
 @media only screen and (max-width: 960px) {
