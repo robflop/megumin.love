@@ -1,8 +1,3 @@
-.header {
-	text-decoration: underline;
-	text-align: center;
-}
-
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
@@ -20,13 +15,12 @@
 	background-color: #dd0000;
 	color: #ff8080;
 	border-radius: 20px;
-	width: 40%;
 	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	font-size:48px;
+	text-align:center;
 }
 
 #warning { /* Warning element is created when no sounds are available */
-	text-align:center;
-	width: 100%;
 	background-color:#606060;
 	color:#383838;
 	box-shadow: initial;

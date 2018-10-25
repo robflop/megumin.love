@@ -47,16 +47,16 @@
 		</div>
 
 		<div id="container">
-			<button id="logout">Logout</button>
 			<div id="backlink-top">
-				<a class="backlink" href="/">Back</a>
+				<a class="backlink-anchor" href="/">Back</a>
 			</div>
+			<button id="logout">Logout</button>
 			<h1 class="titles">megumin.love Admin Panel</h1>
 			<div id="panel">
 				<div id="upload">
 					<h2 class="titles">Sound upload</h2>
 					<form id="upload-form" enctype="multipart/form-data" method="post">
-						<input type="file" id="files" name="files" accept="audio/ogg, audio/mp3" multiple required>
+						<input type="file" name="files" accept="audio/ogg, audio/mp3" multiple required>
 						<input type="text" name="filename" placeholder="Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname" required>
 						<input type="text" name="source" placeholder="Sound source" required>
@@ -84,7 +84,7 @@
 							<!-- Automatically generated -->
 						</select>
 						<div id="delete-confirm-wrapper">
-							<label for="delete-checkbox">
+							<label for="delete-confirmation">
 								<input type="checkbox" name="delete-confirmation" required>
 								Confirm deletion
 							</label>
@@ -95,7 +95,7 @@
 				</div>
 			</div>
 			<div id="backlink-bottom">
-				<a class="backlink" href="/">Back</a>
+				<a class="backlink-anchor" href="/">Back</a>
 			</div>
 		</div>
 
@@ -118,8 +118,8 @@
 				</p>
 				<p>Also check out the <a href="https://discord.gg/v3fghcV">r/megumin Discord server</a>.</p>
 				<hr>
-				<form id="config">
-					<div id="bg-select-wrapper">
+				<form>
+					<div>
 						<label for="bg-select">Background selection:</label>
 						<select name="bg-select" id="bg-select">
 							<!-- Options are auto-generated -->
@@ -127,7 +127,7 @@
 						<p>(You may need to refresh the page.)</p>
 					</div>
 					<hr>
-					<div id="crazymode-toggle-wrapper">
+					<div>
 						<label for="crazymode-toggle">Crazy Mode?:</label>
 						<input name="crazymode-toggle" id="crazymode-toggle" type="checkbox">
 						<p>(Play sound when others click any button)</p>
@@ -141,7 +141,7 @@
 			</div>
 		</div>
 		<footer>
-			<p>Created and maintained by robflop. <a id="credits" href="/credits">Full Credits here.</a></p>
+			<p>Created and maintained by robflop. <a href="/credits">Full Credits here.</a></p>
 		</footer>
 
 		<script src="/js/googleanalytics.min.js" async></script>

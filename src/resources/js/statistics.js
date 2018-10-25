@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	const statistics = {};
-	const chartContext = document.getElementById('monthly-chart');
+	const chartContext = document.getElementsByTagName('canvas')[0];
 	const tickArray = [25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000, 100000000];
 
 	// Establish basic chart model without data

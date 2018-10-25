@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (s.length === 0) {
 			return container.innerHtml = `
-			<div id="backlink-top"><a class="backlink" href="/">Back</a></div>
-			<a id="rankings" href="/rankings">Rankings</a>
+			<div><a class="backlink-anchor" href="/">Back</a></div>
+			<a href="/rankings">Rankings</a>
 			<p id="warning" class="titles" style="font-size:50px">No sounds available.</p>
-			<div id="backlink-bottom"><a class="backlink" href="/">Back</a></div>
+			<div id="backlink-bottom"><a class="backlink-anchor" href="/">Back</a></div>
 			`;
 		}
 

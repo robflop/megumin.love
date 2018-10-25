@@ -1,23 +1,19 @@
-.version-box h2 {
+div h2 {
 	margin-bottom: 5px;
 }
 
-.version-box ul {
+div ul {
 	margin: 0;
 	padding-left: 20px;
+}
+
+footer {
+	bottom: -50px;
 }
 
 #container {
 	width: 600px;
 	background-color: #F2E6E6;
-}
-
-#header {
-	text-decoration: underline;
-}
-
-footer {
-	bottom: -50px;
 }
 
 @media only screen and (max-width: 960px) {

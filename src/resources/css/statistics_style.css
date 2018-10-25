@@ -2,6 +2,10 @@ body {
 	vertical-align: baseline;
 }
 
+canvas {
+	padding: 0;
+}
+
 .statistics {
 	margin: 0;
 	font-size: 25px;
@@ -17,22 +21,13 @@ body {
 	background-color: #F2E6E6;
 }
 
-#container :nth-last-child(2).statistics {
+#container :nth-last-child(2) {
 	border-style: none;
-}
-
-#header {
-	text-decoration: underline;
-	text-align: center;
 }
 
 #chart-wrapper {
 	width: 568px;
 	height: 285px;
-}
-
-#monthly-chart {
-	padding: 0;
 }
 
 @media only screen and (max-width: 960px) {

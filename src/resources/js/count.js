@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let howlerList = {};
 
 	function toggleButton() {
-		const button = document.getElementById('button');
+		const button = document.getElementsByTagName('button')[0];
 
 		if (button.innerText === 'No sounds available.') {
 			button.innerText = 'やめろ!!';
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function loadSounds(s) {
-		const button = document.getElementById('button');
+		const button = document.getElementsByTagName('button')[0];
 		howlerList = {}; // Wipe before (re)load
 
 		for (const sound of sounds) {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 				});
 
-				document.getElementById('button').addEventListener('click', e => {
+				document.getElementsByTagName('button')[0].addEventListener('click', e => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
 					ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	});
 
-	document.getElementById('button').addEventListener('keypress', e => {
+	document.getElementsByTagName('button')[0].addEventListener('keypress', e => {
 		if (e.key === 'Enter') return e.preventDefault();
 	});
 });

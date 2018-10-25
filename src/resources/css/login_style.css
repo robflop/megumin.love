@@ -8,7 +8,7 @@
 	margin-right: 10px;
 }
 
-#login, #login-res {
+form, #login-res {
 	text-align: center;
 	display: inline-block;
 }

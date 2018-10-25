@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	document.getElementById('login').addEventListener('submit', e => {
+	document.getElementsByTagName('form')[0].addEventListener('submit', e => {
 		const token = e.target[0].value;
 
 		fetch('/api/login', {

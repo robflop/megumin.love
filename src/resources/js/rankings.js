@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 
 	const updateRanking = s => {
-		const rankings = document.getElementById('rankings');
+		const rankings = document.getElementsByTagName('ol')[0];
 		s = s.sort((a, b) => b.count - a.count);
 
 		while (rankings.hasChildNodes()) rankings.removeChild(rankings.lastChild);

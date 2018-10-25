@@ -17,6 +17,18 @@ body {
 	font-family: "Open Sans", sans-serif;
 }
 
+body.bg1_halloween footer p, body.bg1_halloween footer a {
+	color: gray; /* TODO: needs changing */
+}
+
+body.bg1_independence footer p, body.bg1_independence footer a {
+	color: #000000;
+}
+
+form p {
+	text-align: center;
+}
+
 img {
 	backface-visibility: hidden;
 	transform: translateZ(0);
@@ -27,6 +39,9 @@ footer {
 	bottom: 0;
 	font-family: "Courgette", cursive;
 	margin-left: 10px;
+}
+
+footer p, footer a {
 	color: azure;
 }
 
@@ -82,7 +97,17 @@ footer {
 	background-image: url('/images/backgrounds/bg1_birthday.jpg');
 }
 
-.backlink {
+.titles {
+	margin: 0 auto;
+	text-align: center;
+	background-color: #dd0000;
+	color: #ff8080;
+	border-radius: 15px;
+	width: 55%;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+}
+
+.backlink-anchor {
 	color: #dd0000;
 }
 
@@ -190,7 +215,8 @@ footer {
 	border-radius: 10px;
 }
 
-form#config p {
+#header {
+	text-decoration: underline;
 	text-align: center;
 }
 
@@ -201,10 +227,6 @@ form#config p {
 #crazymode-warning {
 	font-style: italic;
 	color: #dd0000;
-}
-
-#credits {
-	color: azure;
 }
 
 #backlink-bottom {

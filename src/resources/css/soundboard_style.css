@@ -1,15 +1,18 @@
-.source-wrapper {
-	margin-top: 25px;
+ol {
+	color: #dd0000;
+	text-align: center;
+	display: block;
+	font-size: 30px;
+	margin: 0 auto;
+	width: 130px;
 }
 
-.titles {
-	margin: 0 auto;
-	text-align: center;
-	background-color: #dd0000;
-	color: #ff8080;
-	border-radius: 15px;
-	width: 50%;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+footer {
+	bottom: -50px;
+}
+
+.source-wrapper {
+	margin-top: 25px;
 }
 
 .buttons-wrapper {
@@ -20,7 +23,7 @@
 	margin-top: 10px;
 }
 
-.buttons-wrapper button, #loading {
+.buttons-wrapper button {
 	margin-top: 10px;
 	font-size: 35px;
 	background-color: #dd0000;
@@ -51,23 +54,28 @@
 	visibility: hidden;
 }
 
+#loading {
+	background-color: #dd0000;
+	color: #ff8080;
+	border-radius: 20px;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	font-size:48px;
+	text-align:center;
+}
+
 #warning { /* Warning element is created when no sounds are available */
 	font-size: 40px;
 	background-color: #606060;
 	color: #383838;
 }
 
-#rankings {
+a[href="/rankings"] {
 	color: #dd0000;
 	text-align: center;
 	display: block;
 	font-size: 30px;
 	margin: 0 auto;
 	width: 130px;
-}
-
-footer {
-	bottom: -50px;
 }
 
 @media only screen and (max-width: 960px) {
