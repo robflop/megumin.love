@@ -1,22 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
+	const currentYear = new Date().getFullYear();
+
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
-	const seasonalBackgrounds = [
-		{ filename: 'bg1_independence', displayName: 'Independence Day', month: 7 },
-		{ filename: 'bg1_christmas', displayName: 'Christmas', month: 12 },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', month: 10 },
-		{ filename: 'bg1_easter', displayName: 'Easter', month: 4 },
-		// { filename: 'bg1_birthday', displayName: 'Birthday', month: 1 } // No canon confirmation of the month, January is speculation
+	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December; Epoch year because year is irrelevant but needed in constructor
+		{ filename: 'bg1_independence', displayName: 'Independence Day', start: new Date(currentYear, 6, 10), end: new Date(currentYear, 6, 16) },
+		{ filename: 'bg1_christmas', displayName: 'Christmas', start: new Date(currentYear, 11, 15), end: new Date(currentYear, 11, 27) },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', start: new Date(currentYear, 9, 24), end: new Date(currentYear, 10, 3) },
+		{ filename: 'bg1_easter', displayName: 'Easter', start: new Date(currentYear, 3, 150), end: new Date(currentYear, 3, 28) },
+		// { filename: 'bg1_birthday', displayName: 'Birthday', start: new Date(currentYear, 3, 150), end: new Date(currentYear, 3, 28) }
+		// No canon confirmation of the birthday month, January is speculation
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
+	let preferSeasonals = localStorage.getItem('preferSeasonals');
+
 	const bodyElem = document.getElementsByTagName('body')[0];
 	const bgSelect = document.getElementById('bg-select');
+	const preferSeasonalsToggle = document.getElementById('prefer-seasonals-toggle');
 
-	if (!backgroundSetting) {
-		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => sBg.month === new Date().getMonth() + 1);
+	if (!backgroundSetting || preferSeasonals) {
+		const currentDate = new Date();
+
+		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => currentDate >= sBg.start && currentDate <= sBg.end);
 		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
 		else backgroundSetting = 'randomBg';
 	}
@@ -47,6 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	bgSelect.innerHTML = bgOptions.join('');
 	bgSelect.value = backgroundSetting;
 
+	preferSeasonalsToggle.checked = preferSeasonals;
+	preferSeasonalsToggle.addEventListener('change', e => {
+		if (e.target.checked) localStorage.setItem('preferSeasonals', true);
+		else localStorage.removeItem('preferSeasonals');
+
+		return preferSeasonals = e.target.checked;
+	});
+
 	/* Crazy mode */
 
 	const crazyModeToggle = document.getElementById('crazymode-toggle');
@@ -54,8 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	crazyModeToggle.checked = crazyMode;
 	crazyModeToggle.addEventListener('change', e => {
-		if (!e.target.checked) localStorage.removeItem('crazyMode');
-		else localStorage.setItem('crazyMode', true);
+		if (e.target.checked) localStorage.setItem('crazyMode', true);
+		else localStorage.removeItem('crazyMode');
 
 		return crazyMode = e.target.checked;
 	});
