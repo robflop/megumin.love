@@ -1,54 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
-	const currentYear = new Date().getFullYear();
+	const currentDate = new Date();
+	const setDate = (month, day) => new Date(currentDate.getFullYear(), month, day);
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
 	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December
-		{ filename: 'bg1_independence', displayName: 'Independence Day', start: new Date(currentYear, 6, 10), end: new Date(currentYear, 6, 16) },
-		{ filename: 'bg1_christmas', displayName: 'Christmas', start: new Date(currentYear, 11, 15), end: new Date(currentYear, 11, 27) },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', start: new Date(currentYear, 9, 24), end: new Date(currentYear, 10, 3) },
-		{ filename: 'bg1_easter', displayName: 'Easter', start: new Date(currentYear, 3, 15), end: new Date(currentYear, 3, 28) },
-		// { filename: 'bg1_birthday', displayName: 'Birthday', start: new Date(currentYear, 0, 15), end: new Date(currentYear, 0, 28) }
+		{ filename: 'bg1_independence', displayName: 'Independence Day', start: setDate(6, 10), end: setDate(6, 16) },
+		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3) },
+		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28) },
+		// { filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(0, 15), end: setDate(0, 28) }
 		// No canon confirmation of the birthday month, January is speculation
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	let preferSeasonals = localStorage.getItem('preferSeasonals');
 
-	const bodyElem = document.getElementsByTagName('body')[0];
+	const bodyElem = document.body;
 	const bgSelect = document.getElementById('bg-select');
 	const preferSeasonalsToggle = document.getElementById('prefer-seasonals-toggle');
 
 	if (!backgroundSetting || preferSeasonals) {
-		const currentDate = new Date();
-
 		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => currentDate >= sBg.start && currentDate <= sBg.end);
 		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
 		else if (!backgroundSetting) backgroundSetting = 'randomBg'; // Only applies when there is no preference & no seasonal
 	}
 
-	if (backgroundSetting !== 'randomBg') bodyElem.classList.add(backgroundSetting);
-	else bodyElem.classList.add(randomBg);
+	bodyElem.classList.add(backgroundSetting !== 'randomBg' ? backgroundSetting : randomBg);
 
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
 
 	bgSelect.addEventListener('change', e => {
-		if (e.target.value === 'reset') {
+		const { value } = e.target;
+
+		if (value === 'reset') {
 			return localStorage.removeItem('background');
 		}
-		if (e.target.value !== 'randomBg') {
+		if (value !== 'randomBg') {
 			bodyElem.classList.remove(currentBg);
-			bodyElem.classList.add(e.target.value);
+			bodyElem.classList.add(value);
 
-			currentBg = e.target.value;
+			currentBg = value;
 		}
-		return localStorage.setItem('background', e.target.value);
+		return localStorage.setItem('background', value);
 	});
 
-	let bgOptions = backgrounds.map(bg => `<option value=${bg}>Background ${bg.substr(2)}</option>`);
-	bgOptions = bgOptions.concat(seasonalBackgrounds.map(seasonal => `<option value=${seasonal.filename}>${seasonal.displayName}</option>`));
+	const bgOptions = backgrounds.map(bg => `<option value="${bg}">Background ${bg.substr(2)}</option>`);
+	bgOptions.push(seasonalBackgrounds.map(seasonal => `<option value="${seasonal.filename}">${seasonal.displayName}</option>`));
 	bgOptions.unshift('<option value="randomBg">Random (Default)</option>');
 	bgOptions.unshift('<option value="reset">Reset Preference</option>');
 
