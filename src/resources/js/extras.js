@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
-	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December; Epoch year because year is irrelevant but needed in constructor
+	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December
 		{ filename: 'bg1_independence', displayName: 'Independence Day', start: new Date(currentYear, 6, 10), end: new Date(currentYear, 6, 16) },
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: new Date(currentYear, 11, 15), end: new Date(currentYear, 11, 27) },
 		{ filename: 'bg1_halloween', displayName: 'Halloween', start: new Date(currentYear, 9, 24), end: new Date(currentYear, 10, 3) },
