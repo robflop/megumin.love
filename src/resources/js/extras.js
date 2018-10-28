@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_independence', displayName: 'Independence Day', start: new Date(currentYear, 6, 10), end: new Date(currentYear, 6, 16) },
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: new Date(currentYear, 11, 15), end: new Date(currentYear, 11, 27) },
 		{ filename: 'bg1_halloween', displayName: 'Halloween', start: new Date(currentYear, 9, 24), end: new Date(currentYear, 10, 3) },
-		{ filename: 'bg1_easter', displayName: 'Easter', start: new Date(currentYear, 3, 150), end: new Date(currentYear, 3, 28) },
-		// { filename: 'bg1_birthday', displayName: 'Birthday', start: new Date(currentYear, 3, 150), end: new Date(currentYear, 3, 28) }
+		{ filename: 'bg1_easter', displayName: 'Easter', start: new Date(currentYear, 3, 15), end: new Date(currentYear, 3, 28) },
+		// { filename: 'bg1_birthday', displayName: 'Birthday', start: new Date(currentYear, 0, 15), end: new Date(currentYear, 0, 28) }
 		// No canon confirmation of the birthday month, January is speculation
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
