@@ -1,35 +1,35 @@
+const compressor = require('node-minify');
+const { readdirSync } = require('fs');
+const { basename, join } = require('path');
+
+const resources = (...dir) => join(...[__dirname, 'src', 'resources'].concat(dir));
+
+const Logger = require(resources('js', 'Logger'));
+
 function minifyAssets() {
-	const compressor = require('node-minify');
-	const { readdirSync } = require('fs');
-	const { join } = require('path');
-	const Logger = require(join(__dirname, './src/resources/js/Logger'));
+	const cssPath = resources('css');
+	const cssFiles = readdirSync(cssPath).filter(f => !f.endsWith('.min.css'));
 
-	const cssFiles = readdirSync(join(__dirname, './src/resources/css'))
-		.filter(f => !f.endsWith('.min.css'));
-	const cssPath = join(__dirname, './src/resources/css/');
+	const jsPath = resources('js');
+	const jsFiles = readdirSync(jsPath).filter(f => !f.endsWith('.min.js'));
 
-	const jsFiles = readdirSync(join(__dirname, './src/resources/js'))
-		.filter(f => !f.endsWith('.min.js'));
 	jsFiles.splice(0, 1); // Remove eslintrc
-	const jsPath = join(__dirname, './src/resources/js/');
 
-	cssFiles.forEach(fullFilename => {
-		const noExtFilename = fullFilename.substr(0, fullFilename.indexOf('.css'));
+	cssFiles.forEach(fileName => {
 		compressor.minify({
 			compressor: 'clean-css',
-			input: `${cssPath}${fullFilename}`,
-			output: `${cssPath}${noExtFilename}.min.css`
+			input: join(cssPath, fileName),
+			output: join(cssPath, `${basename(fileName, '.css')}.min.css`),
 		});
 	});
 
 	Logger.info('CSS minification complete.');
 
-	jsFiles.forEach(fullFilename => {
-		const noExtFilename = fullFilename.substr(0, fullFilename.indexOf('.js'));
+	jsFiles.forEach(fileName => {
 		compressor.minify({
 			compressor: 'uglify-es',
-			input: `${jsPath}${fullFilename}`,
-			output: `${jsPath}${noExtFilename}.min.js`
+			input: join(jsPath, fileName),
+			output: join(jsPath, `${basename(fileName, '.js')}.min.js`),
 		});
 	});
 
