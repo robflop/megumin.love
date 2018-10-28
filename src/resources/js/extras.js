@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => currentDate >= sBg.start && currentDate <= sBg.end);
 		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
-		else backgroundSetting = 'randomBg';
+		else if (!backgroundSetting) backgroundSetting = 'randomBg'; // Only applies when there is no preference & no seasonal
 	}
 
 	if (backgroundSetting !== 'randomBg') bodyElem.classList.add(backgroundSetting);
