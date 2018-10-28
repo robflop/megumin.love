@@ -71,7 +71,18 @@ const http = require('http').Server(server);
 
 const pagePath = join(__dirname, '/pages');
 const errorPath = join(pagePath, '/errorTemplates');
-const pages = [];
+const pages = [
+	{
+		name: 'robots.txt',
+		path: join(pagePath, 'robots.txt'),
+		route: '/robots.txt'
+	},
+	{
+		name: 'sitemap.xml',
+		path: join(pagePath, 'sitemap.xml'),
+		route: '/sitemap.xml'
+	}
+];
 
 readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
 	const pageName = file.slice(0, -5).toLowerCase(); // -5 for cutting '.html'

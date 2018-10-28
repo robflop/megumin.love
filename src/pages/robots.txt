@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /admin
+Disallow: /api
+
+Sitemap: https://megumin.love/sitemap.xml
