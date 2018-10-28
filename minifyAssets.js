@@ -18,8 +18,8 @@ function minifyAssets() {
 	cssFiles.forEach(fileName => {
 		compressor.minify({
 			compressor: 'clean-css',
-			input: `${cssPath}${fileName}`,
-			output: `${cssPath}${basename(fileName, '.css')}.min.css`
+			input: join(cssPath, fileName),
+			output: join(cssPath, `${basename(fileName, '.css')}.min.css`),
 		});
 	});
 
@@ -28,8 +28,8 @@ function minifyAssets() {
 	jsFiles.forEach(fileName => {
 		compressor.minify({
 			compressor: 'uglify-es',
-			input: `${jsPath}${fileName}`,
-			output: `${jsPath}${basename(fileName, '.js')}.min.js`
+			input: join(jsPath, fileName),
+			output: join(jsPath, `${basename(fileName, '.js')}.min.js`),
 		});
 	});
 
