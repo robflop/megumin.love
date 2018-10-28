@@ -150,7 +150,7 @@ footer p, footer a {
 }
 
 .sidebar-content h1,
-.sidebar-content h3 {
+.sidebar-content h2 {
 	margin: 0;
 }
 
@@ -160,7 +160,7 @@ footer p, footer a {
 	text-decoration: underline;
 }
 
-.sidebar-content h3 {
+.sidebar-content h2 {
 	font-weight: 400;
 	font-size: inherit;
 }
