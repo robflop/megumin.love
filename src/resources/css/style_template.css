@@ -117,7 +117,7 @@ footer p, footer a {
 	top: 80px;
 	left: -345px;
 	min-width: 330px;
-	min-height: 410px;
+	min-height: 390px;
 	font-family: "Courgette", cursive;
 	transition-duration: 0.3s;
 	border: 4px solid #f9ca65;
@@ -142,7 +142,7 @@ footer p, footer a {
 	flex-direction: column;
 	position: relative;
 	max-width: 310px;
-	max-height: 410px;
+	max-height: 390px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 	overflow-y: auto;
