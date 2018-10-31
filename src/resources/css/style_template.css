@@ -187,6 +187,10 @@ footer p, footer a {
 	margin: 10px 0 0;
 }
 
+.sidebar-content > p {
+	margin: initial;
+}
+
 #container {
 	box-sizing: border-box;
 	border-radius: 20px;
