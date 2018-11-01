@@ -86,11 +86,11 @@ a[href="/statistics"] {
 		margin-left: 95px;
 	}
 
-	#soundboard {
+	a[href="/soundboard"] {
 		margin-left: 30px;
 	}
 
-	#statistics {
+	a[href="/statistics"] {
 		margin-left: 45px;
 	}
 }
