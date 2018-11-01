@@ -12,6 +12,10 @@ li {
 }
 
 @media only screen and (max-width: 960px) {
+	footer {
+		bottom: -50px;
+	}
+
 	#container {
 		max-width: 500px;
 	}
@@ -30,6 +34,10 @@ li {
 }
 
 @media only screen and (max-width: 360px) {
+	footer {
+		bottom: -70px;
+	}
+
 	#container {
 		max-width: 200px;
 	}

@@ -100,6 +100,10 @@ footer {
 }
 
 @media only screen and (max-width: 360px) {
+	footer {
+		bottom: -70px;
+	}
+
 	.buttons-wrapper button, .titles {
 		width: 100%;
 	}
