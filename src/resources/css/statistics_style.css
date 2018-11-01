@@ -30,6 +30,11 @@ canvas {
 	height: 285px;
 }
 
+#mobile-chart-info {
+
+	display: none;
+}
+
 @media only screen and (max-width: 960px) {
 	footer {
 		bottom: -70px;
@@ -47,6 +52,10 @@ canvas {
 }
 
 @media only screen and (max-width: 720px) {
+	.statistics {
+		font-size: 20px;
+	}
+
 	#container {
 		max-width: 400px;
 	}
@@ -59,25 +68,25 @@ canvas {
 }
 
 @media only screen and (max-width: 490px) {
+	.statistics {
+		font-size: 15px;
+	}
+
 	#container {
 		max-width: 300px;
 	}
 
 	#chart-wrapper {
-		max-width: 300px;
-		width: auto;
-		height: auto;
+		display: none;
+	}
+
+	#mobile-chart-info {
+		display: block;
 	}
 }
 
 @media only screen and (max-width: 360px) {
 	#container {
 		max-width: 220px;
-	}
-
-	#chart-wrapper {
-		max-width: 220px;
-		width: auto;
-		height: auto;
 	}
 }
