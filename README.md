@@ -2,8 +2,6 @@
 
 # Megumin.love
 
-[![Build Status](https://travis-ci.org/robflop/megumin.love.svg?branch=master)](https://travis-ci.org/robflop/megumin.love)
-
 A site committed to worshipping best girl Megumin!
 
 Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [uws](https://www.npmjs.com/package/uws).
