@@ -65,8 +65,6 @@ If done via interface then no restart is required, if done manually changes only
 
 - **Using the master branch instead of releases does not guarantee receiving a working version of the website. I work on the site on my own pace and don't always update the master branch to a working state (especially when i am working on new features), so if you want a version that's guaranteed to work, use a release version -- optimally the latest.**
 
-- If upgrading to a new version (*especially a new major, e.g. 4.x -> 5.x*), be sure to check if the release notes mention anything regarding changes that need to be made to the database as well as having a look at the [Upgrading](https://github.com/robflop/megumin.love/blob/master/Upgrading.md) page. If something like that is needed instructions on how to adjust the database will be given, be sure to follow those.
-
 - If you add to the errorTemplates, you will have to create the actual html files for these in the `src/pages/errorTemplates/` folder as well, otherwise this setting will not take effect.
 
 - Update interval in the config represents minutes, following the cronjob syntax, so the max value is 60 (meaning once every hour).
