@@ -7,19 +7,20 @@ A site committed to worshipping best girl Megumin!
 Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [uws](https://www.npmjs.com/package/uws).
 
 ## Self-hosting Usage
-- Navigate into the folder you downloaded the repo to
+- Navigate into the folder you cloned the repo to
 - Rename `src/config.sample.json` to `src/config.json`
 - *Recommended, but not needed*: Rename `src/db/default.db` to a name of your choosing (take care to change the config appropriately)
-  - **Your database may be overwritten** by the default one if you keep the default filename and try updating the website in the future.
+  - **Your database may be overwritten** by the default one if you keep the original filename and try updating the website in the future.
 - Open the `config.json` file and configure the website's settings (**Make sure to change the admin token and session secret**)
 - Run `npm install` in a terminal to install dependencies
-- Navigate into the `src` folder (to set the working directory properly)
-- Start the website using `node server.js` (or `pm2 start server.js` if you use pm2)
+- Navigate into the `src` folder if you aren't already in it to set the working directory properly
+- Boot up the website's server at `server.js`
 - Click!
 
 ## Updating the website
-- Always check by the [Upgrading](https://github.com/robflop/megumin.love/blob/master/Upgrading.md) file for instructions on adding new sounds and migration notices.
-- In addition, read the relevant release notes in the GitHub releases section.
+- When a new version adds default sounds, you will need to follow some instructions to add these to your existing database
+- Read the [Updating](https://github.com/robflop/megumin.love/blob/master/Updating.md) guidelines for instructions on how to do so
+- In addition, read the relevant release notes in the GitHub releases section carefully for additional notices (esp. for breaking versions).
 
 ### Adding custom sounds
 
