@@ -37,7 +37,7 @@ db.serialize(() => {
 	// Insert statistics entry for the boot day if it does not exist
 
 	db.all('SELECT * FROM statistics', [], (selectErr, rows) => {
-		const startOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 }), endOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 });
+		const startOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 }), endOfBootWeek = dateFns.endOfWeek(new Date(), { weekStartsOn: 1 });
 		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
 		const startOfBootYear = dateFns.startOfYear(new Date()), endOfBootYear = dateFns.endOfYear(new Date());
 
