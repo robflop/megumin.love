@@ -69,6 +69,12 @@ footer {
 	color: #383838;
 }
 
+#survey, #survey a {
+	color: #ff8080;
+	text-align: center;
+	font-size: 20px;
+}
+
 @media only screen and (max-width: 960px) {
 	.buttons-wrapper button {
 		width: 47%;
@@ -76,6 +82,11 @@ footer {
 
 	#container {
 		max-width: 700px;
+	}
+
+	#survey {
+		width: 480px;
+		margin: auto;
 	}
 }
 
@@ -87,6 +98,11 @@ footer {
 	#container {
 		max-width: 600px;
 	}
+
+	#survey {
+		width: 400px;
+		margin: auto;
+	}
 }
 
 @media only screen and (max-width: 490px) {
@@ -96,6 +112,11 @@ footer {
 
 	#container {
 		max-width: 400px;
+	}
+
+	#survey {
+		width: 200px;
+		margin: auto;
 	}
 }
 
