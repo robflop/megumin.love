@@ -75,6 +75,29 @@ footer {
 	font-size: 20px;
 }
 
+@media only screen and (max-width: 1440px) {
+	.buttons-wrapper button {
+		font-size: 30px;
+	}
+
+
+	#container {
+		max-width: 1000px;
+	}
+}
+
+
+@media only screen and (max-width: 1366px) {
+	.buttons-wrapper button {
+		font-size: 28px;
+	}
+
+
+	#container {
+		max-width: 960px;
+	}
+}
+
 @media only screen and (max-width: 960px) {
 	.buttons-wrapper button {
 		width: 47%;

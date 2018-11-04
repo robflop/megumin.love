@@ -237,8 +237,27 @@ footer p, footer a {
 	text-align: right;
 }
 
-@media only screen and (max-width: 960px) {
-	/* Nothing yet */
+@media only screen and (max-width: 1366px) {
+	.megu-sidebar {
+		min-width: 280px;
+		left: -288px;
+	}
+
+	.hangumin {
+		right: -228px;
+		top: -39px;
+		height: 380px;
+		width: 257px;
+	}
+
+	.sidebar-content {
+		max-width: 260px;
+		font-size: 12px;
+	}
+
+	.sidebar-content h1 {
+		font-size: 1.1rem;
+	}
 }
 
 @media only screen and (max-width: 720px) {

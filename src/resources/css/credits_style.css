@@ -11,6 +11,12 @@ li {
 	background-color: #F2E6E6;
 }
 
+@media only screen and (max-width: 1366px) {
+	footer {
+		bottom: -30px;
+	}
+}
+
 @media only screen and (max-width: 960px) {
 	footer {
 		bottom: -50px;
