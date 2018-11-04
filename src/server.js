@@ -37,8 +37,7 @@ db.serialize(() => {
 	// Insert statistics entry for the boot day if it does not exist
 
 	db.all('SELECT * FROM statistics', [], (selectErr, rows) => {
-		const startOfBootWeek = dateFns.addDays(dateFns.startOfWeek(new Date()), 1), endOfBootWeek = dateFns.addDays(dateFns.endOfWeek(new Date()), 1);
-		// Add 1 day because I don't believe sunday to be the start of the week
+		const startOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 }), endOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 });
 		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
 		const startOfBootYear = dateFns.startOfYear(new Date()), endOfBootYear = dateFns.endOfYear(new Date());
 
@@ -650,7 +649,7 @@ schedule('0 0 * * 1', () => {
 			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
 		},
 	});
-}); // Reset weekly counter at the start of each week (1 = monday)
+}); // Reset weekly counter at the start of each week
 
 schedule('0 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
