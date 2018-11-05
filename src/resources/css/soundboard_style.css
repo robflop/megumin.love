@@ -37,8 +37,18 @@ footer {
 	outline: 0;
 }
 
-.buttons-wrapper button:hover {
+.buttons-wrapper button:hover, .playall:hover {
 	background-color: #ff3338;
+}
+
+.playall {
+	display: block;
+	margin: 5px auto;
+	font-size: 15px;
+	background-color: #d00;
+	color: #ff8080;
+	border-radius: 20px;
+	width: 10%;
 }
 
 #container {
@@ -80,6 +90,9 @@ footer {
 		font-size: 30px;
 	}
 
+	.playall {
+		font-size: 18px;
+	}
 
 	#container {
 		max-width: 1000px;
@@ -92,6 +105,9 @@ footer {
 		font-size: 28px;
 	}
 
+	.playall {
+		font-size: 16px;
+	}
 
 	#container {
 		max-width: 960px;
@@ -101,6 +117,10 @@ footer {
 @media only screen and (max-width: 960px) {
 	.buttons-wrapper button {
 		width: 47%;
+	}
+
+	.playall {
+		width: 15%;
 	}
 
 	#container {
@@ -118,6 +138,10 @@ footer {
 		width: 49%;
 	}
 
+	.playall {
+		width: 15%;
+	}
+
 	#container {
 		max-width: 600px;
 	}
@@ -131,6 +155,10 @@ footer {
 @media only screen and (max-width: 490px) {
 	.buttons-wrapper button {
 		width: 100%;
+	}
+
+	.playall {
+		width: 20%;
 	}
 
 	#container {
@@ -150,6 +178,10 @@ footer {
 
 	.buttons-wrapper button, .titles {
 		width: 100%;
+	}
+
+	.playall {
+		width: 30%;
 	}
 
 	#container {

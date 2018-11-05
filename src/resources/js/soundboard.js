@@ -54,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				sourceWrapper.appendChild(sourceTitle);
 
+				const playAll = document.createElement('button');
+				playAll.classList.add('playall');
+				playAll.id = `pa-${sourceName}`;
+				playAll.innerText = 'Play all';
+
+				sourceWrapper.appendChild(playAll);
+
 				buttonsWrapper = document.createElement('div'); // Redefined from above check
 				buttonsWrapper.classList.add('buttons-wrapper');
 				buttonsWrapper.id = `${sourceName}-buttons`;
@@ -67,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					buttonsWrapper.appendChild(soundButton);
 				}
+
+				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
+					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
+						howlerList[snd.filename].play();
+					});
+				});
 			}
 
 			if (sound.filename === 'name') {
