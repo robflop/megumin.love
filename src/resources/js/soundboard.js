@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
-	let howlerList = {};
 	let ws;
 
+	/*
+		Due to problems with Chrome/Edge/Others browser cache for the
+		Howler instances, they need to be created and destroyed immediately
+		on play, otherwise if constructed at load and played back from list
+		the respective browser audio will crash and not function until restart
+	*/
+
 	function loadSoundboard(s) {
-		howlerList = {}; // Wipe before (re)load
 		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
 
@@ -27,10 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
-
-			howlerList[sound.filename] = new Howl({
-				src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
-			});
 
 			if (sound.filename === 'realname') continue;
 			// Don't create button for this one
@@ -77,7 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
 					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
-						howlerList[snd.filename].play();
+						const playallHowl = new Howl({
+							src: [`/sounds/${snd.filename}.ogg`, `/sounds/${snd.filename}.mp3`],
+						});
+
+						playallHowl.on('end', () => playallHowl.unload());
+						playallHowl.play();
+
+						// See comment at top for info regarding this way of playing sounds
+
 						return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: snd.filename }));
 					});
 				});
@@ -88,11 +97,25 @@ document.addEventListener('DOMContentLoaded', () => {
 					const rsound = Math.floor(Math.random() * 100) + 1;
 
 					if (rsound === 42) {
-						howlerList.realname.play();
+						const realnameHowl = new Howl({
+							src: ['/sounds/realname.ogg', '/sounds/realname.mp3'],
+						});
+						realnameHowl.on('end', () => realnameHowl.unload());
+						realnameHowl.play();
+
+						// See comment at top for info regarding this way of playing sounds
+
 						ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 					}
 					else {
-						howlerList.name.play();
+						const nameHowl = new Howl({
+							src: ['/sounds/name.ogg', '/sounds/name.mp3'],
+						});
+						nameHowl.on('end', () => nameHowl.unload());
+						nameHowl.play();
+
+						// See comment at top for info regarding this way of playing sounds
+
 						ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 					}
 				});
@@ -102,7 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			document.getElementById(sound.filename).addEventListener('click', e => {
-				howlerList[sound.filename].play();
+				const soundButtonHowl = new Howl({
+					src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
+				});
+				soundButtonHowl.on('end', () => soundButtonHowl.unload());
+				soundButtonHowl.play();
+
+				// See comment at top for info regarding this way of playing sounds
+
 				return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 			});
 
@@ -147,7 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 						return loadSoundboard(sounds); // Reload with now-modified sounds array
 					}
 					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
-						return howlerList[data.soundFilename].play();
+						const crazyModeHowl = new Howl({
+							src: [`/sounds/${data.soundFilename}.ogg`, `/sounds/${data.soundFilename}.mp3`],
+						});
+						crazyModeHowl.on('end', () => crazyModeHowl.unload());
+						return crazyModeHowl.play();
+						// See comment at top for info regarding this way of playing sounds
 					}
 					else if (data.type === 'notification' && data.notification) {
 						document.getElementById('notification').innerText = data.notification.text;
