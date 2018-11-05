@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
 					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
 						howlerList[snd.filename].play();
+						return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: snd.filename }));
 					});
 				});
 			}
