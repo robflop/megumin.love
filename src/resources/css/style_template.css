@@ -115,7 +115,7 @@ footer p, footer a {
 	background-color: #a09a9a;
 	position: fixed;
 	top: 80px;
-	left: -345px;
+	left: -347px;
 	min-width: 330px;
 	min-height: 390px;
 	font-family: "Courgette", cursive;
@@ -141,7 +141,7 @@ footer p, footer a {
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	max-width: 310px;
+	max-width: 316px;
 	max-height: 390px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
