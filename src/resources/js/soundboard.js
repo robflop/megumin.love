@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		const container = document.getElementById('container');
 
 		if (s.length === 0) {
-			return container.innerHtml = `
-			<div><a class="backlink-anchor" href="/">Back</a></div>
-			<a href="/rankings">Rankings</a>
-			<p id="warning" class="titles" style="font-size:50px">No sounds available.</p>
-			<div id="backlink-bottom"><a class="backlink-anchor" href="/">Back</a></div>
-			`;
+			const warning = document.createElement('h1');
+			warning.id = 'warning';
+			warning.innerText = 'No sounds available.';
+
+			document.getElementById('loading').remove();
+			return document.getElementById('soundboard').appendChild(warning);
 		}
 
 		const soundboard = document.getElementById('soundboard');

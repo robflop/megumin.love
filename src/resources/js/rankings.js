@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			warning.id = 'warning';
 			warning.innerText = 'No sounds available.';
 
-			return rankings.appendChild(warning);
+			document.getElementById('loading').remove();
+			return document.getElementById('rankings-wrap').appendChild(warning);
 		}
 
 		for (const sound of s) {
