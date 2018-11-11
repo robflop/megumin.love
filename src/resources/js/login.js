@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				else {
 					const loginRes = document.getElementById('login-res');
 
-					loginRes.innerText = `Errorcode ${res.code}: ${res.message}`;
+					loginRes.innerText = `Error ${res.code}: ${res.message}`;
 					util.fade(loginRes, 2000, 0.1);
 				}
 			});
