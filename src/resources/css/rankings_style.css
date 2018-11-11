@@ -15,21 +15,6 @@ footer {
 	visibility: hidden;
 }
 
-#loading, #warning {
-	background-color: #dd0000;
-	color: #ff8080;
-	border-radius: 20px;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
-	font-size:48px;
-	text-align:center;
-}
-
-#warning { /* Warning element is created when no sounds are available */
-	background-color:#606060;
-	color:#383838;
-	box-shadow: initial;
-}
-
 #rankings-wrap ol > li {
 	margin-top: 10px;
 	text-align: center;

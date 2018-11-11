@@ -25,6 +25,22 @@ body.bg1_independence footer p, body.bg1_independence footer a {
 	color: #000000;
 }
 
+button, .playall {
+	background-color: #dd0000;
+	color: #ff8080;
+	border-radius: 20px;
+	cursor: pointer;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+}
+
+button:focus, .playall:focus {
+	outline: 0;
+}
+
+button:hover, .playall:hover {
+	background-color: #ff3338;
+}
+
 form p {
 	text-align: center;
 }
@@ -201,6 +217,22 @@ footer p, footer a {
 	padding: 16px;
 	margin: 3vh auto 0 auto;
 	height: auto;
+}
+
+#loading, #warning {
+	border-radius: 20px;
+	font-size: 48px;
+	text-align: center;
+	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+}
+
+#loading {
+	background-color: #dd0000;
+	color: #ff8080;
+}
+ #warning { /* Created on main page / soundboard when no sounds are available */
+	background-color: #606060;
+	color: #383838;
 }
 
 #notification-wrapper {

@@ -1,19 +1,7 @@
 button {
 	font-size: 65px;
-	background-color: #ab0000;
-	color: #ff8080;
-	border-radius: 20px;
 	width: 100%;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
 	margin: 10px 0;
-}
-
-button:focus {
-	outline: 0;
-}
-
-button:hover {
-	background-color: #ff3338;
 }
 
 a[href="/versions"], a[href="/soundboard"], [href="/statistics"] {
