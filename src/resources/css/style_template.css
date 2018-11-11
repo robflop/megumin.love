@@ -19,10 +19,10 @@ body {
 }
 
 body.bg1_halloween footer p, body.bg1_halloween footer a {
-	color: gray; /* TODO: needs changing */
+	color: #7f7f7f; /* TODO: needs changing */
 }
 
-body.bg1_independence footer p, body.bg1_independence footer a {
+body.bg1_independence footer p, body.bg1_independence footer a, body.bg9 footer p, body.bg9 footer a {
 	color: #000000;
 }
 
