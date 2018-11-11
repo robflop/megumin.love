@@ -79,19 +79,26 @@
 			<p>Created and maintained by robflop. <a href="/credits">Full Credits here.</a></p>
 		</footer>
 		<script>
-			document.body.addEventListener('mousedown', e => {
-				document.getElementById('pull').style.display = 'none';
-				document.getElementById('release').style.display = 'block';
+			function eyepatchPull(release) {
+				if (!release) {
+					document.getElementById('pull').style.display = 'none';
+					document.getElementById('release').style.display = 'block';
 
-				document.getElementById('itai').play();
-			});
-			document.body.addEventListener('mouseup', e => {
-				document.getElementById('itai').pause();
-				document.getElementById('itai').currentTime = 0;
+					document.getElementById('itai').play();
+				}
+				else {
+					document.getElementById('itai').pause();
+					document.getElementById('itai').currentTime = 0;
 
-				document.getElementById('release').style.display = 'none';
-				document.getElementById('pull').style.display = 'block';
-			});
+					document.getElementById('release').style.display = 'none';
+					document.getElementById('pull').style.display = 'block';
+				}
+			}
+			document.body.addEventListener('mousedown', e => eyepatchPull());
+			document.body.addEventListener('mouseup', e => eyepatchPull(true));
+
+			document.body.addEventListener('keydown', e => e.key === " " ? eyepatchPull() : null);
+			document.body.addEventListener('keyup', e => e.key === " " ? eyepatchPull(true) : null);
 		</script>
 	</body>
 </html>
