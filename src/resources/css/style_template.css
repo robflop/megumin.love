@@ -15,6 +15,7 @@ body {
 	vertical-align: middle;
 	position: relative;
 	font-family: "Open Sans", sans-serif;
+	transition: background-position 0.25s ease-in-out
 }
 
 body.bg1_halloween footer p, body.bg1_halloween footer a {
@@ -58,7 +59,7 @@ footer {
 }
 
 footer p, footer a {
-	color: azure;
+	color: #ffebee;
 }
 
 .bg1 {
@@ -296,7 +297,21 @@ footer p, footer a {
 	}
 }
 
+@media only screen and (max-width: 960px) {
+	.bg4 {
+		background-position: 0;
+	}
+
+	.bg9 {
+		background-position: -90px;
+	}
+}
+
 @media only screen and (max-width: 720px) {
+	.bg9 {
+		background-position: -215px;
+	}
+
 	.megu-sidebar {
 		min-width: 240px;
 		left: -251px;
@@ -320,6 +335,18 @@ footer p, footer a {
 }
 
 @media only screen and (max-width: 490px) {
+	.bg4 {
+		background-position: -125px;
+	}
+
+	.bg5 {
+		background-position: -295px;
+	}
+
+	.bg9 {
+		background-position: -325px;
+	}
+
 	.megu-sidebar {
 		min-width: 180px;
 		left: -188px;
@@ -339,6 +366,18 @@ footer p, footer a {
 }
 
 @media only screen and (max-width: 360px) {
+	.bg4 {
+		background-position: -200px;
+	}
+
+	.bg5 {
+		background-position: -350px;
+	}
+
+	.bg9 {
+		background-position: -425px;
+	}
+
 	.megu-sidebar {
 		min-width: 120px;
 		left: -128px;

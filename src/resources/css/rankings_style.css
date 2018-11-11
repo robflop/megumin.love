@@ -4,7 +4,7 @@ footer {
 
 #container {
 	width: 600px;
-	background-color: #F2E6E6;
+	background-color: #ffebee;
 }
 
 #container::after {
