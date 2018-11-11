@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const setDate = (month, day) => new Date(currentDate.getFullYear(), month, day);
 
 	let backgroundSetting = localStorage.getItem('background');
-	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8'];
+	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
 	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December
 		{ filename: 'bg1_independence', displayName: 'Independence Day', start: setDate(6, 10), end: setDate(6, 16) },
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
