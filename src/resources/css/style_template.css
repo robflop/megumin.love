@@ -18,14 +18,6 @@ body {
 	transition: background-position 0.25s ease-in-out
 }
 
-.bg4 footer p,
-.bg9 footer p,
-.bg1_halloween footer p,
-.bg1_christmas footer p,
-.bg1_independence footer p {
-	background-color: rgba(0, 0, 0, 0.5);
-}
-
 button, .playall {
 	background-color: #dd0000;
 	color: #ff8080;
@@ -116,6 +108,14 @@ footer p, footer a {
 
 .bg1_birthday {
 	background-image: url('/images/backgrounds/bg1_birthday.jpg');
+}
+
+.bg4 footer p,
+.bg9 footer p,
+.bg1_halloween footer p,
+.bg1_christmas footer p,
+.bg1_independence footer p {
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .titles {
