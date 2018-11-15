@@ -314,17 +314,15 @@ apiRouter.get('/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
-apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).array('files', 2), (req, res) => {
+apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('file'), (req, res) => {
 	let newSound;
 
-	if (req.files.length < 2 || (req.files.length && req.files.some(file => !['audio/mpeg', 'audio/mp3', 'audio/ogg'].includes(file.mimetype)))) {
-		req.files.map(file => {
-			return unlink(file.path, delError => {
-				if (delError) return Logger.error(`An error occurred deleting the temporary file '${file.filename}', please check manually.`, delError);
-			});
-		}); // Delete temp files on rejection
+	if (!req.file || (req.file && !['audio/mpeg', 'audio/mp3'].includes(req.file.mimetype))) {
+		unlink(req.file.path, delError => {
+			if (delError) return Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`, delError);
+		}); // Delete temp file on rejection
 
-		return res.status(400).json({ code: 400, message: 'An mp3 and ogg file must be supplied.' });
+		return res.status(400).json({ code: 400, message: 'An mp3 file must be supplied.' });
 	}
 
 	const data = req.body;
@@ -338,13 +336,9 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).array('file
 		let step = 0;
 		const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
-		['mp3', 'ogg'].forEach(ext => {
-			const file = req.files.find(f => f.originalname.endsWith(ext));
-
-			rename(file.path, `./resources/sounds/${data.filename}.${ext}`, renameErr => {
-				if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-				else Logger.info(`(${++step}/4) Uploaded '${ext}' file successfully renamed to requested filename.`);
-			});
+		rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
+			if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+			else Logger.info(`(${++step}/4) Uploaded mp3 file successfully renamed to requested filename.`);
 		});
 
 		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
@@ -396,34 +390,32 @@ apiRouter.patch('/admin/rename', (req, res) => {
 
 				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
 
-				['mp3', 'ogg'].map(ext => {
-					const oldSoundPath = `./resources/sounds/${data.oldFilename}.${ext}`;
-					const newSoundPath = `./resources/sounds/${data.newFilename}.${ext}`;
+				const oldSoundPath = `./resources/sounds/${data.oldFilename}.mp3`;
+				const newSoundPath = `./resources/sounds/${data.newFilename}.mp3`;
 
-					return copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
-						if (copyErr) {
-							Logger.error(`An error occurred backing up the original ${ext} file, renaming aborted.`, copyErr);
+				copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
+					if (copyErr) {
+						Logger.error(`An error occurred backing up the original mp3 file, renaming aborted.`, copyErr);
+						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					}
+					Logger.info(`(${++step}/8) Original mp3 soundfile successfully backed up.`);
+
+					rename(oldSoundPath, newSoundPath, renameErr => {
+						if (renameErr) {
+							Logger.error(`An error occurred renaming the original mp3 soundfile, renaming aborted, restoring backup.`, renameErr);
+							rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
+								if (backupResErr) return Logger.error(`Backup restoration for the mp3 soundfile failed.`);
+							});
+
 							return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
 						}
-						Logger.info(`(${++step}/8) Original ${ext} soundfile successfully backed up.`);
+						Logger.info(`(${++step}/8) Original mp3 soundfile successfully renamed.`);
 
-						rename(oldSoundPath, newSoundPath, renameErr => {
-							if (renameErr) {
-								Logger.error(`An error occurred renaming the original ${ext} soundfile, renaming aborted, restoring backup.`, renameErr);
-								rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
-									if (backupResErr) return Logger.error(`Backup restoration for the ${ext} soundfile failed.`);
-								});
-
-								return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+						unlink(`${oldSoundPath}.bak`, unlinkErr => {
+							if (unlinkErr) {
+								return Logger.error(`An error occurred deleting the original mp3 soundfile backup, please check manually.`, unlinkErr);
 							}
-							Logger.info(`(${++step}/8) Original ${ext} soundfile successfully renamed.`);
-
-							unlink(`${oldSoundPath}.bak`, unlinkErr => {
-								if (unlinkErr) {
-									return Logger.error(`An error occurred deleting the original ${ext} soundfile backup, please check manually.`, unlinkErr);
-								}
-								Logger.info(`(${++step}/8) Original ${ext} soundfile backup successfully deleted.`);
-							});
+							Logger.info(`(${++step}/8) Original mp3 soundfile backup successfully deleted.`);
 						});
 					});
 				});
@@ -454,14 +446,12 @@ apiRouter.delete('/admin/delete', (req, res) => {
 			}
 			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
 
-			['mp3', 'ogg'].map(ext => {
-				return unlink(`./resources/sounds/${deletedSound.filename}.${ext}`, unlinkErr => {
-					if (unlinkErr) {
-						Logger.error(`An error occurred while deleting the ${ext} soundfile, deletion aborted.`, unlinkErr);
-						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-					}
-					Logger.info(`(${++step}/4) ${ext} soundfile successfully deleted.`);
-				});
+			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
+				if (unlinkErr) {
+					Logger.error(`An error occurred while deleting the mp3 soundfile, deletion aborted.`, unlinkErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+				}
+				Logger.info(`(${++step}/4) mp3 soundfile successfully deleted.`);
 			});
 
 			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);

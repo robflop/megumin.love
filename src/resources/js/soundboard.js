@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
 					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
 						const playallHowl = new Howl({
-							src: [`/sounds/${snd.filename}.ogg`, `/sounds/${snd.filename}.mp3`],
+							src: `/sounds/${snd.filename}.mp3`
 						});
 
 						playallHowl.on('end', () => playallHowl.unload());
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					if (rsound === 42) {
 						const realnameHowl = new Howl({
-							src: ['/sounds/realname.ogg', '/sounds/realname.mp3'],
+							src: '/sounds/realname.mp3'
 						});
 						realnameHowl.on('end', () => realnameHowl.unload());
 						realnameHowl.play();
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 					else {
 						const nameHowl = new Howl({
-							src: ['/sounds/name.ogg', '/sounds/name.mp3'],
+							src: '/sounds/name.mp3'
 						});
 						nameHowl.on('end', () => nameHowl.unload());
 						nameHowl.play();
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			document.getElementById(sound.filename).addEventListener('click', e => {
 				const soundButtonHowl = new Howl({
-					src: [`/sounds/${sound.filename}.ogg`, `/sounds/${sound.filename}.mp3`],
+					src: `/sounds/${sound.filename}.mp3`
 				});
 				soundButtonHowl.on('end', () => soundButtonHowl.unload());
 				soundButtonHowl.play();
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
 						const crazyModeHowl = new Howl({
-							src: [`/sounds/${data.soundFilename}.ogg`, `/sounds/${data.soundFilename}.mp3`],
+							src: `/sounds/${data.soundFilename}.mp3`
 						});
 						crazyModeHowl.on('end', () => crazyModeHowl.unload());
 						return crazyModeHowl.play();

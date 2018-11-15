@@ -479,12 +479,12 @@ Upload a new sound to the website.
 
 ### Body
 
-| Key         | Description                                                           | Type |
-| ----------- | --------------------------------------------------------------------- | ---- |
-| files       | The two sound files (mp3 and ogg) that contain the sound to be played | File |
-| filename    | The filename the sound files should be saved under                    | Text |
-| displayname | The name the sound should be displayed under on the website           | Text |
-| source      | The origin of the soundclips (i.e. Season, OVA, Movie, etc)           | Text |
+| Key         | Description                                                 | Type |
+| ----------- | ----------------------------------------------------------- | ---- |
+| file        | The sound file (mp3) that contains the sound to be played   | File |
+| filename    | The filename the sound file should be saved under           | Text |
+| displayname | The name the sound should be displayed under on the website | Text |
+| source      | The origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text |
 
 ### Parameters
 
@@ -495,7 +495,7 @@ Upload a new sound to the website.
 #### Example requests
 
 `/admin/upload` with:
-- files including `test.mp3` and `test.ogg`
+- file including `test.mp3`
 - filename `testfilename`
 - displayname `testdisplayname`
 - source `testsource`
@@ -525,19 +525,19 @@ Output when filename is already in use:
 }
 ```
 
-Output when files with different extension than mp3 and ogg are submitted:
+Output when a file with different extension than mp3 is submitted:
 ```js
 {
     "code": 400,
-    "message": "Only mp3 and ogg files are accepted."
+    "message": "Only mp3 files are accepted."
 }
 ```
 
-Output when no files are supplied (not applicable to this example):
+Output when no file is supplied (not applicable to this example):
 ```js
 {
     "code": 400,
-    "message": "An mp3 and ogg file must be supplied."
+    "message": "An mp3 file must be supplied."
 }
 ```
 

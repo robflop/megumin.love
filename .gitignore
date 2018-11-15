@@ -8,7 +8,6 @@ src/config.json
 src/db/megumin_love.db
 .vscode
 src/resources/testfile.mp3
-src/resources/testfile.ogg
 
 # Ignore minified files (created automatically anyway)
 /**/*.min.css
