@@ -99,6 +99,9 @@
 
 			document.body.addEventListener('keydown', e => e.key === " " ? eyepatchPull() : null);
 			document.body.addEventListener('keyup', e => e.key === " " ? eyepatchPull(true) : null);
+
+			document.body.addEventListener('touchstart', e => eyepatchPull());
+			document.body.addEventListener('touchend', e => eyepatchPull(true));
 		</script>
 	</body>
 </html>
