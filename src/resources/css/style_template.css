@@ -90,24 +90,28 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg9.jpg');
 }
 
-.bg1_independence {
-	background-image: url('/images/backgrounds/bg1_independence.jpg');
+.bg1_easter {
+	background-image: url('/images/backgrounds/bg1_easter.jpg');
 }
 
-.bg1_christmas {
-	background-image: url('/images/backgrounds/bg1_christmas.jpg');
+.bg1_independence {
+	background-image: url('/images/backgrounds/bg1_independence.jpg');
 }
 
 .bg1_halloween {
 	background-image: url('/images/backgrounds/bg1_halloween.jpg');
 }
 
-.bg1_easter {
-	background-image: url('/images/backgrounds/bg1_easter.jpg');
-}
-
 .bg1_birthday {
 	background-image: url('/images/backgrounds/bg1_birthday.jpg');
+}
+
+.bg1_christmas {
+	background-image: url('/images/backgrounds/bg1_christmas.jpg');
+}
+
+.bg1_newyearseve {
+	background-image: url('/images/backgrounds/bg1_newyearseve.jpg');
 }
 
 .bg4 footer p,

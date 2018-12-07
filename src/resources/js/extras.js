@@ -2,16 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
 	const currentDate = new Date();
-	const setDate = (month, day) => new Date(currentDate.getFullYear(), month, day);
+	const setDate = (month, day, intoNextYear = false) => {
+		const year = intoNextYear ? currentDate.getFullYear() + 1 : currentDate.getFullYear();
+		return new Date(year, month, day);
+	}; // intoNextYear makes seasonals that transcend the current year (e.g. new year's eve) possible
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
-	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 11 is December
-		{ filename: 'bg1_independence', displayName: 'Independence Day', start: setDate(6, 12), end: setDate(6, 16) },
-		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3) },
+	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 0 is January, 11 is December
 		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28) },
+		{ filename: 'bg1_independence', displayName: 'Independence Day', start: setDate(6, 12), end: setDate(6, 16) },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3) },
 		// { filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(11, 3), end: setDate(11, 5) } // Canon B-day is 4th Dec
+		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
+		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(11, 30), end: setDate(0, 1, true) },
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
