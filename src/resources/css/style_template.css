@@ -97,6 +97,9 @@ footer p, footer a {
 .bg1_usa_independence {
 	background-image: url('/images/backgrounds/bg1_usa_independence.jpg');
 }
+
+.bg1_german_unity {
+	background-image: url('/images/backgrounds/bg1_german_unity.jpg');
 }
 
 .bg1_halloween {
@@ -119,7 +122,7 @@ footer p, footer a {
 .bg9 footer p,
 .bg1_halloween footer p,
 .bg1_christmas footer p,
-.bg1_independence footer p {
+.bg1_usa_independence footer p {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 0 is January, 11 is December
 		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28) },
 		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(6, 13), end: setDate(6, 15) },
+		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(9, 2), end: setDate(9, 4) },
 		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3) },
 		// { filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(11, 3), end: setDate(11, 5) } // Canon B-day is 4th Dec
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
