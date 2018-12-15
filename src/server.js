@@ -318,9 +318,9 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 	let newSound;
 
 	if (!req.file || (req.file && !['audio/mpeg', 'audio/mp3'].includes(req.file.mimetype))) {
-		unlink(req.file.path, delError => {
+		if (req.file) unlink(req.file.path, delError => {
 			if (delError) return Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`, delError);
-		}); // Delete temp file on rejection
+		}); // If a wrong filetype was supplied, delete the created temp file on rejection
 
 		return res.status(400).json({ code: 400, message: 'An mp3 file must be supplied.' });
 	}
