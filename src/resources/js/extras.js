@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
 	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 0 is January, 11 is December
-		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28) },
-		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(6, 13), end: setDate(6, 15) },
-		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(9, 2), end: setDate(9, 4) },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3) },
-		// { filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(11, 3), end: setDate(11, 5) } // Canon B-day is 4th Dec
-		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27) },
-		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(11, 30), end: setDate(0, 1, 1) },
+		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28), versions: 2 },
+		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(6, 13), end: setDate(6, 15), versions: 1 },
+		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(9, 2), end: setDate(9, 4), versions: 1 },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3), versions: 2 },
+		// { filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(11, 3), end: setDate(11, 5), versions: 1 } // Canon B-day is 4th Dec
+		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27), versions: 1 },
+		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(11, 30), end: setDate(0, 1, 1), versions: 1 },
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -28,7 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if (!backgroundSetting || preferSeasonals) {
 		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => currentDate >= sBg.start && currentDate <= sBg.end);
-		if (fittingSeasonalBackground) backgroundSetting = fittingSeasonalBackground.filename;
+		if (fittingSeasonalBackground) {
+			if (fittingSeasonalBackground.versions > 1) {
+				backgroundSetting = `${fittingSeasonalBackground.filename}${Math.ceil(Math.random() * fittingSeasonalBackground.versions)}`;
+				// Ceil used instead of floor so that it never ends on 0, but always between 1 and the version amount
+			}
+			else backgroundSetting = fittingSeasonalBackground.filename;
+		}
 		else if (!backgroundSetting) backgroundSetting = 'randomBg'; // Only applies when there is no preference & no seasonal
 	}
 
@@ -52,7 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	const bgOptions = backgrounds.map(bg => `<option value="${bg}">Background ${bg.substr(2)}</option>`);
-	bgOptions.push(seasonalBackgrounds.map(seasonal => `<option value="${seasonal.filename}">${seasonal.displayName}</option>`));
+	const seasonalBgOptions = seasonalBackgrounds.map(seasonal => {
+		if (seasonal.versions > 1) {
+			let seasonalVersions = '';
+			for (let i = 1; i <= seasonal.versions; i++) {
+				seasonalVersions += `<option value="${seasonal.filename}${i}">${seasonal.displayName} (${i})</option>`;
+			}
+
+			return seasonalVersions;
+		}
+		else return `<option value="${seasonal.filename}">${seasonal.displayName}</option>`;
+	});
+	bgOptions.push(seasonalBgOptions);
 	bgOptions.unshift('<option value="randomBg">Random (Default)</option>');
 	bgOptions.unshift('<option value="reset">Reset Preference</option>');
 

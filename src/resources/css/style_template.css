@@ -90,8 +90,12 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg9.jpg');
 }
 
-.bg1_easter {
-	background-image: url('/images/backgrounds/bg1_easter.jpg');
+.bg1_easter1 {
+	background-image: url('/images/backgrounds/bg1_easter1.jpg');
+}
+
+.bg1_easter2 {
+	background-image: url('/images/backgrounds/bg1_easter2.jpg');
 }
 
 .bg1_usa_independence {
@@ -102,8 +106,12 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg1_german_unity.jpg');
 }
 
-.bg1_halloween {
-	background-image: url('/images/backgrounds/bg1_halloween.jpg');
+.bg1_halloween1 {
+	background-image: url('/images/backgrounds/bg1_halloween1.jpg');
+}
+
+.bg1_halloween2 {
+	background-image: url('/images/backgrounds/bg1_halloween2.jpg');
 }
 
 .bg1_birthday {
@@ -120,7 +128,8 @@ footer p, footer a {
 
 .bg4 footer p,
 .bg9 footer p,
-.bg1_halloween footer p,
+.bg1_halloween1 footer p,
+.bg1_halloween2 footer p,
 .bg1_christmas footer p,
 .bg1_usa_independence footer p {
 	background-color: rgba(0, 0, 0, 0.5);
