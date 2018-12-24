@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const container = document.getElementById('container');
 
-		if (s.length === 0) {
+		if (!s.length) {
 			const warning = document.createElement('h1');
 			warning.id = 'warning';
 			warning.innerText = 'No sounds available.';

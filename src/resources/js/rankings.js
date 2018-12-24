@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		while (rankings.hasChildNodes()) rankings.removeChild(rankings.lastChild);
 
-		if (s.length === 0) {
+		if (!s.length) {
 			const warning = document.createElement('h1');
 			warning.id = 'warning';
 			warning.innerText = 'No sounds available.';

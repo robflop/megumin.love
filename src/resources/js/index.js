@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 	let howlerList = {};
 
-	function toggleButton() {
+	function toggleButton(hasSounds) {
 		const button = document.getElementsByTagName('button')[0];
 
-		if (button.innerText === 'No sounds available.') {
+		if (hasSounds) {
 			button.innerText = 'やめろ!!';
 			button.style.fontSize = '65px';
 			button.style.backgroundColor = '#ab0000';
@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			button.disabled = false;
 		}
 		else {
+			button.innerText = 'No sounds available.';
 			button.style.fontSize = '40px';
 			button.style.backgroundColor = '#606060';
-			button.style.color = '#383838;';
-			button.innerText === 'No sounds available.';
+			button.style.color = '#383838';
 			button.disabled = true;
 		}
 	}
@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 
-		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton();
-		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton();
+		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
+		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton(false);
 	}
 
 	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
