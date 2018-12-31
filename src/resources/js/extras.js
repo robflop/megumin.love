@@ -4,19 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	const currentDate = new Date();
 	const setDate = (month, day, yearOffset = 0) => {
 		const year = currentDate.getFullYear() + yearOffset;
-		return new Date(year, month, day);
+		return new Date(year, month - 1, day); // Subtract 1 because Date obj month is 0-indexed
 	};
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
-	const seasonalBackgrounds = [ // All months are 0-indexed! E.g. 0 is January, 11 is December
-		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(3, 15), end: setDate(3, 28), versions: 2 },
-		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(6, 13), end: setDate(6, 15), versions: 1 },
-		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(9, 2), end: setDate(9, 4), versions: 1 },
-		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(9, 24), end: setDate(10, 3), versions: 2 },
-		{ filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(11, 3), end: setDate(11, 5), versions: 1 }, // Canon B-day is 4th Dec
-		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(11, 15), end: setDate(11, 27), versions: 1 },
-		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(11, 30), end: setDate(0, 1, 1), versions: 1 },
+	const seasonalBackgrounds = [
+		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(4, 14), end: setDate(4, 28), versions: 2 },
+		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 14), end: setDate(7, 14), versions: 1 },
+		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(10, 3), end: setDate(10, 3), versions: 1 },
+		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(10, 26), end: setDate(11, 2), versions: 2 },
+		{ filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(12, 4), end: setDate(12, 4), versions: 1 }, // Canon B-day is 4th Dec
+		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(12, 19), end: setDate(12, 26), versions: 1 },
+		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1, 1), versions: 1 },
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
