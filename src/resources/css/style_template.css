@@ -19,11 +19,12 @@ body {
 }
 
 button, .playall {
-	background-color: #dd0000;
-	color: #ff8080;
-	border-radius: 20px;
+	background-color: #b71c1c;
+	color: #ef9a9a;
+	border: 0;
+	border-radius: 10px;
 	cursor: pointer;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	box-shadow: 0 10px 30px rgba(0,0,0,.1), 0 1px 8px rgba(0,0,0,.2);
 }
 
 button:focus, .playall:focus {
@@ -31,7 +32,8 @@ button:focus, .playall:focus {
 }
 
 button:hover, .playall:hover {
-	background-color: #ff3338;
+	background-color: #d50000;
+	transform: translate3d(0, -3px, 0);
 }
 
 form p {
@@ -139,15 +141,14 @@ footer p, footer a {
 .titles {
 	margin: 0 auto;
 	text-align: center;
-	background-color: #dd0000;
-	color: #ff8080;
-	border-radius: 15px;
-	width: 65%;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.8);
+	color: #ef9a9a;
+	border-bottom: solid;
+	border-radius: 25px;
+	width: 50%;
 }
 
 .backlink-anchor {
-	color: #dd0000;
+	color: #d50000;
 }
 
 .megu-sidebar {
@@ -242,12 +243,14 @@ footer p, footer a {
 	border-radius: 20px;
 	font-size: 48px;
 	text-align: center;
-	box-shadow: -3px 1px 40px 14px rgba(51,38,51,0.6);
+	width: 50%;
+	margin: 0 auto;
+	margin-top: 10px;
 }
 
 #loading {
-	background-color: #dd0000;
-	color: #ff8080;
+	background-color: #b71c1c;
+	color: #ef9a9a;
 }
  #warning { /* Created on main page / soundboard when no sounds are available */
 	background-color: #606060;
@@ -266,8 +269,8 @@ footer p, footer a {
 #notification {
 	display: inline-block;
 	text-align: left;
-	background-color: #dd0000;
-	color: #ff8080;
+	background-color: #b71c1c;
+	color: #ef9a9a;
 	font-size: 30px;
 	max-width: 1400px;
 	padding: 5px;
@@ -285,11 +288,12 @@ footer p, footer a {
 
 #crazymode-warning {
 	font-style: italic;
-	color: #dd0000;
+	color: #d50000;
 }
 
 #backlink-bottom {
 	text-align: right;
+	margin-top: 10px;
 }
 
 @media only screen and (max-width: 1366px) {

@@ -5,7 +5,7 @@ button {
 }
 
 a[href="/versions"], a[href="/soundboard"], [href="/statistics"] {
-	color: #dd0000;
+	color: #d50000;
 }
 
 a[href="/versions"] {
@@ -39,7 +39,7 @@ a[href="/statistics"] {
 	position: relative;
 	text-align: center;
 	font-size: 50px;
-	color: #dd0000;
+	color: #d50000;
 	margin: auto;
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
@@ -64,16 +64,8 @@ a[href="/statistics"] {
 }
 
 #survey-frame p, #survey-frame a {
-	color: #ff8080;
+	color: #ef9a9a;
 	margin: 0;
-}
-
-/* Doesn't count while survey is up, but usually: Only 360px needs adjustment, since container is 360px wide */
-
-@media only screen and (max-width: 960px) {
-	footer {
-		bottom: -35px;
-	}
 }
 
 @media only screen and (max-width: 360px) {

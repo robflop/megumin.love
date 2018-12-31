@@ -16,7 +16,7 @@ form, #login-res {
 #login-res {
 	display: none;
 	font-size: 16px;
-	color: #dd0000;
+	color: #ef9a9a;
 }
 
 /* No media queries needed as container is only 320px wide */
