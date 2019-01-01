@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
-	const currentDate = new Date();
-	const setDate = (month, day, yearOffset = 0) => {
-		const year = currentDate.getFullYear() + yearOffset;
-		return new Date(year, month - 1, day); // Subtract 1 because Date obj month is 0-indexed
+	const currentDate = new Date(); currentDate.setHours(0, 0, 0, 0); // Breaks when hours not set to midnight
+	const setDate = (month, day) => {
+		const year = currentDate.getFullYear();
+		return new Date(year, month - 1, day);
 	};
 
 	let backgroundSetting = localStorage.getItem('background');
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_halloween', displayName: 'Halloween', start: setDate(10, 26), end: setDate(11, 2), versions: 2 },
 		{ filename: 'bg1_birthday', displayName: 'Birthday', start: setDate(12, 4), end: setDate(12, 4), versions: 1 }, // Canon B-day is 4th Dec
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(12, 19), end: setDate(12, 26), versions: 1 },
-		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1, 1), versions: 1 },
+		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1), versions: 1 },
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -27,7 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
 	const preferSeasonalsToggle = document.getElementById('prefer-seasonals-toggle');
 
 	if (!backgroundSetting || preferSeasonals) {
-		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => currentDate >= sBg.start && currentDate <= sBg.end);
+		const fittingSeasonalBackground = seasonalBackgrounds.find(sBg => {
+			let fitting = currentDate >= sBg.start && currentDate <= sBg.end;
+
+			if (sBg.start.getMonth() > sBg.end.getMonth()) { // Event goes from one year into the next
+				fitting = currentDate >= sBg.start || currentDate <= sBg.end;
+				/*
+				This OR works because if the start month is after the end month, then for it to trigger
+				the current date has to be either after or in the start (so for new year's december)
+				OR before or in the end (so for new year's january)
+
+				It's not AND because it can't be both after/in December AND before/in January at the same time
+				*/
+			}
+
+			return fitting;
+		});
+
 		if (fittingSeasonalBackground) {
 			if (fittingSeasonalBackground.versions > 1) {
 				backgroundSetting = `${fittingSeasonalBackground.filename}${Math.ceil(Math.random() * fittingSeasonalBackground.versions)}`;
@@ -35,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 			else backgroundSetting = fittingSeasonalBackground.filename;
 		}
-		else if (!backgroundSetting) backgroundSetting = 'randomBg'; // Only applies when there is no preference & no seasonal
+		else if (!backgroundSetting) backgroundSetting = 'randomBg'; // Only applies when there is no preference & no seasonal currently active
 	}
 
 	bodyElem.classList.add(backgroundSetting !== 'randomBg' ? backgroundSetting : randomBg);
