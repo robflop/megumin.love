@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018 Robin B. aka robflop
+Copyright (c) 2019 Robin B. aka robflop
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
