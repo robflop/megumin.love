@@ -21,7 +21,7 @@ console.log('(It is complete once the command line input shows up again.)');
 
 copyFile(db.filename, `${db.filename}.bak`, err => {
 	if (err) return console.log('Database backup creation failed, migration aborting.');
-	console.log('Database backup created.');
+	console.log('Database backup created. Restore this if something goes wrong.');
 
 	db.serialize(() => {
 		db.run(`

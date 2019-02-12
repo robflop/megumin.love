@@ -1,5 +1,7 @@
 # Updating existing instances to newer versions
 
+**No matter the update, _always_ read the patchnotes. They can contain important information.**
+
 ## Breaking version changes (e.g. 5.x.x -> 6.x.x)
 
 - When updating from any major version to another, make sure to check if there are any relevant migration scripts (for e.g. adjustment of database structures).

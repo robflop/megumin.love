@@ -1,6 +1,6 @@
 const { Database } = require('sqlite3');
 const { join } = require('path');
-const { copyFile } = require('fs');
+const { copyFile, rename } = require('fs');
 const { databasePath } = require('../src/config.json');
 
 const db = new Database(join('..', 'src', databasePath));
@@ -13,10 +13,11 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 	if (err) return console.log('Database backup creation failed, migration aborting.');
 	console.log('Database backup created. Restore this if something goes wrong.');
 
-	db.serialize(() => {
-		db.get('SELECT name FROM sqlite_master WHERE type="table" AND name="yamero_counter"', [], (error, tableNameRow) => {
-			if (tableNameRow) return db.run('ALTER TABLE yamero_counter RENAME TO main_counter');
-			else return console.log('"yamero_counter" table not found, did you already migrate?');
-		});
+	db.run('UPDATE sounds SET filename = "objection", displayname = "Objection!!" WHERE filename = "igiari"', updateErr => {
+		if (updateErr) return console.log('An error occurred renaming the igiari database entry. Has it already been renamed or does it not exist?');
+	});
+
+	rename('../src/resources/sounds/igiari.mp3', '../src/resources/sounds/objection.mp3', renameErr => {
+		if (renameErr) return console.log('An error occurred renaming the igiari soundfile. Has it already been renamed or does it not exist?');
 	});
 });
