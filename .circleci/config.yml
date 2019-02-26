@@ -3,12 +3,12 @@ workflows:
   version: 2.1
   test:
     jobs:
+      - node-lts
       - node-current
-      - node-latest
 jobs:
-  node-current: &node-template
+  node-lts: &node-template
     docker:
-      - image: circleci/node:current
+      - image: circleci/node:lts
     working_directory: ~/src
     steps:
       - checkout
@@ -22,7 +22,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run test
-  node-latest:
+  node-current:
     <<: *node-template
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:current
