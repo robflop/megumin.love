@@ -54,20 +54,6 @@ a[href="/statistics"] {
 	margin-left: 185px;
 }
 
-#survey-frame {
-	margin-top: 15px;
-	font-size: 20px;
-	text-align: center;
-	border-top-style: solid;
-	border-top-width: 1px;
-	border-color: #9c9c9c;
-}
-
-#survey-frame p, #survey-frame a {
-	color: #ef9a9a;
-	margin: 0;
-}
-
 @media only screen and (max-width: 360px) {
 	a[href="/soundboard"] {
 		margin-left: 30px;
