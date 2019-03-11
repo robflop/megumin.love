@@ -6,18 +6,18 @@
 	"dependencies": {
 		"chalk": "^2.4.2",
 		"date-fns": "^1.30.1",
-		"express": "^4.16.3",
+		"express": "^4.16.4",
 		"express-session": "^1.15.6",
-		"helmet": "^3.15.1",
-		"multer": "^1.4.0",
-		"node-cron": "^2.0.1",
-		"node-minify": "^3.5.0",
+		"helmet": "^3.16.0",
+		"multer": "^1.4.1",
+		"node-cron": "^2.0.3",
+		"node-minify": "^3.6.0",
 		"sqlite3": "^4.0.6",
 		"uws": "10.148.1"
 	},
 	"devDependencies": {
-		"eslint": "^5.13.0",
-		"htmlhint": "^0.10.1"
+		"eslint": "^5.15.1",
+		"htmlhint": "^0.11.0"
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages",
