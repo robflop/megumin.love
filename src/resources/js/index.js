@@ -59,31 +59,38 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
-
-					if (data.type === 'soundUpdate' && data.sounds) {
-						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.id === changedSound.id)] = changedSound);
-						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.id === deletedSound.id), 1));
-						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
-						// Compare IDs because all other fields may have changed, id the only constant
-
-						return loadSounds(sounds); // Reload with now-modified sounds array
-					}
-					else if (data.type === 'counterUpdate' && data.counter) {
-						return document.getElementById('counter').innerText = formatNumber(data.counter);
-					}
-					else if (data.type === 'crazyMode' && localStorage.getItem('crazyMode')) {
-						return howlerList[data.soundFilename].play();
-					}
-					else if (data.type === 'notification' && data.notification) {
-						document.getElementById('notification').innerText = data.notification.text;
-						return util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					switch (data.type) {
+						case 'counterUpdate':
+							if (data.counter) document.getElementById('counter').innerText = formatNumber(data.counter);
+							break;
+						case 'crazyMode':
+							if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
+							break;
+						case 'notification':
+							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+							break;
+						case 'soundRename':
+							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+							loadSounds(sounds);
+							break;
+						case 'soundUpload':
+							sounds.push(data.sound);
+							loadSounds(sounds);
+							break;
+						case 'soundDelete':
+							sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
+							loadSounds(sounds);
+							break;
+						default:
+							break;
 					}
 				});
 
 				document.getElementsByTagName('button')[0].addEventListener('click', e => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
+
 					ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
 
 					return howlerList[sound.filename].play();

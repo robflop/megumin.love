@@ -356,8 +356,8 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 				Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
 
 				emitUpdate({
-					type: 'soundUpdate',
-					sounds: { addedSounds: [newSound], changedSounds: [], deletedSounds: [] }
+					type: 'soundUpload',
+					sound: newSound
 				});
 
 				return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
@@ -421,8 +421,8 @@ apiRouter.patch('/admin/rename', (req, res) => {
 				});
 
 				emitUpdate({
-					type: 'soundUpdate',
-					sounds: { changedSounds: [changedSound], addedSounds: [], deletedSounds: [] }
+					type: 'soundRename',
+					sound: changedSound
 				});
 
 				return res.json({ code: 200, message: 'Sound successfully renamed.', sound: changedSound });
@@ -458,8 +458,8 @@ apiRouter.delete('/admin/delete', (req, res) => {
 			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			emitUpdate({
-				type: 'soundUpdate',
-				sounds: { deletedSounds: [deletedSound], changedSounds: [], addedSounds: [] }
+				type: 'soundDelete',
+				sound: deletedSound
 			});
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
@@ -471,10 +471,12 @@ apiRouter.post('/admin/notification', (req, res) => {
 	const data = req.body;
 
 	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
+
 	emitUpdate({
 		type: 'notification',
 		notification: data
 	});
+
 	return res.json({ code: 200, message: 'Notification sent.' });
 });
 
@@ -575,8 +577,8 @@ socketServer.on('connection', socket => {
 			}, { excludeSocket: socket });
 
 			return emitUpdate({
-				type: 'soundUpdate',
-				sounds: { changedSounds: [soundEntry], addedSounds: [], deletedSounds: [] }
+				type: 'soundClick',
+				sound: soundEntry
 			});
 		}
 	});

@@ -50,19 +50,26 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
-
-					if (data.type === 'soundUpdate' && data.sounds) {
-						data.sounds.changedSounds.map(changedSound => sounds[sounds.findIndex(snd => snd.id === changedSound.id)] = changedSound);
-						data.sounds.deletedSounds.map(deletedSound => sounds.splice(sounds.findIndex(snd => snd.id === deletedSound.id), 1));
-						data.sounds.addedSounds.map(addedSound => sounds.push(addedSound));
-						// Compare IDs because all other fields may have changed, id the only constant
-
-						return updateRanking(sounds);
-					}
-					else if (data.type === 'notification' && data.notification) {
-						document.getElementById('notification').innerText = data.notification.text;
-						return util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					switch (data.type) {
+						case 'notification':
+							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+							break;
+						case 'soundClick': // Same code because a click modifies the sound object just like a rename would
+						case 'soundRename':
+							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+							updateRanking(sounds);
+							break;
+						case 'soundUpload':
+							sounds.push(data.sound);
+							updateRanking(sounds);
+							break;
+						case 'soundDelete':
+							sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
+							updateRanking(sounds);
+							break;
+						default:
+							break;
 					}
 				});
 			});

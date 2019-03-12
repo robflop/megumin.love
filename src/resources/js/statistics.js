@@ -79,19 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
-					if (!['counterUpdate', 'soundUpdate', 'crazyMode', 'notification'].includes(data.type)) return;
-
-					if (data.type === 'counterUpdate' && data.statistics) {
-						if (data.statistics.newChartData) {
-							statistics.chartData[statistics.chartData.length - 1] = data.statistics.newChartData;
-						}
-						statistics.summary = data.statistics.summary;
-
-						return updateStatistics(statistics);
-					}
-					else if (data.type === 'notification' && data.notification) {
-						document.getElementById('notification').innerText = data.notification.text;
-						return util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					switch (data.type) {
+						case 'counterUpdate':
+							if (data.statistics.newChartData) {
+								statistics.chartData[statistics.chartData.length - 1] = data.statistics.newChartData;
+							}
+							statistics.summary = data.statistics.summary;
+							updateStatistics(statistics);
+							break;
+						case 'notification':
+							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+							break;
+						default:
+							break;
 					}
 				});
 			});
