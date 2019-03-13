@@ -69,7 +69,6 @@ const server = express();
 const http = require('http').Server(server);
 
 const pagePath = join(__dirname, '/pages');
-const errorPath = join(pagePath, '/errorTemplates');
 const pages = [
 	{
 		name: 'robots.txt',
@@ -485,7 +484,7 @@ server.use('/api', apiRouter);
 for (const page of pages) {
 	if (page.name === 'admin.html') {
 		server.get(page.route, (req, res) => {
-			if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: errorPath });
+			if (!req.session.loggedIn) return res.status('401').sendFile('401.html', { root: './pages/error/' });
 			else return res.sendFile(page.path);
 		});
 		continue;
@@ -493,9 +492,9 @@ for (const page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
 }
 
-for (const error of config.errorTemplates) {
-	server.use((req, res) => res.status(error).sendFile(`${error}.html`, { root: errorPath }));
-}
+server.use((req, res) => res.status(401).sendFile(`401.html`, { root: './pages/error/' }));
+server.use((req, res) => res.status(404).sendFile(`404.html`, { root: './pages/error/' }));
+server.use((req, res) => res.status(500).sendFile(`500.html`, { root: './pages/error/' }));
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}`;

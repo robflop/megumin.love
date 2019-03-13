@@ -1,10 +1,6 @@
 {
 	"port": 5959,
 	"SSLproxy": false,
-	"errorTemplates": [
-		"404",
-		"500"
-	],
 	"databasePath": "./db/default.db",
 	"updateInterval": 15,
 	"adminToken": "pathOfExplosions",
