@@ -13,6 +13,7 @@ Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs
   - **Your database may be overwritten** by the default one if you keep the original filename and try updating the website in the future.
 - Open the `config.json` file and configure the website's settings (**Make sure to change the admin token and session secret**)
 - Run `npm install` in a terminal to install dependencies
+- Run `npm run minify` to minify the CSS and JS files before serving them (only ever needs to be done once + after updates)
 - Navigate into the `src` folder if you aren't already in it to set the working directory properly
 - Boot up the website's server at `server.js`
 - Click!

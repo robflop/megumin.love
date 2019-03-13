@@ -36,4 +36,4 @@ function minifyAssets() {
 	Logger.info('JS minification complete.');
 }
 
-module.exports = minifyAssets;
+minifyAssets();

@@ -62,8 +62,6 @@ db.serialize(() => {
 	});
 });
 
-require('../minifyAssets')(); // Minify CSS and JS files before serving them
-
 // Webserver
 const server = express();
 const http = require('http').Server(server);

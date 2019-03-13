@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages",
-		"minify": "node minify.js"
+		"minify": "node minifyAssets.js"
 	},
 	"repository": {
 		"type": "git",

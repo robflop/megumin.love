@@ -3,13 +3,13 @@ logs
 *.log
 npm-debug.log*
 
-# ignore debug and env files
+# Debug and env files
 src/config.json
 src/db/megumin_love.db
 .vscode
 src/resources/testfile.mp3
 
-# Ignore minified files (created automatically anyway)
+# Minified files
 /**/*.min.css
 /**/*.min.js
 
