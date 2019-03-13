@@ -1,5 +1,3 @@
-# Proxying megumin.love to port 443 (SSL) via nginx
-
 If you want to proxy the website to the SSL port (443), so that users can access the site via `https://<domain>` instead of `http://<domain>:<port>`, then flip on the `SSLproxy` setting in the config.
 This will make the front-end WebSocket connections connect to `wss://<domain>` instead of `ws://<domain>:<port>`.
 Not changing this setting but still proxying to the SSL port (443) will result in every counter of the page being unresponsive, as the WebSocket connections will fail.

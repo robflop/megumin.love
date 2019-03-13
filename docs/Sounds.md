@@ -1,5 +1,3 @@
-# Adding, changing or deleting sounds from the website
-
 ## Adding custom sounds
 
 There are two ways to add custom sounds starting with version 5.0.0 -- via interface or manually.

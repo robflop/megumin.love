@@ -1,5 +1,3 @@
-# Website API
-
 Base domain for all requests is ``megumin.love/api``. Response format for all routes is JSON.
 
 ---

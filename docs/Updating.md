@@ -1,5 +1,3 @@
-# Updating existing instances to newer versions
-
 **No matter the update, _always_ read the patchnotes. They can contain important information.**
 
 For all kinds of updates, run `npm run minify` once before booting.

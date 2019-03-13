@@ -1,5 +1,3 @@
-# Configuring the website
-
 - port setting dictates which port the web- and socket server will run on
 - SSLproxy affects whether the frontend will try to build the websocket connection on port 80 or port 443, so enabling it will require configuring a reverse proxy to serve the website on port 443
 - updateInterval is measured in minutes following cronjob syntax, meaning a maximum value of 60 (i.e. once every hour) and a minimum value of 1 (i.e. once every minute) exist, in addition to this all values will be rounded to floats
