@@ -1,6 +1,6 @@
 **No matter the update, _always_ read the patchnotes. They can contain important information.**
 
-For all kinds of updates, run `npm run minify` once before booting.
+For all kinds of updates, run `npm run setup` once before booting after updating.
 
 ## Breaking version changes (e.g. 5.x.x -> 6.x.x)
 
