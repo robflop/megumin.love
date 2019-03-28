@@ -91,9 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					const sound = sounds[Math.floor(Math.random() * sounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
 
-					ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
+					howlerList[sound.filename].play();
 
-					return howlerList[sound.filename].play();
+					return ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
 				});
 			});
 		});

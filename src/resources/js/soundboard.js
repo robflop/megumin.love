@@ -1,19 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 	let ws;
-
-	/*
-		Due to problems with Chrome/Edge/Others browser cache for the
-		Howler instances, they need to be created and destroyed immediately
-		on play, otherwise if constructed at load and played back from list
-		the respective browser audio will crash and not function until restart
-	*/
+	const howlerList = {};
 
 	function loadSoundboard(s) {
 		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
-
-		const container = document.getElementById('container');
 
 		if (!s.length) {
 			const warning = document.createElement('h1');
@@ -32,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
+
+			howlerList[sound.filename] = new Howl({
+				src: `/sounds/${sound.filename}.mp3`
+			}); // Register the Howl instances
 
 			if (sound.filename === 'realname') continue;
 			// Don't create button for this one
@@ -78,14 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
 					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
-						const playallHowl = new Howl({
-							src: `/sounds/${snd.filename}.mp3`
-						});
-
-						playallHowl.on('end', () => playallHowl.unload());
-						playallHowl.play();
-
-						// See comment at top for info regarding this way of playing sounds
+						howlerList[snd.filename].play();
 
 						return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: snd.filename }));
 					});
@@ -97,24 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
 					const rsound = Math.floor(Math.random() * 100) + 1;
 
 					if (rsound === 42) {
-						const realnameHowl = new Howl({
-							src: '/sounds/realname.mp3'
-						});
-						realnameHowl.on('end', () => realnameHowl.unload());
-						realnameHowl.play();
-
-						// See comment at top for info regarding this way of playing sounds
+						howlerList.realname.play();
 
 						ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 					}
 					else {
-						const nameHowl = new Howl({
-							src: '/sounds/name.mp3'
-						});
-						nameHowl.on('end', () => nameHowl.unload());
-						nameHowl.play();
-
-						// See comment at top for info regarding this way of playing sounds
+						howlerList.name.play();
 
 						ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 					}
@@ -125,13 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			document.getElementById(sound.filename).addEventListener('click', e => {
-				const soundButtonHowl = new Howl({
-					src: `/sounds/${sound.filename}.mp3`
-				});
-				soundButtonHowl.on('end', () => soundButtonHowl.unload());
-				soundButtonHowl.play();
-
-				// See comment at top for info regarding this way of playing sounds
+				howlerList[sound.filename].play();
 
 				return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: sound.filename }));
 			});
@@ -168,13 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					switch (data.type) {
 						case 'crazyMode':
-							if (localStorage.getItem('crazyMode')) {
-								const crazyModeHowl = new Howl({
-									src: `/sounds/${data.soundFilename}.mp3`
-								});
-								crazyModeHowl.on('end', () => crazyModeHowl.unload());
-								crazyModeHowl.play(); // See comment at top for info regarding this way of playing sounds
-							}
+							if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
 							break;
 						case 'notification':
 							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
