@@ -31,6 +31,10 @@ button:focus, .playall:focus {
 	outline: 0;
 }
 
+button::-moz-focus-inner, .playall::-moz-focus-inner {
+	border: 0;
+}
+
 button:hover, .playall:hover {
 	background-color: #d50000;
 	transform: translate3d(0, -3px, 0);
