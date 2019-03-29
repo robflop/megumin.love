@@ -490,8 +490,8 @@ for (const page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
 }
 
-server.use((req, res) => res.status(401).sendFile(`401.html`, { root: './pages/error/' }));
 server.use((req, res) => res.status(404).sendFile(`404.html`, { root: './pages/error/' }));
+server.use((req, res) => res.status(401).sendFile(`401.html`, { root: './pages/error/' }));
 server.use((req, res) => res.status(500).sendFile(`500.html`, { root: './pages/error/' }));
 
 http.listen(config.port, () => {
