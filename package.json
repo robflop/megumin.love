@@ -16,7 +16,7 @@
 		"uws": "10.148.1"
 	},
 	"devDependencies": {
-		"eslint": "^5.15.1",
+		"eslint": "^5.15.3",
 		"htmlhint": "^0.11.0"
 	},
 	"scripts": {

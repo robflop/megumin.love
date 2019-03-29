@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
 	let ws;
-	const howlerList = {};
+	let howlerList = {};
 
 	function loadSoundboard(s) {
 		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
+		howlerList = {}; // Wipe before reload
 
 		if (!s.length) {
 			const warning = document.createElement('h1');
