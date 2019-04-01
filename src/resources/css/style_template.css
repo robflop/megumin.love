@@ -132,6 +132,10 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg1_newyearseve.jpg');
 }
 
+.bg_true_goddess {
+	background-image: url('/images/backgrounds/bg_true_goddess.jpg')
+}
+
 .bg4 footer p,
 .bg9 footer p,
 .bg1_halloween1 footer p,
@@ -256,7 +260,8 @@ footer p, footer a {
 	background-color: #b71c1c;
 	color: #ef9a9a;
 }
- #warning { /* Created on main page / soundboard when no sounds are available */
+
+#warning { /* Created on main page / soundboard when no sounds are available */
 	background-color: #606060;
 	color: #383838;
 }
@@ -331,11 +336,19 @@ footer p, footer a {
 	.bg9 {
 		background-position: -90px;
 	}
+
+	.bg_true_goddess {
+		background-position: -300px;
+	}
 }
 
 @media only screen and (max-width: 720px) {
 	.bg9 {
 		background-position: -215px;
+	}
+
+	.bg_true_goddess {
+		background-position: -515px;
 	}
 
 	.megu-sidebar {
@@ -373,6 +386,10 @@ footer p, footer a {
 		background-position: -325px;
 	}
 
+	.bg_true_goddess {
+		background-position: -750px;
+	}
+
 	.megu-sidebar {
 		min-width: 180px;
 		left: -188px;
@@ -402,6 +419,10 @@ footer p, footer a {
 
 	.bg9 {
 		background-position: -425px;
+	}
+
+	.bg_true_goddess {
+		background-position: -875px;
 	}
 
 	.megu-sidebar {

@@ -6,10 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
 		const year = currentDate.getFullYear();
 		return new Date(year, month - 1, day);
 	};
+	const goddessCSS = attach => {
+		if (attach) {
+			const trueGoddessCSS = document.createElement('link');
+			trueGoddessCSS.rel = 'stylesheet';
+			trueGoddessCSS.href = '/css/true_goddess.min.css';
+			trueGoddessCSS.id = 'goddess-css';
+
+			document.head.appendChild(trueGoddessCSS);
+
+			document.getElementsByClassName('hangumin')[0].src = '/images/general/Bluegumin.svg';
+			document.title = document.title.replace('Megumin', 'Aqua');
+		}
+		else {
+			const trueGoddessCSS = document.getElementById('goddess-css');
+			if (trueGoddessCSS) {
+				document.head.removeChild(trueGoddessCSS);
+				document.getElementsByClassName('hangumin')[0].src = '/images/general/Hangumin.svg';
+				document.title = document.title.replace('Aqua', 'Megumin');
+			}
+		}
+	};
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
 	const seasonalBackgrounds = [
+		{ filename: 'bg_true_goddess', displayName: 'True Goddess', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
 		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(4, 14), end: setDate(4, 28), versions: 2 },
 		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 14), end: setDate(7, 14), versions: 1 },
 		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(10, 3), end: setDate(10, 3), versions: 1 },
@@ -45,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 
 		if (fittingSeasonalBackground) {
+			if (fittingSeasonalBackground.filename === 'bg_true_goddess') goddessCSS(true);
+
 			if (fittingSeasonalBackground.versions > 1) {
 				backgroundSetting = `${fittingSeasonalBackground.filename}${Math.ceil(Math.random() * fittingSeasonalBackground.versions)}`;
 				// Ceil used instead of floor so that it never ends on 0, but always between 1 and the version amount
@@ -58,8 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
 
+	if (backgroundSetting === 'bg_true_goddess') goddessCSS(true);
+
 	bgSelect.addEventListener('change', e => {
 		const { value } = e.target;
+
+		if (value === 'bg_true_goddess') {
+			currentBg = value;
+			goddessCSS(true);
+		}
+		else if (currentBg === 'bg_true_goddess') {
+			goddessCSS(false);
+		}
 
 		if (value === 'reset') {
 			return localStorage.removeItem('background');
@@ -70,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			currentBg = value;
 		}
+
 		return localStorage.setItem('background', value);
 	});
 
