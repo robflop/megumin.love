@@ -105,27 +105,27 @@ server.use(express.static('./resources'));
 
 /*
 	Using a date iterator instead of simply looping over the statistics because I also want to fill out
-	the object values for dates that are not present in the database. Looping over the stats wouldn't
+	the object values for dates that are not present in the database. Looping over the statistics wouldn't
 	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
-	would not work if the difference between current stats iteration and date iterator is bigger than one.
+	would not work if the difference between current statistics iteration and date iterator is bigger than one.
 */
-function filterStats(statsObj, startDate, endDate, statsCondition) {
+function filterStatistics(statisticsObject, startDate, endDate, condition) {
 	let iterator = startDate;
-	const result = {};
+	const filtered = {};
 
-	if (!statsCondition) statsCondition = () => true; // If no condition provided default to true
+	if (!condition) condition = () => true; // If no condition provided, default to pass all
 
 	while (dateFns.differenceInDays(endDate, iterator) >= 0) {
-		if (!statsObj.hasOwnProperty(iterator)) result[iterator] = 0;
+		if (!statisticsObject.hasOwnProperty(iterator)) filtered[iterator] = 0;
 		// Check for days missing in statistics and insert value for those
-		if (statsObj.hasOwnProperty(iterator) && statsCondition(iterator)) {
-			result[iterator] = statsObj[iterator];
+		if (statisticsObject.hasOwnProperty(iterator) && condition(iterator)) {
+			filtered[iterator] = statisticsObject[iterator];
 		}
 
 		iterator = dateFns.format(dateFns.addDays(iterator, 1), 'YYYY-MM-DD');
 	}
 
-	return result;
+	return filtered;
 }
 
 const apiRouter = express.Router();
@@ -134,9 +134,9 @@ apiRouter.use(express.urlencoded({ extended: true }));
 apiRouter.use(express.json());
 
 apiRouter.all('/*', (req, res, next) => {
-	const apiRoutes = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
+	const apiEndpoints = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
-	if (!apiRoutes.includes(req.path)) return res.status(404).json({ code: 404, message: 'Route not found.' });
+	if (!apiEndpoints.includes(req.path)) return res.status(404).json({ code: 404, message: 'Endpoint not found.' });
 	else return next();
 });
 
@@ -183,10 +183,10 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 });
 
 apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
-	let requestedStats = statistics;
+	let requestedStatistics = statistics;
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
-	const firstStatDate = Object.keys(statistics)[0];
-	const latestStatDate = Object.keys(statistics)[Object.keys(statistics).length - 1];
+	const firstStatisticsEntry = Object.keys(statistics)[0];
+	const latestStatisticsEntry = Object.keys(statistics)[Object.keys(statistics).length - 1];
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (['from', 'to', 'equals', 'over', 'under'].some(parameter => Object.keys(req.query).includes(parameter))) {
@@ -197,7 +197,7 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 		const { to, from } = req.query;
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((to && dateFns.isAfter(to, latestStatDate)) || (from && dateFns.isAfter(from, latestStatDate))) {
+		if ((to && dateFns.isAfter(to, latestStatisticsEntry)) || (from && dateFns.isAfter(from, latestStatisticsEntry))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
@@ -216,17 +216,17 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 
 		// Date filtering
 		if (from && !to) {
-			requestedStats = filterStats(requestedStats, from, latestStatDate, iterator => {
-				return dateFns.isWithinRange(iterator, from, latestStatDate);
+			requestedStatistics = filterStatistics(requestedStatistics, from, latestStatisticsEntry, iterator => {
+				return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
 			});
 		}
 		else if (!from && to) {
-			requestedStats = filterStats(requestedStats, firstStatDate, to, iterator => {
+			requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, to, iterator => {
 				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
 			});
 		}
 		else if (from && to) {
-			requestedStats = filterStats(requestedStats, from, to, iterator => {
+			requestedStatistics = filterStatistics(requestedStatistics, from, to, iterator => {
 				return dateFns.isWithinRange(iterator, from, to);
 			});
 		}
@@ -234,36 +234,36 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
-					return requestedStats[iterator] === equals;
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] === equals;
 				});
 			}
 			else if (over && !under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
-					return requestedStats[iterator] > over;
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] > over;
 				});
 			}
 			else if (!over && under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
-					return requestedStats[iterator] < under;
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] < under;
 				});
 			}
 			else if (over && under) {
-				requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate, iterator => {
-					return requestedStats[iterator] > over && requestedStats[iterator] < under;
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
 				});
 			}
 
-			for (const entryKey in requestedStats) {
-				if (requestedStats[entryKey] === 0) delete requestedStats[entryKey];
-			} // Filter padded entries if a count filter is used
+			for (const entryKey in requestedStatistics) {
+				if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
+			} // Remove padded entries if a count filter is used
 		}
 	}
 	else {
-		requestedStats = filterStats(requestedStats, firstStatDate, latestStatDate);
+		requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry);
 	}
 
-	return res.json(requestedStats);
+	return res.json(requestedStatistics);
 });
 
 apiRouter.get('/statistics/summary', (req, res) => {
@@ -295,7 +295,7 @@ apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses 
 
 apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
 	if (config.adminToken === req.headers.authorization) {
-		Logger.info(`A user has sent a request to the '${req.path}' route.`);
+		Logger.info(`A user has sent a request to the '${req.path}' endpoint.`);
 		return next();
 	}
 	else {
@@ -321,19 +321,18 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 	}
 
 	const data = req.body;
-	Logger.info(`Upload process for sound '${data.filename}' initiated.`);
+	Logger.info(`Upload process for sound '${data.filename}' (${data.displayname}, ${data.source}) initiated.`);
 
 	if (sounds.find(sound => sound.filename === data.filename)) {
-		Logger.error(`Sound with filename '${data.filename}' already exists, upload aborted.`);
+		Logger.error(`A sound with filename '${data.filename}' already exists, upload aborted.`);
 		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
 	}
 	else {
-		let step = 0;
 		const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
 		rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
 			if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-			else Logger.info(`(${++step}/4) Uploaded mp3 file successfully renamed to requested filename.`);
+			else Logger.info(`(1/3): Uploaded mp3 file successfully renamed to requested filename.`);
 		});
 
 		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
@@ -341,14 +340,14 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 			insertErr => {
 				if (insertErr) {
 					Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(${++step}/4) Database entry successfully created.`);
+				Logger.info(`(2/3): Database entry successfully created.`);
 
 				newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
 				sounds.push(newSound);
 
-				Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully created.`);
+				Logger.info(`(3/3): Sound cache entry successfully created.`);
 
 				emitUpdate({
 					type: 'soundUpload',
@@ -368,22 +367,21 @@ apiRouter.patch('/admin/rename', (req, res) => {
 	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
 		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
-		let step = 0;
 
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
 			data.newFilename, data.newDisplayname, data.newSource, changedSound.filename,
 			updateErr => {
 				if (updateErr) {
 					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(${++step}/8) Database entry successfully updated.`);
+				Logger.info(`(1/5): Database entry successfully updated.`);
 
 				changedSound.filename = data.newFilename;
 				changedSound.displayname = data.newDisplayname;
 				changedSound.source = data.newSource;
 
-				Logger.info(`(${++step}/8) Rankings/Sound cache entry successfully updated.`);
+				Logger.info(`(2/5): Sound cache entry successfully updated.`);
 
 				const oldSoundPath = `./resources/sounds/${data.oldFilename}.mp3`;
 				const newSoundPath = `./resources/sounds/${data.newFilename}.mp3`;
@@ -391,26 +389,26 @@ apiRouter.patch('/admin/rename', (req, res) => {
 				copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
 					if (copyErr) {
 						Logger.error(`An error occurred backing up the original mp3 file, renaming aborted.`, copyErr);
-						return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+						return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 					}
-					Logger.info(`(${++step}/8) Original mp3 soundfile successfully backed up.`);
+					Logger.info(`(3/5): Original mp3 file successfully backed up.`);
 
 					rename(oldSoundPath, newSoundPath, renameErr => {
 						if (renameErr) {
-							Logger.error(`An error occurred renaming the original mp3 soundfile, renaming aborted, restoring backup.`, renameErr);
+							Logger.error(`An error occurred renaming the original mp3 file, renaming aborted, restoring backup.`, renameErr);
 							rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
-								if (backupResErr) return Logger.error(`Backup restoration for the mp3 soundfile failed.`);
+								if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
 							});
 
-							return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+							return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 						}
-						Logger.info(`(${++step}/8) Original mp3 soundfile successfully renamed.`);
+						Logger.info(`(4/5): Original mp3 file successfully renamed.`);
 
 						unlink(`${oldSoundPath}.bak`, unlinkErr => {
 							if (unlinkErr) {
-								return Logger.error(`An error occurred deleting the original mp3 soundfile backup, please check manually.`, unlinkErr);
+								return Logger.warn(`An error occurred deleting the original mp3 backup, please delete manually.`, unlinkErr);
 							}
-							Logger.info(`(${++step}/8) Original mp3 soundfile backup successfully deleted.`);
+							Logger.info(`(5/5): Original mp3 backup successfully deleted.`);
 						});
 					});
 				});
@@ -431,26 +429,25 @@ apiRouter.delete('/admin/delete', (req, res) => {
 
 	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`);
-		let step = 0;
+		Logger.info(`Deletion process for sound '${deletedSound.filename}' (${deletedSound.displayname}, ${deletedSound.source}) initiated.`);
 
 		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
 			if (deleteErr) {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-			Logger.info(`(${++step}/4) Database entry successfully deleted.`);
+			Logger.info(`(1/3): Database entry successfully deleted.`);
+
+			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
+			Logger.info(`(2/3): Sound cache entry successfully deleted.`);
 
 			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
 				if (unlinkErr) {
-					Logger.error(`An error occurred while deleting the mp3 soundfile, deletion aborted.`, unlinkErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+					Logger.error(`An error occurred while deleting the mp3 file, deletion aborted.`, unlinkErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(${++step}/4) mp3 soundfile successfully deleted.`);
+				Logger.info(`(3/3): mp3 file successfully deleted.`);
 			});
-
-			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
-			Logger.info(`(${++step}/4) Rankings/Sound cache entry successfully deleted.`);
 
 			emitUpdate({
 				type: 'soundDelete',
@@ -536,6 +533,7 @@ socketServer.on('connection', socket => {
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
 			const currentMonth = currentDate.substring(0, 7);
 			const currentMonthData = chartData.find(d => d.month === currentMonth);
+
 			++counter;
 			++daily; ++weekly;
 			++monthly; ++yearly;
