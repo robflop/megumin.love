@@ -11,25 +11,23 @@ const { readdirSync, unlink, rename, copyFile } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 
-let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1, chartData = {};
-const sounds = [], statistics = {};
+let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
+let sounds = [], chartData = {};
+const statistics = {};
 
 // On-boot database interaction
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
 	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
-		if (!row) {
-			db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
-			counter = 0;
-		}
+		if (!row) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
 		else counter = row.counter;
 
 		return Logger.info('Main counter loaded.');
 	});
 
 	db.all('SELECT * FROM sounds', [], (selectErr, rows) => {
-		rows.map(sound => sounds.push(sound));
+		sounds = rows;
 		return Logger.info('Sounds & rankings loaded.');
 	});
 
