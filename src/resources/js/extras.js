@@ -1,29 +1,58 @@
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds */
 
+	const originalTitle = document.title;
 	const currentDate = new Date(); currentDate.setHours(0, 0, 0, 0); // Breaks when hours not set to midnight
 	const setDate = (month, day) => {
 		const year = currentDate.getFullYear();
 		return new Date(year, month - 1, day);
 	};
-	const goddessCSS = attach => {
-		if (attach) {
-			const trueGoddessCSS = document.createElement('link');
-			trueGoddessCSS.rel = 'stylesheet';
-			trueGoddessCSS.href = '/css/true_goddess.min.css';
-			trueGoddessCSS.id = 'goddess-css';
+	const characters = [
+		{
+			background: 'bg_true_goddess',
+			css: 'true_goddess',
+			svg: 'Bluegumin',
+			title: 'Aqua'
+		},
+		{
+			background: 'bg_purest_crusader',
+			css: 'purest_crusader',
+			svg: 'Yellowgumin',
+			title: 'Darkness'
+		},
+		{
+			background: 'bg_equality_advocate',
+			css: 'equality_advocate',
+			svg: 'Greengumin',
+			title: 'Kazuma'
+		}
+	];
+	const attachCharacterCSS = (character, disable = false) => {
+		character = characters.find(char => char.background === character);
 
-			document.head.appendChild(trueGoddessCSS);
+		if (!disable) {
+			if (document.getElementById('character-css')) document.head.removeChild(document.getElementById('character-css'));
 
-			document.getElementsByClassName('hangumin')[0].src = '/images/general/Bluegumin.svg';
-			document.title = document.title.replace('Megumin', 'Aqua');
+			let newTitle = document.title.split(' ');
+			newTitle[0] = character.title;
+			newTitle = newTitle.join(' ');
+
+			const characterCSS = document.createElement('link');
+			characterCSS.rel = 'stylesheet';
+			characterCSS.href = `/css/${character.css}.min.css`;
+			characterCSS.id = 'character-css';
+
+			document.head.appendChild(characterCSS);
+
+			document.getElementsByClassName('hangumin')[0].src = `/images/general/${character.svg}.svg`;
+			document.title = newTitle;
 		}
 		else {
-			const trueGoddessCSS = document.getElementById('goddess-css');
-			if (trueGoddessCSS) {
-				document.head.removeChild(trueGoddessCSS);
+			const characterCSS = document.getElementById('character-css');
+			if (characterCSS) {
+				document.head.removeChild(characterCSS);
 				document.getElementsByClassName('hangumin')[0].src = '/images/general/Hangumin.svg';
-				document.title = document.title.replace('Aqua', 'Megumin');
+				document.title = originalTitle;
 			}
 		}
 	};
@@ -32,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
 	const seasonalBackgrounds = [
 		{ filename: 'bg_true_goddess', displayName: 'True Goddess', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
+		{ filename: 'bg_purest_crusader', displayName: 'Purest Crusader', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
+		{ filename: 'bg_equality_advocate', displayName: 'Equality Advocate', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
 		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(4, 14), end: setDate(4, 28), versions: 2 },
 		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 14), end: setDate(7, 14), versions: 1 },
 		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(10, 3), end: setDate(10, 3), versions: 1 },
@@ -67,7 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 
 		if (fittingSeasonalBackground) {
-			if (fittingSeasonalBackground.filename === 'bg_true_goddess') goddessCSS(true);
+			if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(fittingSeasonalBackground.filename)) {
+				attachCharacterCSS(fittingSeasonalBackground.filename);
+			}
 
 			if (fittingSeasonalBackground.versions > 1) {
 				backgroundSetting = `${fittingSeasonalBackground.filename}${Math.ceil(Math.random() * fittingSeasonalBackground.versions)}`;
@@ -82,17 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
 
-	if (backgroundSetting === 'bg_true_goddess') goddessCSS(true);
+	if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(backgroundSetting)) attachCharacterCSS(backgroundSetting);
 
 	bgSelect.addEventListener('change', e => {
 		const { value } = e.target;
 
-		if (value === 'bg_true_goddess') {
+		if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(value)) {
 			currentBg = value;
-			goddessCSS(true);
+			attachCharacterCSS(value);
 		}
-		else if (currentBg === 'bg_true_goddess') {
-			goddessCSS(false);
+		else if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(currentBg)) {
+			attachCharacterCSS(currentBg, true);
 		}
 
 		if (value === 'reset') {
