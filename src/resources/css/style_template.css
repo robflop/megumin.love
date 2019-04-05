@@ -150,7 +150,9 @@ footer p, footer a {
 .bg1_halloween2 footer p,
 .bg1_birthday footer p,
 .bg1_christmas footer p,
-.bg1_usa_independence footer p {
+.bg1_usa_independence footer p,
+.bg_chivalrous_crusader footer p,
+.bg_equality_advocate footer p {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 

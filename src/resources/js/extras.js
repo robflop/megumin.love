@@ -7,62 +7,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		const year = currentDate.getFullYear();
 		return new Date(year, month - 1, day);
 	};
-	const characters = [
-		{
-			background: 'bg_true_goddess',
-			css: 'true_goddess',
-			svg: 'Bluegumin',
-			title: 'Aqua'
-		},
-		{
-			background: 'bg_purest_crusader',
-			css: 'purest_crusader',
-			svg: 'Yellowgumin',
-			title: 'Darkness'
-		},
-		{
-			background: 'bg_equality_advocate',
-			css: 'equality_advocate',
-			svg: 'Greengumin',
-			title: 'Kazuma'
-		}
-	];
-	const attachCharacterCSS = (character, disable = false) => {
-		character = characters.find(char => char.background === character);
+	const setSpecialEffects = specialBg => {
+		const existingSpecialCSS = document.getElementById('special-css');
+		if (existingSpecialCSS) document.head.removeChild(existingSpecialCSS);
 
-		if (!disable) {
-			if (document.getElementById('character-css')) document.head.removeChild(document.getElementById('character-css'));
+		const specialBackground = specialBackgrounds.find(s => s.filename === specialBg);
+		const specialCSS = document.createElement('link');
+		specialCSS.rel = 'stylesheet';
+		specialCSS.href = `/css/${specialBackground.css}.min.css`;
+		specialCSS.id = 'special-css';
 
-			let newTitle = document.title.split(' ');
-			newTitle[0] = character.title;
-			newTitle = newTitle.join(' ');
+		document.head.appendChild(specialCSS);
 
-			const characterCSS = document.createElement('link');
-			characterCSS.rel = 'stylesheet';
-			characterCSS.href = `/css/${character.css}.min.css`;
-			characterCSS.id = 'character-css';
-
-			document.head.appendChild(characterCSS);
-
-			document.getElementsByClassName('hangumin')[0].src = `/images/general/${character.svg}.svg`;
-			document.title = newTitle;
-		}
-		else {
-			const characterCSS = document.getElementById('character-css');
-			if (characterCSS) {
-				document.head.removeChild(characterCSS);
-				document.getElementsByClassName('hangumin')[0].src = '/images/general/Hangumin.svg';
-				document.title = originalTitle;
-			}
-		}
+		document.getElementsByClassName('hangumin')[0].src = `/images/general/${specialBackground.svg}.svg`;
+		document.title = originalTitle.replace('Megumin', specialBackground.title);
 	};
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9'];
 	const seasonalBackgrounds = [
-		{ filename: 'bg_true_goddess', displayName: 'True Goddess', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
-		{ filename: 'bg_purest_crusader', displayName: 'Purest Crusader', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
-		{ filename: 'bg_equality_advocate', displayName: 'Equality Advocate', start: setDate(4, 1), end: setDate(4, 1), version: 1 },
 		{ filename: 'bg1_easter', displayName: 'Easter', start: setDate(4, 14), end: setDate(4, 28), versions: 2 },
 		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 14), end: setDate(7, 14), versions: 1 },
 		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(10, 3), end: setDate(10, 3), versions: 1 },
@@ -71,10 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(12, 19), end: setDate(12, 26), versions: 1 },
 		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1), versions: 1 },
 	];
+	const specialBackgrounds = [
+		{ filename: 'bg_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'Bluegumin', title: 'Aqua' },
+		{ filename: 'bg_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'Yellowgumin', title: 'Darkness' },
+		{ filename: 'bg_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'Greengumin', title: 'Kazuma' }
+	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
 	let preferSeasonals = localStorage.getItem('preferSeasonals');
-
 	const bodyElem = document.body;
 	const bgSelect = document.getElementById('bg-select');
 	const preferSeasonalsToggle = document.getElementById('prefer-seasonals-toggle');
@@ -98,10 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 
 		if (fittingSeasonalBackground) {
-			if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(fittingSeasonalBackground.filename)) {
-				attachCharacterCSS(fittingSeasonalBackground.filename);
-			}
-
 			if (fittingSeasonalBackground.versions > 1) {
 				backgroundSetting = `${fittingSeasonalBackground.filename}${Math.ceil(Math.random() * fittingSeasonalBackground.versions)}`;
 				// Ceil used instead of floor so that it never ends on 0, but always between 1 and the version amount
@@ -112,26 +75,26 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	bodyElem.classList.add(backgroundSetting !== 'randomBg' ? backgroundSetting : randomBg);
+	if (specialBackgrounds.map(s => s = s.filename).includes(backgroundSetting)) setSpecialEffects(backgroundSetting);
 
 	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
 
-	if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(backgroundSetting)) attachCharacterCSS(backgroundSetting);
-
 	bgSelect.addEventListener('change', e => {
 		const { value } = e.target;
-
-		if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(value)) {
-			currentBg = value;
-			attachCharacterCSS(value);
-		}
-		else if (['bg_true_goddess', 'bg_purest_crusader', 'bg_equality_advocate'].includes(currentBg)) {
-			attachCharacterCSS(currentBg, true);
-		}
 
 		if (value === 'reset') {
 			return localStorage.removeItem('background');
 		}
 		if (value !== 'randomBg') {
+			if (specialBackgrounds.map(s => s = s.filename).includes(value)) setSpecialEffects(value);
+			else { // Making sure there are no special background settings left when switching to non-special backgrounds
+				if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
+				if (!document.title.includes('Megumin')) document.title = originalTitle;
+				if (!document.getElementsByClassName('hangumin')[0].src.includes('Hangumin')) {
+					document.getElementsByClassName('hangumin')[0].src = '/images/general/Hangumin.svg';
+				}
+			}
+
 			bodyElem.classList.remove(currentBg);
 			bodyElem.classList.add(value);
 
@@ -153,7 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		else return `<option value="${seasonal.filename}">${seasonal.displayName}</option>`;
 	});
+	const specialBgOptions = specialBackgrounds.map(special => `<option value="${special.filename}">${special.displayName}</option>`);
+
 	bgOptions.push(seasonalBgOptions);
+	bgOptions.push(specialBgOptions);
 	bgOptions.unshift('<option value="randomBg">Random (Default)</option>');
 	bgOptions.unshift('<option value="reset">Reset Preference</option>');
 
