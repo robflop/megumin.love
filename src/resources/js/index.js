@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-	let sounds = [];
+	let allSounds = [];
+	let activatedSounds = [];
 	let howlerList = {};
 
 	function toggleButton(hasSounds) {
@@ -8,10 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (hasSounds) {
 			button.innerText = 'やめろ!!';
-			button.style.fontSize = '65px';
-			button.style.backgroundColor = '#ab0000';
-			button.style.color = '#ff8080';
 			button.disabled = false;
+			button.removeAttribute('style');
+			// Removes inline CSS but keeps stylesheet intact
 		}
 		else {
 			button.innerText = 'No sounds available.';
@@ -22,25 +22,30 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	function loadSounds(s) {
+	function loadSounds(sounds, association = null) {
 		const button = document.getElementsByTagName('button')[0];
 		howlerList = {}; // Wipe before (re)load
 
-		for (const sound of s) {
+		if (association) sounds = sounds.filter(s => s.association === association);
+
+		activatedSounds = sounds;
+
+		for (const sound of sounds) {
 			howlerList[sound.filename] = new Howl({
 				src: `/sounds/${sound.filename}.mp3`
 			});
 		}
 
-		if (s.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
-		if (!s.length && button.innerText === 'やめろ!!') toggleButton(false);
+		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
+		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton(false);
 	}
 
 	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
 
 	fetch('/api/sounds').then(res => res.json()).then(s => {
-		sounds = s;
-		loadSounds(sounds);
+		allSounds = s;
+		const currentBackground = localStorage.getItem('background');
+		loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 	}).then(() => {
 		fetch('/api/conInfo').then(res => res.json()).then(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
@@ -59,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
+					const currentBackground = localStorage.getItem('background');
+
 					switch (data.type) {
 						case 'counterUpdate':
 							if (data.counter) document.getElementById('counter').innerText = formatNumber(data.counter);
@@ -71,16 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
 							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 							break;
 						case 'soundRename':
-							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-							loadSounds(sounds);
+							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						case 'soundUpload':
-							sounds.push(data.sound);
-							loadSounds(sounds);
+							allSounds.push(data.sound);
+							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						case 'soundDelete':
-							sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
-							loadSounds(sounds);
+							allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
+							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						default:
 							break;
@@ -88,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 
 				document.getElementsByTagName('button')[0].addEventListener('click', e => {
-					const sound = sounds[Math.floor(Math.random() * sounds.length)];
+					const sound = activatedSounds[Math.floor(Math.random() * activatedSounds.length)];
 					if (sound.filename === 'realname') sound.filename = 'name';
 
 					howlerList[sound.filename].play();
@@ -97,6 +104,21 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 			});
 		});
+	});
+
+	document.getElementById('bg-select').addEventListener('change', e => {
+		const { value } = e.target;
+
+		if (value.startsWith('special_')) {
+			const specialSounds = allSounds.filter(s => s.association === value);
+			activatedSounds = specialSounds;
+			loadSounds(specialSounds);
+		}
+		else {
+			const normalSounds = allSounds.filter(s => !s.association);
+			activated = normalSounds;
+			loadSounds(normalSounds);
+		}
 	});
 
 	document.getElementsByTagName('button')[0].addEventListener('keypress', e => {
