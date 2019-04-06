@@ -169,7 +169,7 @@ footer p, footer a {
 	color: #d50000;
 }
 
-.megu-sidebar {
+#megu-sidebar {
 	background-color: #a09a9a;
 	position: fixed;
 	top: 80px;
@@ -183,11 +183,11 @@ footer p, footer a {
 	z-index: 100;
 }
 
-.megu-sidebar:hover {
+#megu-sidebar:hover {
 	left: 0;
 }
 
-.hangumin {
+#hangumin {
 	position: absolute;
 	right: -244px;
 	top: -42px;
@@ -195,7 +195,7 @@ footer p, footer a {
 	width: 272px;
 }
 
-.sidebar-content {
+#sidebar-content {
 	display: flex;
 	flex-direction: column;
 	position: relative;
@@ -207,45 +207,45 @@ footer p, footer a {
 	z-index: 150;
 }
 
-.sidebar-content h1,
-.sidebar-content h2 {
+#sidebar-content h1,
+#sidebar-content h2 {
 	margin: 0;
 }
 
-.sidebar-content h1 {
+#sidebar-content h1 {
 	font-size: 1.5rem;
 	margin-bottom: 15px;
 	text-decoration: underline;
 }
 
-.sidebar-content h2 {
+#sidebar-content h2 {
 	font-weight: 400;
 	font-size: inherit;
 }
 
-.sidebar-content ul {
+#sidebar-content ul {
 	margin: 0;
 	padding: 0;
 }
 
-.sidebar-content ul li {
+#sidebar-content ul li {
 	list-style-type: none;
 	margin: 15px 0;
 }
 
-.sidebar-content ul li::before {
+#sidebar-content ul li::before {
 	content: "->";
 }
 
-.sidebar-content hr {
+#sidebar-content hr {
 	width: 100%;
 }
 
-.sidebar-content p {
+#sidebar-content p {
 	margin: 10px 0 0;
 }
 
-.sidebar-content > p {
+#sidebar-content > p {
 	margin: initial;
 }
 
@@ -316,24 +316,24 @@ footer p, footer a {
 }
 
 @media only screen and (max-width: 1366px) {
-	.megu-sidebar {
+	#megu-sidebar {
 		min-width: 280px;
 		left: -288px;
 	}
 
-	.hangumin {
+	#hangumin {
 		right: -228px;
 		top: -39px;
 		height: 380px;
 		width: 257px;
 	}
 
-	.sidebar-content {
+	#sidebar-content {
 		max-width: 260px;
 		font-size: 12px;
 	}
 
-	.sidebar-content h1 {
+	#sidebar-content h1 {
 		font-size: 1.1rem;
 	}
 }
@@ -361,24 +361,24 @@ footer p, footer a {
 		background-position: -515px;
 	}
 
-	.megu-sidebar {
+	#megu-sidebar {
 		min-width: 240px;
 		left: -251px;
 	}
 
-	.hangumin {
+	#hangumin {
 		right: -189px;
 		top: -34px;
 		height: 320px;
 		width: 207px;
 	}
 
-	.sidebar-content {
+	#sidebar-content {
 		max-width: 220px;
 		font-size: 12px;
 	}
 
-	.sidebar-content h1 {
+	#sidebar-content h1 {
 		font-size: 1.1rem;
 	}
 }
@@ -400,19 +400,19 @@ footer p, footer a {
 		background-position: -750px;
 	}
 
-	.megu-sidebar {
+	#megu-sidebar {
 		min-width: 180px;
 		left: -188px;
 	}
 
-	.hangumin {
+	#hangumin {
 		right: -148px;
 		top: -27px;
 		height: 250px;
 		width: 162px;
 	}
 
-	.sidebar-content {
+	#sidebar-content {
 		max-width: 160px;
 		font-size: 12px;
 	}
@@ -435,19 +435,19 @@ footer p, footer a {
 		background-position: -875px;
 	}
 
-	.megu-sidebar {
+	#megu-sidebar {
 		min-width: 120px;
 		left: -128px;
 	}
 
-	.hangumin {
+	#hangumin {
 		right: -108px;
 		top: -21px;
 		height: 180px;
 		width: 117px;
 	}
 
-	.sidebar-content {
+	#sidebar-content {
 		max-width: 100px;
 		font-size: 12px;
 	}
