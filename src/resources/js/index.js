@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			button.innerText = 'やめろ!!';
 			button.style.fontSize = '65px';
 			button.style.backgroundColor = '#ab0000';
-			button.style.color = 'ff8080';
+			button.style.color = '#ff8080';
 			button.disabled = false;
 		}
 		else {
@@ -26,14 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		const button = document.getElementsByTagName('button')[0];
 		howlerList = {}; // Wipe before (re)load
 
-		for (const sound of sounds) {
+		for (const sound of s) {
 			howlerList[sound.filename] = new Howl({
 				src: `/sounds/${sound.filename}.mp3`
 			});
 		}
 
-		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
-		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton(false);
+		if (s.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
+		if (!s.length && button.innerText === 'やめろ!!') toggleButton(false);
 	}
 
 	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
