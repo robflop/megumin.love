@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		document.head.appendChild(specialCSS);
 
-		document.getElementsByClassName('hangumin')[0].src = `/images/general/${specialBackground.svg}.svg`;
+		document.getElementById('hangumin').src = `/images/general/${specialBackground.svg}.svg`;
 		document.title = originalTitle.replace('Megumin', specialBackground.title);
 	};
 
@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			else { // Making sure there are no special background settings left when switching to non-special backgrounds
 				if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
 				if (!document.title.includes('Megumin')) document.title = originalTitle;
-				if (!document.getElementsByClassName('hangumin')[0].src.includes('Hangumin')) {
-					document.getElementsByClassName('hangumin')[0].src = '/images/general/Hangumin.svg';
+				if (!document.getElementById('hangumin').src.includes('Hangumin')) {
+					document.getElementById('hangumin').src = '/images/general/Hangumin.svg';
 				}
 			}
 
