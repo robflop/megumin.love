@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1), versions: 1 },
 	];
 	const specialBackgrounds = [
-		{ filename: 'bg_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'Bluegumin', title: 'Aqua' },
-		{ filename: 'bg_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'Yellowgumin', title: 'Darkness' },
-		{ filename: 'bg_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'Greengumin', title: 'Kazuma' }
+		{ filename: 'special_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'Bluegumin', title: 'Aqua' },
+		{ filename: 'special_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'Yellowgumin', title: 'Darkness' },
+		{ filename: 'special_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'Greengumin', title: 'Kazuma' }
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
