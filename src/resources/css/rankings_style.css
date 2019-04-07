@@ -3,7 +3,7 @@ footer {
 }
 
 #container {
-	width: 600px;
+	width: 1150px;
 	background-color: #ffebee;
 }
 
@@ -15,14 +15,58 @@ footer {
 	visibility: hidden;
 }
 
-#rankings-wrap ol > li {
+#rankings-wrap {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+#rankings-wrap div {
+	width: 24%;
+}
+
+#rankings-wrap > div:not(:last-of-type) {
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-color: black;
+	padding-right: 10px;
+}
+
+#rankings-wrap div h2 {
+	text-align: center;
+	width: 75%;
+}
+
+#rankings-wrap div ol > li {
 	margin-top: 10px;
 	text-align: center;
+}
+
+#warning {
+	font-size: 30px;
+	width: 80%;
+}
+
+@media only screen and (max-width: 1366px) {
+	#container {
+		max-width: 900px;
+	}
 }
 
 @media only screen and (max-width: 960px) {
 	#container {
 		max-width: 500px;
+	}
+
+	#rankings-wrap div {
+		width: 47%;
+	}
+
+	#rankings-wrap > div {
+		border-right-style: solid;
+		border-right-width: 1px;
+		border-color: black;
+		padding-right: 10px;
 	}
 }
 
@@ -35,6 +79,14 @@ footer {
 @media only screen and (max-width: 490px) {
 	#container {
 		max-width: 300px;
+	}
+
+	#rankings-wrap div {
+		width: 100%;
+	}
+
+	#container #rankings-wrap > div {
+		border-right-style: none;
 	}
 }
 

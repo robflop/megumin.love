@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		const button = document.getElementsByTagName('button')[0];
 		howlerList = {}; // Wipe before (re)load
 
-		if (association) sounds = sounds.filter(s => s.association === association);
+		sounds = sounds.filter(s => s.association === association);
+		// Load sounds with either only associated background, or none with an association
 
 		activatedSounds = sounds;
 
@@ -110,14 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const { value } = e.target;
 
 		if (value.startsWith('special_')) {
-			const specialSounds = allSounds.filter(s => s.association === value);
-			activatedSounds = specialSounds;
-			loadSounds(specialSounds);
+			loadSounds(allSounds, value);
 		}
 		else {
-			const normalSounds = allSounds.filter(s => !s.association);
-			activatedSounds = normalSounds;
-			loadSounds(normalSounds);
+			loadSounds(allSounds);
 		}
 	});
 

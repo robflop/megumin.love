@@ -1,30 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	let sounds = [];
+	const specials = { megumin: null, aqua: 'special_true_goddess', darkness: 'special_chivalrous_crusader', kazuma: 'special_equality_advocate' };
 
 	const updateRanking = s => {
-		const rankings = document.getElementsByTagName('ol')[0];
+		const rankingsWrap = document.getElementById('rankings-wrap');
+		rankingsWrap.innerHTML = ''; // Reset to re-populate
 		s = s.sort((a, b) => b.count - a.count);
 
-		while (rankings.hasChildNodes()) rankings.removeChild(rankings.lastChild);
+		Object.keys(specials).forEach(character => {
+			const listWrap = document.createElement('div');
+			listWrap.id = character;
+			rankingsWrap.appendChild(listWrap);
 
-		if (!s.length) {
-			const warning = document.createElement('h1');
-			warning.id = 'warning';
-			warning.innerText = 'No sounds available.';
+			const characterSounds = sounds.filter(snd => snd.association === specials[character]);
 
-			document.getElementById('loading').remove();
-			return document.getElementById('rankings-wrap').appendChild(warning);
-		}
+			const title = document.createElement('h2');
+			title.innerText = character.charAt(0).toUpperCase() + character.slice(1);
+			title.classList.add('titles');
+			listWrap.appendChild(title);
 
-		for (const sound of s) {
-			if (sound.filename === 'realname') continue;
-			const soundListItem = document.createElement('li');
-			soundListItem.id = sound.filename;
-			soundListItem.innerText = `${sound.displayname}: ${formatNumber(sound.count)} clicks`;
+			if (!characterSounds.length) {
+				const warning = document.createElement('h3');
+				warning.id = 'warning';
+				warning.innerText = 'No sounds available.';
 
-			rankings.appendChild(soundListItem);
-		}
+				if (document.getElementById('loading')) document.getElementById('loading').remove();
+				return listWrap.appendChild(warning);
+			}
+
+			const list = document.createElement('ol');
+
+			for (const sound of characterSounds) {
+				if (sound.filename === 'realname') continue;
+				const rankingListItem = document.createElement('li');
+				rankingListItem.id = sound.filename;
+				rankingListItem.innerText = `${sound.displayname}: ${formatNumber(sound.count)} clicks`;
+
+				list.appendChild(rankingListItem);
+			}
+
+			listWrap.appendChild(list);
+		});
 
 		if (document.getElementById('loading')) document.getElementById('loading').remove();
 	};

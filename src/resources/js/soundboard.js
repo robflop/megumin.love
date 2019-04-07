@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	let howlerList = {};
 
 	function loadSoundboard(sounds, association = null) {
-		sounds = sounds.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+		sounds = sounds
+			.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source))
 		// Sort primarily by season and secondarily alphabetically within seasons
-		if (association) sounds = sounds.filter(s => s.association === association);
+			.filter(s => s.association === association);
+		// Load sounds with either only associated background, or none with an association
 
 		activatedSounds = sounds;
 		howlerList = {}; // Wipe before reload
@@ -177,14 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const { value } = e.target;
 
 		if (value.startsWith('special_')) {
-			const specialSounds = allSounds.filter(s => s.association === value);
-			activatedSounds = specialSounds;
-			loadSoundboard(specialSounds);
+			loadSoundboard(allSounds, value);
 		}
-		else {
-			const normalSounds = allSounds.filter(s => !s.association);
-			activatedSounds = normalSounds;
-			loadSoundboard(normalSounds);
+		else if (value !== 'randomBg') {
+			loadSoundboard(allSounds);
 		}
 	});
 });
