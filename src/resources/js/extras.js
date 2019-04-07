@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		document.head.appendChild(specialCSS);
 
-		document.getElementById('hangumin').src = `/images/general/${specialBackground.svg}.svg`;
+		document.getElementById('sidebar-vector').src = `/images/vectors/${specialBackground.svg}.svg`;
 		document.title = originalTitle.replace('Megumin', specialBackground.title);
 	};
 
@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1), versions: 1 },
 	];
 	const specialBackgrounds = [
-		{ filename: 'special_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'Bluegumin', title: 'Aqua' },
-		{ filename: 'special_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'Yellowgumin', title: 'Darkness' },
-		{ filename: 'special_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'Greengumin', title: 'Kazuma' }
+		{ filename: 'special_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'aqua_sidebar', title: 'Aqua' },
+		{ filename: 'special_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'darkness_sidebar', title: 'Darkness' },
+		{ filename: 'special_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'kazuma_sidebar', title: 'Kazuma' }
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (value === 'reset') {
 			if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
 			if (!document.title.includes('Megumin')) document.title = originalTitle;
-			if (!document.getElementById('hangumin').src.includes('Hangumin')) {
-				document.getElementById('hangumin').src = '/images/general/Hangumin.svg';
+			if (!document.getElementById('sidebar-vector').src.includes('megumin_sidebar')) {
+				document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
 			}
 
 			bodyElem.classList.remove(currentBg);
@@ -98,8 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			else { // Making sure there are no special background settings left when switching to non-special backgrounds
 				if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
 				if (!document.title.includes('Megumin')) document.title = originalTitle;
-				if (!document.getElementById('hangumin').src.includes('Hangumin')) {
-					document.getElementById('hangumin').src = '/images/general/Hangumin.svg';
+				if (!document.getElementById('sidebar-vector').src.includes('megumin_sidebar')) {
+					document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
 				}
 			}
 
