@@ -321,7 +321,7 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 	}
 
 	const data = req.body;
-	Logger.info(`Upload process for sound '${data.filename}' (${data.displayname}, ${data.source}) initiated.`);
+	Logger.info(`Upload process for sound '${data.filename}' (${data.displayname}, ${data.source}, ${data.association}) initiated.`);
 
 	if (sounds.find(sound => sound.filename === data.filename)) {
 		Logger.error(`A sound with filename '${data.filename}' already exists, upload aborted.`);
@@ -335,8 +335,8 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 			else Logger.info(`(1/3): Uploaded mp3 file successfully renamed to requested filename.`);
 		});
 
-		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count ) VALUES ( ?, ?, ?, ? )',
-			data.filename, data.displayname, data.source, 0,
+		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ?)',
+			data.filename, data.displayname, data.source, 0, data.association,
 			insertErr => {
 				if (insertErr) {
 					Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
@@ -344,7 +344,14 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 				}
 				Logger.info(`(2/3): Database entry successfully created.`);
 
-				newSound = { id: latestID + 1, filename: data.filename, displayname: data.displayname, source: data.source, count: 0 };
+				newSound = {
+					id: latestID + 1,
+					filename: data.filename,
+					displayname: data.displayname,
+					source: data.source,
+					count: 0,
+					association: data.association
+				};
 				sounds.push(newSound);
 
 				Logger.info(`(3/3): Sound cache entry successfully created.`);
@@ -366,10 +373,10 @@ apiRouter.patch('/admin/rename', (req, res) => {
 
 	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}) initiated.`);
+		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}, ${data.newAssociation}) initiated.`); // eslint-disable-line max-len
 
-		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ? WHERE filename = ?',
-			data.newFilename, data.newDisplayname, data.newSource, changedSound.filename,
+		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ?, association = ? WHERE filename = ?',
+			data.newFilename, data.newDisplayname, data.newSource, data.newAssociation, changedSound.filename,
 			updateErr => {
 				if (updateErr) {
 					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
@@ -380,6 +387,7 @@ apiRouter.patch('/admin/rename', (req, res) => {
 				changedSound.filename = data.newFilename;
 				changedSound.displayname = data.newDisplayname;
 				changedSound.source = data.newSource;
+				changedSound.association = data.newAssociation;
 
 				Logger.info(`(2/5): Sound cache entry successfully updated.`);
 
@@ -429,7 +437,7 @@ apiRouter.delete('/admin/delete', (req, res) => {
 
 	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Deletion process for sound '${deletedSound.filename}' (${deletedSound.displayname}, ${deletedSound.source}) initiated.`);
+		Logger.info(`Deletion process for sound '${deletedSound.filename}' (${deletedSound.displayname}, ${deletedSound.source}, ${deletedSound.association}) initiated.`); // eslint-disable-line max-len
 
 		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
 			if (deleteErr) {

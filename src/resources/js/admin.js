@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const updateSounds = s => {
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
-		const options = sounds.map(sound => `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source})</option>`);
+		const options = sounds.map(sound => {
+			return `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})</option>`;
+		});
 
 		document.getElementById('rename-select').innerHTML = options.join('');
 		document.getElementById('delete-select').innerHTML = options.join('');
@@ -53,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				oldFilename: renameForm[0].value,
 				newFilename: renameForm[1].value,
 				newDisplayname: renameForm[2].value,
-				newSource: renameForm[3].value
+				newSource: renameForm[3].value,
+				newAssociation: renameForm[4].value
 			};
 
 			fetch('/api/admin/rename', {

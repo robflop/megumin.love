@@ -157,15 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
 							break;
 						case 'soundRename':
 							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-							loadSoundboard(allSounds);
+							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						case 'soundUpload':
 							allSounds.push(data.sound);
-							loadSoundboard(allSounds);
+							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						case 'soundDelete':
 							allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
-							loadSoundboard(allSounds);
+							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;
 						default:
 							break;
