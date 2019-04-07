@@ -83,6 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		const { value } = e.target;
 
 		if (value === 'reset') {
+			if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
+			if (!document.title.includes('Megumin')) document.title = originalTitle;
+			if (!document.getElementById('hangumin').src.includes('Hangumin')) {
+				document.getElementById('hangumin').src = '/images/general/Hangumin.svg';
+			}
+
+			bodyElem.classList.remove(currentBg);
+			bodyElem.classList.add('bg1'); // Reset to default bg
 			return localStorage.removeItem('background');
 		}
 		if (value !== 'randomBg') {

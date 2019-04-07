@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
 
-	fetch('/api/sounds').then(res => res.json()).then(s => {
-		allSounds = s;
-		const currentBackground = localStorage.getItem('background');
+	fetch('/api/sounds').then(res => res.json()).then(sounds => {
+		allSounds = sounds;
+		const currentBackground = localStorage.getItem('background') || '';
 		loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 	}).then(() => {
 		fetch('/api/conInfo').then(res => res.json()).then(con => {
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
-					const currentBackground = localStorage.getItem('background');
+					const currentBackground = localStorage.getItem('background') || '';
 
 					switch (data.type) {
 						case 'counterUpdate':
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		else {
 			const normalSounds = allSounds.filter(s => !s.association);
-			activated = normalSounds;
+			activatedSounds = normalSounds;
 			loadSounds(normalSounds);
 		}
 	});
