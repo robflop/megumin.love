@@ -1,27 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
-	let sounds = [];
 	let ws;
+	let allSounds = [];
+	let activatedSounds = [];
 	let howlerList = {};
 
-	function loadSoundboard(s) {
-		s = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+	function loadSoundboard(sounds, association = null) {
+		sounds = sounds.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
+		if (association) sounds = sounds.filter(s => s.association === association);
+
+		activatedSounds = sounds;
 		howlerList = {}; // Wipe before reload
-
-		if (!s.length) {
-			const warning = document.createElement('h1');
-			warning.id = 'warning';
-			warning.innerText = 'No sounds available.';
-
-			document.getElementById('loading').remove();
-			return document.getElementById('soundboard').appendChild(warning);
-		}
 
 		const soundboard = document.getElementById('soundboard');
 		soundboard.innerHTML = ''; // Reset to re-populate
 
+		if (!sounds.length) {
+			const warning = document.createElement('h1');
+			warning.id = 'warning';
+			warning.innerText = 'No sounds available.';
+
+			if (document.getElementById('loading')) document.getElementById('loading').remove();
+			return document.getElementById('soundboard').appendChild(warning);
+		}
+
 		// Create buttons and make them play corresponding sounds
-		for (const sound of s) {
+		for (const sound of sounds) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
@@ -74,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
-					sounds.filter(snd => snd.source === sound.source).forEach(snd => {
+					allSounds.filter(snd => snd.source === sound.source).forEach(snd => {
 						howlerList[snd.filename].play();
 
 						return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: snd.filename }));
@@ -117,9 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (document.getElementById('loading')) document.getElementById('loading').remove();
 	}
 
-	fetch('/api/sounds').then(res => res.json()).then(s => {
-		sounds = s;
-		loadSoundboard(sounds);
+	fetch('/api/sounds').then(res => res.json()).then(sounds => {
+		allSounds = sounds;
+		const currentBackground = localStorage.getItem('background') || '';
+		loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 	}).then(() => {
 		fetch('/api/conInfo').then(res => res.json()).then(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
@@ -138,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
 						data = {};
 					}
 
+					const currentBackground = localStorage.getItem('background') || '';
+
 					switch (data.type) {
 						case 'crazyMode':
 							if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
@@ -147,16 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
 							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 							break;
 						case 'soundRename':
-							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-							loadSoundboard(sounds);
+							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+							loadSoundboard(allSounds);
 							break;
 						case 'soundUpload':
-							sounds.push(data.sound);
-							loadSoundboard(sounds);
+							allSounds.push(data.sound);
+							loadSoundboard(allSounds);
 							break;
 						case 'soundDelete':
-							sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
-							loadSoundboard(sounds);
+							allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
+							loadSoundboard(allSounds);
 							break;
 						default:
 							break;
@@ -164,5 +171,20 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 			});
 		});
+	});
+
+	document.getElementById('bg-select').addEventListener('change', e => {
+		const { value } = e.target;
+
+		if (value.startsWith('special_')) {
+			const specialSounds = allSounds.filter(s => s.association === value);
+			activatedSounds = specialSounds;
+			loadSoundboard(specialSounds);
+		}
+		else {
+			const normalSounds = allSounds.filter(s => !s.association);
+			activatedSounds = normalSounds;
+			loadSoundboard(normalSounds);
+		}
 	});
 });
