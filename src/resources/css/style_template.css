@@ -96,6 +96,10 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg9.jpg');
 }
 
+.bg10 {
+	background-image: url('/images/backgrounds/bg10.jpg');
+}
+
 .bg1_easter1 {
 	background-image: url('/images/backgrounds/bg1_easter1.jpg');
 }
@@ -146,6 +150,7 @@ footer p, footer a {
 
 .bg4 footer p,
 .bg9 footer p,
+.bg10 footer p,
 .bg1_halloween1 footer p,
 .bg1_halloween2 footer p,
 .bg1_birthday footer p,
