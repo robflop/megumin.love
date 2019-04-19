@@ -16,4 +16,14 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 	db.run('ALTER TABLE sounds ADD COLUMN association TEXT', alterErr => {
 		if (alterErr) return console.log('An error occurred adding the association column.');
 	});
+
+	db.serialize(() => {
+		db.run(`CREATE TABLE IF NOT EXISTS meta ( dbVersion INTEGER NOT NULL )`, createErr => {
+			if (createErr) return console.log('An error occurred creating the \'meta\' table.');
+		});
+
+		db.run('INSERT INTO meta ( dbVersion ) VALUES ( 8 )', insertErr => {
+			if (insertErr) return console.log('An error occurred inserting the database version into the \'meta\' table.');
+		});
+	});
 });
