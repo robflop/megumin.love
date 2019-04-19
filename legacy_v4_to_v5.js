@@ -1,18 +1,18 @@
 const { Database } = require('sqlite3');
 const { join } = require('path');
 const { copyFile } = require('fs');
-const { databasePath } = require('../src/config.json');
+const { databasePath } = require('./src/config.json');
 let sounds;
 
 try {
-	sounds = require('../src/resources/js/sounds');
+	sounds = require('./src/resources/js/sounds');
 }
 catch (e) {
 	console.log('The sounds.js file could not be found! Did you already migrate?');
 	return console.log(e.message);
 }
 
-const db = new Database(join('..', 'src', databasePath));
+const db = new Database(join('.', 'src', databasePath));
 const soundQueryValues = sounds.map(sound => `( "${sound.filename}", "${sound.displayName}", "${sound.source}", 0 )`);
 
 console.log('Database adjustment now in progress. Do not manually exit or your database will get corrupted and not work again.');
