@@ -110,12 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('bg-select').addEventListener('change', e => {
 		const { value } = e.target;
 
-		if (value.startsWith('special_')) {
-			loadSounds(allSounds, value);
-		}
-		else {
-			loadSounds(allSounds);
-		}
+		if (value.startsWith('special_')) loadSounds(allSounds, value);
+		else loadSounds(allSounds);
 	});
 
 	document.getElementsByTagName('button')[0].addEventListener('keypress', e => {

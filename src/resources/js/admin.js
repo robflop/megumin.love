@@ -21,15 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		uploadForm.addEventListener('submit', e => {
 			e.preventDefault();
 
-			const formData = new FormData(uploadForm);
-
 			fetch('/api/admin/upload', {
 				method: 'POST',
 				headers: {
 					Authorization: localStorage.getItem('token')
 					// Content-Type not set because of boundary
 				},
-				body: formData
+				body: new FormData(uploadForm)
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					uploadForm.reset();
@@ -88,17 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('delete-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			const data = {
-				filename: deleteForm[0].value
-			};
-
 			fetch('/api/admin/delete', {
 				method: 'DELETE',
 				headers: {
 					'Authorization': localStorage.getItem('token'),
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(data)
+				body: JSON.stringify({ filename: deleteForm[0].value })
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					deleteForm.reset();

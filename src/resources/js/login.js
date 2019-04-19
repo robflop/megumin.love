@@ -7,9 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({
-				token
-			})
+			body: JSON.stringify({ token })
 		}).then(res => res.json())
 			.then(res => {
 				if (res.code === 200) {

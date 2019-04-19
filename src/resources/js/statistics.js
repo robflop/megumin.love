@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const yearly = document.getElementById('yearly');
 	const average = document.getElementById('average');
 
-
 	const updateStatistics = stats => {
 		alltime.innerText = `All-time clicks: ${formatNumber(stats.summary.alltime)}`;
 		daily.innerText = `Today's clicks: ${formatNumber(stats.summary.daily)}`;

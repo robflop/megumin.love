@@ -5,19 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
 	let howlerList = {};
 
 	function loadSoundboard(sounds, association = null) {
-		sounds = sounds
+		activatedSounds = sounds
 			.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source))
 		// Sort primarily by season and secondarily alphabetically within seasons
 			.filter(s => s.association === association);
 		// Load sounds with either only associated background, or none with an association
 
-		activatedSounds = sounds;
 		howlerList = {}; // Wipe before reload
 
 		const soundboard = document.getElementById('soundboard');
 		soundboard.innerHTML = ''; // Reset to re-populate
 
-		if (!sounds.length) {
+		if (!activatedSounds.length) {
 			const warning = document.createElement('h1');
 			warning.id = 'warning';
 			warning.innerText = 'No sounds available.';
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		// Create buttons and make them play corresponding sounds
-		for (const sound of sounds) {
+		for (const sound of activatedSounds) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
 			// Source as in "Season 1", "Season 1 OVA", etc
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 
 				document.getElementById(`pa-${sourceName}`).addEventListener('click', e => {
-					allSounds.filter(snd => snd.source === sound.source).forEach(snd => {
+					activatedSounds.filter(snd => snd.source === sound.source).forEach(snd => {
 						howlerList[snd.filename].play();
 
 						return ws.send(JSON.stringify({ type: 'sbClick', soundFilename: snd.filename }));
@@ -178,11 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('bg-select').addEventListener('change', e => {
 		const { value } = e.target;
 
-		if (value.startsWith('special_')) {
-			loadSoundboard(allSounds, value);
-		}
-		else if (value !== 'randomBg') {
-			loadSoundboard(allSounds);
-		}
+		if (value.startsWith('special_')) loadSoundboard(allSounds, value);
+		else if (value !== 'randomBg') loadSoundboard(allSounds);
 	});
 });

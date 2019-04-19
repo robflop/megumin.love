@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	const characters = { megumin: null, aqua: 'special_true_goddess', darkness: 'special_chivalrous_crusader', kazuma: 'special_equality_advocate' };
 	let sounds = [];
-	const specials = { megumin: null, aqua: 'special_true_goddess', darkness: 'special_chivalrous_crusader', kazuma: 'special_equality_advocate' };
 
 	const updateRanking = s => {
 		const rankingsWrap = document.getElementById('rankings-wrap');
 		rankingsWrap.innerHTML = ''; // Reset to re-populate
 		s = s.sort((a, b) => b.count - a.count);
 
-		Object.keys(specials).forEach(character => {
+		Object.keys(characters).forEach(character => {
 			const listWrap = document.createElement('div');
 			listWrap.id = character;
 			rankingsWrap.appendChild(listWrap);
 
-			const characterSounds = sounds.filter(snd => snd.association === specials[character]);
+			const characterSounds = sounds.filter(snd => snd.association === characters[character]);
 
 			const title = document.createElement('h2');
 			title.innerText = character.charAt(0).toUpperCase() + character.slice(1);
