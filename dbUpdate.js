@@ -23,8 +23,8 @@ const databaseVersions = [
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
-				achieved INTEGER NOT NULL,
-				timestamp TEXT NOT NULL,
+				reached INTEGER NOT NULL DEFAULT 0,
+				timestamp INTEGER NOT NULL DEFAULT 0,
 				soundID INTEGER,
 					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
 			);`
