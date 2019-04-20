@@ -221,7 +221,7 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
 		}
 
-		const { to, from } = req.query;
+		const { from, to } = req.query;
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
 		if ((to && dateFns.isAfter(to, latestStatisticsEntry)) || (from && dateFns.isAfter(from, latestStatisticsEntry))) {
