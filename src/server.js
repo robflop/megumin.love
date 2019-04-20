@@ -567,9 +567,9 @@ socketServer.on('connection', socket => {
 		if (!['click', 'sbClick'].includes(data.type)) return;
 
 		if (data.type === 'click') {
-			const crazyModeSound = data.soundFilename ? sounds.find(s => s.filename === data.soundFilename) : null;
+			const soundEntry = sounds.find(s => s.filename === data.soundFilename);
 
-			if (!crazyModeSound) return;
+			if (!soundEntry) return;
 
 			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
 			const currentMonth = currentDate.substring(0, 7);
@@ -588,7 +588,7 @@ socketServer.on('connection', socket => {
 
 			emitUpdate({
 				type: 'crazyMode',
-				soundFilename: crazyModeSound.filename
+				soundFilename: soundEntry.filename
 			}, { excludeSocket: socket });
 
 			return emitUpdate({
