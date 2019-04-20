@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		average.innerText = `Average clicks a day (in this month): ~${formatNumber(stats.summary.average)}`;
 
 		chart.data.labels = stats.chartData.map(entry => entry = entry.month);
-		chart.data.datasets[0].data = stats.chartData.map(entry => entry = entry.clicks);
+		chart.data.datasets[0].data = stats.chartData.map(entry => entry = entry.count);
 		chart.update();
 	};
 

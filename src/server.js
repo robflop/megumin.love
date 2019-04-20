@@ -73,7 +73,7 @@ db.serialize(() => {
 		return Logger.info('Statistics loaded.');
 	});
 
-	db.all('SELECT sum(count) AS clicks, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
+	db.all('SELECT sum(count) AS count, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
 		if (!rows) return Logger.warn('No chart data found.');
 		chartData = rows;
 
@@ -669,7 +669,7 @@ socketServer.on('connection', socket => {
 			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
-			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentMonth });
+			currentMonthData ? currentMonthData.count++ : chartData.push({ count: 1, month: currentMonth });
 
 			statistics[currentDate] = daily;
 
