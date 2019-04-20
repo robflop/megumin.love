@@ -49,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 	}).then(() => {
 		fetch('/api/conInfo').then(res => res.json()).then(con => {
+			versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
+			trimmedVersion = con.version.substring(0, con.version.lastIndexOf('.'));
+			versionsAnchor.innerText = `[ver${trimmedVersion}]`;
+
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
 

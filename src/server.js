@@ -10,24 +10,40 @@ const { join } = require('path');
 const { readdirSync, unlink, rename, copyFile } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
+const { version: packageVersion } = require('../package.json');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
-let sounds = [], chartData = {};
+let sounds = [], chartData = {}, milestones = [], version = '';
 const statistics = {};
 
 // On-boot database interaction
 const db = new Database(config.databasePath);
 
 db.serialize(() => {
+	db.get('SELECT version FROM meta', [], (selectErr, row) => {
+		if (!row || !row.version) {
+			version = packageVersion;
+			return Logger.warn('No version number found, substituted by package.json value. You should consider fixing this in the database.');
+		}
+		version = row.version;
+
+		return Logger.info('Version number loaded.');
+	});
+
 	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
-		if (!row) db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
-		else counter = row.counter;
+		if (!row || row.counter === undefined) {
+			db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
+			return Logger.warn('Counter not found, automatically inserted into the database and loaded as 0.');
+		}
+		counter = row.counter;
 
 		return Logger.info('Main counter loaded.');
 	});
 
 	db.all('SELECT * FROM sounds', [], (selectErr, rows) => {
+		if (!rows) return Logger.warn('No sounds found.');
 		sounds = rows;
+
 		return Logger.info('Sounds & rankings loaded.');
 	});
 
@@ -35,6 +51,8 @@ db.serialize(() => {
 	// Insert statistics entry for the boot day if it does not exist
 
 	db.all('SELECT * FROM statistics', [], (selectErr, rows) => {
+		if (!rows) return Logger.warn('No statistics found.');
+
 		const startOfBootWeek = dateFns.startOfWeek(new Date(), { weekStartsOn: 1 }), endOfBootWeek = dateFns.endOfWeek(new Date(), { weekStartsOn: 1 });
 		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
 		const startOfBootYear = dateFns.startOfYear(new Date()), endOfBootYear = dateFns.endOfYear(new Date());
@@ -55,8 +73,17 @@ db.serialize(() => {
 	});
 
 	db.all('SELECT sum(count) AS clicks, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
+		if (!rows) return Logger.warn('No chart data found.');
 		chartData = rows;
+
 		return Logger.info('Chart data loaded.');
+	});
+
+	db.all('SELECT * FROM milestones', [], (selectErr, rows) => {
+		if (!rows) return Logger.warn('No milestones found.');
+		milestones = rows;
+
+		return Logger.info('Milestones loaded.');
 	});
 });
 
@@ -145,7 +172,7 @@ apiRouter.get('/', (req, res) => {
 });
 
 apiRouter.get('/conInfo', (req, res) => {
-	return res.json({ port: config.port, ssl: config.SSLproxy });
+	return res.json({ port: config.port, ssl: config.SSLproxy, version });
 });
 
 apiRouter.get('/counter', (req, res) => {
@@ -266,6 +293,11 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	return res.json(requestedStatistics);
 });
 
+apiRouter.get('/statistics/milestones', (req, res) => {
+	// TODO: Everything
+	return res.json(milestones);
+});
+
 apiRouter.get('/statistics/summary', (req, res) => {
 	return res.json({
 		alltime: counter,
@@ -278,6 +310,7 @@ apiRouter.get('/statistics/summary', (req, res) => {
 });
 
 apiRouter.get('/statistics/chartData', (req, res) => {
+	// TODO: Allow filtering via request parameters?
 	return res.json(chartData);
 });
 
@@ -550,6 +583,8 @@ socketServer.on('connection', socket => {
 			currentMonthData ? currentMonthData.clicks++ : chartData.push({ clicks: 1, month: currentMonth });
 
 			statistics[currentDate] = daily;
+
+			// TODO: milestone functionality
 
 			emitUpdate({
 				type: 'crazyMode',
