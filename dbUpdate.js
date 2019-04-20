@@ -7,11 +7,22 @@ const { databasePath } = require('./src/config.json');
 const db = new Database(join('src', databasePath));
 let currentVersion, newVersion;
 
+console.log('This is the megumin.love database migration tool.');
+console.log('------------------------------------');
+console.log('Creating database backup.');
+
+copyFile(db.filename, `${db.filename}.bak`, err => {
+	if (err) {
+		console.log('Database backup creation failed, migration aborting.');
+		return setTimeout(() => process.exit(1), 2000);
+	}
+});
+
 db.get('SELECT version FROM meta', [], (selectErr, data) => {
 	if (selectErr || !data || (data && !data.version)) currentVersion = 'Unknown';
 	else currentVersion = data.version;
 
-	console.log('This is the megumin.love database migration tool.');
+	console.log('------------------------------------');
 	console.log(`Detected database version: ${currentVersion}`);
 
 	if (currentVersion === 'Unknown') {
@@ -47,11 +58,22 @@ function targetDatabaseUpdate() {
 	newVersionInput.on('line', ver => {
 		newVersion = ver.trim();
 
+		if (newVersion === 'latest') newVersion = databaseVersions[databaseVersions.length - 1].targetVersion;
+
+		if (currentVersion > newVersion) {
+			console.log('\nCurrent version is above new version. No updating is necessary.');
+			return process.exit(0);
+		}
+		else if (currentVersion === newVersion) {
+			console.log('\nCurrent version equals new version. No updating is necessary.');
+			return process.exit(0);
+		}
+
 		const upgrades = databaseVersions.filter(version => {
 			const aboveCurrent = currentVersion < version.targetVersion;
 			const belowNew = newVersion >= version.targetVersion;
 
-			return aboveCurrent && newVersion === 'latest' ? true : belowNew;
+			return aboveCurrent && belowNew;
 			// Passes all versions above the current if the latest version is aspired
 		});
 
@@ -74,14 +96,8 @@ function targetDatabaseUpdate() {
 
 		newVersionInput.close();
 
-		copyFile(db.filename, `${db.filename}.bak`, err => {
-			if (err) {
-				console.log('Database backup creation failed, migration aborting.');
-				return setTimeout(() => process.exit(1), 2000);
-			}
-			console.log('------------------------------------');
-			console.log('Please review the above output for important notes and restore the created database backup if anything went wrong.');
-		});
+		console.log('------------------------------------');
+		return console.log('Please review the above output for important notes and restore the created database backup if anything went wrong.');
 	});
 }
 
@@ -111,7 +127,7 @@ const databaseVersions = [
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
 				achieved INTEGER NOT NULL,
-				achievedAt TEXT NOT NULL,
+				timestamp TEXT NOT NULL,
 				soundID INTEGER,
 					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
 			);`
