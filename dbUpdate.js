@@ -5,76 +5,82 @@ const { copyFile } = require('fs');
 const { databasePath } = require('./src/config.json');
 
 const db = new Database(join('src', databasePath));
-let dbVersion, newVersion;
+let currentVersion, newVersion;
 
-db.get('SELECT dbVersion FROM meta', [], (selectErr, data) => {
-	if (selectErr || !data || (data && !data.dbVersion)) dbVersion = 'Unknown';
-	else dbVersion = data.dbVersion;
+db.get('SELECT version FROM meta', [], (selectErr, data) => {
+	if (selectErr || !data || (data && !data.version)) currentVersion = 'Unknown';
+	else currentVersion = data.version;
 
 	console.log('This is the megumin.love database migration tool.');
-	console.log(`Detected database version: ${dbVersion}`);
+	console.log(`Detected database version: ${currentVersion}`);
 
-	if (dbVersion === 'Unknown') {
-		console.log('Please enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0):');
+	if (currentVersion === 'Unknown') {
+		console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
 
-		const dbVersionInput = createInterface({
+		const currentVersionInput = createInterface({
 			input: process.stdin,
 			output: process.stdout,
 			prompt: 'Starting database version: '
 		});
 
-		dbVersionInput.prompt();
+		currentVersionInput.prompt();
 
-		dbVersionInput.on('line', ver => {
-			dbVersion = ver.trim();
-			dbVersionInput.close();
+		currentVersionInput.on('line', ver => {
+			currentVersion = ver.trim();
+			currentVersionInput.close();
 		});
 
-		dbVersionInput.on('close', () => targetDatabaseUpdate());
+		currentVersionInput.on('close', () => targetDatabaseUpdate());
 	}
 	else targetDatabaseUpdate();
 });
 
 function targetDatabaseUpdate() {
-	const migrationVersionInput = createInterface({
+	const newVersionInput = createInterface({
 		input: process.stdin,
 		output: process.stdout,
-		prompt: 'Targeted database version: '
+		prompt: '\nTargeted database version (\'x.x.x\' or \'latest\'): '
 	});
 
-	migrationVersionInput.prompt();
+	newVersionInput.prompt();
 
-	migrationVersionInput.on('line', ver => {
-		console.log('------------------------------------');
+	newVersionInput.on('line', ver => {
 		newVersion = ver.trim();
 
-		databaseVersions.forEach(version => {
-			if (dbVersion < version.targetVersion && newVersion >= version.targetVersion) {
+		const upgrades = databaseVersions.filter(version => {
+			const aboveCurrent = currentVersion < version.targetVersion;
+			const belowNew = newVersion >= version.targetVersion;
+
+			return aboveCurrent && newVersion === 'latest' ? true : belowNew;
+			// Passes all versions above the current if the latest version is aspired
+		});
+
+		upgrades.forEach(version => {
+			console.log('------------------------------------');
 				console.log(`Running database queries required for version ${version.targetVersion}.`);
 
 				const queries = version.queries.join(' ');
 
 				db.exec(queries, err => {
 					if (err) {
-						console.log('An error occurred while running the relevant queries:');
+					console.log(`An error occurred while running the queries for version ${version.targetVersion}:`);
 						console.log(err);
 					}
 				});
 
 				if (version.notes) version.notes.forEach(note => console.log('Notice:', note));
 				console.log(`Migration to version ${version.targetVersion} completed.`);
-				console.log('------------------------------------');
-			}
 		});
 
-		migrationVersionInput.close();
+		newVersionInput.close();
 
 		copyFile(db.filename, `${db.filename}.bak`, err => {
 			if (err) {
-				console.log('\nDatabase backup creation failed, migration aborting.');
+				console.log('Database backup creation failed, migration aborting.');
 				return setTimeout(() => process.exit(1), 2000);
 			}
-			console.log('Restore the created database backup if anything went wrong.');
+			console.log('------------------------------------');
+			console.log('Please review the above output for important notes and restore the created database backup if anything went wrong.');
 		});
 	});
 }
