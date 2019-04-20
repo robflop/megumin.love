@@ -130,7 +130,7 @@ Output:
         "source": "Season 1",
         "count": 12671
     },
-// ...
+    // ...
 ]
 ```
 
@@ -260,6 +260,98 @@ Output:
 
 ---
 
+## `GET /statistics/milestones`
+
+Returns an array containing the website's milestones including the following information:
+- Count for said milestone to be hit
+- If the milestone has been reached in Integer type (0 or 1 for false or true respectively)
+- When the milestone was reached if yes (epoch timestamp)
+- The ID of the sound that played when the milestone was hit
+
+All additional info besides count will only be filled out if the milestone has been reached.
+If it has not been reached, a dummy 0 value is filled out for the timestamp.
+
+No milestones are activated by default, so none may exist.
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key | Description | Format |
+| --- | ----------- | ------ |
+| --- | ----------- | ------ |
+
+### Parameters
+
+| Key      | Description                                       | Format     | Example      |
+| -------- | ------------------------------------------------- | ---------- | ------------ |
+| reached  | Whether the milestone needs to have been reached  | Integer    | 0 / 1        |
+| soundID  | ID the milestone must have been reached with      | Integer    | 42           |
+
+#### Example requests
+
+`/statistics/milestones`
+
+Output:
+
+```js
+[
+	{
+		count: 100000,
+		reached: 1,
+		timestamp: 1555792165395,
+		soundID: 24
+	},
+	{
+		count: 500000,
+		reached: 1,
+		timestamp: 1556152197176,
+		soundID: 42
+	},
+	{
+		count: 1000000,
+		reached: 0,
+		timestamp: 0,
+		soundID: undefined
+	}
+]
+```
+
+`/statistics/milestones?reached=0`
+
+Output:
+
+```js
+[
+	{
+		count: 1000000,
+		reached: 0,
+		timestamp: 0,
+		soundID: undefined
+	}
+]
+```
+
+`/statistics/milestones?soundID=42`
+
+Output:
+
+```js
+[
+	{
+		count: 500000,
+		reached: 1,
+		timestamp: 1556152197176,
+		soundID: 42
+	}
+]
+```
+---
+
 ## `GET /statistics/summary`
 
 Returns a summary of the following counter statistics:
@@ -329,9 +421,10 @@ Returns data necessary for constructing the monthly click distribution chart dis
 
 ### Parameters
 
-| Key | Description | Format | Example |
-| --- | ----------- | ------ | ------- |
-| --- | ----------- | ------ | ------- |
+| Key  | Description            | Format  | Example |
+| ---- | ---------------------- | ------- | ------- |
+| from | Month to begin data at | YYYY-MM | 2018-07 |
+| to   | Month to end data at   | YYYY-MM | 2018-10 |
 
 
 #### Example requests
@@ -343,14 +436,76 @@ Output:
 ```js
 [
     {
-        "clicks": 1099355,
-        "month": "2017-04"
+        "clicks": 375994,
+        "month": "2018-07"
+    },
+    // ...
+    {
+        "clicks": 22482,
+        "month": "2019-04"
+    },
+    // ...
+]
+```
+
+`/statistics/chartData?from=2018-07`
+
+```js
+[
+    {
+        "clicks": 375994,
+        "month": "2018-07"
     },
     {
-        "clicks": 3652240,
-        "month": "2017-05"
+        "clicks": 266681,
+        "month": "2018-08"
     },
-// ...
+    // ...
+]
+```
+
+Output:
+
+`/statistics/chartData?to=2018-10`
+
+Output:
+
+```js
+[
+    {
+        "clicks": 20085238,
+        "month": "2017-04"
+    },
+    // ...
+    {
+        "clicks": 334915,
+        "month": "2018-10"
+    }
+]
+```
+
+`/statistics/chartData?from=2018-07&to=2018-10`
+
+Output:
+
+```js
+[
+    {
+        "clicks": 375994,
+        "month": "2018-07"
+    },
+    {
+        "clicks": 266681,
+        "month": "2018-08"
+    },
+    {
+        "clicks": 50542260,
+        "month": "2018-09"
+    },
+    {
+        "clicks": 334915,
+        "month": "2018-10"
+    }
 ]
 ```
 

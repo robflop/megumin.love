@@ -1,0 +1,36 @@
+#container {
+	width: 600px;
+	background-color: #ffebee;
+}
+
+#container :nth-last-child(2) {
+	border-style: none;
+}
+
+@media only screen and (max-width: 1366px) {
+
+}
+
+@media only screen and (max-width: 960px) {
+	#container {
+		max-width: 500px;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	#container {
+		max-width: 400px;
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	#container {
+		max-width: 300px;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	#container {
+		max-width: 220px;
+	}
+}

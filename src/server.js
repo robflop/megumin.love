@@ -19,6 +19,7 @@ const statistics = {};
 // On-boot database interaction
 const db = new Database(config.databasePath);
 
+// TODO: Test all the "not found" variants
 db.serialize(() => {
 	db.get('SELECT version FROM meta', [], (selectErr, row) => {
 		if (!row || !row.version) {
@@ -294,8 +295,17 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 });
 
 apiRouter.get('/statistics/milestones', (req, res) => {
-	// TODO: Everything
-	return res.json(milestones);
+	const [reached, soundID] = [parseInt(req.query.reached), parseInt(req.query.soundID)];
+	let requestedMilestones = milestones;
+
+	if (reached !== undefined) {
+		requestedMilestones = requestedMilestones.filter(ms => ms.reached === reached);
+	}
+	if (soundID) {
+		requestedMilestones = requestedMilestones.filter(ms => ms.soundID === soundID);
+	}
+
+	return res.json(requestedMilestones);
 });
 
 apiRouter.get('/statistics/summary', (req, res) => {
@@ -310,7 +320,46 @@ apiRouter.get('/statistics/summary', (req, res) => {
 });
 
 apiRouter.get('/statistics/chartData', (req, res) => {
-	// TODO: Allow filtering via request parameters?
+	const dateRegex = new RegExp(/^(\d{4})-(\d{2})$/);
+	const { to, from } = req.query;
+	let requestedChartData = chartData;
+	const firstChartEntry = Object.keys(chartData)[0];
+	const latestChartEntry = Object.keys(chartData)[Object.keys(chartData).length - 1];
+
+	if (['from', 'to'].some(parameter => Object.keys(req.query).includes(parameter))) {
+		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
+		}
+
+		if ((to && dateFns.isAfter(to, latestChartEntry)) || (from && dateFns.isAfter(from, latestChartEntry))) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
+		}
+
+		if ((to && from) && dateFns.isAfter(from, to)) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
+		}
+
+		// Date filtering
+		if (from && !to) {
+			requestedChartData = filterChartData(requestedChartData, from, requestedChartData, iterator => {
+				return dateFns.isWithinRange(iterator, from, requestedChartData);
+			});
+		}
+		else if (!from && to) {
+			requestedChartData = filterChartData(requestedChartData, requestedChartData, to, iterator => {
+				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
+			});
+		}
+		else if (from && to) {
+			requestedChartData = filterChartData(requestedChartData, from, to, iterator => {
+				return dateFns.isWithinRange(iterator, from, to);
+			});
+		}
+	}
+	else {
+		requestedChartData = filterChartData(requestedChartData, firstChartEntry, latestChartEntry);
+	}
+
 	return res.json(chartData);
 });
 
@@ -551,6 +600,29 @@ function emitUpdate(eventData, options = {}) {
 	return socketServer.clients.forEach(socket => socket.send(JSON.stringify(eventData)));
 }
 
+function updateMilestone(count, timestamp, soundID) {
+	const milestone = milestones.find(ms => ms.count === count);
+
+	if (milestone) {
+		Object.assign(milestone, { reached: 1, timestamp, soundID });
+
+		Logger.info(`Milestone ${milestone.id} (${milestone.count} clicks) reached! Updating database entry.`);
+
+		db.run('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE count = ?',
+			1, timestamp, soundID, count,
+			updateErr => {
+				if (updateErr) Logger.error(`An error occurred updating the milestone entry.`, updateErr);
+
+				return emitUpdate({
+					type: 'milestoneUpdate',
+					statistics: {
+						milestone
+					}
+				});
+			});
+	}
+}
+
 socketServer.on('connection', socket => {
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
@@ -584,7 +656,8 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			// TODO: milestone functionality
+			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached);
+			if (reachedMilestone.length) updateMilestone(counter, Date.now(), soundEntry.id);
 
 			emitUpdate({
 				type: 'crazyMode',
