@@ -99,12 +99,12 @@ Returns an array of objects containing the following information on all of the w
 
 ### Parameters
 
-| Key    | Description                                     | Format     | Example  |
-| ------ | ----------------------------------------------- | ---------- | -------- |
-| source | Source a sound must be from to be returned      | Any string | Season 1 |
-| equals | The exact amount of clicks a sound must have    | Any number | 51840    |
-| over   | The amount of clicks a sound must at least have | Any number | 25000    |
-| under  | The amount of clicks a sound must at max have   | Any number | 50000    |
+| Key    | Description                                     | Format  | Example  |
+| ------ | ----------------------------------------------- | ------- | -------- |
+| source | Source a sound must be from to be returned      | String  | Season 1 |
+| equals | The exact amount of clicks a sound must have    | Integer | 51840    |
+| over   | The amount of clicks a sound must at least have | Integer | 25000    |
+| under  | The amount of clicks a sound must at max have   | Integer | 50000    |
 
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
 
@@ -197,9 +197,9 @@ Returns an object containing the website's statistics, mapped by their correspon
 | ------ | ------------------------------------------------ | ---------- | ---------- |
 | from   | First day of statistics to be returned           | YYYY-MM-DD | 2017-05-27 |
 | to     | Last day of statistics to be returned            | YYYY-MM-DD | 2017-06-05 |
-| equals | The exact amount of clicks an entry must have    | Any number | 684826     |
-| over   | The amount of clicks an entry must at least have | Any number | 10000      |
-| under  | The amount of clicks an entry must at max have   | Any number | 1000000    |
+| equals | The exact amount of clicks an entry must have    | Integer    | 684826     |
+| over   | The amount of clicks an entry must at least have | Integer    | 10000      |
+| under  | The amount of clicks an entry must at max have   | Integer    | 1000000    |
 
 Supplying only the `from` parameter will result in the output starting at the specified date and return everything up to the latest known date.
 
@@ -421,11 +421,15 @@ Returns data necessary for constructing the monthly click distribution chart dis
 
 ### Parameters
 
-| Key  | Description            | Format  | Example |
-| ---- | ---------------------- | ------- | ------- |
-| from | Month to begin data at | YYYY-MM | 2018-07 |
-| to   | Month to end data at   | YYYY-MM | 2018-10 |
+| Key    | Description             | Format  | Example    |
+| ------ | ----------------------- | ------- | ---------- |
+| from   | Month to begin data at  | YYYY-MM | 2018-07    |
+| to     | Month to end data at    | YYYY-MM | 2018-10    |
+| equals | Exact clicks in entry   | Integer | 684826     |
+| over   | Minimum clicks in entry | Integer | 10000      |
+| under  | Maximum clicks in entry | Integer | 1000000    |
 
+Parameters behave exactly like the ones for the statistics endpoint, but based on months.
 
 #### Example requests
 
@@ -450,6 +454,8 @@ Output:
 
 `/statistics/chartData?from=2018-07`
 
+Output:
+
 ```js
 [
     {
@@ -463,8 +469,6 @@ Output:
     // ...
 ]
 ```
-
-Output:
 
 `/statistics/chartData?to=2018-10`
 
@@ -525,9 +529,9 @@ Admin routes can be accessed by providing an Authorization header, so this is us
 
 ### Body
 
-| Key   | Description                                       | Format     |
-| ----- | ------------------------------------------------- | ---------- |
-| token | The auth token configured in the website settings | Any string |
+| Key   | Description                                       | Format |
+| ----- | ------------------------------------------------- | ------ |
+| token | The auth token configured in the website settings | String |
 
 ### Parameters
 
@@ -717,12 +721,12 @@ Modify an existing sound on the website.
 
 ### Body
 
-| Key            | Description                                | Format     |
-| -------------- | ------------------------------------------ | ---------- |
-| oldFilename    | Old filename of the sound to be renamed    | Any string |
-| newFilename    | New filename of the sound to be renamed    | Any string |
-| newDisplayname | New displayname of the sound to be renamed | Any string |
-| newSource      | New source of the sound to be renamed      | Any string |
+| Key            | Description                                | Format |
+| -------------- | ------------------------------------------ | ------ |
+| oldFilename    | Old filename of the sound to be renamed    | String |
+| newFilename    | New filename of the sound to be renamed    | String |
+| newDisplayname | New displayname of the sound to be renamed | String |
+| newSource      | New source of the sound to be renamed      | String |
 
 ### Parameters
 
@@ -785,9 +789,9 @@ Delete an existing sound from the website.
 
 ### Body
 
-| Key      | Description                         | Format     |
-| -------- | ----------------------------------- | ---------- |
-| filename | Filename of the sound to be deleted | Any string |
+| Key      | Description                         | Format |
+| -------- | ----------------------------------- | -------|
+| filename | Filename of the sound to be deleted | String |
 
 ### Parameters
 
