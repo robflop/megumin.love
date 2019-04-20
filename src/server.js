@@ -340,15 +340,15 @@ apiRouter.get('/statistics/chartData', (req, res) => {
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})$/);
 	const { to, from } = req.query;
 	let requestedChartData = chartData;
-	const firstChartEntry = Object.keys(chartData)[0];
-	const latestChartEntry = Object.keys(chartData)[Object.keys(chartData).length - 1];
+	const firstChartMonth = chartData[0].month;
+	const latestChartMonth = chartData[chartData.length - 1].month;
 
 	if (['from', 'to'].some(parameter => Object.keys(req.query).includes(parameter))) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
 		}
 
-		if ((to && dateFns.isAfter(to, latestChartEntry)) || (from && dateFns.isAfter(from, latestChartEntry))) {
+		if ((to && dateFns.isAfter(to, latestChartMonth)) || (from && dateFns.isAfter(from, latestChartMonth))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
@@ -358,26 +358,26 @@ apiRouter.get('/statistics/chartData', (req, res) => {
 
 		// Date filtering
 		if (from && !to) {
-			requestedChartData = filterChartData(requestedChartData, from, requestedChartData, iterator => {
-				return dateFns.isWithinRange(iterator, from, requestedChartData);
+			requestedChartData = dateFilter(requestedChartData, from, latestChartMonth, 'month', iterator => {
+				return dateFns.isWithinRange(iterator, from, latestChartMonth);
 			});
 		}
 		else if (!from && to) {
-			requestedChartData = filterChartData(requestedChartData, requestedChartData, to, iterator => {
-				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
+			requestedChartData = dateFilter(requestedChartData, firstChartMonth, to, 'month', iterator => {
+				return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
 			});
 		}
 		else if (from && to) {
-			requestedChartData = filterChartData(requestedChartData, from, to, iterator => {
+			requestedChartData = dateFilter(requestedChartData, from, to, 'month', iterator => {
 				return dateFns.isWithinRange(iterator, from, to);
 			});
 		}
 	}
 	else {
-		requestedChartData = filterChartData(requestedChartData, firstChartEntry, latestChartEntry);
+		requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month');
 	}
 
-	return res.json(chartData);
+	return res.json(requestedChartData);
 });
 
 apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses this route
