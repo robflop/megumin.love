@@ -1,106 +1,3 @@
-const { Database } = require('sqlite3');
-const { join } = require('path');
-const { createInterface } = require('readline');
-const { copyFile } = require('fs');
-const { databasePath } = require('./src/config.json');
-
-const db = new Database(join('src', databasePath));
-let currentVersion, newVersion;
-
-console.log('This is the megumin.love database migration tool.');
-console.log('------------------------------------');
-console.log('Creating database backup.');
-
-copyFile(db.filename, `${db.filename}.bak`, err => {
-	if (err) {
-		console.log('Database backup creation failed, migration aborting.');
-		return setTimeout(() => process.exit(1), 2000);
-	}
-});
-
-db.get('SELECT version FROM meta', [], (selectErr, data) => {
-	if (selectErr || !data || (data && !data.version)) currentVersion = 'Unknown';
-	else currentVersion = data.version;
-
-	console.log('------------------------------------');
-	console.log(`Detected database version: ${currentVersion}`);
-
-	if (currentVersion === 'Unknown') {
-		console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
-
-		const currentVersionInput = createInterface({
-			input: process.stdin,
-			output: process.stdout,
-			prompt: 'Starting database version: '
-		});
-
-		currentVersionInput.prompt();
-
-		currentVersionInput.on('line', ver => {
-			currentVersion = ver.trim();
-			currentVersionInput.close();
-		});
-
-		currentVersionInput.on('close', () => targetDatabaseUpdate());
-	}
-	else targetDatabaseUpdate();
-});
-
-function targetDatabaseUpdate() {
-	const newVersionInput = createInterface({
-		input: process.stdin,
-		output: process.stdout,
-		prompt: '\nTargeted database version (\'x.x.x\' or \'latest\'): '
-	});
-
-	newVersionInput.prompt();
-
-	newVersionInput.on('line', ver => {
-		newVersion = ver.trim();
-
-		if (newVersion === 'latest') newVersion = databaseVersions[databaseVersions.length - 1].targetVersion;
-
-		if (currentVersion > newVersion) {
-			console.log('\nCurrent version is above new version. No updating is necessary.');
-			return process.exit(0);
-		}
-		else if (currentVersion === newVersion) {
-			console.log('\nCurrent version equals new version. No updating is necessary.');
-			return process.exit(0);
-		}
-
-		const upgrades = databaseVersions.filter(version => {
-			const aboveCurrent = currentVersion < version.targetVersion;
-			const belowNew = newVersion >= version.targetVersion;
-
-			return aboveCurrent && belowNew;
-			// Passes all versions above the current if the latest version is aspired
-		});
-
-		upgrades.forEach(version => {
-			console.log('------------------------------------');
-			console.log(`Running database queries required for version ${version.targetVersion}.`);
-
-			const queries = version.queries.join(' ');
-
-			db.exec(queries, err => {
-				if (err) {
-					console.log(`An error occurred while running the queries for version ${version.targetVersion}:`);
-					console.log(err);
-				}
-			});
-
-			if (version.notes) version.notes.forEach(note => console.log('Notice:', note));
-			console.log(`Migration to version ${version.targetVersion} completed.`);
-		});
-
-		newVersionInput.close();
-
-		console.log('------------------------------------');
-		return console.log('Please review the above output for important notes and restore the created database backup if anything went wrong.');
-	});
-}
-
 const databaseVersions = [
 	{
 		targetVersion: '6.0.0',
@@ -134,3 +31,128 @@ const databaseVersions = [
 		]
 	},
 ];
+
+const { Database } = require('sqlite3');
+const { join } = require('path');
+const { createInterface } = require('readline');
+const { copyFile } = require('fs');
+const { databasePath } = require('./src/config.json');
+
+const db = new Database(join('src', databasePath));
+let currentVersion, newVersion;
+
+const newVersionCLI = process.argv.filter(arg => arg.includes('newVersion='))[0];
+const currentVersionCLI = process.argv.filter(arg => arg.includes('currentVersion='))[0];
+
+if (newVersionCLI) newVersion = newVersionCLI.substr(newVersionCLI.indexOf('=') + 1).trim();
+if (currentVersionCLI) currentVersion = currentVersionCLI.substr(currentVersionCLI.indexOf('=') + 1).trim();
+
+
+console.log('This is the megumin.love database migration tool.');
+console.log('------------------------------------');
+console.log('Creating database backup.');
+
+copyFile(db.filename, `${db.filename}.bak`, err => {
+	if (err) {
+		console.log('Database backup creation failed, migration aborting.');
+		return setTimeout(() => process.exit(1), 2000);
+	}
+});
+
+if (!currentVersion) {
+	db.get('SELECT version FROM meta', [], (selectErr, data) => {
+		if (selectErr || !data || (data && !data.version)) currentVersion = 'Unknown';
+		else currentVersion = data.version;
+
+		console.log('------------------------------------');
+		console.log(`Detected database version: ${currentVersion}`);
+
+		if (currentVersion === 'Unknown') {
+			console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
+
+			const currentVersionInput = createInterface({
+				input: process.stdin,
+				output: process.stdout,
+				prompt: 'Starting database version: '
+			});
+
+			currentVersionInput.prompt();
+
+			currentVersionInput.on('line', ver => {
+				currentVersion = ver.trim();
+				currentVersionInput.close();
+			});
+
+			currentVersionInput.on('close', () => {
+				if (!newVersion) promptNewVersion();
+				else executeUpdateQueries();
+			});
+		}
+		else {
+			if (!newVersion) promptNewVersion(); // eslint-disable-line no-lonely-if
+			else executeUpdateQueries();
+		}
+	});
+}
+else {
+	if (!newVersion) promptNewVersion(); // eslint-disable-line no-lonely-if
+	else executeUpdateQueries();
+}
+
+function promptNewVersion() {
+	const newVersionInput = createInterface({
+		input: process.stdin,
+		output: process.stdout,
+		prompt: '\nTargeted database version (\'x.x.x\' or \'latest\'): '
+	});
+
+	newVersionInput.prompt();
+
+	newVersionInput.on('line', ver => {
+		newVersion = ver.trim();
+		newVersionInput.close();
+
+		executeUpdateQueries();
+	});
+}
+
+function executeUpdateQueries() {
+	if (newVersion === 'latest') newVersion = databaseVersions[databaseVersions.length - 1].targetVersion;
+
+	if (currentVersion > newVersion) {
+		console.log('\nCurrent version is above new version. No updating is necessary.');
+		return process.exit(0);
+	}
+	else if (currentVersion === newVersion) {
+		console.log('\nCurrent version equals new version. No updating is necessary.');
+		return process.exit(0);
+	}
+
+	const upgrades = databaseVersions.filter(version => {
+		const aboveCurrent = currentVersion < version.targetVersion;
+		const belowNew = newVersion >= version.targetVersion;
+
+		return aboveCurrent && belowNew;
+		// Passes all versions above the current if the latest version is aspired
+	});
+
+	upgrades.forEach(version => {
+		console.log('------------------------------------');
+		console.log(`Running database queries required for version ${version.targetVersion}.`);
+
+		const queries = version.queries.join(' ');
+
+		db.exec(queries, err => {
+			if (err) {
+				console.log(`An error occurred while running the queries for version ${version.targetVersion}:`);
+				console.log(err);
+			}
+		});
+
+		if (version.notes) version.notes.forEach(note => console.log('Notice:', note));
+		console.log(`Migration to version ${version.targetVersion} completed.`);
+	});
+
+	console.log('------------------------------------');
+	console.log('Please review the above output for important notes and restore the created database backup if anything went wrong.');
+}
