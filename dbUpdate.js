@@ -57,19 +57,19 @@ function targetDatabaseUpdate() {
 
 		upgrades.forEach(version => {
 			console.log('------------------------------------');
-				console.log(`Running database queries required for version ${version.targetVersion}.`);
+			console.log(`Running database queries required for version ${version.targetVersion}.`);
 
-				const queries = version.queries.join(' ');
+			const queries = version.queries.join(' ');
 
-				db.exec(queries, err => {
-					if (err) {
+			db.exec(queries, err => {
+				if (err) {
 					console.log(`An error occurred while running the queries for version ${version.targetVersion}:`);
-						console.log(err);
-					}
-				});
+					console.log(err);
+				}
+			});
 
-				if (version.notes) version.notes.forEach(note => console.log('Notice:', note));
-				console.log(`Migration to version ${version.targetVersion} completed.`);
+			if (version.notes) version.notes.forEach(note => console.log('Notice:', note));
+			console.log(`Migration to version ${version.targetVersion} completed.`);
 		});
 
 		newVersionInput.close();
@@ -105,8 +105,16 @@ const databaseVersions = [
 		targetVersion: '8.0.0',
 		queries: [
 			'ALTER TABLE sounds ADD COLUMN association TEXT;',
-			'CREATE TABLE IF NOT EXISTS meta ( dbVersion TEXT NOT NULL );',
-			'INSERT INTO meta ( dbVersion ) VALUES ( \'8.0.0\' );'
+			'CREATE TABLE IF NOT EXISTS meta ( version TEXT NOT NULL );',
+			'INSERT INTO meta ( version ) VALUES ( \'8.0.0\' );',
+			`CREATE TABLE IF NOT EXISTS milestones (
+				id INTEGER PRIMARY KEY,
+				count INTEGER NOT NULL UNIQUE,
+				achieved INTEGER NOT NULL,
+				achievedAt TEXT NOT NULL,
+				soundID INTEGER,
+					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
+			);`
 		]
 	},
 ];
