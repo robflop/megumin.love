@@ -15,9 +15,9 @@ Returns necessary data for the client to properly connect to the server, such as
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -52,9 +52,9 @@ Returns the current global counter.
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -93,9 +93,9 @@ Returns an array of objects containing the following information on all of the w
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -187,9 +187,9 @@ Returns an object containing the website's statistics, mapped by their correspon
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -281,9 +281,9 @@ No milestones are activated by default, so none may exist.
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -373,9 +373,9 @@ This summary is not available for any other time than the time of the request, b
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -415,9 +415,9 @@ Returns data necessary for constructing the monthly click distribution chart dis
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -529,9 +529,9 @@ Admin routes can be accessed by providing an Authorization header, so this is us
 
 ### Body
 
-| Key   | Description                                       | Format |
-| ----- | ------------------------------------------------- | ------ |
-| token | The auth token configured in the website settings | String |
+| Key   | Description                                       | Format | Example |
+| ----- | ------------------------------------------------- | ------ | ------- |
+| token | The auth token configured in the website settings | String | mytoken |
 
 ### Parameters
 
@@ -595,15 +595,16 @@ Logout route that disables access to admin-only routes upon use.
 
 ### Headers
 
-| Key          | Value                             |
-| ------------ | --------------------------------- |
-| Content-Type | application/x-www-form-urlencoded |
+| Key           | Value                             |
+| ------------- | --------------------------------- |
+| Content-Type  | application/x-www-form-urlencoded |
+| Authorization | Configured admin token            |
 
 ### Body
 
-| Key | Description | Format |
-| --- | ----------- | ------ |
-| --- | ----------- | ------ |
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
 
 ### Parameters
 
@@ -624,6 +625,47 @@ Logout route that disables access to admin-only routes upon use.
 
 ---
 
+## `POST /admin/notification`
+
+Send site-wide notifications to everyone viewing the website.
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key      | Description                            | Format  | Example |
+| -------- | -------------------------------------- | ------- | ------- |
+| text     | Notification text to display           | String  | hello!  |
+| duration | Duration (seconds) of the notification | Integer | 5       |
+
+### Parameters
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+#### Example requests
+
+`/admin/notification` with:
+- text `test notification`
+- duration `3`
+
+Output:
+
+```js
+{
+    "code": 200,
+    "message": "Notification sent."
+}
+```
+
+
+---
+
 ## `POST /admin/upload`
 
 Upload a new sound to the website.
@@ -636,12 +678,12 @@ Upload a new sound to the website.
 
 ### Body
 
-| Key         | Description                                                 | Type |
-| ----------- | ----------------------------------------------------------- | ---- |
-| file        | The sound file (mp3) that contains the sound to be played   | File |
-| filename    | The filename the sound file should be saved under           | Text |
-| displayname | The name the sound should be displayed under on the website | Text |
-| source      | The origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text |
+| Key         | Description                                                 | Type | Example  |
+| ----------- | ----------------------------------------------------------- | ---- | -------- |
+| file        | The sound file (mp3) that contains the sound to be played   | File | -------- |
+| filename    | The filename the sound file should be saved under           | Text | testfile |
+| displayname | The name the sound should be displayed under on the website | Text | testdisp |
+| source      | The origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text | testsrc  |
 
 ### Parameters
 
@@ -721,12 +763,12 @@ Modify an existing sound on the website.
 
 ### Body
 
-| Key            | Description                                | Format |
-| -------------- | ------------------------------------------ | ------ |
-| oldFilename    | Old filename of the sound to be renamed    | String |
-| newFilename    | New filename of the sound to be renamed    | String |
-| newDisplayname | New displayname of the sound to be renamed | String |
-| newSource      | New source of the sound to be renamed      | String |
+| Key            | Description                                | Format | Example   |
+| -------------- | ------------------------------------------ | ------ | --------- |
+| oldFilename    | Old filename of the sound to be renamed    | String | explsn    |
+| newFilename    | New filename of the sound to be renamed    | String | explosion |
+| newDisplayname | New displayname of the sound to be renamed | String | Boom!     |
+| newSource      | New source of the sound to be renamed      | String | Movie 1   |
 
 ### Parameters
 
@@ -789,9 +831,9 @@ Delete an existing sound from the website.
 
 ### Body
 
-| Key      | Description                         | Format |
-| -------- | ----------------------------------- | -------|
-| filename | Filename of the sound to be deleted | String |
+| Key      | Description                         | Format | Example  |
+| -------- | ----------------------------------- | -------| -------- |
+| filename | Filename of the sound to be deleted | String | testfile |
 
 ### Parameters
 
