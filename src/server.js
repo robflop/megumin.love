@@ -131,48 +131,6 @@ server.use(session({
 }));
 server.use(express.static('./resources'));
 
-/*
-	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
-	the object values for dates that are not present in the database. Looping over the statistics wouldn't
-	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
-	would not work if the difference between current statistics iteration and date iterator is bigger than one.
-*/
-function filterData(data, startDate, endDate, step, condition) {
-	if (!condition) condition = () => true; // If no condition provided, default to pass all
-	let iterator = startDate;
-	let filteredResult;
-
-	if (Array.isArray(data)) filteredResult = [];
-	else filteredResult = {};
-
-	const steps = {
-		day: [dateFns.differenceInDays, dateFns.addDays, 'YYYY-MM-DD'],
-		month: [dateFns.differenceInMonths, dateFns.addMonths, 'YYYY-MM'],
-		year: [dateFns.differenceInYears, dateFns.addYears, 'YYYY']
-	};
-
-	while (steps[step][0](endDate, iterator) >= 0) {
-		if (Array.isArray(data)) {
-			if (!data.find(d => d.month === iterator)) filteredResult.push({ month: iterator, count: 0 });
-			// Check for months missing in statistics and insert value for those
-			if (data.find(d => d.month === iterator) && condition(iterator)) {
-				filteredResult.push(data.find(d => d.month === iterator));
-			}
-		}
-		else {
-			if (!data.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
-			// Check for days missing in statistics and insert value for those
-			if (data.hasOwnProperty(iterator) && condition(iterator)) {
-				filteredResult[iterator] = data[iterator];
-			}
-		}
-
-		iterator = dateFns.format(steps[step][1](iterator, 1), steps[step][2]);
-	}
-
-	return filteredResult;
-}
-
 function validateParameters({ parameters = {}, step, dateLimiter }) { // eslint-disable-line complexity
 	const dateRegex = new RegExp(`^(\\d{4})-(\\d{2})${step === 'day' ? '-(\\d{2})' : ''}$`);
 	// YYYY-MM-DD for day step, YYYY-MM for month step
@@ -202,6 +160,127 @@ function validateParameters({ parameters = {}, step, dateLimiter }) { // eslint-
 	}
 
 	return { code: 200 };
+}
+
+/*
+	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
+	the object values for dates that are not present in the database. Looping over the statistics wouldn't
+	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
+	would not work if the difference between current statistics iteration and date iterator is bigger than one.
+*/
+function filterData(data, startDate, endDate, step, condition) {
+	if (!condition) condition = () => true; // If no condition provided, default to pass all
+	let iterator = startDate;
+	let filteredResult;
+
+	if (Array.isArray(data)) filteredResult = [];
+	else filteredResult = {};
+
+	const steps = {
+		day: [dateFns.differenceInDays, dateFns.addDays, 'YYYY-MM-DD'],
+		month: [dateFns.differenceInMonths, dateFns.addMonths, 'YYYY-MM']
+	};
+
+	while (steps[step][0](endDate, iterator) >= 0) {
+		if (Array.isArray(data)) {
+			if (!data.find(d => d.month === iterator)) filteredResult.push({ month: iterator, count: 0 });
+			// Check for months missing in statistics and insert value for those
+			if (data.find(d => d.month === iterator) && condition(iterator)) {
+				filteredResult.push(data.find(d => d.month === iterator));
+			}
+		}
+		else {
+			if (!data.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
+			// Check for days missing in statistics and insert value for those
+			if (data.hasOwnProperty(iterator) && condition(iterator)) {
+				filteredResult[iterator] = data[iterator];
+			}
+		}
+
+		iterator = dateFns.format(steps[step][1](iterator, 1), steps[step][2]);
+	}
+
+	return filteredResult;
+}
+
+function dateFilter({ data, parameters = {}, dataEdges = {}, step = '' }) {
+	const { from, to } = parameters;
+	const { start, end } = dataEdges;
+
+	if (from && !to) {
+		data = filterData(data, from, end, step, iterator => {
+			return dateFns.isWithinRange(iterator, from, end);
+		});
+	}
+	else if (!from && to) {
+		data = filterData(data, start, to, step, iterator => {
+			if (step === 'day') return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
+			else if (step === 'month') return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
+		});
+	}
+	else if (from && to) {
+		data = filterData(data, from, to, step, iterator => {
+			return dateFns.isWithinRange(iterator, from, to);
+		});
+	}
+
+	return data;
+}
+
+function countFilter({ data, parameters = {}, dataEdges = {}, step = '' }) {
+	const { equals, over, under } = parameters;
+	const { start, end } = dataEdges;
+
+	if (equals || over || under) {
+		if (equals) {
+			data = filterData(data, start, end, step, iterator => {
+				if (step === 'day') return data[iterator] === equals;
+				else if (step === 'month') {
+					const dataCount = data.find(d => d.month === iterator).count;
+					return dataCount === equals;
+				}
+			});
+		}
+		else if (over && !under) {
+			data = filterData(data, start, end, step, iterator => {
+				if (step === 'day') return data[iterator] > over;
+				else if (step === 'month') {
+					const dataCount = data.find(d => d.month === iterator).count;
+					return dataCount > over;
+				}
+			});
+		}
+		else if (!over && under) {
+			data = filterData(data, start, end, step, iterator => {
+				if (step === 'day') return data[iterator] < under;
+				else if (step === 'month') {
+					const dataCount = data.find(d => d.month === iterator).count;
+					return dataCount < under;
+				}
+			});
+		}
+		else if (over && under) {
+			data = filterData(data, start, end, step, iterator => {
+				if (step === 'day') return data[iterator] > over && data[iterator] < under;
+				else if (step === 'month') {
+					const dataCount = data.find(d => d.month === iterator).count;
+					return dataCount > over && dataCount < under;
+				}
+			});
+		}
+
+		if (step === 'day') {
+			for (const entryKey in data) {
+				if (data[entryKey] === 0) delete data[entryKey];
+			} // Remove padded entries if a count filter is used
+		}
+		else if (step === 'month') {
+			data = data.filter(entry => entry.count !== 0);
+			// Remove padded entries if a count filter is used
+		}
+	}
+
+	return data;
 }
 
 const apiRouter = express.Router();
@@ -243,7 +322,7 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 			if (source) requestedSounds = requestedSounds.filter(sound => sound.source.toLowerCase() === source.toLowerCase());
 
 			// Count filtering
-			if (equals || over || under) {
+			if ((equals && !isNaN(equals)) || (over && !isNaN(over)) || (under && !isNaN(under))) {
 				if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
 				else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
 				else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
@@ -269,50 +348,23 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 			const { from, to } = req.query;
 			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-			// Date filtering
-			if (from && !to) {
-				requestedStatistics = filterData(requestedStatistics, from, latestStatisticsEntry, 'day', iterator => {
-					return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
-				});
-			}
-			else if (!from && to) {
-				requestedStatistics = filterData(requestedStatistics, firstStatisticsEntry, to, 'day', iterator => {
-					return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
-				});
-			}
-			else if (from && to) {
-				requestedStatistics = filterData(requestedStatistics, from, to, 'day', iterator => {
-					return dateFns.isWithinRange(iterator, from, to);
-				});
-			}
+			if (from || to) requestedStatistics = dateFilter(
+				{
+					data: requestedStatistics,
+					parameters: { from, to },
+					dataEdges: { start: firstStatisticsEntry, end: latestStatisticsEntry },
+					step: 'day'
+				}
+			);
 
-			// Count filtering
-			if (equals || over || under) {
-				if (equals) {
-					requestedStatistics = filterData(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-						return requestedStatistics[iterator] === equals;
-					});
+			if ((equals && !isNaN(equals)) || (over && !isNaN(over)) || (under && !isNaN(under))) requestedStatistics = countFilter(
+				{
+					data: requestedStatistics,
+					parameters: { equals, over, under },
+					dataEdges: { start: firstStatisticsEntry, end: latestStatisticsEntry },
+					step: 'day'
 				}
-				else if (over && !under) {
-					requestedStatistics = filterData(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-						return requestedStatistics[iterator] > over;
-					});
-				}
-				else if (!over && under) {
-					requestedStatistics = filterData(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-						return requestedStatistics[iterator] < under;
-					});
-				}
-				else if (over && under) {
-					requestedStatistics = filterData(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-						return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
-					});
-				}
-
-				for (const entryKey in requestedStatistics) {
-					if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
-				} // Remove padded entries if a count filter is used
-			}
+			);
 		}
 	}
 	else {
@@ -360,53 +412,23 @@ apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line co
 			const { to, from } = req.query;
 			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-			// Date filtering
-			if (from && !to) {
-				requestedChartData = filterData(requestedChartData, from, latestChartMonth, 'month', iterator => {
-					return dateFns.isWithinRange(iterator, from, latestChartMonth);
-				});
-			}
-			else if (!from && to) {
-				requestedChartData = filterData(requestedChartData, firstChartMonth, to, 'month', iterator => {
-					return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
-				});
-			}
-			else if (from && to) {
-				requestedChartData = filterData(requestedChartData, from, to, 'month', iterator => {
-					return dateFns.isWithinRange(iterator, from, to);
-				});
-			}
+			if (from || to) requestedChartData = countFilter(
+				{
+					data: requestedChartData,
+					parameters: { from, to },
+					dataEdges: { start: firstChartMonth, end: latestChartMonth },
+					step: 'month'
+				}
+			);
 
-			// Count filtering
-			if (equals || over || under) {
-				if (equals) {
-					requestedChartData = filterData(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount === equals;
-					});
+			if ((equals && !isNaN(equals)) || (over && !isNaN(over)) || (under && !isNaN(under))) requestedChartData = countFilter(
+				{
+					data: requestedChartData,
+					parameters: { equals, over, under },
+					dataEdges: { start: firstChartMonth, end: latestChartMonth },
+					step: 'month'
 				}
-				else if (over && !under) {
-					requestedChartData = filterData(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount > over;
-					});
-				}
-				else if (!over && under) {
-					requestedChartData = filterData(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount < under;
-					});
-				}
-				else if (over && under) {
-					requestedChartData = filterData(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount > over && dataCount < under;
-					});
-				}
-
-				requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
-				// Remove padded entries if a count filter is used
-			}
+			);
 		}
 	}
 	else {
@@ -444,6 +466,7 @@ apiRouter.get('/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
+// todo: move these three routes to /admin/sound/...
 apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('file'), (req, res) => {
 	let newSound;
 
@@ -502,6 +525,7 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 	}
 });
 
+// todo: move these three routes to /admin/sound/...
 apiRouter.patch('/admin/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
@@ -566,6 +590,7 @@ apiRouter.patch('/admin/rename', (req, res) => {
 	}
 });
 
+// todo: move these three routes to /admin/sound/...
 apiRouter.delete('/admin/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.filename);
