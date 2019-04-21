@@ -666,7 +666,7 @@ Output:
 
 ---
 
-## `POST /admin/upload`
+## `POST /admin/sounds/upload`
 
 Upload a new sound to the website.
 
@@ -693,7 +693,7 @@ Upload a new sound to the website.
 
 #### Example requests
 
-`/admin/upload` with:
+`/admin/sounds/upload` with:
 - file including `test.mp3`
 - filename `testfilename`
 - displayname `testdisplayname`
@@ -751,7 +751,7 @@ Output for other errors:
 
 ---
 
-## `PATCH /admin/rename`
+## `PATCH /admin/sounds/rename`
 
 Modify an existing sound on the website.
 
@@ -778,7 +778,7 @@ Modify an existing sound on the website.
 
 #### Example requests
 
-`/admin/rename` with:
+`/admin/sounds/rename` with:
 - oldFilename `testfilename`
 - newFilename `newtestfilename`
 - newDisplayname `newtestdisplayname`
@@ -819,7 +819,7 @@ Output for misc. errors:
 
 ---
 
-## `DELETE /admin/delete`
+## `DELETE /admin/sounds/delete`
 
 Delete an existing sound from the website.
 
@@ -843,7 +843,7 @@ Delete an existing sound from the website.
 
 #### Example requests
 
-`/admin/upload` with:
+`/admin/sounds/delete` with:
 - filename `newtestfilename`
 
 Output when there is no error:
@@ -878,3 +878,231 @@ Output for other errors:
     "message": "An unexpected error occurred."
 }
 ```
+
+---
+
+## `POST /admin/milestones/add`
+
+Add a new milestone to the site.
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key       | Description                                         | Type    | Example       |
+| --------- | --------------------------------------------------- | ------- | ------------- |
+| count     | The count at which the milestone is reached         | Integer | 1000000       |
+| reached   | Integer whether the milestone has been reached      | Integer | 0 / 1         |
+| timestamp | Unix time of when the timestamp was reached         | Integer | 1555847635067 |
+| soundID   | ID of sound that played when milestone was reached  | Integer | 42            |
+
+All values except `count` are optional and will be filled out once the milestone is reached.
+
+### Parameters
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+#### Example requests
+
+`/admin/milestones/add` with:
+- count `1000000`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Milestone successfully added.",
+    "milestone": {
+        "id": 5,
+        "count": 1000000,
+        "reached": 0,
+        "timestamp": null,
+        "soundID": null
+    }
+}
+```
+
+Output when milestone with same count already exists:
+
+```js
+{
+    "code": 400,
+    "message": "Milestone with submitted count already exists."
+}
+```
+
+Output for other errors:
+
+```js
+{
+    "code": 500,
+    "message": "An unexpected error occurred."
+}
+```
+
+`/admin/milestones/add` with:
+- count `1000000`
+- reached `1`
+- timestamp `1555847635067`
+- soundID `42`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Milestone successfully added.",
+    "milestone": {
+        "id": 5,
+        "count": 1000000,
+        "reached": 1,
+        "timestamp": 1555847635067,
+        "soundID": 42
+    }
+}
+```
+
+Outputs for other cases (conflict, other error) remain the same.
+
+---
+
+## `PATCH /admin/milestones/modify`
+
+Modify an existing sound on the website.
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key              | Description                                                | Format  | Example         |
+| ---------------- | ---------------------------------------------------------- | ------- | --------------- |
+| id               | ID of the milestone to modify                              | Integer | 5               |
+| newCount         | New clicks count the milestone is for                      | Integer | 2000000         |
+| newReachedStatus | New status as to whether the milestone has been reached    | Integer | 0 / 1           |
+| newTimestamp     | New unix timestamp for when the milestone was reached      | Integer | 1550247538345   |
+| newSoundID       | New ID of the sound that played when milestone was reached | Integer | 39              |
+
+ID parameter is mandatory, all others are optional, but at least one must be filled out.
+
+### Parameters
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+#### Example requests
+
+`/admin/milestones/modify` with:
+- id `5`
+- newCount `2000000`
+- newReachedStatus `1`
+- newTimestamp `1550247538345`
+- newSoundID `39`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Milestone successfully modified.",
+    "milestone": {
+        "id": 5,
+        "count": 2000000,
+        "reached": 1,
+        "timestamp": 1550247538345,
+        "soundID": 39
+    }
+}
+```
+
+Output when the requested milestone (ID) was not found:
+```js
+{
+    "code": 404,
+    "message": "Milestone not found."
+}
+```
+
+Output for misc. errors:
+
+```js
+{
+    "code": 500,
+    "message": "An unexpected error occurred."
+}
+```
+
+---
+
+## `DELETE /admin/milestones/delete`
+
+Delete an existing milestone from the website.
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key | Description                       | Format  | Example |
+| --- | --------------------------------- | --------| ------- |
+| id  | ID of the milestone to be deleted | Integer | 39      |
+
+### Parameters
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+#### Example requests
+
+`/admin/milestones/delete` with:
+- id `5`
+
+Output when there is no error:
+
+```js
+{
+    "code": 200,
+    "message": "Milestone successfully deleted.",
+    "milestone": {
+        "id": 5,
+        "count": 2000000,
+        "reached": 1,
+        "timestamp": 1550247538345,
+        "soundID": 39
+    }
+}
+```
+
+Output when the requested milestone (ID) was not found:
+```js
+{
+    "code": 404,
+    "message": "Milestone not found."
+}
+```
+
+Output for other errors:
+
+```js
+{
+    "code": 500,
+    "message": "An unexpected error occurred."
+}
+```
+
+---
