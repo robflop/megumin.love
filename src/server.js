@@ -497,7 +497,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			else Logger.info(`(1/3): Uploaded mp3 file successfully renamed to requested filename.`);
 		});
 
-		db.run('INSERT OR IGNORE INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ?)',
+		db.run('INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ?)',
 			data.filename, data.displayname, data.source, 0, data.association,
 			insertErr => {
 				if (insertErr) {
@@ -628,6 +628,155 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 			});
 
 			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
+		});
+	}
+});
+
+// todo: test and make work with various different args supplied
+apiRouter.post('/admin/milestones/add', (req, res) => {
+	const data = req.body;
+	const milestoneData = {
+		count: parseInt(data.count),
+		reached: parseInt(data.reached),
+		timestamp: parseInt(data.timestamp),
+		soundID: parseInt(data.soundID)
+	};
+
+	if (!data.count) {
+		return res.status(400).json({ code: 400, message: 'Milestone count must be provided.' });
+	}
+	if (data.count && isNaN(milestoneData.count)) {
+		return res.status(400).json({ code: 400, message: 'Milestone count must be an integer.' });
+	}
+	if ((data.reached && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
+		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
+	}
+
+	Logger.info(`Milestone with count ${milestoneData.count} now being added.`);
+
+	if (milestones.find(ms => ms.count === milestoneData.count)) {
+		Logger.error(`A milestone with count ${milestoneData.count} already exists, adding aborted.`);
+		return res.status(400).json({ code: 400, message: 'Milestone with submitted count already exists.' });
+	}
+	else {
+		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
+
+		db.run('INSERT INTO milestones ( count, reached, timestamp, soundID ) VALUES ( ?, ?, ?, ? )',
+			milestoneData.count, milestoneData.reached || 0, milestoneData.timestamp, milestoneData.soundID,
+			insertErr => {
+				if (insertErr) {
+					Logger.error(`An error occurred creating the database entry, addition aborted. (Likely foreign key restraint)`, insertErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				}
+				Logger.info(`(1/2): Database entry successfully created.`);
+
+				const newMilestone = {
+					id: latestID + 1,
+					count: milestoneData.count,
+					reached: milestoneData.reached || 0,
+					timestamp: milestoneData.timestamp,
+					soundID: milestoneData.soundID
+				};
+				milestones.push(newMilestone);
+
+				Logger.info(`(2/2): Milestone cache entry successfully created.`);
+
+				emitUpdate({
+					type: 'milestoneUpdate',
+					statistics: {
+						milestone: newMilestone
+					}
+				});
+
+				return res.json({ code: 200, message: 'Milestone successfully added.', milestone: newMilestone });
+			}
+		);
+	}
+});
+
+// todo: test and make work with various different args supplied
+apiRouter.patch('/admin/milestones/modify', (req, res) => {
+	const data = req.body;
+	const milestoneData = {
+		id: parseInt(data.id),
+		newCount: parseInt(data.newCount),
+		newReachedStatus: parseInt(data.newReachedStatus),
+		newTimestamp: parseInt(data.newTimestamp),
+		newSoundID: parseInt(data.newSoundID)
+	};
+
+	if (!data.id) return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
+	if (data.id && isNaN(milestoneData.id)) return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
+
+	const changedMilestone = milestones.find(ms => ms.id === milestoneData.id);
+
+	if (!changedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
+	else {
+		Logger.info(`Modification process for milestone ${changedMilestone.id} (${changedMilestone.count} clicks) initiated.`);
+
+		// todo: only update provided values
+		db.run('UPDATE milestones SET count = ?, reached = ?, timestamp = ?, soundID = ? WHERE id = ?',
+			milestoneData.newCount, milestoneData.newReachedStatus || 0, milestoneData.newTimestamp, milestoneData.newSoundID, milestoneData.id,
+			updateErr => {
+				if (updateErr) {
+					Logger.error(`An error occurred updating the database entry, modification aborted.`, updateErr);
+					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				}
+				Logger.info(`(1/2): Database entry successfully updated.`);
+
+				changedMilestone.count = milestoneData.newCount;
+				changedMilestone.reached = milestoneData.newReachedStatus;
+				changedMilestone.timestamp = milestoneData.newTimestamp;
+				changedMilestone.soundID = milestoneData.newSoundID;
+
+				Logger.info(`(2/2): Milestone cache entry successfully updated.`);
+
+				emitUpdate({
+					type: 'milestoneUpdate',
+					statistics: {
+						milestone: changedMilestone
+					}
+				});
+
+				return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
+			}
+		);
+	}
+});
+
+apiRouter.delete('/admin/milestones/delete', (req, res) => {
+	const data = req.body;
+	const milestoneData = {
+		id: parseInt(data.id),
+	};
+
+	if (!data.id) return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
+	if (data.id && isNaN(milestoneData.id)) return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
+
+	const deletedMilestone = milestones.find(ms => ms.id === milestoneData.id);
+
+	if (!deletedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
+	else {
+		Logger.info(`Deletion process for milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) initiated.`);
+
+		db.run('DELETE FROM milestones WHERE id = ?', deletedMilestone.id, deleteErr => {
+			if (deleteErr) {
+				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
+				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+			}
+			Logger.info(`(1/2): Database entry successfully deleted.`);
+
+			milestones.splice(milestones.findIndex(ms => ms.id === deletedMilestone.id), 1);
+			Logger.info(`(2/2): Milestone cache entry successfully deleted.`);
+
+			emitUpdate({
+				type: 'milestoneUpdate',
+				statistics: {
+					milestone: deletedMilestone
+				}
+			});
+
+			return res.json({ code: 200, message: 'Milestone successfully deleted.', milestone: deletedMilestone });
 		});
 	}
 });
