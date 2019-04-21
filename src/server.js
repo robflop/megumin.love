@@ -173,6 +173,37 @@ function dateFilter(filterData, startDate, endDate, step, condition) {
 	return filteredResult;
 }
 
+function validateParameters({ parameters = {}, step, dateLimiter }) { // eslint-disable-line complexity
+	const dateRegex = new RegExp(`^(\\d{4})-(\\d{2})${step === 'day' ? '-(\\d{2})' : ''}$`);
+	// YYYY-MM-DD for day step, YYYY-MM for month step
+
+	const { from, to, source } = parameters;
+	const [equals, over, under] = [parseInt(parameters.equals), parseInt(parameters.over), parseInt(parameters.under)];
+
+	if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
+		return { code: 400, name: 'Wrong Format', message: `Dates must be provided in YYYY-MM${step === 'day' ? '-DD' : ''} format.` };
+	}
+
+	if ((to && dateFns.isAfter(to, dateLimiter)) || (from && dateFns.isAfter(from, dateLimiter))) {
+		return { code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' };
+	}
+
+	if ((to && from) && dateFns.isAfter(from, to)) {
+		return { code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' };
+	}
+
+	if ((parameters.equals && isNaN(equals)) || (parameters.over && isNaN(over)) || (parameters.under && isNaN(under))) {
+		// Check if the param was initially supplied, and if the input wasn't a number
+		return { code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' };
+	}
+
+	if ((over && under) && over > under) {
+		return { code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' };
+	}
+
+	return { code: 200 };
+}
+
 const apiRouter = express.Router();
 
 apiRouter.use(express.urlencoded({ extended: true }));
@@ -200,27 +231,24 @@ apiRouter.get('/counter', (req, res) => {
 apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
-	if (['source', 'over', 'under', 'equals'].some(parameter => Object.keys(req.query).includes(parameter))) {
-		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+	if (Object.keys(req.query).length) {
+		const parameterResult = validateParameters({ parameters: req.query });
 
-		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
-			// Check if the param was initially supplied, and if it was if the input wasn't a number
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
-		}
+		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
+		else {
+			const { source } = req.query;
+			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((over && under) && over > under) {
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
-		}
+			// Source filtering
+			if (source) requestedSounds = requestedSounds.filter(sound => sound.source.toLowerCase() === source.toLowerCase());
 
-		// Source filtering
-		if (req.query.source) requestedSounds = requestedSounds.filter(sound => sound.source.toLowerCase() === req.query.source.toLowerCase());
-
-		// Count filtering
-		if (equals || over || under) {
-			if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
-			else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
-			else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
-			else if (over && under) requestedSounds = requestedSounds.filter(sound => sound.count > over && sound.count < under);
+			// Count filtering
+			if (equals || over || under) {
+				if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
+				else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
+				else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
+				else if (over && under) requestedSounds = requestedSounds.filter(sound => sound.count > over && sound.count < under);
+			}
 		}
 	}
 
@@ -229,79 +257,62 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 
 apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStatistics = statistics;
-	const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
 	const firstStatisticsEntry = Object.keys(statistics)[0];
 	const latestStatisticsEntry = Object.keys(statistics)[Object.keys(statistics).length - 1];
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
-	if (['from', 'to', 'equals', 'over', 'under'].some(parameter => Object.keys(req.query).includes(parameter))) {
-		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
-			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
-		}
+	if (Object.keys(req.query).length) {
+		const parameterResult = validateParameters({ parameters: req.query, step: 'day', dateLimiter: latestStatisticsEntry });
 
-		const { from, to } = req.query;
-		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
+		else {
+			const { from, to } = req.query;
+			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((to && dateFns.isAfter(to, latestStatisticsEntry)) || (from && dateFns.isAfter(from, latestStatisticsEntry))) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
-		}
-
-		if ((to && from) && dateFns.isAfter(from, to)) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
-		}
-
-		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
-			// Check if the param was initially supplied, and if it was if the input wasn't a number
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
-		}
-
-		if ((over && under) && over > under) {
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
-		}
-
-		// Date filtering
-		if (from && !to) {
-			requestedStatistics = dateFilter(requestedStatistics, from, latestStatisticsEntry, 'day', iterator => {
-				return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
-			});
-		}
-		else if (!from && to) {
-			requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, to, 'day', iterator => {
-				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
-			});
-		}
-		else if (from && to) {
-			requestedStatistics = dateFilter(requestedStatistics, from, to, 'day', iterator => {
-				return dateFns.isWithinRange(iterator, from, to);
-			});
-		}
-
-		// Count filtering
-		if (equals || over || under) {
-			if (equals) {
-				requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-					return requestedStatistics[iterator] === equals;
+			// Date filtering
+			if (from && !to) {
+				requestedStatistics = dateFilter(requestedStatistics, from, latestStatisticsEntry, 'day', iterator => {
+					return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
 				});
 			}
-			else if (over && !under) {
-				requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-					return requestedStatistics[iterator] > over;
+			else if (!from && to) {
+				requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, to, 'day', iterator => {
+					return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
 				});
 			}
-			else if (!over && under) {
-				requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-					return requestedStatistics[iterator] < under;
-				});
-			}
-			else if (over && under) {
-				requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
-					return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
+			else if (from && to) {
+				requestedStatistics = dateFilter(requestedStatistics, from, to, 'day', iterator => {
+					return dateFns.isWithinRange(iterator, from, to);
 				});
 			}
 
-			for (const entryKey in requestedStatistics) {
-				if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
-			} // Remove padded entries if a count filter is used
+			// Count filtering
+			if (equals || over || under) {
+				if (equals) {
+					requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
+						return requestedStatistics[iterator] === equals;
+					});
+				}
+				else if (over && !under) {
+					requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
+						return requestedStatistics[iterator] > over;
+					});
+				}
+				else if (!over && under) {
+					requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
+						return requestedStatistics[iterator] < under;
+					});
+				}
+				else if (over && under) {
+					requestedStatistics = dateFilter(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, 'day', iterator => {
+						return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
+					});
+				}
+
+				for (const entryKey in requestedStatistics) {
+					if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
+				} // Remove padded entries if a count filter is used
+			}
 		}
 	}
 	else {
@@ -337,82 +348,65 @@ apiRouter.get('/statistics/summary', (req, res) => {
 });
 
 apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line complexity
-	const dateRegex = new RegExp(/^(\d{4})-(\d{2})$/);
-	const { to, from } = req.query;
-	const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
-
 	let requestedChartData = chartData;
 	const firstChartMonth = chartData[0].month;
 	const latestChartMonth = chartData[chartData.length - 1].month;
 
-	if (['from', 'to', 'equals', 'over', 'under'].some(parameter => Object.keys(req.query).includes(parameter))) {
-		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
-			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
-		}
+	if (Object.keys(req.query).length) {
+		const parameterResult = validateParameters({ parameters: req.query, step: 'month', dateLimiter: latestChartMonth });
 
-		if ((to && dateFns.isAfter(to, latestChartMonth)) || (from && dateFns.isAfter(from, latestChartMonth))) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
-		}
+		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
+		else {
+			const { to, from } = req.query;
+			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((to && from) && dateFns.isAfter(from, to)) {
-			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
-		}
-
-		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
-			// Check if the param was initially supplied, and if it was if the input wasn't a number
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
-		}
-
-		if ((over && under) && over > under) {
-			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
-		}
-
-		// Date filtering
-		if (from && !to) {
-			requestedChartData = dateFilter(requestedChartData, from, latestChartMonth, 'month', iterator => {
-				return dateFns.isWithinRange(iterator, from, latestChartMonth);
-			});
-		}
-		else if (!from && to) {
-			requestedChartData = dateFilter(requestedChartData, firstChartMonth, to, 'month', iterator => {
-				return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
-			});
-		}
-		else if (from && to) {
-			requestedChartData = dateFilter(requestedChartData, from, to, 'month', iterator => {
-				return dateFns.isWithinRange(iterator, from, to);
-			});
-		}
-
-		// Count filtering
-		if (equals || over || under) {
-			if (equals) {
-				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount === equals;
+			// Date filtering
+			if (from && !to) {
+				requestedChartData = dateFilter(requestedChartData, from, latestChartMonth, 'month', iterator => {
+					return dateFns.isWithinRange(iterator, from, latestChartMonth);
 				});
 			}
-			else if (over && !under) {
-				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount > over;
+			else if (!from && to) {
+				requestedChartData = dateFilter(requestedChartData, firstChartMonth, to, 'month', iterator => {
+					return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
 				});
 			}
-			else if (!over && under) {
-				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount < under;
-				});
-			}
-			else if (over && under) {
-				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount > over && dataCount < under;
+			else if (from && to) {
+				requestedChartData = dateFilter(requestedChartData, from, to, 'month', iterator => {
+					return dateFns.isWithinRange(iterator, from, to);
 				});
 			}
 
-			requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
-			// Remove padded entries if a count filter is used
+			// Count filtering
+			if (equals || over || under) {
+				if (equals) {
+					requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+						const dataCount = requestedChartData.find(d => d.month === iterator).count;
+						return dataCount === equals;
+					});
+				}
+				else if (over && !under) {
+					requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+						const dataCount = requestedChartData.find(d => d.month === iterator).count;
+						return dataCount > over;
+					});
+				}
+				else if (!over && under) {
+					requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+						const dataCount = requestedChartData.find(d => d.month === iterator).count;
+						return dataCount < under;
+					});
+				}
+				else if (over && under) {
+					requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+						const dataCount = requestedChartData.find(d => d.month === iterator).count;
+						return dataCount > over && dataCount < under;
+					});
+				}
+
+				requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
+				// Remove padded entries if a count filter is used
+			}
 		}
 	}
 	else {
