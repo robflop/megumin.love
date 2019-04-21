@@ -25,7 +25,7 @@ Other values are set to null by default.
 
 ### Manually:
 1) Run this query with with the new values you want to use for the sound:
-	- `UPDATE milestones SET count = <your>, achieved = <values>, timestamp = <in>, soundID = <here> WHERE id = <milestone id>;`
+	- `UPDATE milestones SET count = <your>, reached = <values>, timestamp = <in>, soundID = <here> WHERE id = <milestone id>;`
 2) Restart the website
 
 All values are again optional and remain unchanged if not provided, but any one must be filled out.

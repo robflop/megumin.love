@@ -938,6 +938,32 @@ Output when milestone with same count already exists:
 }
 ```
 
+Output when no count is provided or count is not an integer:
+
+```js
+{
+	"code": 400,
+	"message": "Milestone count must be provided."
+}
+```
+
+Output when count is not a number:
+
+```js
+{
+	"code": 400,
+	"message": "Milestone count must be an integer."
+}
+```
+
+Output when any other value is provided but not in Integer format:
+```js
+{
+	"code": 400,
+	"message": "Milestone reached status, timestamp and soundID must be an integer if provided."
+}
+```
+
 Output for other errors:
 
 ```js
