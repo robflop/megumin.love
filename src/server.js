@@ -378,10 +378,10 @@ apiRouter.get('/statistics/milestones', (req, res) => {
 	const [reached, soundID] = [parseInt(req.query.reached), parseInt(req.query.soundID)];
 	let requestedMilestones = milestones;
 
-	if (reached !== undefined) {
+	if (!isNaN(reached)) {
 		requestedMilestones = requestedMilestones.filter(ms => ms.reached === reached);
 	}
-	if (soundID) {
+	if (!isNaN(soundID)) {
 		requestedMilestones = requestedMilestones.filter(ms => ms.soundID === soundID);
 	}
 
@@ -690,6 +690,16 @@ function updateMilestone(count, timestamp, soundID) {
 			1, timestamp, soundID, count,
 			updateErr => {
 				if (updateErr) Logger.error(`An error occurred updating the milestone entry.`, updateErr);
+
+				const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+
+				emitUpdate({
+					type: 'notification',
+					notification: {
+						text: `Milestone ${milestone.id} of ${readableCount} clicks has been reached!`,
+						duration: 2
+					}
+				});
 
 				return emitUpdate({
 					type: 'milestoneUpdate',
