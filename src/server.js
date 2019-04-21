@@ -161,10 +161,10 @@ function dateFilter(filterData, startDate, endDate, step, condition) {
 		}
 		else {
 			if (!filterData.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
-		// Check for days missing in statistics and insert value for those
+			// Check for days missing in statistics and insert value for those
 			if (filterData.hasOwnProperty(iterator) && condition(iterator)) {
 				filteredResult[iterator] = filterData[iterator];
-		}
+			}
 		}
 
 		iterator = dateFns.format(steps[step][1](iterator, 1), steps[step][2]);
@@ -336,14 +336,16 @@ apiRouter.get('/statistics/summary', (req, res) => {
 	});
 });
 
-apiRouter.get('/statistics/chartData', (req, res) => {
+apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line complexity
 	const dateRegex = new RegExp(/^(\d{4})-(\d{2})$/);
 	const { to, from } = req.query;
+	const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+
 	let requestedChartData = chartData;
 	const firstChartMonth = chartData[0].month;
 	const latestChartMonth = chartData[chartData.length - 1].month;
 
-	if (['from', 'to'].some(parameter => Object.keys(req.query).includes(parameter))) {
+	if (['from', 'to', 'equals', 'over', 'under'].some(parameter => Object.keys(req.query).includes(parameter))) {
 		if ((req.query.from && !dateRegex.test(req.query.from)) || (req.query.to && !dateRegex.test(req.query.to))) {
 			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
 		}
@@ -354,6 +356,15 @@ apiRouter.get('/statistics/chartData', (req, res) => {
 
 		if ((to && from) && dateFns.isAfter(from, to)) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
+		}
+
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially supplied, and if it was if the input wasn't a number
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
+		}
+
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
 		}
 
 		// Date filtering
@@ -371,6 +382,37 @@ apiRouter.get('/statistics/chartData', (req, res) => {
 			requestedChartData = dateFilter(requestedChartData, from, to, 'month', iterator => {
 				return dateFns.isWithinRange(iterator, from, to);
 			});
+		}
+
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) {
+				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount === equals;
+				});
+			}
+			else if (over && !under) {
+				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount > over;
+				});
+			}
+			else if (!over && under) {
+				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount < under;
+				});
+			}
+			else if (over && under) {
+				requestedChartData = dateFilter(requestedChartData, firstChartMonth, latestChartMonth, 'month', iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount > over && dataCount < under;
+				});
+			}
+
+			requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
+			// Remove padded entries if a count filter is used
 		}
 	}
 	else {
