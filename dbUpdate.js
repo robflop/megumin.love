@@ -24,7 +24,7 @@ const databaseVersions = [
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
 				reached INTEGER NOT NULL DEFAULT 0,
-				timestamp INTEGER NOT NULL DEFAULT 0,
+				timestamp INTEGER,
 				soundID INTEGER,
 					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
 			);`
