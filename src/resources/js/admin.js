@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		uploadForm.addEventListener('submit', e => {
 			e.preventDefault();
 
-			fetch('/api/admin/upload', {
+			fetch('/api/admin/sounds/upload', {
 				method: 'POST',
 				headers: {
 					Authorization: localStorage.getItem('token')
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				newAssociation: renameForm[4].value
 			};
 
-			fetch('/api/admin/rename', {
+			fetch('/api/admin/sounds/rename', {
 				method: 'PATCH',
 				headers: {
 					'Authorization': localStorage.getItem('token'),
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('delete-form').addEventListener('submit', e => {
 			e.preventDefault();
 
-			fetch('/api/admin/delete', {
+			fetch('/api/admin/sounds/delete', {
 				method: 'DELETE',
 				headers: {
 					'Authorization': localStorage.getItem('token'),

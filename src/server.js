@@ -17,7 +17,11 @@ let sounds = [], chartData = {}, milestones = [], version = '';
 const statistics = {};
 
 // On-boot database interaction
-const db = new Database(config.databasePath);
+const db = new Database(config.databasePath, () => {
+	db.exec('PRAGMA foreign_keys = ON;', pragmaErr => {
+		if (pragmaErr) return Logger.error('Foreign key enforcement pragma query failed.');
+	});
+});
 
 // TODO: Test all the "not found" variants
 db.serialize(() => {
@@ -466,8 +470,8 @@ apiRouter.get('/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
-// todo: move these three routes to /admin/sound/...
-apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('file'), (req, res) => {
+// todo: test and make work with various different args supplied
+apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).single('file'), (req, res) => {
 	let newSound;
 
 	if (!req.file || (req.file && !['audio/mpeg', 'audio/mp3'].includes(req.file.mimetype))) {
@@ -525,8 +529,8 @@ apiRouter.post('/admin/upload', multer({ dest: './resources/temp' }).single('fil
 	}
 });
 
-// todo: move these three routes to /admin/sound/...
-apiRouter.patch('/admin/rename', (req, res) => {
+// todo: test and make work with various different args supplied
+apiRouter.patch('/admin/sounds/rename', (req, res) => {
 	const data = req.body;
 	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
 
@@ -534,6 +538,7 @@ apiRouter.patch('/admin/rename', (req, res) => {
 	else {
 		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}, ${data.newAssociation}) initiated.`); // eslint-disable-line max-len
 
+		// todo: only update provided values
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ?, association = ? WHERE filename = ?',
 			data.newFilename, data.newDisplayname, data.newSource, data.newAssociation, changedSound.filename,
 			updateErr => {
@@ -590,8 +595,8 @@ apiRouter.patch('/admin/rename', (req, res) => {
 	}
 });
 
-// todo: move these three routes to /admin/sound/...
-apiRouter.delete('/admin/delete', (req, res) => {
+// todo: test and make work with various different args supplied
+apiRouter.delete('/admin/sounds/delete', (req, res) => {
 	const data = req.body;
 	const deletedSound = sounds.find(sound => sound.filename === data.filename);
 
