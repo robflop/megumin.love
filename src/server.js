@@ -486,10 +486,12 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
+	if (!data.displayname) data.displayname = '';
+	if (!data.source) data.source = '';
 
 	const soundData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
@@ -556,7 +558,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 
 	const soundData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
@@ -656,7 +658,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 
 	const soundData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
@@ -710,7 +712,7 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 
 	const milestoneData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
@@ -774,7 +776,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 
 	const milestoneData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
@@ -837,7 +839,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 
 	const milestoneData = {};
 	Object.keys(data).map(d => {
-		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
 		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
