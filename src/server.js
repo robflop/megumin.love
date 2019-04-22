@@ -134,79 +134,6 @@ server.use(session({
 }));
 server.use(express.static('./resources'));
 
-function validateParameters({ parameters = {}, step, dateLimiter }) { // eslint-disable-line complexity
-	const dateRegex = new RegExp(`^(\\d{4})-(\\d{2})${step === 'day' ? '-(\\d{2})' : ''}$`);
-	// YYYY-MM-DD for day step, YYYY-MM for month step
-
-	const { from, to, source } = parameters;
-	const [equals, over, under] = [parseInt(parameters.equals), parseInt(parameters.over), parseInt(parameters.under)];
-
-	if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
-		return { code: 400, name: 'Wrong Format', message: `Dates must be provided in YYYY-MM${step === 'day' ? '-DD' : ''} format.` };
-	}
-
-	if ((to && dateFns.isAfter(to, dateLimiter)) || (from && dateFns.isAfter(from, dateLimiter))) {
-		return { code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' };
-	}
-
-	if ((to && from) && dateFns.isAfter(from, to)) {
-		return { code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' };
-	}
-
-	if ((parameters.equals && isNaN(equals)) || (parameters.over && isNaN(over)) || (parameters.under && isNaN(under))) {
-		// Check if the param was initially provided, and if the input wasn't a number
-		return { code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' };
-	}
-
-	if ((over && under) && over > under) {
-		return { code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' };
-	}
-
-	return { code: 200 };
-}
-
-/*
-	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
-	the object values for dates that are not present in the database. Looping over the statistics wouldn't
-	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
-	would not work if the difference between current statistics iteration and date iterator is bigger than one.
-*/
-function filterStatistics(data, startDate, endDate, condition) {
-	if (!condition) condition = () => true; // If no condition provided, default to pass all
-	let iterator = startDate;
-	const filteredResult = {};
-
-	while (dateFns.differenceInDays(endDate, iterator) >= 0) {
-		if (!data.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
-		// Check for days missing in statistics and insert value for those
-		if (data.hasOwnProperty(iterator) && condition(iterator)) {
-			filteredResult[iterator] = data[iterator];
-		}
-
-		iterator = dateFns.format(dateFns.addDays(iterator, 1), 'YYYY-MM-DD');
-	}
-
-	return filteredResult;
-}
-
-function filterChartData(data, startDate, endDate, condition) {
-	if (!condition) condition = () => true; // If no condition provided, default to pass all
-	let iterator = startDate;
-	const filteredResult = [];
-
-	while (dateFns.differenceInMonths(endDate, iterator) >= 0) {
-		if (!data.find(d => d.month === iterator)) filteredResult.push({ month: iterator, count: 0 });
-		// Check for months missing in statistics and insert value for those
-		if (data.find(d => d.month === iterator) && condition(iterator)) {
-			filteredResult.push(data.find(d => d.month === iterator));
-		}
-
-		iterator = dateFns.format(dateFns.addMonths(iterator, 1), 'YYYY-MM');
-	}
-
-	return filteredResult;
-}
-
 const apiRouter = express.Router();
 
 apiRouter.use(express.urlencoded({ extended: true }));
@@ -231,30 +158,34 @@ apiRouter.get('/counter', (req, res) => {
 	return res.json({ counter });
 });
 
-apiRouter.get('/sounds', (req, res) => {
+apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
 	if (Object.keys(req.query).length) {
-		const parameterResult = validateParameters({ parameters: req.query });
+		const { source } = req.query;
+		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
-		else {
-			const { source } = req.query;
-			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially provided, and if the input wasn't a number
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
+		}
 
-			// Source filtering
-			if (source) requestedSounds = requestedSounds.filter(sound => {
-				if (!sound.source) return false;
-				else return sound.source.toLowerCase() === source.toLowerCase();
-			});
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
+		}
 
-			// Count filtering
-			if (equals || over || under) {
-				if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
-				else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
-				else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
-				else if (over && under) requestedSounds = requestedSounds.filter(sound => sound.count > over && sound.count < under);
-			}
+		// Source filtering
+		if (source) requestedSounds = requestedSounds.filter(sound => {
+			if (!sound.source) return false;
+			else return sound.source.toLowerCase() === source.toLowerCase();
+		});
+
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) requestedSounds = requestedSounds.filter(sound => sound.count === equals);
+			else if (over && !under) requestedSounds = requestedSounds.filter(sound => sound.count > over);
+			else if (!over && under) requestedSounds = requestedSounds.filter(sound => sound.count < under);
+			else if (over && under) requestedSounds = requestedSounds.filter(sound => sound.count > over && sound.count < under);
 		}
 	}
 
@@ -267,58 +198,100 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	const latestStatisticsEntry = Object.keys(statistics)[Object.keys(statistics).length - 1];
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
+	/*
+	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
+	the object values for dates that are not present in the database. Looping over the statistics wouldn't
+	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
+	would not work if the difference between current statistics iteration and date iterator is bigger than one.
+	*/
+	const filterStatistics = (data, startDate, endDate, condition) => {
+		if (!condition) condition = () => true; // If no condition provided, default to pass all
+		let iterator = startDate;
+		const filteredResult = {};
+
+		while (dateFns.differenceInDays(endDate, iterator) >= 0) {
+			if (!data.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
+			// Check for days missing in statistics and insert value for those
+			if (data.hasOwnProperty(iterator) && condition(iterator)) {
+				filteredResult[iterator] = data[iterator];
+			}
+
+			iterator = dateFns.format(dateFns.addDays(iterator, 1), 'YYYY-MM-DD');
+		}
+
+		return filteredResult;
+	};
+
 	if (Object.keys(req.query).length) {
-		const parameterResult = validateParameters({ parameters: req.query, step: 'day', dateLimiter: latestStatisticsEntry });
+		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})-(\\d{2})$');
 
-		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
-		else {
-			const { from, to } = req.query;
-			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+		const { from, to } = req.query;
+		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-			// Date filtering
-			if (from && !to) {
-				requestedStatistics = filterStatistics(requestedStatistics, from, latestStatisticsEntry, iterator => {
-					return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
+		if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
+		}
+
+		if ((to && dateFns.isAfter(to, latestStatisticsEntry)) || (from && dateFns.isAfter(from, latestStatisticsEntry))) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
+		}
+
+		if ((to && from) && dateFns.isAfter(from, to)) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
+		}
+
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially provided, and if the input wasn't a number
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
+		}
+
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
+		}
+
+		// Date filtering
+		if (from && !to) {
+			requestedStatistics = filterStatistics(requestedStatistics, from, latestStatisticsEntry, iterator => {
+				return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
+			});
+		}
+		else if (!from && to) {
+			requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, to, iterator => {
+				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
+			});
+		}
+		else if (from && to) {
+			requestedStatistics = filterStatistics(requestedStatistics, from, to, iterator => {
+				return dateFns.isWithinRange(iterator, from, to);
+			});
+		}
+
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) {
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] === equals;
 				});
 			}
-			else if (!from && to) {
-				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, to, iterator => {
-					return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
+			else if (over && !under) {
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] > over;
 				});
 			}
-			else if (from && to) {
-				requestedStatistics = filterStatistics(requestedStatistics, from, to, iterator => {
-					return dateFns.isWithinRange(iterator, from, to);
+			else if (!over && under) {
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] < under;
+				});
+			}
+			else if (over && under) {
+				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
+					return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
 				});
 			}
 
-			// Count filtering
-			if (equals || over || under) {
-				if (equals) {
-					requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-						return requestedStatistics[iterator] === equals;
-					});
-				}
-				else if (over && !under) {
-					requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-						return requestedStatistics[iterator] > over;
-					});
-				}
-				else if (!over && under) {
-					requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-						return requestedStatistics[iterator] < under;
-					});
-				}
-				else if (over && under) {
-					requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-						return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
-					});
-				}
-
-				for (const entryKey in requestedStatistics) {
-					if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
-				} // Remove padded entries if a count filter is used
-			}
+			for (const entryKey in requestedStatistics) {
+				if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
+			} // Remove padded entries if a count filter is used
 		}
 	}
 	else {
@@ -328,66 +301,108 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	return res.json(requestedStatistics);
 });
 
-apiRouter.get('/statistics/chartData', (req, res) => {
+apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line complexity
 	let requestedChartData = chartData;
 	const firstChartMonth = chartData[0].month;
 	const latestChartMonth = chartData[chartData.length - 1].month;
 
+	/*
+	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
+	the object values for dates that are not present in the database. Looping over the statistics wouldn't
+	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
+	would not work if the difference between current statistics iteration and date iterator is bigger than one.
+	*/
+	const filterChartData = (data, startDate, endDate, condition) => {
+		if (!condition) condition = () => true; // If no condition provided, default to pass all
+		let iterator = startDate;
+		const filteredResult = [];
+
+		while (dateFns.differenceInMonths(endDate, iterator) >= 0) {
+			if (!data.find(d => d.month === iterator)) filteredResult.push({ month: iterator, count: 0 });
+			// Check for months missing in statistics and insert value for those
+			if (data.find(d => d.month === iterator) && condition(iterator)) {
+				filteredResult.push(data.find(d => d.month === iterator));
+			}
+
+			iterator = dateFns.format(dateFns.addMonths(iterator, 1), 'YYYY-MM');
+		}
+
+		return filteredResult;
+	};
+
 	if (Object.keys(req.query).length) {
-		const parameterResult = validateParameters({ parameters: req.query, step: 'month', dateLimiter: latestChartMonth });
+		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})$');
 
-		if (parameterResult.code !== 200) return res.status(parameterResult.code).json(parameterResult);
-		else {
-			const { to, from } = req.query;
-			const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
+		const { from, to } = req.query;
+		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-			// Date filtering
-			if (from && !to) {
-				requestedChartData = filterChartData(requestedChartData, from, latestChartMonth, iterator => {
-					return dateFns.isWithinRange(iterator, from, latestChartMonth);
+		if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
+		}
+
+		if ((to && dateFns.isAfter(to, latestChartMonth)) || (from && dateFns.isAfter(from, latestChartMonth))) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
+		}
+
+		if ((to && from) && dateFns.isAfter(from, to)) {
+			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
+		}
+
+		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
+			// Check if the param was initially provided, and if the input wasn't a number
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
+		}
+
+		if ((over && under) && over > under) {
+			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
+		}
+
+		// Date filtering
+		if (from && !to) {
+			requestedChartData = filterChartData(requestedChartData, from, latestChartMonth, iterator => {
+				return dateFns.isWithinRange(iterator, from, latestChartMonth);
+			});
+		}
+		else if (!from && to) {
+			requestedChartData = filterChartData(requestedChartData, firstChartMonth, to, iterator => {
+				return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
+			});
+		}
+		else if (from && to) {
+			requestedChartData = filterChartData(requestedChartData, from, to, iterator => {
+				return dateFns.isWithinRange(iterator, from, to);
+			});
+		}
+
+		// Count filtering
+		if (equals || over || under) {
+			if (equals) {
+				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount === equals;
 				});
 			}
-			else if (!from && to) {
-				requestedChartData = filterChartData(requestedChartData, firstChartMonth, to, iterator => {
-					return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
+			else if (over && !under) {
+				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount > over;
 				});
 			}
-			else if (from && to) {
-				requestedChartData = filterChartData(requestedChartData, from, to, iterator => {
-					return dateFns.isWithinRange(iterator, from, to);
+			else if (!over && under) {
+				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount < under;
+				});
+			}
+			else if (over && under) {
+				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
+					const dataCount = requestedChartData.find(d => d.month === iterator).count;
+					return dataCount > over && dataCount < under;
 				});
 			}
 
-			// Count filtering
-			if (equals || over || under) {
-				if (equals) {
-					requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount === equals;
-					});
-				}
-				else if (over && !under) {
-					requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount > over;
-					});
-				}
-				else if (!over && under) {
-					requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount < under;
-					});
-				}
-				else if (over && under) {
-					requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-						const dataCount = requestedChartData.find(d => d.month === iterator).count;
-						return dataCount > over && dataCount < under;
-					});
-				}
-
-				requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
-				// Remove padded entries if a count filter is used
-			}
+			requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
+			// Remove padded entries if a count filter is used
 		}
 	}
 	else {
@@ -874,39 +889,6 @@ function emitUpdate(eventData, options = {}) {
 	return socketServer.clients.forEach(socket => socket.send(JSON.stringify(eventData)));
 }
 
-function updateMilestone(id, timestamp, soundID) {
-	const milestone = milestones.find(ms => ms.id === id);
-
-	if (milestone) {
-		Logger.info(`Milestone ${milestone.id} (${milestone.count} clicks) reached! Entry being updated.`);
-
-		Object.assign(milestone, { reached: 1, timestamp, soundID });
-
-		const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE id = ?');
-		query.run(1, timestamp, soundID, id, updateErr => {
-			if (updateErr) {
-				Logger.error('An error occurred updating the milestone entry.');
-				Logger.error(updateErr);
-			}
-
-			const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-
-			emitUpdate({
-				type: 'notification',
-				notification: {
-					text: `Milestone ${milestone.id} of ${readableCount} clicks has been reached!`,
-					duration: 3
-				}
-			});
-
-			return emitUpdate({
-				type: 'milestoneUpdate',
-				milestone
-			});
-		});
-	}
-}
-
 socketServer.on('connection', socket => {
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
@@ -941,7 +923,36 @@ socketServer.on('connection', socket => {
 			statistics[currentDate] = daily;
 
 			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
-			if (reachedMilestone) updateMilestone(reachedMilestone.id, Date.now(), soundEntry.id);
+			if (reachedMilestone) {
+				const timestamp = Date.now();
+
+				Logger.info(`Milestone ${reachedMilestone.id} (${reachedMilestone.count} clicks) reached! Entry being updated.`);
+
+				Object.assign(reachedMilestone, { reached: 1, timestamp, soundID: soundEntry.id });
+
+				const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE id = ?');
+				query.run(1, timestamp, soundEntry.id, reachedMilestone.id, updateErr => {
+					if (updateErr) {
+						Logger.error('An error occurred updating the milestone entry.');
+						Logger.error(updateErr);
+					}
+
+					const readableCount = reachedMilestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+
+					emitUpdate({
+						type: 'notification',
+						notification: {
+							text: `Milestone ${reachedMilestone.id} of ${readableCount} clicks has been reached!`,
+							duration: 3
+						}
+					});
+
+					return emitUpdate({
+						type: 'milestoneUpdate',
+						milestone: reachedMilestone
+					});
+				});
+			}
 
 			emitUpdate({
 				type: 'crazyMode',
