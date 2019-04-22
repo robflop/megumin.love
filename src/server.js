@@ -450,6 +450,37 @@ apiRouter.get('/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
+apiRouter.all('/admin/sounds/*', multer({ dest: './resources/temp' }).single('file'), (req, res, next) => {
+	const originalData = req.body;
+	const parsedData = {};
+
+	Object.keys(originalData).forEach(d => {
+		if (!isNaN(parseInt(originalData[d]))) return parsedData[d] = parseInt(originalData[d]);
+		else if (typeof originalData[d] === 'string') return parsedData[d] = originalData[d].trim();
+		else return parsedData[d] = originalData[d];
+	});
+
+	if ((originalData.filename !== undefined && parsedData.filename === '') || (originalData.count !== undefined && parsedData.count === '')) {
+		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
+	}
+	if (originalData.count !== undefined && isNaN(parsedData.count)) {
+		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
+	}
+	if (originalData.filename && sounds.find(sound => sound.filename === parsedData.filename)) {
+		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
+	}
+	if (originalData.id && isNaN(parsedData.id)) {
+		return res.status(400).json({ code: 400, message: 'Sound ID must be an integer.' });
+	}
+	if (originalData.id && !sounds.find(sound => sound.id === parsedData.id)) {
+		return res.status(404).json({ code: 404, message: 'Sound not found.' });
+	}
+
+	req.body = parsedData;
+
+	return next();
+});
+
 apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).single('file'), (req, res) => {
 	let newSound;
 
@@ -467,264 +498,223 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
 
-	const soundData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
-		else return soundData[d] = data[d];
-	});
-
-	if (!['filename'].every(p => Object.keys(soundData).includes(p))) {
+	if (!Object.keys(data).includes('filename')) {
 		return res.status(400).json({ code: 400, message: 'Filename value must be provided.' });
 	}
-	if ((data.filename !== undefined && soundData.filename === '') || (data.count !== undefined && soundData.count === '')) {
-		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
-	}
-	if (data.count !== undefined && isNaN(soundData.count)) {
-		return res.status(400).json({ code: 400, message: 'Count must be an integer if provided.' });
-	}
 
-	Logger.info(`Sound '${soundData.filename}' (Shown as '${soundData.displayname}', from '${soundData.source}') now being uploaded.`);
+	Logger.info(`Sound '${data.filename}' (Shown as '${data.displayname}', from '${data.source}') now being uploaded.`);
 
-	if (sounds.find(sound => sound.filename === soundData.filename)) {
-		Logger.error(`A sound with filename '${soundData.filename}' already exists, upload aborted.`);
-		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
-	}
-	else {
-		const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
+	const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
-		rename(req.file.path, `./resources/sounds/${soundData.filename}.mp3`, renameErr => {
-			if (renameErr) {
-				Logger.error('An error occurred renaming the temporary file.');
-				Logger.error(renameErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console..' });
-			}
-			else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
+	rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
+		if (renameErr) {
+			Logger.error('An error occurred renaming the temporary file.');
+			Logger.error(renameErr);
+			return res.status(500).json({ code: 500, message: 'Please check the server console..' });
+		}
+		else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
+	});
+
+	const valuePlaceholders = '?, '.repeat(Object.keys(data).length).slice(0, -2); // Cut off dangling comma and whitespace
+
+	const query = db.prepare(`INSERT INTO sounds ( ${Object.keys(data).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
+	query.run(...Object.values(data), insertErr => {
+		if (insertErr) {
+			Logger.error('An error occurred creating the database entry, upload aborted.');
+			Logger.error(insertErr);
+			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+		}
+		Logger.info('(2/3): Database entry successfully created.');
+
+		newSound = {
+			id: latestID + 1,
+			filename: data.filename,
+			displayname: data.displayname || null,
+			source: data.source || null,
+			count: data.count,
+			association: data.association || null
+		};
+		sounds.push(newSound);
+
+		Logger.info('(3/3): Sound cache entry successfully created.');
+
+		emitUpdate({
+			type: 'soundUpload',
+			sound: newSound
 		});
 
-		const valuePlaceholders = '?, '.repeat(Object.keys(soundData).length).slice(0, -2); // Cut off dangling comma and whitespace
-
-		const query = db.prepare(`INSERT INTO sounds ( ${Object.keys(soundData).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
-		query.run(...Object.values(soundData), insertErr => {
-			if (insertErr) {
-				Logger.error('An error occurred creating the database entry, upload aborted.');
-				Logger.error(insertErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
-			}
-			Logger.info('(2/3): Database entry successfully created.');
-
-			newSound = {
-				id: latestID + 1,
-				filename: soundData.filename,
-				displayname: soundData.displayname || null,
-				source: soundData.source || null,
-				count: soundData.count,
-				association: soundData.association || null
-			};
-			sounds.push(newSound);
-
-			Logger.info('(3/3): Sound cache entry successfully created.');
-
-			emitUpdate({
-				type: 'soundUpload',
-				sound: newSound
-			});
-
-			return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
-		});
-	}
+		return res.json({ code: 200, message: 'Sound successfully uploaded.', sound: newSound });
+	});
 });
 
 apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const data = req.body;
 
-	const soundData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
-		else return soundData[d] = data[d];
-	});
-
-	const stepAmount = soundData.hasOwnProperty('filename') ? 5 : 2;
+	const stepAmount = data.hasOwnProperty('filename') ? 5 : 2;
 
 	if (!data.id) {
 		return res.status(400).json({ code: 400, message: 'Sound ID must be provided.' });
 	}
-	if (data.id && isNaN(soundData.id)) {
-		return res.status(400).json({ code: 400, message: 'Sound ID must be an integer.' });
-	}
-	if (!['filename', 'displayname', 'source', 'count', 'association'].some(p => Object.keys(soundData).includes(p))) {
+	if (!['filename', 'displayname', 'source', 'count', 'association'].some(p => Object.keys(data).includes(p))) {
 		return res.status(400).json({ code: 400, message: 'At least one property to modify must be supplied.' });
 	}
-	if (data.count !== undefined && isNaN(soundData.count)) {
-		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
-	}
-	if ((data.filename !== undefined && soundData.filename === '') || (data.count !== undefined && soundData.count === '')) {
-		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
-	}
 
-	const changedSound = sounds.find(sound => sound.id === soundData.id);
-	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
-	else {
-		Logger.info(`Sound '${changedSound.filename}' to '${soundData.filename}' now being deleted.`);
+	const changedSound = sounds.find(sound => sound.id === data.id);
+	Logger.info(`Sound '${changedSound.filename}' to '${data.filename}' now being deleted.`);
 
-		let columnPlaceholders = '';
+	let columnPlaceholders = '';
 
-		const changedProperties = Object.assign({}, soundData);
-		delete changedProperties.id; // Only properties to change wanted
+	const changedProperties = Object.assign({}, data);
+	delete changedProperties.id; // Only properties to change wanted
 
-		Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
-		columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
+	Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
+	columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
 
-		const query = db.prepare(`UPDATE sounds SET ${columnPlaceholders} WHERE id = ?`);
+	const query = db.prepare(`UPDATE sounds SET ${columnPlaceholders} WHERE id = ?`);
 
-		query.run(...Object.values(changedProperties), soundData.id, updateErr => {
-			if (updateErr) {
-				Logger.error('An error occurred updating the database entry, renaming aborted.');
-				Logger.error(updateErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
-			}
-			Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
+	query.run(...Object.values(changedProperties), data.id, updateErr => {
+		if (updateErr) {
+			Logger.error('An error occurred updating the database entry, renaming aborted.');
+			Logger.error(updateErr);
+			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+		}
+		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-			const oldSoundPath = `./resources/sounds/${changedSound.filename}.mp3`;
-			const newSoundPath = `./resources/sounds/${soundData.filename}.mp3`;
+		const oldSoundPath = `./resources/sounds/${changedSound.filename}.mp3`;
+		const newSoundPath = `./resources/sounds/${data.filename}.mp3`;
 
-			Object.assign(changedSound, soundData);
+		Object.assign(changedSound, data);
 
-			Logger.info(`(2/${stepAmount}): Sound cache entry successfully updated.`);
+		Logger.info(`(2/${stepAmount}): Sound cache entry successfully updated.`);
 
-			if (soundData.filename) {
-				copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
-					if (copyErr) {
-						Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
-						Logger.error(copyErr);
+		if (data.filename) {
+			copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
+				if (copyErr) {
+					Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
+					Logger.error(copyErr);
+					return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+				}
+				Logger.info(`(3/${stepAmount}): Original mp3 file successfully backed up.`);
+
+				rename(oldSoundPath, newSoundPath, renameErr => {
+					if (renameErr) {
+						Logger.error('An error occurred renaming the original mp3 file, renaming aborted, restoring backup.');
+						Logger.error(renameErr);
+						rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
+							if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
+						});
+
 						return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 					}
-					Logger.info(`(3/${stepAmount}): Original mp3 file successfully backed up.`);
+					Logger.info(`(4/${stepAmount}): Original mp3 file successfully renamed.`);
 
-					rename(oldSoundPath, newSoundPath, renameErr => {
-						if (renameErr) {
-							Logger.error('An error occurred renaming the original mp3 file, renaming aborted, restoring backup.');
-							Logger.error(renameErr);
-							rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
-								if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
-							});
-
-							return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+					unlink(`${oldSoundPath}.bak`, unlinkErr => {
+						if (unlinkErr) {
+							Logger.warn('An error occurred deleting the original mp3 backup, please delete manually.');
+							return Logger.error(unlinkErr);
 						}
-						Logger.info(`(4/${stepAmount}): Original mp3 file successfully renamed.`);
-
-						unlink(`${oldSoundPath}.bak`, unlinkErr => {
-							if (unlinkErr) {
-								Logger.warn('An error occurred deleting the original mp3 backup, please delete manually.');
-								return Logger.error(unlinkErr);
-							}
-							Logger.info(`(5/${stepAmount}): Original mp3 backup successfully deleted.`);
-						});
+						Logger.info(`(5/${stepAmount}): Original mp3 backup successfully deleted.`);
 					});
 				});
-			}
-
-			emitUpdate({
-				type: 'soundModify',
-				sound: changedSound
 			});
+		}
 
-			return res.json({ code: 200, message: 'Sound successfully modified.', sound: changedSound });
+		emitUpdate({
+			type: 'soundModify',
+			sound: changedSound
 		});
-	}
+
+		return res.json({ code: 200, message: 'Sound successfully modified.', sound: changedSound });
+	});
 });
 
 apiRouter.delete('/admin/sounds/delete', (req, res) => {
 	const data = req.body;
 
-	const soundData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return soundData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
-		else return soundData[d] = data[d];
-	});
+	const deletedSound = sounds.find(sound => sound.id === data.id);
+	Logger.info(`Sound '${deletedSound.filename}' now being deleted.`); // eslint-disable-line max-len
 
-	if (!data.id) {
-		return res.status(400).json({ code: 400, message: 'Sound ID must be provided.' });
-	}
-	if (data.id && isNaN(soundData.id)) {
-		return res.status(400).json({ code: 400, message: 'Sound ID must be an integer.' });
-	}
+	const query = db.prepare('DELETE FROM sounds WHERE id = ?');
+	query.run(data.id, deleteErr => {
+		if (deleteErr) {
+			Logger.error('An error occurred while deleting the database entry, deletion aborted.');
+			Logger.error(deleteErr);
+			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+		}
+		Logger.info('(1/3): Database entry successfully deleted.');
 
-	const deletedSound = sounds.find(sound => sound.id === soundData.id);
-	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
-	else {
-		Logger.info(`Sound '${deletedSound.filename}' now being deleted.`); // eslint-disable-line max-len
+		sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
+		Logger.info('(2/3): Sound cache entry successfully deleted.');
 
-		const query = db.prepare('DELETE FROM sounds WHERE id = ?');
-		query.run(soundData.id, deleteErr => {
-			if (deleteErr) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
-				Logger.error(deleteErr);
+		unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
+			if (unlinkErr) {
+				Logger.error('An error occurred while deleting the mp3 file.');
+				Logger.error(unlinkErr);
 				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 			}
-			Logger.info('(1/3): Database entry successfully deleted.');
+			Logger.info('(3/3): mp3 file successfully deleted.');
 
-			sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
-			Logger.info('(2/3): Sound cache entry successfully deleted.');
-
-			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
-				if (unlinkErr) {
-					Logger.error('An error occurred while deleting the mp3 file.');
-					Logger.error(unlinkErr);
-					return res.status(500).json({ code: 500, message: 'Please check the server console.' });
-				}
-				Logger.info('(3/3): mp3 file successfully deleted.');
-
-				emitUpdate({
-					type: 'soundDelete',
-					sound: deletedSound
-				});
-
-				return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
+			emitUpdate({
+				type: 'soundDelete',
+				sound: deletedSound
 			});
+
+			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
 		});
+	});
+});
+
+apiRouter.all('/admin/milestones/*', (req, res, next) => {
+	const originalData = req.body;
+	const parsedData = {};
+
+	Object.keys(originalData).forEach(d => {
+		if (!isNaN(parseInt(originalData[d]))) return parsedData[d] = parseInt(originalData[d]);
+		else if (typeof originalData[d] === 'string') return parsedData[d] = originalData[d].trim();
+		else return parsedData[d] = originalData[d];
+	});
+
+	if (originalData.id && isNaN(parsedData.id)) {
+		return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
 	}
+	if (originalData.count !== undefined && isNaN(parsedData.count)) {
+		return res.status(400).json({ code: 400, message: 'Milestone count must be an integer.' });
+	}
+	if ((originalData.reached !== undefined && isNaN(parsedData.reached)) || (originalData.timestamp && isNaN(parsedData.timestamp)) || (originalData.soundID && isNaN(parsedData.soundID))) { // eslint-disable-line max-len
+		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
+	}
+	if (originalData.reached !== undefined && (parsedData.reached !== 0 && parsedData.reached !== 1)) {
+		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
+	} // Checking for undefined because reached property can have value 0 which is falsy but still defined
+	if (originalData.id && !milestones.find(ms => ms.id === parsedData.id)) {
+		return res.status(404).json({ code: 404, message: 'Milestone not found.' });
+	}
+
+	req.body = parsedData;
+
+	return next();
 });
 
 apiRouter.post('/admin/milestones/add', (req, res) => {
 	const data = req.body;
 	if (!data.reached) data.reached = 0;
 
-	const milestoneData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
-		else return milestoneData[d] = data[d];
-	});
-
 	if (!data.count) {
 		return res.status(400).json({ code: 400, message: 'Milestone count must be provided.' });
 	}
-	if (data.count && isNaN(milestoneData.count)) {
-		return res.status(400).json({ code: 400, message: 'Milestone count must be an integer.' });
-	}
-	if ((data.reached !== undefined && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
-		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
-	}
-	if (milestoneData.reached !== undefined && (milestoneData.reached !== 0 && milestoneData.reached !== 1)) {
-		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
-	}
-	// Checking for undefined because reached property can have value 0 which is falsy but still defined
 
-	Logger.info(`Milestone with count ${milestoneData.count} now being added.`);
+	Logger.info(`Milestone with count ${data.count} now being added.`);
 
-	if (milestones.find(ms => ms.count === milestoneData.count)) {
-		Logger.error(`A milestone with count ${milestoneData.count} already exists, adding aborted.`);
+	if (milestones.find(ms => ms.count === data.count)) {
+		Logger.error(`A milestone with count ${data.count} already exists, adding aborted.`);
 		return res.status(400).json({ code: 400, message: 'Milestone with submitted count already exists.' });
 	}
 	else {
 		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
-		const valuePlaceholders = '?, '.repeat(Object.keys(milestoneData).length).slice(0, -2); // Cut off dangling comma and whitespace
+		const valuePlaceholders = '?, '.repeat(Object.keys(data).length).slice(0, -2); // Cut off dangling comma and whitespace
 
-		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(milestoneData).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
-		query.run(...Object.values(milestoneData), insertErr => {
+		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(data).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
+		query.run(...Object.values(data), insertErr => {
 			if (insertErr) {
 				Logger.error('An error occurred creating the database entry, addition aborted.');
 				Logger.error(insertErr);
@@ -737,10 +727,10 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 
 			const newMilestone = {
 				id: latestID + 1,
-				count: milestoneData.count,
-				reached: milestoneData.reached,
-				timestamp: milestoneData.timestamp || null,
-				soundID: milestoneData.soundID || null
+				count: data.count,
+				reached: data.reached,
+				timestamp: data.timestamp || null,
+				soundID: data.soundID || null
 			};
 			milestones.push(newMilestone);
 
@@ -759,108 +749,78 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	const data = req.body;
 
-	const milestoneData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
-		else return milestoneData[d] = data[d];
-	});
-
 	if (!data.id) {
 		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
 	}
-	if (data.id && isNaN(milestoneData.id)) {
-		return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
-	}
-	if (!['count', 'reached', 'timestamp', 'soundID'].some(p => Object.keys(milestoneData).includes(p))) {
+	if (!['count', 'reached', 'timestamp', 'soundID'].some(p => Object.keys(data).includes(p))) {
 		return res.status(400).json({ code: 400, message: 'At least one property to modify must be supplied.' });
 	}
-	if ((data.reached !== undefined && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
-		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
-	}
-	if (milestoneData.reached !== undefined && (milestoneData.reached !== 0 && milestoneData.reached !== 1)) {
-		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
-	}
 
-	const changedMilestone = milestones.find(ms => ms.id === milestoneData.id);
+	const changedMilestone = milestones.find(ms => ms.id === data.id);
+	Logger.info(`Milestone ${changedMilestone.id} (${changedMilestone.count} clicks) now being modified.`);
 
-	if (!changedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
-	else {
-		Logger.info(`Milestone ${changedMilestone.id} (${changedMilestone.count} clicks) now being modified.`);
+	let columnPlaceholders = '';
 
-		let columnPlaceholders = '';
+	const changedProperties = Object.assign({}, data);
+	delete changedProperties.id; // Only properties to change wanted
 
-		const changedProperties = Object.assign({}, milestoneData);
-		delete changedProperties.id; // Only properties to change wanted
+	Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
+	columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
 
-		Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
-		columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
+	const query = db.prepare(`UPDATE milestones SET ${columnPlaceholders} WHERE id = ?`);
+	query.run(...Object.values(changedProperties), data.id, updateErr => {
+		if (updateErr) {
+			Logger.error('An error occurred updating the database entry, modification aborted.');
+			Logger.error(updateErr);
+			const error = updateErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
+			const errorCode = error.includes('ID') ? 400 : 500;
 
-		const query = db.prepare(`UPDATE milestones SET ${columnPlaceholders} WHERE id = ?`);
-		query.run(...Object.values(changedProperties), milestoneData.id, updateErr => {
-			if (updateErr) {
-				Logger.error('An error occurred updating the database entry, modification aborted.');
-				Logger.error(updateErr);
-				const error = updateErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
-				const errorCode = error.includes('ID') ? 400 : 500;
+			return res.status(errorCode).json({ code: errorCode, message: error });
+		}
+		Logger.info('(1/2): Database entry successfully updated.');
 
-				return res.status(errorCode).json({ code: errorCode, message: error });
-			}
-			Logger.info('(1/2): Database entry successfully updated.');
+		Object.assign(changedMilestone, data);
 
-			Object.assign(changedMilestone, milestoneData);
+		Logger.info('(2/2): Milestone cache entry successfully updated.');
 
-			Logger.info('(2/2): Milestone cache entry successfully updated.');
-
-			emitUpdate({
-				type: 'milestoneModify',
-				milestone: changedMilestone
-			});
-
-			return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
+		emitUpdate({
+			type: 'milestoneModify',
+			milestone: changedMilestone
 		});
-	}
+
+		return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
+	});
 });
 
 apiRouter.delete('/admin/milestones/delete', (req, res) => {
 	const data = req.body;
 
-	const milestoneData = {};
-	Object.keys(data).map(d => {
-		if (!isNaN(parseInt(data[d]))) return milestoneData[d] = parseInt(data[d]);
-		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
-		else return milestoneData[d] = data[d];
-	});
-
-	if (!data.id) return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
-	if (data.id && isNaN(milestoneData.id)) return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
-
-	const deletedMilestone = milestones.find(ms => ms.id === milestoneData.id);
-
-	if (!deletedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
-	else {
-		Logger.info(`Milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) now being deleted.`);
-
-		const query = db.prepare('DELETE FROM milestones WHERE id = ?');
-		query.run(milestoneData.id, deleteErr => {
-			if (deleteErr) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
-				Logger.error(deleteErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
-			}
-			Logger.info('(1/2): Database entry successfully deleted.');
-
-			milestones.splice(milestones.findIndex(ms => ms.id === deletedMilestone.id), 1);
-			Logger.info('(2/2): Milestone cache entry successfully deleted.');
-
-			emitUpdate({
-				type: 'milestoneDelete',
-				milestone: deletedMilestone
-			});
-
-			return res.json({ code: 200, message: 'Milestone successfully deleted.', milestone: deletedMilestone });
-		});
+	if (!data.id) {
+		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
 	}
+
+	const deletedMilestone = milestones.find(ms => ms.id === data.id);
+	Logger.info(`Milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) now being deleted.`);
+
+	const query = db.prepare('DELETE FROM milestones WHERE id = ?');
+	query.run(data.id, deleteErr => {
+		if (deleteErr) {
+			Logger.error('An error occurred while deleting the database entry, deletion aborted.');
+			Logger.error(deleteErr);
+			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+		}
+		Logger.info('(1/2): Database entry successfully deleted.');
+
+		milestones.splice(milestones.findIndex(ms => ms.id === deletedMilestone.id), 1);
+		Logger.info('(2/2): Milestone cache entry successfully deleted.');
+
+		emitUpdate({
+			type: 'milestoneDelete',
+			milestone: deletedMilestone
+		});
+
+		return res.json({ code: 200, message: 'Milestone successfully deleted.', milestone: deletedMilestone });
+	});
 });
 
 apiRouter.post('/admin/notification', (req, res) => {
