@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!s.displayname) s.displayname = '';
 			if (!s.source) s.source = '';
 		});
+
 		activatedSounds = sounds
 			.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source))
 		// Sort primarily by season and secondarily alphabetically within seasons

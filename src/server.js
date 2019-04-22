@@ -514,7 +514,11 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
 		rename(req.file.path, `./resources/sounds/${soundData.filename}.mp3`, renameErr => {
-			if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
+			if (renameErr) {
+				Logger.error('An error occurred renaming the temporary file.');
+				Logger.error(renameErr);
+				return res.status(500).json({ code: 500, message: 'Please check the server console..' });
+			}
 			else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
 		});
 
@@ -525,7 +529,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			if (insertErr) {
 				Logger.error('An error occurred creating the database entry, upload aborted.');
 				Logger.error(insertErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 			}
 			Logger.info('(2/3): Database entry successfully created.');
 
@@ -598,7 +602,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 			if (updateErr) {
 				Logger.error('An error occurred updating the database entry, renaming aborted.');
 				Logger.error(updateErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 			}
 			Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
@@ -614,7 +618,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 					if (copyErr) {
 						Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
 						Logger.error(copyErr);
-						return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+						return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 					}
 					Logger.info(`(3/${stepAmount}): Original mp3 file successfully backed up.`);
 
@@ -626,7 +630,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 								if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
 							});
 
-							return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+							return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 						}
 						Logger.info(`(4/${stepAmount}): Original mp3 file successfully renamed.`);
 
@@ -678,7 +682,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 			if (deleteErr) {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
 				Logger.error(deleteErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 			}
 			Logger.info('(1/3): Database entry successfully deleted.');
 
@@ -689,7 +693,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 				if (unlinkErr) {
 					Logger.error('An error occurred while deleting the mp3 file.');
 					Logger.error(unlinkErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+					return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 				}
 				Logger.info('(3/3): mp3 file successfully deleted.');
 
@@ -744,7 +748,10 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 			if (insertErr) {
 				Logger.error('An error occurred creating the database entry, addition aborted.');
 				Logger.error(insertErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				const error = insertErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
+				const errorCode = error.includes('ID') ? 400 : 500;
+
+				return res.status(errorCode).json({ code: errorCode, message: error });
 			}
 			Logger.info('(1/2): Database entry successfully created.');
 
@@ -814,7 +821,10 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 			if (updateErr) {
 				Logger.error('An error occurred updating the database entry, modification aborted.');
 				Logger.error(updateErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				const error = updateErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
+				const errorCode = error.includes('ID') ? 400 : 500;
+
+				return res.status(errorCode).json({ code: errorCode, message: error });
 			}
 			Logger.info('(1/2): Database entry successfully updated.');
 
@@ -856,7 +866,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 			if (deleteErr) {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
 				Logger.error(deleteErr);
-				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
+				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 			}
 			Logger.info('(1/2): Database entry successfully deleted.');
 
