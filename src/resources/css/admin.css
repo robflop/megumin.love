@@ -49,7 +49,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	margin-top: 20px;
 }
 
-#upload, #delete, #rename {
+#upload, #delete, #modify {
 	width: 33%;
 	text-align: center;
 	display: block;
@@ -82,7 +82,7 @@ label[for="bg-select"], select[id="bg-select"] {
 		max-width: 600px;
 	}
 
-	#upload, #delete, #rename {
+	#upload, #delete, #modify {
 		width: 34%;
 	}
 }
@@ -100,7 +100,7 @@ label[for="bg-select"], select[id="bg-select"] {
 		display: block;
 	}
 
-	#upload, #delete, #rename {
+	#upload, #delete, #modify {
 		text-align: center;
 		display: block;
 		margin-left: 5%;

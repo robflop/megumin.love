@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			return `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})</option>`;
 		});
 
-		document.getElementById('rename-select').innerHTML = options.join('');
+		document.getElementById('modify-select').innerHTML = options.join('');
 		document.getElementById('delete-select').innerHTML = options.join('');
 	};
 
@@ -45,16 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 
-		const renameForm = document.getElementById('rename-form');
-		document.getElementById('rename-form').addEventListener('submit', e => {
+		const modifyForm = document.getElementById('modify-form');
+		document.getElementById('modify-form').addEventListener('submit', e => {
 			e.preventDefault();
 
 			const data = {
-				oldFilename: renameForm[0].value,
-				newFilename: renameForm[1].value,
-				newDisplayname: renameForm[2].value,
-				newSource: renameForm[3].value,
-				newAssociation: renameForm[4].value
+				oldFilename: modifyForm[0].value,
+				newFilename: modifyForm[1].value,
+				newDisplayname: modifyForm[2].value,
+				newSource: modifyForm[3].value,
+				newAssociation: modifyForm[4].value
 			};
 
 			fetch('/api/admin/sounds/rename', {
@@ -66,9 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				body: JSON.stringify(data)
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
-					renameForm.reset();
+					modifyForm.reset();
 
-					response.innerText = 'Sound successfully renamed!';
+					response.innerText = 'Sound successfully modified!';
 					util.fade(response, 5000);
 
 					sounds[sounds.findIndex(snd => snd.id === res.sound.id)] = res.sound;

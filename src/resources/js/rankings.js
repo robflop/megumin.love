@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
 							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
 							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 							break;
-						case 'soundClick': // Same code because a click modifies the sound object just like a rename would
-						case 'soundRename':
+						case 'soundClick': // Same code because a click modifies the sound object just like a modification would
+						case 'soundModify':
 							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
 							updateRanking(sounds);
 							break;

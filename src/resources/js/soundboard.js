@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
 							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 							break;
-						case 'soundRename':
+						case 'soundModify':
 							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
 							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 							break;

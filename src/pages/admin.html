@@ -60,21 +60,23 @@
 						<input type="text" name="filename" placeholder="Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname" required>
 						<input type="text" name="source" placeholder="Sound source" required>
+						<input type="text" name="count" placeholder="(Optional) Sound count">
 						<input type="text" name="association" placeholder="(Optional) Sound association">
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
-				<div id="rename">
-					<h2 class="titles">Sound renaming</h2>
-					<form id="rename-form" method="post">
-						<select name="oldFilename" id="rename-select">
+				<div id="modify">
+					<h2 class="titles">Sound modification</h2>
+					<form id="modify-form" method="post">
+						<select name="id" id="modify-select">
 							<!-- Automatically generated -->
 						</select>
-						<input type="text" name="newFilename" placeholder="New filename" required>
-						<input type="text" name="newDisplayname" placeholder="New displayname" required>
-						<input type="text" name="newSource" placeholder="New source" required>
-						<input type="text" name="newAssociation" placeholder="(Optional) New association">
-						<input type="submit" value="Rename sound">
+						<input type="text" name="filename" placeholder="New filename">
+						<input type="text" name="displayname" placeholder="New displayname">
+						<input type="text" name="source" placeholder="New source">
+						<input type="text" name="count" placeholder="New count">
+						<input type="text" name="association" placeholder="(Optional) New association">
+						<input type="submit" value="Modify sound">
 					</form>
 				</div>
 				<div id="delete">

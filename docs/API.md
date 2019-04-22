@@ -677,13 +677,14 @@ Upload a new sound to the website.
 
 ### Body
 
-| Key          | Description                                             | Type | Example  |
-| ------------ | ------------------------------------------------------- | ---- | -------- |
-| file         | Sound file (mp3) that contains the sound to be played   | File | -------- |
-| filename     | Filename the sound file should be saved under           | Text | laugh    |
-| displayname  | Name the sound should be displayed under on the website | Text | hahaha   |
-| source       | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text | Season 2 |
-| association* | Association for the soundclip (for specials)            | Text | goddess  |
+| Key          | Description                                             | Type    | Example  |
+| ------------ | ------------------------------------------------------- | ------- | -------- |
+| file         | Sound file (mp3) that contains the sound to be played   | File    | -------- |
+| filename     | Filename the sound file should be saved under           | Text    | laugh    |
+| displayname  | Name the sound should be displayed under on the website | Text    | hahaha   |
+| source       | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text    | Season 2 |
+| count*       | Preset count of the sound (defaults to 0)               | Integer | 5000     |
+| association* | Association for the soundclip (for specials)            | Text    | goddess  |
 
 \* Optional parameter
 
@@ -700,6 +701,7 @@ Upload a new sound to the website.
 - filename `laugh`
 - displayname `hahaha`
 - source `Season 2`
+- count `null`
 - association `null`
 
 Output when there is no error:
@@ -728,19 +730,30 @@ Output when filename is already in use:
 }
 ```
 
-Output when a file with different extension than mp3 is submitted:
-```js
-{
-    "code": 400,
-    "message": "Only mp3 files are accepted."
-}
-```
+Output when either no file or a non-mp3 file is supplied:
 
-Output when no file is supplied:
 ```js
 {
     "code": 400,
     "message": "An mp3 file must be supplied."
+}
+```
+
+Output when not all mandatory properties are provided:
+
+```js
+{
+	"code": 400,
+	"message": "Filename, displayname and source values must be provided."
+}
+```
+
+Output when count is provided but not of integer type:
+
+```js
+{
+	"code": 400,
+	"message": "Count must be an integer if provided."
 }
 ```
 
@@ -755,7 +768,7 @@ Output for other errors:
 
 ---
 
-## `PATCH /admin/sounds/rename`
+## `PATCH /admin/sounds/modify`
 
 Modify an existing sound on the website.
 
@@ -773,6 +786,7 @@ Modify an existing sound on the website.
 | filename    | New filename    | String  | explosion |
 | displayname | New displayname | String  | Boom!     |
 | source      | New source      | String  | Movie 1   |
+| count       | New count       | Integer | 5000      |
 | association | New association | String  | crimson   |
 
 All parameters are optional, but at least any one besides the ID must be provided.
@@ -786,7 +800,7 @@ Parameters that are not provided will remain unchanged.
 
 #### Example requests
 
-`/admin/sounds/rename` with:
+`/admin/sounds/modify` with:
 - id `42`
 - filename `explosion`
 - displayname `Boom!`
@@ -797,7 +811,7 @@ Output when there is no error:
 ```js
 {
     "code": 200,
-    "message": "Sound successfully renamed.",
+    "message": "Sound successfully modified.",
     "sound": {
         "id": 60,
         "filename": "explosion",
@@ -814,6 +828,24 @@ Output when the requested sound (ID) was not found:
 {
     "code": 404,
     "message": "Sound not found."
+}
+```
+
+Output when count is provided but not of integer type:
+
+```js
+{
+	"code": 400,
+	"message": "Count must be an integer if provided."
+}
+```
+
+Output when no property to modify is provided:
+
+```js
+{
+	"code": 400,
+	"message": "At least one property to modify must be supplied."
 }
 ```
 

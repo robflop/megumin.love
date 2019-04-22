@@ -15,17 +15,19 @@ Using the interface is _highly_ recommended. It's much less effort and less pron
 	- `INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( <your>, <values>, <here>, 0, <optional value> );`
 3) Restart the website
 
-## Renaming sounds
+## Modifying sounds
 
 ### Interface:
 1) Open the admin panel at the `/admin` page and log in
-2) Fill out the form for renaming in the center and click "Update sound".
+2) Fill out the form for modifying in the center and click "Modify sound".
 
 ### Manually:
 1) Rename the file in the `src/resources/sounds` folder
 2) Run this query with with the new values you want to use for the sound:
-	- `UPDATE sounds SET filename = <your>, displayname = <values>, source = <here>, association = <optional value> WHERE filename = <old filename>;`
+	- `UPDATE sounds SET filename = <your>, displayname = <values>, source = <here>, count = <and>, association = <here> WHERE id = <id>;`
 3) Restart the website
+
+All values are optional, but at least any one must be filled out.
 
 ## Removing sounds
 
