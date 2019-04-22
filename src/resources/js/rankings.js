@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			const list = document.createElement('ol');
 
 			for (const sound of characterSounds) {
-				if (sound.filename === 'realname') continue;
+				if (sound.displayname === '' || sound.source === '') continue;
+				// Don't list those without displayname or source
 				const rankingListItem = document.createElement('li');
 				rankingListItem.id = sound.filename;
 				rankingListItem.innerText = `${sound.displayname}: ${formatNumber(sound.count)} clicks`;

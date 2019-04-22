@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				src: `/sounds/${sound.filename}.mp3`
 			}); // Register the Howl instances
 
-			if (sound.filename === 'realname') continue;
-			// Don't create button for this one
+			if (sound.displayname === '' || sound.source === '') continue;
+			// Don't make button for those without displayname or source
 
 			if (buttonsWrapper) {
 				const soundButton = document.createElement('button');

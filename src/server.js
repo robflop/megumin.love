@@ -494,17 +494,17 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		else return soundData[d] = data[d];
 	});
 
-	if (!['filename', 'displayname', 'source'].every(p => Object.keys(soundData).includes(p))) {
-		return res.status(400).json({ code: 400, message: 'Filename, displayname and source values must be provided.' });
+	if (!['filename'].every(p => Object.keys(soundData).includes(p))) {
+		return res.status(400).json({ code: 400, message: 'Filename value must be provided.' });
 	}
-	if ((data.filename !== undefined && soundData.filename === '') || (data.displayname !== undefined && soundData.displayname === '') || (data.source !== undefined && soundData.source === '') || (data.count !== undefined && soundData.count === '')) { // eslint-disable-line max-len
-		return res.status(400).json({ code: 400, message: 'Filename, displayname, source and count may not be an empty string.' });
+	if ((data.filename !== undefined && soundData.filename === '') || (data.count !== undefined && soundData.count === '')) {
+		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
 	}
 	if (data.count !== undefined && isNaN(soundData.count)) {
 		return res.status(400).json({ code: 400, message: 'Count must be an integer if provided.' });
 	}
 
-	Logger.info(`Upload process for sound '${soundData.filename}' (${soundData.displayname}, ${soundData.source}, ${soundData.association}) initiated.`);
+	Logger.info(`Upload process for sound '${soundData.filename}' (Shown as '${soundData.displayname}', from '${soundData.source}') initiated.`);
 
 	if (sounds.find(sound => sound.filename === soundData.filename)) {
 		Logger.error(`A sound with filename '${soundData.filename}' already exists, upload aborted.`);
@@ -575,8 +575,8 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	if (data.count !== undefined && isNaN(soundData.count)) {
 		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
 	}
-	if ((data.filename !== undefined && soundData.filename === '') || (data.displayname !== undefined && soundData.displayname === '') || (data.source !== undefined && soundData.source === '') || (data.count !== undefined && soundData.count === '')) { // eslint-disable-line max-len
-		return res.status(400).json({ code: 400, message: 'Filename, displayname, source and count may not be an empty string.' });
+	if ((data.filename !== undefined && soundData.filename === '') || (data.count !== undefined && soundData.count === '')) {
+		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
 	}
 
 	const changedSound = sounds.find(sound => sound.id === soundData.id);

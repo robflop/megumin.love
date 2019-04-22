@@ -24,10 +24,29 @@ const databaseVersions = [
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
 				reached INTEGER NOT NULL DEFAULT 0,
-				timestamp INTEGER,
-				soundID INTEGER,
+				timestamp INTEGER DEFAULT NULL,
+				soundID INTEGER DEFAULT NULL,
 					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
-			);`
+			);`,
+			`CREATE TABLE IF NOT EXISTS soundsTemp (
+				id INTEGER PRIMARY KEY,
+				filename TEXT NOT NULL UNIQUE,
+				displayname TEXT DEFAULT NULL,
+				source TEXT DEFAULT NULL,
+				count INTEGER NOT NULL DEFAULT 0,
+				association TEXT DEFAULT NULL
+			);`,
+			'INSERT INTO soundsTemp SELECT * FROM sounds;',
+			'DROP TABLE sounds;',
+			'ALTER TABLE soundsTemp RENAME TO sounds;',
+			`CREATE TABLE IF NOT EXISTS statisticsTemp (
+				id INTEGER PRIMARY KEY,
+				date TEXT NOT NULL UNIQUE,
+				count INTEGER NOT NULL DEFAULT 0
+			);`,
+			'INSERT INTO statisticsTemp SELECT * FROM statistics;',
+			'DROP TABLE statistics;',
+			'ALTER TABLE statisticsTemp RENAME TO statistics;'
 		]
 	},
 ];
