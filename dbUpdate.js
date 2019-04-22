@@ -58,13 +58,15 @@ const { copyFile } = require('fs');
 const { databasePath } = require('./src/config.json');
 
 const db = new Database(join('src', databasePath));
-let currentVersion, newVersion;
+let currentVersion, newVersion, force;
 
 const newVersionCLI = process.argv.filter(arg => arg.includes('newVersion='))[0];
 const currentVersionCLI = process.argv.filter(arg => arg.includes('currentVersion='))[0];
+const forceCLI = process.argv.filter(arg => arg.includes('--force'))[0];
 
 if (newVersionCLI) newVersion = newVersionCLI.substr(newVersionCLI.indexOf('=') + 1).trim();
 if (currentVersionCLI) currentVersion = currentVersionCLI.substr(currentVersionCLI.indexOf('=') + 1).trim();
+if (forceCLI) force = true;
 
 
 console.log('This is the megumin.love database migration tool.');
@@ -138,11 +140,11 @@ function promptNewVersion() {
 function executeUpdateQueries() {
 	if (newVersion === 'latest') newVersion = databaseVersions[databaseVersions.length - 1].targetVersion;
 
-	if (currentVersion > newVersion) {
+	if (currentVersion > newVersion && !force) {
 		console.log('\nCurrent version is above new version. No updating is necessary.');
 		return process.exit(0);
 	}
-	else if (currentVersion === newVersion) {
+	else if (currentVersion === newVersion && !force) {
 		console.log('\nCurrent version equals new version. No updating is necessary.');
 		return process.exit(0);
 	}
@@ -150,6 +152,8 @@ function executeUpdateQueries() {
 	const upgrades = databaseVersions.filter(version => {
 		const aboveCurrent = currentVersion < version.targetVersion;
 		const belowNew = newVersion >= version.targetVersion;
+
+		if (force) return currentVersion <= version.targetVersion;
 
 		return aboveCurrent && belowNew;
 		// Passes all versions above the current if the latest version is aspired
