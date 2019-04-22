@@ -263,21 +263,17 @@ footer p, footer a {
 }
 
 #loading, #warning {
-	border-radius: 20px;
-	font-size: 48px;
 	text-align: center;
-	width: 50%;
 	margin: 0 auto;
 	margin-top: 10px;
 }
 
 #loading {
-	background-color: #b71c1c;
-	color: #ef9a9a;
+	font-size: 48px;
+	color: #d50000;
 }
 
 #warning { /* Created on main page / soundboard when no sounds are available */
-	background-color: #606060;
 	color: #383838;
 }
 

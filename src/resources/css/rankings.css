@@ -18,18 +18,31 @@ footer {
 #rankings-wrap {
 	display: flex;
 	justify-content: space-between;
-	flex-wrap: wrap;
 }
 
 #rankings-wrap div {
 	width: 24%;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
-#rankings-wrap > div:not(:last-of-type) {
+#rankings-wrap div:first-child {
+	padding-right: 10px;
+}
+
+#rankings-wrap div:last-child {
+	padding-left: 10px;
+}
+
+#rankings-wrap div:not(:first-child):not(:last-child) {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+#rankings-wrap div:not(:last-of-type) {
 	border-right-style: solid;
 	border-right-width: 1px;
 	border-color: black;
-	padding-right: 10px;
 }
 
 #rankings-wrap div h2 {
@@ -42,11 +55,6 @@ footer {
 	text-align: center;
 }
 
-#warning {
-	font-size: 30px;
-	width: 80%;
-}
-
 @media only screen and (max-width: 1366px) {
 	#container {
 		max-width: 900px;
@@ -55,18 +63,35 @@ footer {
 
 @media only screen and (max-width: 960px) {
 	#container {
-		max-width: 500px;
+		max-width: 550px;
 	}
 
-	#rankings-wrap div {
+	#container #rankings-wrap {
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	#container #rankings-wrap > div {
 		width: 47%;
 	}
 
-	#rankings-wrap > div {
+	#container #rankings-wrap > div:not(:nth-last-child(-n+2)) {
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+	}
+
+	#container #rankings-wrap > div:nth-child(odd) {
 		border-right-style: solid;
 		border-right-width: 1px;
 		border-color: black;
 		padding-right: 10px;
+		padding-left: 0px;
+	}
+
+	#container #rankings-wrap > div:nth-child(even) {
+		border-right-style: none;
+		padding-right: 0px;
+		padding-left: 10px;
 	}
 }
 
@@ -81,11 +106,16 @@ footer {
 		max-width: 300px;
 	}
 
-	#rankings-wrap div {
+	#container #rankings-wrap > div {
 		width: 100%;
+		border-right-style: none;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 
-	#container #rankings-wrap > div {
+	#container #rankings-wrap > div:nth-child(odd) {
 		border-right-style: none;
 	}
 }
