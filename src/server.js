@@ -486,8 +486,6 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
-	if (!data.displayname) data.displayname = '';
-	if (!data.source) data.source = '';
 
 	const soundData = {};
 	Object.keys(data).map(d => {
@@ -534,8 +532,8 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			newSound = {
 				id: latestID + 1,
 				filename: soundData.filename,
-				displayname: soundData.displayname,
-				source: soundData.source,
+				displayname: soundData.displayname || null,
+				source: soundData.source || null,
 				count: soundData.count,
 				association: soundData.association || null
 			};

@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// TODO: Test all of this again and make milestone frontend
 
 	const updateSounds = s => {
-		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+		sounds = s.sort((a, b) => {
+			if (!a.displayname || !b.displayname || !a.source || !b.source) return true;
+			if (a.source === b.source) return a.displayname.localeCompare(b.displayname);
+			else return a.source.localeCompare(b.source);
+		});
 		// Sort primarily by season and secondarily alphabetically within seasons
 		const options = sounds.map(sound => {
 			return `<option value=${sound.id}>${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})</option>`;
