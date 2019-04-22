@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+document.addEventListener('DOMContentLoaded', async () => {
+	function formatNumber(number) {
+		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	}
 	const statistics = {};
 	const chartContext = document.getElementsByTagName('canvas')[0];
 	const tickArray = [10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000, 100000000];
@@ -54,47 +56,44 @@ document.addEventListener('DOMContentLoaded', () => {
 		chart.update();
 	};
 
-	fetch('/api/statistics/summary').then(res => res.json()).then(summary => {
-		statistics.summary = summary;
-	}).then(() => fetch('/api/statistics/chartData').then(res => res.json()).then(cData => {
-		statistics.chartData = cData;
-	})).then(() => {
-		updateStatistics(statistics);
+	statistics.summary = await fetch('/api/statistics/summary').then(res => res.json());
+	statistics.chartData = await fetch('/api/statistics/chartData').then(res => res.json());
 
-		fetch('/api/conInfo').then(res => res.json()).then(con => {
-			const domainOrIP = document.URL.split('/')[2].split(':')[0];
-			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+	updateStatistics(statistics);
 
-			const ws = new WebSocket(host);
+	const conInfo = await fetch('/api/conInfo').then(res => res.json());
 
-			ws.addEventListener('open', event => {
-				ws.addEventListener('message', message => {
-					let data;
+	const domainOrIP = document.URL.split('/')[2].split(':')[0];
+	const host = conInfo.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${conInfo.port}`;
 
-					try {
-						data = JSON.parse(message.data);
+	const ws = new WebSocket(host);
+
+	ws.addEventListener('open', event => {
+		ws.addEventListener('message', message => {
+			let data;
+
+			try {
+				data = JSON.parse(message.data);
+			}
+			catch (e) {
+				data = {};
+			}
+
+			switch (data.type) {
+				case 'counterUpdate':
+					if (data.statistics.newChartData) {
+						statistics.chartData[statistics.chartData.length - 1] = data.statistics.newChartData;
 					}
-					catch (e) {
-						data = {};
-					}
-
-					switch (data.type) {
-						case 'counterUpdate':
-							if (data.statistics.newChartData) {
-								statistics.chartData[statistics.chartData.length - 1] = data.statistics.newChartData;
-							}
-							statistics.summary = data.statistics.summary;
-							updateStatistics(statistics);
-							break;
-						case 'notification':
-							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
-							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
-							break;
-						default:
-							break;
-					}
-				});
-			});
+					statistics.summary = data.statistics.summary;
+					updateStatistics(statistics);
+					break;
+				case 'notification':
+					if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+					util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					break;
+				default:
+					break;
+			}
 		});
 	});
 });

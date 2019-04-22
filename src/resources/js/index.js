@@ -1,6 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-	const formatNumber = number => number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-	let allSounds = [];
+document.addEventListener('DOMContentLoaded', async () => {
+	function formatNumber(number) {
+		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+	}
 	let activatedSounds = [];
 	let howlerList = {};
 
@@ -41,73 +42,72 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton(false);
 	}
 
-	fetch('/api/counter').then(res => res.json()).then(res => document.getElementById('counter').innerText = formatNumber(res.counter));
+	const counterRes = await fetch('/api/counter').then(res => res.json());
+	document.getElementById('counter').innerText = formatNumber(counterRes.counter);
 
-	fetch('/api/sounds').then(res => res.json()).then(sounds => {
-		allSounds = sounds;
-		const currentBackground = localStorage.getItem('background') || '';
-		loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-	}).then(() => {
-		fetch('/api/conInfo').then(res => res.json()).then(con => {
-			versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
-			trimmedVersion = con.version.substring(0, con.version.lastIndexOf('.'));
-			versionsAnchor.innerText = `[ver${trimmedVersion}]`;
+	const allSounds = await fetch('/api/sounds').then(res => res.json());
+	let currentBackground = localStorage.getItem('background') || '';
+	loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 
-			const domainOrIP = document.URL.split('/')[2].split(':')[0];
-			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+	const conInfo = await fetch('/api/conInfo').then(res => res.json());
 
-			const ws = new WebSocket(host);
+	versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
+	trimmedVersion = conInfo.version.substring(0, conInfo.version.lastIndexOf('.'));
+	versionsAnchor.innerText = `[ver${trimmedVersion}]`;
 
-			ws.addEventListener('open', event => {
-				ws.addEventListener('message', message => {
-					let data;
+	const domainOrIP = document.URL.split('/')[2].split(':')[0];
+	const host = conInfo.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${conInfo.port}`;
 
-					try {
-						data = JSON.parse(message.data);
-					}
-					catch (e) {
-						data = {};
-					}
+	const ws = new WebSocket(host);
 
-					const currentBackground = localStorage.getItem('background') || '';
+	ws.addEventListener('open', event => {
+		ws.addEventListener('message', message => {
+			let data;
 
-					switch (data.type) {
-						case 'counterUpdate':
-							if (data.counter) document.getElementById('counter').innerText = formatNumber(data.counter);
-							break;
-						case 'crazyMode':
-							if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
-							break;
-						case 'notification':
-							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
-							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
-							break;
-						case 'soundModify':
-							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						case 'soundUpload':
-							allSounds.push(data.sound);
-							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						case 'soundDelete':
-							allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
-							loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						default:
-							break;
-					}
-				});
+			try {
+				data = JSON.parse(message.data);
+			}
+			catch (e) {
+				data = {};
+			}
 
-				document.getElementsByTagName('button')[0].addEventListener('click', e => {
-					const sound = activatedSounds[Math.floor(Math.random() * activatedSounds.length)];
-					if (sound.filename === 'realname') sound.filename = 'name';
+			currentBackground = localStorage.getItem('background') || '';
 
-					howlerList[sound.filename].play();
+			switch (data.type) {
+				case 'counterUpdate':
+					if (data.counter) document.getElementById('counter').innerText = formatNumber(data.counter);
+					break;
+				case 'crazyMode':
+					if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
+					break;
+				case 'notification':
+					if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+					util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					break;
+				case 'soundModify':
+					allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+					loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				case 'soundUpload':
+					allSounds.push(data.sound);
+					loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				case 'soundDelete':
+					allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
+					loadSounds(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				default:
+					break;
+			}
+		});
 
-					return ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
-				});
-			});
+		document.getElementsByTagName('button')[0].addEventListener('click', e => {
+			const sound = activatedSounds[Math.floor(Math.random() * activatedSounds.length)];
+			if (sound.filename === 'realname') sound.filename = 'name';
+
+			howlerList[sound.filename].play();
+
+			return ws.send(JSON.stringify({ type: 'click', soundFilename: sound.filename }));
 		});
 	});
 

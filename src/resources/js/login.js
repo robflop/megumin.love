@@ -1,27 +1,25 @@
-document.addEventListener('DOMContentLoaded', () => {
-	document.getElementsByTagName('form')[0].addEventListener('submit', e => {
+document.addEventListener('DOMContentLoaded', async () => {
+	document.getElementsByTagName('form')[0].addEventListener('submit', async e => {
 		const token = e.target[0].value;
 
-		fetch('/api/login', {
+		const authRes = await fetch('/api/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ token })
-		}).then(res => res.json())
-			.then(res => {
-				if (res.code === 200) {
-					localStorage.setItem('token', token);
-					return window.location.href = '/admin';
-				}
-				else {
-					const loginRes = document.getElementById('login-res');
+		}).then(res => res.json());
 
-					loginRes.innerText = `Error ${res.code}: ${res.message}`;
-					util.fade(loginRes, 2000, 0.1);
-				}
-			});
-		// No catch because it doesn't reject on http error, so all is handled in promise resolve
+		if (authRes.code === 200) {
+			localStorage.setItem('token', token);
+			return window.location.href = '/admin';
+		}
+		else {
+			const loginRes = document.getElementById('login-res');
+
+			loginRes.innerText = `Error ${authRes.code}: ${authRes.message}`;
+			util.fade(loginRes, 2000, 0.1);
+		}
 
 		e.preventDefault();
 	});

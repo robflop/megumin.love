@@ -3,11 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const originalTitle = document.title;
 	const currentDate = new Date(); currentDate.setHours(0, 0, 0, 0); // Breaks when hours not set to midnight
-	const setDate = (month, day) => {
+
+	function setDate(month, day) {
 		const year = currentDate.getFullYear();
 		return new Date(year, month - 1, day);
-	};
-	const setSpecialEffects = specialBg => {
+	}
+
+	function setSpecialEffects(specialBg) {
 		const existingSpecialCSS = document.getElementById('special-css');
 		if (existingSpecialCSS) document.head.removeChild(existingSpecialCSS);
 
@@ -21,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		document.getElementById('sidebar-vector').src = `/images/vectors/${specialBackground.svg}.svg`;
 		document.title = originalTitle.replace('Megumin', specialBackground.title);
-	};
+	}
 
 	let backgroundSetting = localStorage.getItem('background');
 	const backgrounds = ['bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9', 'bg10'];

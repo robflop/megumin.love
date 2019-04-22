@@ -1,6 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-	let ws;
-	let allSounds = [];
+document.addEventListener('DOMContentLoaded', async () => {
 	let activatedSounds = [];
 	let howlerList = {};
 
@@ -33,22 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Create buttons and make them play corresponding sounds
 		for (const sound of activatedSounds) {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
-			let buttonsWrapper = document.getElementById(`${sourceName}-buttons`);
-			// Source as in "Season 1", "Season 1 OVA", etc
 
 			howlerList[sound.filename] = new Howl({
 				src: `/sounds/${sound.filename}.mp3`
-			}); // Register the Howl instances
+			});
 
 			if (sound.displayname === '' || sound.source === '') continue;
 			// Don't make button for those without displayname or source
 
-			if (buttonsWrapper) {
+			if (document.getElementById(`${sound.source.replace(/\s/g, '-').toLowerCase()}-buttons`)) {
+				// Check if buttons wrapper for source exists and if not create it
 				const soundButton = document.createElement('button');
 				soundButton.id = sound.filename;
 				soundButton.innerText = sound.displayname;
 
-				buttonsWrapper.appendChild(soundButton);
+				document.getElementById(`${sound.source.replace(/\s/g, '-').toLowerCase()}-buttons`).appendChild(soundButton);
 			}
 			else {
 				const sourceWrapper = document.createElement('div');
@@ -69,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				sourceWrapper.appendChild(playAll);
 
-				buttonsWrapper = document.createElement('div'); // Redefined from above check
+				const buttonsWrapper = document.createElement('div');
 				buttonsWrapper.classList.add('buttons-wrapper');
 				buttonsWrapper.id = `${sourceName}-buttons`;
 
@@ -108,8 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 				});
 
-				continue;
-				// Create button but don't use standard click function
+				continue; // Create button but don't use standard click function
 			}
 
 			document.getElementById(sound.filename).addEventListener('click', e => {
@@ -127,55 +123,53 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (document.getElementById('loading')) document.getElementById('loading').remove();
 	}
 
-	fetch('/api/sounds').then(res => res.json()).then(sounds => {
-		allSounds = sounds;
-		const currentBackground = localStorage.getItem('background') || '';
-		loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-	}).then(() => {
-		fetch('/api/conInfo').then(res => res.json()).then(con => {
-			const domainOrIP = document.URL.split('/')[2].split(':')[0];
-			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
+	const allSounds = await fetch('/api/sounds').then(res => res.json());
+	let currentBackground = localStorage.getItem('background') || '';
+	loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
 
-			ws = new WebSocket(host);
+	const conInfo = await fetch('/api/conInfo').then(res => res.json());
 
-			ws.addEventListener('open', event => {
-				ws.addEventListener('message', message => {
-					let data;
+	const domainOrIP = document.URL.split('/')[2].split(':')[0];
+	const host = conInfo.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${conInfo.port}`;
 
-					try {
-						data = JSON.parse(message.data);
-					}
-					catch (e) {
-						data = {};
-					}
+	const ws = new WebSocket(host);
 
-					const currentBackground = localStorage.getItem('background') || '';
+	ws.addEventListener('open', event => {
+		ws.addEventListener('message', message => {
+			let data;
 
-					switch (data.type) {
-						case 'crazyMode':
-							if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
-							break;
-						case 'notification':
-							if (data.notification) document.getElementById('notification').innerText = data.notification.text;
-							util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
-							break;
-						case 'soundModify':
-							allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						case 'soundUpload':
-							allSounds.push(data.sound);
-							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						case 'soundDelete':
-							allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
-							loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
-							break;
-						default:
-							break;
-					}
-				});
-			});
+			try {
+				data = JSON.parse(message.data);
+			}
+			catch (e) {
+				data = {};
+			}
+
+			currentBackground = localStorage.getItem('background') || '';
+
+			switch (data.type) {
+				case 'crazyMode':
+					if (localStorage.getItem('crazyMode')) howlerList[data.soundFilename].play();
+					break;
+				case 'notification':
+					if (data.notification) document.getElementById('notification').innerText = data.notification.text;
+					util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
+					break;
+				case 'soundModify':
+					allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				case 'soundUpload':
+					allSounds.push(data.sound);
+					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				case 'soundDelete':
+					allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
+					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					break;
+				default:
+					break;
+			}
 		});
 	});
 
