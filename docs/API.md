@@ -663,7 +663,6 @@ Output:
 }
 ```
 
-
 ---
 
 ## `POST /admin/sounds/upload`
@@ -678,12 +677,15 @@ Upload a new sound to the website.
 
 ### Body
 
-| Key         | Description                                                 | Type | Example  |
-| ----------- | ----------------------------------------------------------- | ---- | -------- |
-| file        | The sound file (mp3) that contains the sound to be played   | File | -------- |
-| filename    | The filename the sound file should be saved under           | Text | testfile |
-| displayname | The name the sound should be displayed under on the website | Text | testdisp |
-| source      | The origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text | testsrc  |
+| Key          | Description                                             | Type | Example  |
+| ------------ | ------------------------------------------------------- | ---- | -------- |
+| file         | Sound file (mp3) that contains the sound to be played   | File | -------- |
+| filename     | Filename the sound file should be saved under           | Text | laugh    |
+| displayname  | Name the sound should be displayed under on the website | Text | hahaha   |
+| source       | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text | Season 2 |
+| association* | Association for the soundclip (for specials)            | Text | goddess  |
+
+\* Optional parameter
 
 ### Parameters
 
@@ -694,10 +696,11 @@ Upload a new sound to the website.
 #### Example requests
 
 `/admin/sounds/upload` with:
-- file including `test.mp3`
-- filename `testfilename`
-- displayname `testdisplayname`
-- source `testsource`
+- file `test.mp3`
+- filename `laugh`
+- displayname `hahaha`
+- source `Season 2`
+- association `null`
 
 Output when there is no error:
 
@@ -706,11 +709,12 @@ Output when there is no error:
     "code": 200,
     "message": "Sound successfully uploaded.",
     "sound": {
-        "id": 60,
-        "filename": "testfilename",
-        "displayname": "testdisplayname",
-        "source": "testsource",
-        "count": 0
+        "id": 42,
+        "filename": "laugh",
+        "displayname": "hahaha",
+        "source": "Season 2",
+		"count": 0,
+		"association": null
     }
 }
 ```
@@ -732,7 +736,7 @@ Output when a file with different extension than mp3 is submitted:
 }
 ```
 
-Output when no file is supplied (not applicable to this example):
+Output when no file is supplied:
 ```js
 {
     "code": 400,
@@ -763,12 +767,16 @@ Modify an existing sound on the website.
 
 ### Body
 
-| Key            | Description                                | Format | Example   |
-| -------------- | ------------------------------------------ | ------ | --------- |
-| oldFilename    | Old filename of the sound to be renamed    | String | explsn    |
-| newFilename    | New filename of the sound to be renamed    | String | explosion |
-| newDisplayname | New displayname of the sound to be renamed | String | Boom!     |
-| newSource      | New source of the sound to be renamed      | String | Movie 1   |
+| Key         | Description     | Format  | Example   |
+| ----------- | --------------- | ------- | --------- |
+| id          | Target sound ID | Integer | 42        |
+| filename    | New filename    | String  | explosion |
+| displayname | New displayname | String  | Boom!     |
+| source      | New source      | String  | Movie 1   |
+| association | New association | String  | crimson   |
+
+All parameters are optional, but at least any one besides the ID must be provided.
+Parameters that are not provided will remain unchanged.
 
 ### Parameters
 
@@ -779,10 +787,10 @@ Modify an existing sound on the website.
 #### Example requests
 
 `/admin/sounds/rename` with:
-- oldFilename `testfilename`
-- newFilename `newtestfilename`
-- newDisplayname `newtestdisplayname`
-- newSource `newtestsource`
+- id `42`
+- filename `explosion`
+- displayname `Boom!`
+- source `Movie 1`
 
 Output when there is no error:
 
@@ -792,15 +800,16 @@ Output when there is no error:
     "message": "Sound successfully renamed.",
     "sound": {
         "id": 60,
-        "filename": "newtestfilename",
-        "displayname": "newtestdisplayname",
-        "source": "newtestsource",
-        "count": 0
+        "filename": "explosion",
+        "displayname": "Boom!",
+        "source": "Movie 1",
+		"count": 0,
+		"association": null
     }
 }
 ```
 
-Output when the requested sound (oldFilename) was not found:
+Output when the requested sound (ID) was not found:
 ```js
 {
     "code": 404,
@@ -831,9 +840,9 @@ Delete an existing sound from the website.
 
 ### Body
 
-| Key      | Description                         | Format | Example  |
-| -------- | ----------------------------------- | -------| -------- |
-| filename | Filename of the sound to be deleted | String | testfile |
+| Key | Description                   | Format  | Example |
+| --- | ----------------------------- | ------- | ------- |
+| id  | ID of the sound to be deleted | Integer | 42      |
 
 ### Parameters
 
@@ -844,7 +853,7 @@ Delete an existing sound from the website.
 #### Example requests
 
 `/admin/sounds/delete` with:
-- filename `newtestfilename`
+- id `42`
 
 Output when there is no error:
 
@@ -853,16 +862,17 @@ Output when there is no error:
     "code": 200,
     "message": "Sound successfully deleted.",
     "sound": {
-        "id": 60,
-        "filename": "newtestfilename",
-        "displayname": "newtestdisplayname",
-        "source": "newtestsource",
-        "count": 0
+        "id": 42,
+        "filename": "explosion",
+        "displayname": "Boom!",
+        "source": "Movie 1",
+		"count": 0,
+		"association": null
     }
 }
 ```
 
-Output when the requested sound (filename) was not found:
+Output when the requested sound (ID) was not found:
 ```js
 {
     "code": 404,

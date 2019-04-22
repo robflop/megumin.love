@@ -536,11 +536,11 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 // todo: test and make work with various different args supplied
 apiRouter.patch('/admin/sounds/rename', (req, res) => {
 	const data = req.body;
-	const changedSound = sounds.find(sound => sound.filename === data.oldFilename);
+	const changedSound = sounds.find(sound => sound.id === data.id);
 
 	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${data.oldFilename}' to '${data.newFilename}' (${data.newDisplayname}, ${data.newSource}, ${data.newAssociation}) initiated.`); // eslint-disable-line max-len
+		Logger.info(`Renaming process for sound '${changedSound.filename}' initiated.`);
 
 		// todo: only update provided values
 		db.run('UPDATE sounds SET filename = ?, displayname = ?, source = ?, association = ? WHERE filename = ?',
@@ -553,11 +553,13 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 				}
 				Logger.info('(1/5): Database entry successfully updated.');
 
+				Object.assign(changedSound, data);
+
 				// todo: rename parameters to plain names for object assign
-				changedSound.filename = data.newFilename;
-				changedSound.displayname = data.newDisplayname;
-				changedSound.source = data.newSource;
-				changedSound.association = data.newAssociation;
+				// changedSound.filename = data.newFilename;
+				// changedSound.displayname = data.newDisplayname;
+				// changedSound.source = data.newSource;
+				// changedSound.association = data.newAssociation;
 
 				Logger.info('(2/5): Sound cache entry successfully updated.');
 
