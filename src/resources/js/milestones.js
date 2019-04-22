@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	let milestones = [], sounds = [];
 
 	function updateMilestones(ms) {
+		fetch('/api/sounds').then(res => res.json()).then(s => sounds = s);
+		// For displaying milestone sounds based on their id
+
 		const milestonesWrap = document.getElementById('milestones-wrap');
 		milestonesWrap.innerHTML = ''; // Wipe before reload
 
@@ -57,10 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	fetch('/api/statistics/milestones').then(res => res.json()).then(ms => {
 		milestones = ms;
-	}).then(() => fetch('/api/sounds').then(res => res.json())).then(s => {
-		sounds = s;
 		updateMilestones(milestones);
-
+	}).then(() => {
 		fetch('/api/conInfo').then(res => res.json()).then(con => {
 			const domainOrIP = document.URL.split('/')[2].split(':')[0];
 			const host = con.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${con.port}`;
@@ -85,17 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
 							break;
 						// todo: make updating with api work
 						case 'milestoneUpdate':
-							milestones[milestones.findIndex(ms => ms.id === data.statistics.milestone.id)] = data.statistics.milestone;
+						case 'milestoneModify':
+							milestones[milestones.findIndex(ms => ms.id === data.milestone.id)] = data.milestone;
 							updateMilestones(milestones);
 							break;
-						case 'soundRename':
-							sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+						case 'milestoneAdd':
+							milestones.push(data.milestone);
 							break;
-						case 'soundUpload':
-							sounds.push(data.sound);
-							break;
-						case 'soundDelete':
-							sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
+						case 'milestoneDelete':
+							milestones.splice(milestones.findIndex(ms => ms.id === data.milestone.id), 1);
 							break;
 						default:
 							break;

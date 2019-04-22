@@ -695,10 +695,8 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 			Logger.info('(2/2): Milestone cache entry successfully created.');
 
 			emitUpdate({
-				type: 'milestoneUpdate',
-				statistics: {
-					milestone: newMilestone
-				}
+				type: 'milestoneAdd',
+				milestone: newMilestone
 			});
 
 			return res.json({ code: 200, message: 'Milestone successfully added.', milestone: newMilestone });
@@ -756,10 +754,8 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 			Logger.info('(2/2): Milestone cache entry successfully updated.');
 
 			emitUpdate({
-				type: 'milestoneUpdate',
-				statistics: {
-					milestone: changedMilestone
-				}
+				type: 'milestoneModify',
+				milestone: changedMilestone
 			});
 
 			return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
@@ -795,10 +791,8 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 			Logger.info('(2/2): Milestone cache entry successfully deleted.');
 
 			emitUpdate({
-				type: 'milestoneUpdate',
-				statistics: {
-					milestone: deletedMilestone
-				}
+				type: 'milestoneDelete',
+				milestone: deletedMilestone
 			});
 
 			return res.json({ code: 200, message: 'Milestone successfully deleted.', milestone: deletedMilestone });
@@ -885,9 +879,7 @@ function updateMilestone(count, timestamp, soundID) {
 
 				return emitUpdate({
 					type: 'milestoneUpdate',
-					statistics: {
-						milestone
-					}
+					milestone
 				});
 			});
 	}
