@@ -19,11 +19,15 @@ a[href="/rankings"] {
 	color: #22ea9e;
 }
 
+.response {
+	color: #22ea9e;
+}
+
 .backlink-anchor {
 	color: #22ea9e;
 }
 
-#loading {;
+#loading {
 	color: #22ea9e;
 }
 
@@ -37,9 +41,5 @@ a[href="/rankings"] {
 }
 
 #counter {
-	color: #22ea9e;
-}
-
-.response {
 	color: #22ea9e;
 }

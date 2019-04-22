@@ -19,6 +19,10 @@ a[href="/rankings"] {
 	color: #FCBB46;
 }
 
+.response {
+	color: #FBFF00;
+}
+
 .backlink-anchor {
 	color: #FCBB46;
 }
@@ -38,8 +42,4 @@ a[href="/rankings"] {
 
 #counter {
 	color: #FCBB46;
-}
-
-.response {
-	color: #FBFF00;
 }

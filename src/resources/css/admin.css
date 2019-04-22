@@ -8,6 +8,23 @@ label[for="bg-select"], select[id="bg-select"] {
 	*/
 }
 
+.panel {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 20px 0 15px 0;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-color: #9c9c9c;
+}
+
+.response {
+	display: none;
+	text-align: center;
+	font-size: 20px;
+	color: #ef9a9a;
+	width: 100%;
+}
+
 #container {
 	width: 1175px;
 	background-color: rgba(0, 0, 0, 0.5);
@@ -36,7 +53,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	height: 16px;
 }
 
-#container :nth-last-child(2) {
+#container > :nth-last-child(2) {
 	border-style: none;
 }
 
@@ -48,27 +65,12 @@ label[for="bg-select"], select[id="bg-select"] {
 	float: right;
 }
 
-.panel {
-	display: flex;
-	flex-wrap: wrap;
-	padding: 20px 0 15px 0;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-color: #9c9c9c;
-}
+
 
 #soundUpload, #soundModify, #soundDelete, #milestoneAdd, #milestoneModify, #milestoneDelete {
 	width: 33%;
 	text-align: center;
 	display: block;
-}
-
-.response {
-	display: none;
-	text-align: center;
-	font-size: 20px;
-	color: #ef9a9a;
-	width: 100%;
 }
 
 #soundDelete-confirm-wrapper label, #milestoneDelete-confirm-wrapper label {
@@ -101,12 +103,12 @@ label[for="bg-select"], select[id="bg-select"] {
 		bottom: -50px;
 	}
 
-	#container {
-		max-width: 400px;
-	}
-
 	.panel {
 		display: block;
+	}
+
+	#container {
+		max-width: 400px;
 	}
 
 	#soundUpload, #soundModify, #soundDelete, #milestoneAdd, #milestoneModify, #milestoneDelete {
