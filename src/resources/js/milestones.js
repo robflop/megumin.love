@@ -7,12 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		return `${date.getDate()}.${month}.${date.getFullYear()}`;
 	};
 
-	let milestones = [], sounds = [];
+	let milestones = [];
 
 	function updateMilestones(ms) {
-		fetch('/api/sounds').then(res => res.json()).then(s => sounds = s);
-		// For displaying milestone sounds based on their id
-
+		fetch('/api/sounds').then(res => res.json()).then(sounds => {
 		const milestonesWrap = document.getElementById('milestones-wrap');
 		milestonesWrap.innerHTML = ''; // Wipe before reload
 
@@ -46,16 +44,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				milestoneListElement.appendChild(milestoneDate);
 
-				const milestoneSound = document.createElement('p');
-				milestoneSound.innerText = `Sound that played: ${sounds.find(s => s.id === milestone.soundID).displayname || 'Unknown'}`;
+					const milestoneSoundElement = document.createElement('p');
+					const soundObject = sounds.find(s => s.id === milestone.soundID);
+					milestoneSoundElement.innerText = `Sound that played: ${soundObject ? soundObject.displayname : 'Unknown'}`;
 
-				milestoneListElement.appendChild(milestoneSound);
+					milestoneListElement.appendChild(milestoneSoundElement);
 			}
 
 			milestonesList.appendChild(milestoneListElement);
 		}
 
 		milestonesWrap.appendChild(milestonesList);
+		});
 	}
 
 	fetch('/api/statistics/milestones').then(res => res.json()).then(ms => {
@@ -92,9 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
 							break;
 						case 'milestoneAdd':
 							milestones.push(data.milestone);
+							updateMilestones(milestones);
 							break;
 						case 'milestoneDelete':
 							milestones.splice(milestones.findIndex(ms => ms.id === data.milestone.id), 1);
+							updateMilestones(milestones);
 							break;
 						default:
 							break;
