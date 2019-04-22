@@ -440,9 +440,9 @@ apiRouter.get('/statistics/milestones', (req, res) => {
 apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses this route
 	if (config.adminToken === req.body.token) {
 		req.session.loggedIn = true;
-		Logger.info('A user has authenticated on the \'/login\' endpoint.');
+		Logger.info('A user has logged in on the \'/login\' endpoint.');
 
-		return res.json({ code: 200, message: 'Successfully authenticated!' });
+		return res.json({ code: 200, message: 'Successfully logged in!' });
 	}
 	else {
 		return res.status(401).json({ code: 401, message: 'Invalid token provided.' });
@@ -465,7 +465,7 @@ apiRouter.get('/admin/logout', (req, res) => {
 	return res.json({ code: 200, message: 'Successfully logged out!' });
 });
 
-apiRouter.all('/admin/sounds/*', multer({ dest: './resources/temp' }).single('file'), (req, res, next) => {
+apiRouter.all('/admin/sounds/*', (req, res, next) => {
 	const originalData = req.body;
 	const parsedData = {};
 
@@ -521,15 +521,6 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 	const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
-	rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
-		if (renameErr) {
-			Logger.error('An error occurred renaming the temporary file.');
-			Logger.error(renameErr);
-			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
-		}
-		else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
-	});
-
 	const valuePlaceholders = '?, '.repeat(Object.keys(data).length).slice(0, -2); // Cut off dangling comma and whitespace
 
 	const query = db.prepare(`INSERT INTO sounds ( ${Object.keys(data).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
@@ -537,9 +528,17 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		if (insertErr) {
 			Logger.error('An error occurred creating the database entry, upload aborted.');
 			Logger.error(insertErr);
+
+			unlink(req.file.path, delError => {
+				if (delError) {
+					Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`);
+					return Logger.error(delError);
+				} // Delete temporary file on failure
+			});
+
 			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 		}
-		Logger.info('(2/3): Database entry successfully created.');
+		Logger.info('(1/3): Database entry successfully created.');
 
 		newSound = {
 			id: latestID + 1,
@@ -551,7 +550,16 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		};
 		sounds.push(newSound);
 
-		Logger.info('(3/3): Sound cache entry successfully created.');
+		Logger.info('(2/3): Sound cache entry successfully created.');
+
+		rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
+			if (renameErr) {
+				Logger.error('An error occurred renaming the temporary file.');
+				Logger.error(renameErr);
+				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+			}
+			else Logger.info('(3/3): Uploaded mp3 file successfully renamed to requested filename.');
+		});
 
 		emitUpdate({
 			type: 'soundUpload',
