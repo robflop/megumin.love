@@ -730,12 +730,12 @@ Output when filename is already in use:
 }
 ```
 
-Output when either no file or a non-mp3 file is supplied:
+Output when either no file or a non-mp3 file is provided:
 
 ```js
 {
     "code": 400,
-    "message": "An mp3 file must be supplied."
+    "message": "An mp3 file must be provided."
 }
 ```
 
@@ -845,7 +845,7 @@ Output when no property to modify is provided:
 ```js
 {
 	"code": 400,
-	"message": "At least one property to modify must be supplied."
+	"message": "At least one property to modify must be provided."
 }
 ```
 
@@ -1100,7 +1100,7 @@ Output for when no property to modify was submitted (i.e. only ID):
 ```js
 {
 	"code": 400,
-	"message": "At least one property to modify must be supplied."
+	"message": "At least one property to modify must be provided."
 }
 ```
 

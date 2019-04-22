@@ -154,7 +154,7 @@ function validateParameters({ parameters = {}, step, dateLimiter }) { // eslint-
 	}
 
 	if ((parameters.equals && isNaN(equals)) || (parameters.over && isNaN(over)) || (parameters.under && isNaN(under))) {
-		// Check if the param was initially supplied, and if the input wasn't a number
+		// Check if the param was initially provided, and if the input wasn't a number
 		return { code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' };
 	}
 
@@ -460,19 +460,19 @@ apiRouter.all('/admin/sounds/*', multer({ dest: './resources/temp' }).single('fi
 		else return parsedData[d] = originalData[d];
 	});
 
-	if ((originalData.filename !== undefined && parsedData.filename === '') || (originalData.count !== undefined && parsedData.count === '')) {
-		return res.status(400).json({ code: 400, message: 'Filename and count may not be an empty string.' });
+	if (parsedData.filename === '' || parsedData.count === '') {
+		return res.status(400).json({ code: 400, message: 'Sound filename and count may not be an empty string.' });
+	}
+	if (parsedData.filename && sounds.find(sound => sound.filename === parsedData.filename)) {
+		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
 	}
 	if (originalData.count !== undefined && isNaN(parsedData.count)) {
 		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
 	}
-	if (originalData.filename && sounds.find(sound => sound.filename === parsedData.filename)) {
-		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
-	}
-	if (originalData.id && isNaN(parsedData.id)) {
+	if (originalData.id !== undefined && isNaN(parseInt(parsedData.id))) {
 		return res.status(400).json({ code: 400, message: 'Sound ID must be an integer.' });
 	}
-	if (originalData.id && !sounds.find(sound => sound.id === parsedData.id)) {
+	if (parsedData.id !== undefined && !sounds.find(sound => sound.id === parsedData.id)) {
 		return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	}
 
@@ -490,16 +490,16 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 				Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`);
 				return Logger.error(delError);
 			}
-		}); // If a wrong filetype was supplied, delete the created temp file on rejection
+		}); // If a wrong filetype was provided, delete the created temp file on rejection
 
-		return res.status(400).json({ code: 400, message: 'An mp3 file must be supplied.' });
+		return res.status(400).json({ code: 400, message: 'An mp3 file must be provided.' });
 	}
 
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
 
 	if (!Object.keys(data).includes('filename')) {
-		return res.status(400).json({ code: 400, message: 'Filename value must be provided.' });
+		return res.status(400).json({ code: 400, message: 'Sound filename must be provided.' });
 	}
 
 	Logger.info(`Sound '${data.filename}' (Shown as '${data.displayname}', from '${data.source}') now being uploaded.`);
@@ -510,7 +510,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		if (renameErr) {
 			Logger.error('An error occurred renaming the temporary file.');
 			Logger.error(renameErr);
-			return res.status(500).json({ code: 500, message: 'Please check the server console..' });
+			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
 		}
 		else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
 	});
@@ -556,7 +556,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		return res.status(400).json({ code: 400, message: 'Sound ID must be provided.' });
 	}
 	if (!['filename', 'displayname', 'source', 'count', 'association'].some(p => Object.keys(data).includes(p))) {
-		return res.status(400).json({ code: 400, message: 'At least one property to modify must be supplied.' });
+		return res.status(400).json({ code: 400, message: 'At least one property to modify must be provided.' });
 	}
 
 	const changedSound = sounds.find(sound => sound.id === data.id);
@@ -753,7 +753,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
 	}
 	if (!['count', 'reached', 'timestamp', 'soundID'].some(p => Object.keys(data).includes(p))) {
-		return res.status(400).json({ code: 400, message: 'At least one property to modify must be supplied.' });
+		return res.status(400).json({ code: 400, message: 'At least one property to modify must be provided.' });
 	}
 
 	const changedMilestone = milestones.find(ms => ms.id === data.id);
