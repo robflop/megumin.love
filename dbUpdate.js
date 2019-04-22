@@ -19,7 +19,7 @@ const databaseVersions = [
 		queries: [
 			'ALTER TABLE sounds ADD COLUMN association TEXT;',
 			'CREATE TABLE IF NOT EXISTS meta ( version TEXT NOT NULL );',
-			'INSERT INTO meta ( version ) VALUES ( \'8.0.0\' );',
+			'INSERT OR IGNORE INTO meta ( version ) VALUES ( \'8.0.0\' );',
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
