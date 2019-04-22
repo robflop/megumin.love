@@ -476,7 +476,10 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 	if (!req.file || (req.file && !['audio/mpeg', 'audio/mp3'].includes(req.file.mimetype))) {
 		if (req.file) unlink(req.file.path, delError => {
-			if (delError) return Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`, delError);
+			if (delError) {
+				Logger.error(`An error occurred deleting the temporary file '${req.file.filename}', please check manually.`);
+				return Logger.error(delError);
+			}
 		}); // If a wrong filetype was supplied, delete the created temp file on rejection
 
 		return res.status(400).json({ code: 400, message: 'An mp3 file must be supplied.' });
@@ -501,7 +504,8 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			data.filename, data.displayname, data.source, 0, data.association,
 			insertErr => {
 				if (insertErr) {
-					Logger.error(`An error occurred creating the database entry, upload aborted.`, insertErr);
+					Logger.error(`An error occurred creating the database entry, upload aborted.`);
+					Logger.error(insertErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
 				Logger.info(`(2/3): Database entry successfully created.`);
@@ -543,7 +547,8 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 			data.newFilename, data.newDisplayname, data.newSource, data.newAssociation, changedSound.filename,
 			updateErr => {
 				if (updateErr) {
-					Logger.error(`An error occurred updating the database entry, renaming aborted.`, updateErr);
+					Logger.error(`An error occurred updating the database entry, renaming aborted.`);
+					Logger.error(updateErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
 				Logger.info(`(1/5): Database entry successfully updated.`);
@@ -560,14 +565,16 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 
 				copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
 					if (copyErr) {
-						Logger.error(`An error occurred backing up the original mp3 file, renaming aborted.`, copyErr);
+						Logger.error(`An error occurred backing up the original mp3 file, renaming aborted.`);
+						Logger.error(copyErr);
 						return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 					}
 					Logger.info(`(3/5): Original mp3 file successfully backed up.`);
 
 					rename(oldSoundPath, newSoundPath, renameErr => {
 						if (renameErr) {
-							Logger.error(`An error occurred renaming the original mp3 file, renaming aborted, restoring backup.`, renameErr);
+							Logger.error(`An error occurred renaming the original mp3 file, renaming aborted, restoring backup.`);
+							Logger.error(renameErr);
 							rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
 								if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
 							});
@@ -578,7 +585,8 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 
 						unlink(`${oldSoundPath}.bak`, unlinkErr => {
 							if (unlinkErr) {
-								return Logger.warn(`An error occurred deleting the original mp3 backup, please delete manually.`, unlinkErr);
+								Logger.warn(`An error occurred deleting the original mp3 backup, please delete manually.`);
+								return Logger.error(unlinkErr);
 							}
 							Logger.info(`(5/5): Original mp3 backup successfully deleted.`);
 						});
@@ -606,7 +614,8 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 
 		db.run('DELETE FROM sounds WHERE filename = ?', deletedSound.filename, deleteErr => {
 			if (deleteErr) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
+				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
+				Logger.error(deleteErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
 			Logger.info(`(1/3): Database entry successfully deleted.`);
@@ -616,7 +625,8 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 
 			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
 				if (unlinkErr) {
-					Logger.error(`An error occurred while deleting the mp3 file, deletion aborted.`, unlinkErr);
+					Logger.error(`An error occurred while deleting the mp3 file, deletion aborted.`);
+					Logger.error(unlinkErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
 				Logger.info(`(3/3): mp3 file successfully deleted.`);
@@ -661,12 +671,13 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	}
 	else {
 		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
-		const valuePlaceholders = '?, '.repeat(Object.keys(milestoneData).length).slice(0, -2);
+		const valuePlaceholders = '?, '.repeat(Object.keys(milestoneData).length).slice(0, -2); // Cut off dangling comma and whitespace
 
 		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(milestoneData).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
 		query.run(...Object.values(milestoneData), insertErr => {
 			if (insertErr) {
-				Logger.error(`An error occurred creating the database entry, addition aborted. (Likely foreign key restraint)`, insertErr);
+				Logger.error(`An error occurred creating the database entry, addition aborted.`);
+				Logger.error(insertErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
 			Logger.info(`(1/2): Database entry successfully created.`);
@@ -761,7 +772,8 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 
 		db.run('DELETE FROM milestones WHERE id = ?', deletedMilestone.id, deleteErr => {
 			if (deleteErr) {
-				Logger.error('An error occurred while deleting the database entry, deletion aborted.', deleteErr);
+				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
+				Logger.error(deleteErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
 			Logger.info(`(1/2): Database entry successfully deleted.`);
@@ -843,7 +855,10 @@ function updateMilestone(count, timestamp, soundID) {
 		db.run('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE count = ?',
 			1, timestamp, soundID, count,
 			updateErr => {
-				if (updateErr) Logger.error(`An error occurred updating the milestone entry.`, updateErr);
+				if (updateErr) {
+					Logger.error(`An error occurred updating the milestone entry.`);
+					Logger.error(updateErr);
+				}
 
 				const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 

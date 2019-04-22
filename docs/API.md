@@ -982,30 +982,6 @@ Output for other errors:
 }
 ```
 
-`/admin/milestones/add` with:
-- count `1000000`
-- reached `1`
-- timestamp `1555847635067`
-- soundID `42`
-
-Output when there is no error:
-
-```js
-{
-    "code": 200,
-    "message": "Milestone successfully added.",
-    "milestone": {
-        "id": 5,
-        "count": 1000000,
-        "reached": 1,
-        "timestamp": 1555847635067,
-        "soundID": 42
-    }
-}
-```
-
-Outputs for other cases (conflict, other error) remain the same.
-
 ---
 
 ## `PATCH /admin/milestones/modify`
@@ -1020,13 +996,13 @@ Modify an existing sound on the website.
 
 ### Body
 
-| Key              | Description                                                | Format  | Example         |
-| ---------------- | ---------------------------------------------------------- | ------- | --------------- |
-| id               | ID of the milestone to modify                              | Integer | 5               |
-| newCount         | New clicks count the milestone is for                      | Integer | 2000000         |
-| newReachedStatus | New status as to whether the milestone has been reached    | Integer | 0 / 1           |
-| newTimestamp     | New unix timestamp for when the milestone was reached      | Integer | 1550247538345   |
-| newSoundID       | New ID of the sound that played when milestone was reached | Integer | 39              |
+| Key       | Description                                                | Format  | Example         |
+| ----------| ---------------------------------------------------------- | ------- | --------------- |
+| id        | ID of the milestone to modify                              | Integer | 5               |
+| count     | New clicks count the milestone is for                      | Integer | 2000000         |
+| reached   | New status as to whether the milestone has been reached    | Integer | 0 / 1           |
+| timestamp | New unix timestamp for when the milestone was reached      | Integer | 1550247538345   |
+| soundID   | New ID of the sound that played when milestone was reached | Integer | 39              |
 
 ID parameter is mandatory, all others are optional, but at least one must be filled out.
 
@@ -1040,10 +1016,10 @@ ID parameter is mandatory, all others are optional, but at least one must be fil
 
 `/admin/milestones/modify` with:
 - id `5`
-- newCount `2000000`
-- newReachedStatus `1`
-- newTimestamp `1550247538345`
-- newSoundID `39`
+- count `2000000`
+- reached `1`
+- timestamp `1550247538345`
+- soundID `39`
 
 Output when there is no error:
 
@@ -1069,14 +1045,15 @@ Output when the requested milestone (ID) was not found:
 }
 ```
 
-Output for misc. errors:
-
+Output for when no property to modify was submitted (i.e. only ID):
 ```js
 {
-    "code": 500,
-    "message": "An unexpected error occurred."
+	"code": 400,
+	"message": "At least one property to modify must be supplied."
 }
 ```
+
+Other responses (misc errors, wrong types for other properties) behave just like with adding milestones.
 
 ---
 
