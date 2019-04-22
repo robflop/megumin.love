@@ -23,7 +23,6 @@ const db = new Database(config.databasePath, () => {
 	});
 });
 
-// TODO: Test all the "not found" variants
 db.serialize(() => {
 	db.get('SELECT version FROM meta', [], (selectErr, row) => {
 		if (!row || !row.version) {
@@ -934,37 +933,36 @@ function emitUpdate(eventData, options = {}) {
 	return socketServer.clients.forEach(socket => socket.send(JSON.stringify(eventData)));
 }
 
-function updateMilestone(count, timestamp, soundID) {
-	const milestone = milestones.find(ms => ms.count === count);
+function updateMilestone(id, timestamp, soundID) {
+	const milestone = milestones.find(ms => ms.id === id);
 
 	if (milestone) {
+		Logger.info(`Milestone ${milestone.id} (${milestone.count} clicks) reached! Entry being updated.`);
+
 		Object.assign(milestone, { reached: 1, timestamp, soundID });
 
-		Logger.info(`Milestone ${milestone.id} (${milestone.count} clicks) reached! Updating database entry.`);
+		const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE id = ?');
+		query.run(1, timestamp, soundID, id, updateErr => {
+			if (updateErr) {
+				Logger.error('An error occurred updating the milestone entry.');
+				Logger.error(updateErr);
+			}
 
-		db.run('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE count = ?',
-			1, timestamp, soundID, count,
-			updateErr => {
-				if (updateErr) {
-					Logger.error('An error occurred updating the milestone entry.');
-					Logger.error(updateErr);
+			const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+
+			emitUpdate({
+				type: 'notification',
+				notification: {
+					text: `Milestone ${milestone.id} of ${readableCount} clicks has been reached!`,
+					duration: 3
 				}
-
-				const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-
-				emitUpdate({
-					type: 'notification',
-					notification: {
-						text: `Milestone ${milestone.id} of ${readableCount} clicks has been reached!`,
-						duration: 2
-					}
-				});
-
-				return emitUpdate({
-					type: 'milestoneUpdate',
-					milestone
-				});
 			});
+
+			return emitUpdate({
+				type: 'milestoneUpdate',
+				milestone
+			});
+		});
 	}
 }
 
@@ -1001,8 +999,8 @@ socketServer.on('connection', socket => {
 
 			statistics[currentDate] = daily;
 
-			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached);
-			if (reachedMilestone.length) updateMilestone(counter, Date.now(), soundEntry.id);
+			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
+			if (reachedMilestone) updateMilestone(reachedMilestone.id, Date.now(), soundEntry.id);
 
 			emitUpdate({
 				type: 'crazyMode',
@@ -1045,13 +1043,13 @@ socketServer.on('connection', socket => {
 // Database updates
 schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 	db.serialize(() => {
-		db.run(`UPDATE main_counter SET \`counter\` = ${counter}`);
+		db.run('UPDATE main_counter SET counter = ?', counter);
 
-		db.run(`INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date('now', 'localtime'), ${daily} )`);
-		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
+		db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date("now", "localtime"), ? )', daily);
+		db.run('UPDATE statistics SET count = ? WHERE date = date("now", "localtime")', daily);
 
 		for (const sound of sounds) {
-			db.run(`UPDATE sounds SET count = ${sound.count} WHERE id = ${sound.id}`);
+			db.run('UPDATE sounds SET count = ? WHERE id = ?', sound.count, sound.id);
 		}
 	});
 
