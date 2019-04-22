@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 	let sounds = [];
+	// TODO: Test all of this again and make milestone frontend
 
 	const updateSounds = s => {
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
 		const options = sounds.map(sound => {
-			return `<option value=${sound.filename}>${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})</option>`;
+			return `<option value=${sound.id}>${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})</option>`;
 		});
 
 		document.getElementById('modify-select').innerHTML = options.join('');
@@ -50,14 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
 			e.preventDefault();
 
 			const data = {
-				oldFilename: modifyForm[0].value,
-				newFilename: modifyForm[1].value,
-				newDisplayname: modifyForm[2].value,
-				newSource: modifyForm[3].value,
-				newAssociation: modifyForm[4].value
+				id: modifyForm[0].value,
+				filename: modifyForm[1].value,
+				displayname: modifyForm[2].value,
+				source: modifyForm[3].value,
+				count: modifyForm[4].value,
+				association: modifyForm[5].value
 			};
 
-			fetch('/api/admin/sounds/rename', {
+			fetch('/api/admin/sounds/modify', {
 				method: 'PATCH',
 				headers: {
 					'Authorization': localStorage.getItem('token'),
@@ -92,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					'Authorization': localStorage.getItem('token'),
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ filename: deleteForm[0].value })
+				body: JSON.stringify({ id: deleteForm[0].value })
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					deleteForm.reset();
