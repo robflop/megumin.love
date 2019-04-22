@@ -497,7 +497,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			else Logger.info(`(1/3): Uploaded mp3 file successfully renamed to requested filename.`);
 		});
 
-		db.run('INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ?)',
+		db.run('INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ? )',
 			data.filename, data.displayname, data.source, 0, data.association,
 			insertErr => {
 				if (insertErr) {
@@ -632,15 +632,12 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 	}
 });
 
-// todo: test and make work with various different args supplied
 apiRouter.post('/admin/milestones/add', (req, res) => {
 	const data = req.body;
-	const milestoneData = {
-		count: parseInt(data.count),
-		reached: parseInt(data.reached),
-		timestamp: parseInt(data.timestamp),
-		soundID: parseInt(data.soundID)
-	};
+	if (!data.reached) data.reached = 0;
+
+	const milestoneData = {};
+	Object.keys(data).map(d => milestoneData[d] = parseInt(data[d]));
 
 	if (!data.count) {
 		return res.status(400).json({ code: 400, message: 'Milestone count must be provided.' });
@@ -648,9 +645,13 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	if (data.count && isNaN(milestoneData.count)) {
 		return res.status(400).json({ code: 400, message: 'Milestone count must be an integer.' });
 	}
-	if ((data.reached && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
+	if ((data.reached !== undefined && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
 		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
 	}
+	if (milestoneData.reached !== undefined && (milestoneData.reached !== 0 && milestoneData.reached !== 1)) {
+		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
+	}
+	// Checking for undefined because reached property can have value 0 which is falsy but still defined
 
 	Logger.info(`Milestone with count ${milestoneData.count} now being added.`);
 
@@ -660,37 +661,36 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	}
 	else {
 		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
+		const valuePlaceholders = '?, '.repeat(Object.keys(milestoneData).length).slice(0, -2);
 
-		db.run('INSERT INTO milestones ( count, reached, timestamp, soundID ) VALUES ( ?, ?, ?, ? )',
-			milestoneData.count, milestoneData.reached || 0, milestoneData.timestamp, milestoneData.soundID,
-			insertErr => {
-				if (insertErr) {
-					Logger.error(`An error occurred creating the database entry, addition aborted. (Likely foreign key restraint)`, insertErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
-				}
-				Logger.info(`(1/2): Database entry successfully created.`);
-
-				const newMilestone = {
-					id: latestID + 1,
-					count: milestoneData.count,
-					reached: milestoneData.reached || 0,
-					timestamp: milestoneData.timestamp,
-					soundID: milestoneData.soundID
-				};
-				milestones.push(newMilestone);
-
-				Logger.info(`(2/2): Milestone cache entry successfully created.`);
-
-				emitUpdate({
-					type: 'milestoneUpdate',
-					statistics: {
-						milestone: newMilestone
-					}
-				});
-
-				return res.json({ code: 200, message: 'Milestone successfully added.', milestone: newMilestone });
+		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(milestoneData).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
+		query.run(...Object.values(milestoneData), insertErr => {
+			if (insertErr) {
+				Logger.error(`An error occurred creating the database entry, addition aborted. (Likely foreign key restraint)`, insertErr);
+				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-		);
+			Logger.info(`(1/2): Database entry successfully created.`);
+
+			const newMilestone = {
+				id: latestID + 1,
+				count: milestoneData.count,
+				reached: milestoneData.reached,
+				timestamp: milestoneData.timestamp || null,
+				soundID: milestoneData.soundID || null
+			};
+			milestones.push(newMilestone);
+
+			Logger.info(`(2/2): Milestone cache entry successfully created.`);
+
+			emitUpdate({
+				type: 'milestoneUpdate',
+				statistics: {
+					milestone: newMilestone
+				}
+			});
+
+			return res.json({ code: 200, message: 'Milestone successfully added.', milestone: newMilestone });
+		});
 	}
 });
 
