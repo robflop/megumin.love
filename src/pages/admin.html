@@ -57,11 +57,11 @@
 					<h2 class="titles">Upload sounds</h2>
 					<form id="soundUpload-form" enctype="multipart/form-data" method="post">
 						<input type="file" name="file" accept="audio/mp3" required>
-						<input type="text" name="filename" placeholder="Sound filename" required>
+						<input type="text" name="filename" placeholder="(Required) Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname">
 						<input type="text" name="source" placeholder="Sound source">
-						<input type="text" name="count" placeholder="(Optional) Sound count">
-						<input type="text" name="association" placeholder="(Optional) Sound association">
+						<input type="text" name="count" placeholder="Sound count">
+						<input type="text" name="association" placeholder="Sound association">
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
@@ -75,7 +75,7 @@
 						<input type="text" name="displayname" placeholder="New displayname">
 						<input type="text" name="source" placeholder="New source">
 						<input type="text" name="count" placeholder="New count">
-						<input type="text" name="association" placeholder="(Optional) New association">
+						<input type="text" name="association" placeholder="New association">
 						<input type="submit" value="Modify sound">
 					</form>
 				</div>
@@ -94,17 +94,18 @@
 						<input type="submit" value="Delete sound">
 					</form>
 				</div>
+
+				<p class="response" id="soundResponse"></p>
 			</div>
 
-			<p class="response" id="soundResponse"></p>
 
 			<div class="panel" id="milestonePanel">
 				<div id="milestoneAdd">
 					<h2 class="titles">Add milestones</h2>
 					<form id="milestoneAdd-form" method="post">
-						<input type="text" name="count" placeholder="Milestone count" required>
+						<input type="text" name="count" placeholder="(Required) Milestone count" required>
 						<input type="text" name="reached" placeholder="Milestone reached status">
-						<input type="text" name="timestamp" placeholder="Milestone timestamp">
+						<input type="text" name="timestamp" placeholder="Milestone timestamp (Unix)">
 						<input type="text" name="soundID" placeholder="Milestone sound ID">
 						<input type="submit" value="Add milestone">
 					</form>
@@ -137,9 +138,9 @@
 						<input type="submit" value="Delete milestone">
 					</form>
 				</div>
-			</div>
 
-			<p class="response" id="milestoneResponse"></p>
+				<p class="response" id="milestoneResponse"></p>
+			</div>
 
 			<div id="backlink-bottom">
 				<a class="backlink-anchor" href="/">Back</a>
@@ -198,6 +199,6 @@
 		</footer>
 
 		<script src="/js/extras.min.js"></script>
-		<script src="/js/admin.min.js"></script>
+		<script src="/js/admin.js"></script>
 	</body>
 </html>

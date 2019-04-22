@@ -36,7 +36,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	height: 16px;
 }
 
-#container :nth-last-child(3) {
+#container :nth-last-child(2) {
 	border-style: none;
 }
 
@@ -50,6 +50,7 @@ label[for="bg-select"], select[id="bg-select"] {
 
 .panel {
 	display: flex;
+	flex-wrap: wrap;
 	padding: 20px 0 15px 0;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
@@ -67,6 +68,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	text-align: center;
 	font-size: 20px;
 	color: #ef9a9a;
+	width: 100%;
 }
 
 #soundDelete-confirm-wrapper label, #milestoneDelete-confirm-wrapper label {

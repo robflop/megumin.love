@@ -50,11 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		soundUploadForm.addEventListener('submit', e => {
 			e.preventDefault();
 
-			const data = {};
+			const formData = new FormData();
 
 			for (let i = 0; i < soundUploadForm.elements.length - 1; i++) {
 				const field = soundUploadForm.elements[i];
-				if (field.value !== '') data[field.name] = field.value;
+				if (field.name === 'file') {
+					formData.append('file', field.files[0]);
+					continue;
+				}
+				if (field.value !== '') formData.append(field.name, field.value);
 			} // Minus one of its length to take out the submit button
 
 			fetch('/api/admin/sounds/upload', {
@@ -63,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					Authorization: localStorage.getItem('token')
 					// Content-Type not set because of boundary
 				},
-				body: new FormData(data)
+				body: formData
 			}).then(res => res.json()).then(res => {
 				if (res.code === 200) {
 					soundUploadForm.reset();
