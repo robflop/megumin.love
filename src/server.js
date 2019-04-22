@@ -490,11 +490,15 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 	const soundData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
 
 	if (!['filename', 'displayname', 'source'].every(p => Object.keys(soundData).includes(p))) {
 		return res.status(400).json({ code: 400, message: 'Filename, displayname and source values must be provided.' });
+	}
+	if ((data.filename !== undefined && soundData.filename === '') || (data.displayname !== undefined && soundData.displayname === '') || (data.source !== undefined && soundData.source === '') || (data.count !== undefined && soundData.count === '')) { // eslint-disable-line max-len
+		return res.status(400).json({ code: 400, message: 'Filename, displayname, source and count may not be an empty string.' });
 	}
 	if (data.count !== undefined && isNaN(soundData.count)) {
 		return res.status(400).json({ code: 400, message: 'Count must be an integer if provided.' });
@@ -553,6 +557,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const soundData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
 
@@ -569,6 +574,9 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	}
 	if (data.count !== undefined && isNaN(soundData.count)) {
 		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
+	}
+	if ((data.filename !== undefined && soundData.filename === '') || (data.displayname !== undefined && soundData.displayname === '') || (data.source !== undefined && soundData.source === '') || (data.count !== undefined && soundData.count === '')) { // eslint-disable-line max-len
+		return res.status(400).json({ code: 400, message: 'Filename, displayname, source and count may not be an empty string.' });
 	}
 
 	const changedSound = sounds.find(sound => sound.id === soundData.id);
@@ -649,6 +657,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 	const soundData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return soundData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return soundData[d] = data[d].trim();
 		else return soundData[d] = data[d];
 	});
 
@@ -678,19 +687,19 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 
 			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
 				if (unlinkErr) {
-					Logger.error('An error occurred while deleting the mp3 file, deletion aborted.');
+					Logger.error('An error occurred while deleting the mp3 file.');
 					Logger.error(unlinkErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
 				Logger.info('(3/3): mp3 file successfully deleted.');
-			});
 
-			emitUpdate({
-				type: 'soundDelete',
-				sound: deletedSound
-			});
+				emitUpdate({
+					type: 'soundDelete',
+					sound: deletedSound
+				});
 
-			return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
+				return res.json({ code: 200, message: 'Sound successfully deleted.', sound: deletedSound });
+			});
 		});
 	}
 });
@@ -702,6 +711,7 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	const milestoneData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
 
@@ -765,6 +775,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	const milestoneData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
 
@@ -827,6 +838,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 	const milestoneData = {};
 	Object.keys(data).map(d => {
 		if (parseInt(data[d])) return milestoneData[d] = parseInt(data[d]);
+		else if (typeof data[d] === 'string') return milestoneData[d] = data[d].trim();
 		else return milestoneData[d] = data[d];
 	});
 
@@ -1029,7 +1041,7 @@ schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {
 		db.run(`UPDATE statistics SET count = ${daily} WHERE date = date('now', 'localtime')`);
 
 		for (const sound of sounds) {
-			db.run(`UPDATE sounds SET count = ${sound.count} WHERE filename = '${sound.filename}'`);
+			db.run(`UPDATE sounds SET count = ${sound.count} WHERE id = ${sound.id}`);
 		}
 	});
 

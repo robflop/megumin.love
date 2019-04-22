@@ -849,6 +849,15 @@ Output when no property to modify is provided:
 }
 ```
 
+Output when filename, displayname, source or count are provided as empty strings:
+
+```js
+{
+	"code": 400,
+	"message": "Filename, displayname, source and count may not be an empty string."
+}
+```
+
 Output for misc. errors:
 
 ```js
