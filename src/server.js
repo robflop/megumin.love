@@ -37,7 +37,7 @@ db.serialize(() => {
 
 	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
 		if (!row || row.counter === undefined) {
-			db.run(`INSERT INTO main_counter ( counter ) VALUES ( 0 )`);
+			db.run('INSERT INTO main_counter ( counter ) VALUES ( 0 )');
 			return Logger.warn('Counter not found, automatically inserted into the database and loaded as 0.');
 		}
 		counter = row.counter;
@@ -497,18 +497,18 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
 			if (renameErr) return res.status(500).json({ code: 500, message: 'An unexpected error occurred.' });
-			else Logger.info(`(1/3): Uploaded mp3 file successfully renamed to requested filename.`);
+			else Logger.info('(1/3): Uploaded mp3 file successfully renamed to requested filename.');
 		});
 
 		db.run('INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( ?, ?, ?, ?, ? )',
 			data.filename, data.displayname, data.source, 0, data.association,
 			insertErr => {
 				if (insertErr) {
-					Logger.error(`An error occurred creating the database entry, upload aborted.`);
+					Logger.error('An error occurred creating the database entry, upload aborted.');
 					Logger.error(insertErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(2/3): Database entry successfully created.`);
+				Logger.info('(2/3): Database entry successfully created.');
 
 				newSound = {
 					id: latestID + 1,
@@ -520,7 +520,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 				};
 				sounds.push(newSound);
 
-				Logger.info(`(3/3): Sound cache entry successfully created.`);
+				Logger.info('(3/3): Sound cache entry successfully created.');
 
 				emitUpdate({
 					type: 'soundUpload',
@@ -547,33 +547,34 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 			data.newFilename, data.newDisplayname, data.newSource, data.newAssociation, changedSound.filename,
 			updateErr => {
 				if (updateErr) {
-					Logger.error(`An error occurred updating the database entry, renaming aborted.`);
+					Logger.error('An error occurred updating the database entry, renaming aborted.');
 					Logger.error(updateErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(1/5): Database entry successfully updated.`);
+				Logger.info('(1/5): Database entry successfully updated.');
 
+				// todo: rename parameters to plain names for object assign
 				changedSound.filename = data.newFilename;
 				changedSound.displayname = data.newDisplayname;
 				changedSound.source = data.newSource;
 				changedSound.association = data.newAssociation;
 
-				Logger.info(`(2/5): Sound cache entry successfully updated.`);
+				Logger.info('(2/5): Sound cache entry successfully updated.');
 
 				const oldSoundPath = `./resources/sounds/${data.oldFilename}.mp3`;
 				const newSoundPath = `./resources/sounds/${data.newFilename}.mp3`;
 
 				copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
 					if (copyErr) {
-						Logger.error(`An error occurred backing up the original mp3 file, renaming aborted.`);
+						Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
 						Logger.error(copyErr);
 						return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 					}
-					Logger.info(`(3/5): Original mp3 file successfully backed up.`);
+					Logger.info('(3/5): Original mp3 file successfully backed up.');
 
 					rename(oldSoundPath, newSoundPath, renameErr => {
 						if (renameErr) {
-							Logger.error(`An error occurred renaming the original mp3 file, renaming aborted, restoring backup.`);
+							Logger.error('An error occurred renaming the original mp3 file, renaming aborted, restoring backup.');
 							Logger.error(renameErr);
 							rename(`${oldSoundPath}.bak`, oldSoundPath, backupResErr => {
 								if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
@@ -581,14 +582,14 @@ apiRouter.patch('/admin/sounds/rename', (req, res) => {
 
 							return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 						}
-						Logger.info(`(4/5): Original mp3 file successfully renamed.`);
+						Logger.info('(4/5): Original mp3 file successfully renamed.');
 
 						unlink(`${oldSoundPath}.bak`, unlinkErr => {
 							if (unlinkErr) {
-								Logger.warn(`An error occurred deleting the original mp3 backup, please delete manually.`);
+								Logger.warn('An error occurred deleting the original mp3 backup, please delete manually.');
 								return Logger.error(unlinkErr);
 							}
-							Logger.info(`(5/5): Original mp3 backup successfully deleted.`);
+							Logger.info('(5/5): Original mp3 backup successfully deleted.');
 						});
 					});
 				});
@@ -618,18 +619,18 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 				Logger.error(deleteErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-			Logger.info(`(1/3): Database entry successfully deleted.`);
+			Logger.info('(1/3): Database entry successfully deleted.');
 
 			sounds.splice(sounds.findIndex(sound => sound.filename === deletedSound.filename), 1);
-			Logger.info(`(2/3): Sound cache entry successfully deleted.`);
+			Logger.info('(2/3): Sound cache entry successfully deleted.');
 
 			unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
 				if (unlinkErr) {
-					Logger.error(`An error occurred while deleting the mp3 file, deletion aborted.`);
+					Logger.error('An error occurred while deleting the mp3 file, deletion aborted.');
 					Logger.error(unlinkErr);
 					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 				}
-				Logger.info(`(3/3): mp3 file successfully deleted.`);
+				Logger.info('(3/3): mp3 file successfully deleted.');
 			});
 
 			emitUpdate({
@@ -676,11 +677,11 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(milestoneData).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
 		query.run(...Object.values(milestoneData), insertErr => {
 			if (insertErr) {
-				Logger.error(`An error occurred creating the database entry, addition aborted.`);
+				Logger.error('An error occurred creating the database entry, addition aborted.');
 				Logger.error(insertErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-			Logger.info(`(1/2): Database entry successfully created.`);
+			Logger.info('(1/2): Database entry successfully created.');
 
 			const newMilestone = {
 				id: latestID + 1,
@@ -691,7 +692,7 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 			};
 			milestones.push(newMilestone);
 
-			Logger.info(`(2/2): Milestone cache entry successfully created.`);
+			Logger.info('(2/2): Milestone cache entry successfully created.');
 
 			emitUpdate({
 				type: 'milestoneUpdate',
@@ -705,19 +706,27 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	}
 });
 
-// todo: test and make work with various different args supplied
 apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	const data = req.body;
-	const milestoneData = {
-		id: parseInt(data.id),
-		newCount: parseInt(data.newCount),
-		newReachedStatus: parseInt(data.newReachedStatus),
-		newTimestamp: parseInt(data.newTimestamp),
-		newSoundID: parseInt(data.newSoundID)
-	};
 
-	if (!data.id) return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
-	if (data.id && isNaN(milestoneData.id)) return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
+	const milestoneData = {};
+	Object.keys(data).map(d => milestoneData[d] = parseInt(data[d]));
+
+	if (!data.id) {
+		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
+	}
+	if (data.id && isNaN(milestoneData.id)) {
+		return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
+	}
+	if (Object.keys(data).length < 2) {
+		return res.status(400).json({ code: 400, message: 'At least one property to modify must be supplied.' });
+	}
+	if ((data.reached !== undefined && isNaN(milestoneData.reached)) || (data.timestamp && isNaN(milestoneData.timestamp)) || (data.soundID && isNaN(milestoneData.soundID))) { // eslint-disable-line max-len
+		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
+	}
+	if (milestoneData.reached !== undefined && (milestoneData.reached !== 0 && milestoneData.reached !== 1)) {
+		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
+	}
 
 	const changedMilestone = milestones.find(ms => ms.id === milestoneData.id);
 
@@ -725,41 +734,44 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	else {
 		Logger.info(`Modification process for milestone ${changedMilestone.id} (${changedMilestone.count} clicks) initiated.`);
 
-		// todo: only update provided values
-		db.run('UPDATE milestones SET count = ?, reached = ?, timestamp = ?, soundID = ? WHERE id = ?',
-			milestoneData.newCount, milestoneData.newReachedStatus || 0, milestoneData.newTimestamp, milestoneData.newSoundID, milestoneData.id,
-			updateErr => {
-				if (updateErr) {
-					Logger.error(`An error occurred updating the database entry, modification aborted.`, updateErr);
-					return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
-				}
-				Logger.info(`(1/2): Database entry successfully updated.`);
+		let columnPlaceholders = '';
 
-				changedMilestone.count = milestoneData.newCount;
-				changedMilestone.reached = milestoneData.newReachedStatus;
-				changedMilestone.timestamp = milestoneData.newTimestamp;
-				changedMilestone.soundID = milestoneData.newSoundID;
+		const changedProperties = Object.assign({}, milestoneData);
+		delete changedProperties.id; // Only properties to change wanted
 
-				Logger.info(`(2/2): Milestone cache entry successfully updated.`);
+		Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
+		columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
 
-				emitUpdate({
-					type: 'milestoneUpdate',
-					statistics: {
-						milestone: changedMilestone
-					}
-				});
-
-				return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
+		const query = db.prepare(`UPDATE milestones SET ${columnPlaceholders} WHERE id = ?`);
+		query.run(...Object.values(changedProperties), milestoneData.id, updateErr => {
+			if (updateErr) {
+				Logger.error('An error occurred updating the database entry, modification aborted.');
+				Logger.error(updateErr);
+				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-		);
+			Logger.info('(1/2): Database entry successfully updated.');
+
+			Object.assign(changedMilestone, milestoneData);
+
+			Logger.info('(2/2): Milestone cache entry successfully updated.');
+
+			emitUpdate({
+				type: 'milestoneUpdate',
+				statistics: {
+					milestone: changedMilestone
+				}
+			});
+
+			return res.json({ code: 200, message: 'Milestone successfully modified.', milestone: changedMilestone });
+		});
 	}
 });
 
 apiRouter.delete('/admin/milestones/delete', (req, res) => {
 	const data = req.body;
-	const milestoneData = {
-		id: parseInt(data.id),
-	};
+
+	const milestoneData = {};
+	Object.keys(data).map(d => milestoneData[d] = parseInt(data[d]));
 
 	if (!data.id) return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
 	if (data.id && isNaN(milestoneData.id)) return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
@@ -770,16 +782,17 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 	else {
 		Logger.info(`Deletion process for milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) initiated.`);
 
-		db.run('DELETE FROM milestones WHERE id = ?', deletedMilestone.id, deleteErr => {
+		const query = db.prepare('DELETE FROM milestones WHERE id = ?');
+		query.run(milestoneData.id, deleteErr => {
 			if (deleteErr) {
 				Logger.error('An error occurred while deleting the database entry, deletion aborted.');
 				Logger.error(deleteErr);
 				return res.status(500).json({ code: 500, message: 'An unexpected error occurred. Please check the server console.' });
 			}
-			Logger.info(`(1/2): Database entry successfully deleted.`);
+			Logger.info('(1/2): Database entry successfully deleted.');
 
 			milestones.splice(milestones.findIndex(ms => ms.id === deletedMilestone.id), 1);
-			Logger.info(`(2/2): Milestone cache entry successfully deleted.`);
+			Logger.info('(2/2): Milestone cache entry successfully deleted.');
 
 			emitUpdate({
 				type: 'milestoneUpdate',
@@ -819,9 +832,9 @@ for (const page of pages) {
 	server.get(page.route, (req, res) => res.sendFile(page.path));
 }
 
-server.use((req, res) => res.status(404).sendFile(`404.html`, { root: './pages/error/' }));
-server.use((req, res) => res.status(401).sendFile(`401.html`, { root: './pages/error/' }));
-server.use((req, res) => res.status(500).sendFile(`500.html`, { root: './pages/error/' }));
+server.use((req, res) => res.status(404).sendFile('404.html', { root: './pages/error/' }));
+server.use((req, res) => res.status(401).sendFile('401.html', { root: './pages/error/' }));
+server.use((req, res) => res.status(500).sendFile('500.html', { root: './pages/error/' }));
 
 http.listen(config.port, () => {
 	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}`;
@@ -856,7 +869,7 @@ function updateMilestone(count, timestamp, soundID) {
 			1, timestamp, soundID, count,
 			updateErr => {
 				if (updateErr) {
-					Logger.error(`An error occurred updating the milestone entry.`);
+					Logger.error('An error occurred updating the milestone entry.');
 					Logger.error(updateErr);
 				}
 
