@@ -52,10 +52,10 @@
 			</div>
 			<button id="logout">Logout</button>
 			<h1 class="titles">megumin.love Admin Panel</h1>
-			<div id="panel">
-				<div id="upload">
-					<h2 class="titles">Sound upload</h2>
-					<form id="upload-form" enctype="multipart/form-data" method="post">
+			<div class="panel" id="soundPanel">
+				<div id="soundUpload">
+					<h2 class="titles">Upload sounds</h2>
+					<form id="soundUpload-form" enctype="multipart/form-data" method="post">
 						<input type="file" name="file" accept="audio/mp3" required>
 						<input type="text" name="filename" placeholder="Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname" required>
@@ -65,10 +65,10 @@
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
-				<div id="modify">
-					<h2 class="titles">Sound modification</h2>
-					<form id="modify-form" method="post">
-						<select name="id" id="modify-select">
+				<div id="soundModify">
+					<h2 class="titles">Modify sounds</h2>
+					<form id="soundModify-form" method="post">
+						<select name="id" id="soundModify-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="text" name="filename" placeholder="New filename">
@@ -79,15 +79,15 @@
 						<input type="submit" value="Modify sound">
 					</form>
 				</div>
-				<div id="delete">
-					<h2 class="titles">Sound deletion</h2>
-					<form id="delete-form" method="post">
-						<select name="filename" id="delete-select">
+				<div id="soundDelete">
+					<h2 class="titles">Delete sounds</h2>
+					<form id="soundDelete-form" method="post">
+						<select name="filename" id="soundDelete-select">
 							<!-- Automatically generated -->
 						</select>
-						<div id="delete-confirm-wrapper">
-							<label for="delete-confirmation">
-								<input type="checkbox" name="delete-confirmation" required>
+						<div id="soundDelete-confirm-wrapper">
+							<label for="soundDelete-confirmation">
+								<input type="checkbox" name="soundDelete-confirmation" required>
 								Confirm deletion
 							</label>
 						</div>
@@ -95,7 +95,52 @@
 					</form>
 				</div>
 			</div>
-			<p id="response"></p>
+
+			<p class="response" id="soundResponse"></p>
+
+			<div class="panel" id="milestonePanel">
+				<div id="milestoneAdd">
+					<h2 class="titles">Add milestones</h2>
+					<form id="milestoneAdd-form" method="post">
+						<input type="text" name="count" placeholder="Milestone count" required>
+						<input type="text" name="reached" placeholder="Milestone reached status">
+						<input type="text" name="timestamp" placeholder="Milestone timestamp">
+						<input type="text" name="soundID" placeholder="Milestone sound ID">
+						<input type="submit" value="Add milestone">
+					</form>
+				</div>
+				<div id="milestoneModify">
+					<h2 class="titles">Modify milestones</h2>
+					<form id="milestoneModify-form" method="post">
+						<select name="id" id="milestoneModify-select">
+							<!-- Automatically generated -->
+						</select>
+						<input type="text" name="count" placeholder="New milestone count">
+						<input type="text" name="reached" placeholder="New milestone reached status">
+						<input type="text" name="timestamp" placeholder="New milestone timestamp">
+						<input type="text" name="soundID" placeholder="New milestone sound ID">
+						<input type="submit" value="Modify milestone">
+					</form>
+				</div>
+				<div id="milestoneDelete">
+					<h2 class="titles">Delete milestones</h2>
+					<form id="milestoneDelete-form" method="post">
+						<select name="filename" id="milestoneDelete-select">
+							<!-- Automatically generated -->
+						</select>
+						<div id="milestoneDelete-confirm-wrapper">
+							<label for="milestoneDelete-confirmation">
+								<input type="checkbox" name="milestoneDelete-confirmation" required>
+								Confirm deletion
+							</label>
+						</div>
+						<input type="submit" value="Delete milestone">
+					</form>
+				</div>
+			</div>
+
+			<p class="response" id="milestoneResponse"></p>
+
 			<div id="backlink-bottom">
 				<a class="backlink-anchor" href="/">Back</a>
 			</div>

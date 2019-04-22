@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				const formattedDate = formatDate(new Date(milestone.timestamp));
 
 				const milestoneDate = document.createElement('p');
-				milestoneDate.innerText = `Count reached on: ${formattedDate}`;
+					milestoneDate.innerText = `Count reached on: ${milestone.timestamp ? formattedDate : 'Unknown'}`;
 
 				milestoneListElement.appendChild(milestoneDate);
 

@@ -504,7 +504,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 		return res.status(400).json({ code: 400, message: 'Count must be an integer if provided.' });
 	}
 
-	Logger.info(`Upload process for sound '${soundData.filename}' (Shown as '${soundData.displayname}', from '${soundData.source}') initiated.`);
+	Logger.info(`Sound '${soundData.filename}' (Shown as '${soundData.displayname}', from '${soundData.source}') now being uploaded.`);
 
 	if (sounds.find(sound => sound.filename === soundData.filename)) {
 		Logger.error(`A sound with filename '${soundData.filename}' already exists, upload aborted.`);
@@ -582,7 +582,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const changedSound = sounds.find(sound => sound.id === soundData.id);
 	if (!changedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Renaming process for sound '${changedSound.filename}' to '${soundData.filename}' initiated.`);
+		Logger.info(`Sound '${changedSound.filename}' to '${soundData.filename}' now being deleted.`);
 
 		let columnPlaceholders = '';
 
@@ -671,7 +671,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 	const deletedSound = sounds.find(sound => sound.id === soundData.id);
 	if (!deletedSound) return res.status(404).json({ code: 404, message: 'Sound not found.' });
 	else {
-		Logger.info(`Deletion process for sound '${deletedSound.filename}' initiated.`); // eslint-disable-line max-len
+		Logger.info(`Sound '${deletedSound.filename}' now being deleted.`); // eslint-disable-line max-len
 
 		const query = db.prepare('DELETE FROM sounds WHERE id = ?');
 		query.run(soundData.id, deleteErr => {
@@ -799,7 +799,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 
 	if (!changedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
 	else {
-		Logger.info(`Modification process for milestone ${changedMilestone.id} (${changedMilestone.count} clicks) initiated.`);
+		Logger.info(`Milestone ${changedMilestone.id} (${changedMilestone.count} clicks) now being modified.`);
 
 		let columnPlaceholders = '';
 
@@ -849,7 +849,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 
 	if (!deletedMilestone) return res.status(404).json({ code: 404, message: 'Milestone not found.' });
 	else {
-		Logger.info(`Deletion process for milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) initiated.`);
+		Logger.info(`Milestone ${deletedMilestone.id} (${deletedMilestone.count} clicks) now being deleted.`);
 
 		const query = db.prepare('DELETE FROM milestones WHERE id = ?');
 		query.run(milestoneData.id, deleteErr => {

@@ -159,13 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const util = {};
 
+	let fadeInterval;
+
 	util.fade = function(elem, displayDuration = 2000, step = 0.1) {
 		elem.style.display = 'block';
 		elem.style.opacity = 0;
 		let fadedIn = false;
 		let delayOver = false;
 
-		const fadeInterval = setInterval(() => {
+		if (fadeInterval) clearInterval(fadeInterval);
+		// Clear when called while still executing
+
+		fadeInterval = setInterval(() => {
 			if (elem.style.opacity === '1') {
 				fadedIn = true; // So it doesn't increase opacity infinitely beyond 1
 				if (!delayOver) setTimeout(() => delayOver = true, displayDuration);
