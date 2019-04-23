@@ -72,7 +72,7 @@ db.serialize(() => {
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(monthly / thisMonth.length);
 
-		rows.map(date => statistics[date.date] = date.count);
+		rows.forEach(date => statistics[date.date] = date.count);
 		return Logger.info('Statistics loaded.');
 	});
 
