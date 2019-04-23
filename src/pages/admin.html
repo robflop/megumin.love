@@ -106,27 +106,31 @@
 						<input type="text" name="count" placeholder="(Required) Milestone count" required>
 						<input type="text" name="reached" placeholder="Milestone reached status">
 						<input type="text" name="timestamp" placeholder="Milestone timestamp (Unix)">
-						<input type="text" name="soundID" placeholder="Milestone sound ID">
+						<select name="soundID" id="milestoneAdd-soundID-select">
+							<!-- Automatically generated -->
+						</select>
 						<input type="submit" value="Add milestone">
 					</form>
 				</div>
 				<div id="milestoneModify">
 					<h2 class="titles">Modify milestones</h2>
 					<form id="milestoneModify-form" method="post">
-						<select name="id" id="milestoneModify-select">
+						<select name="id" id="milestoneModify-id-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="text" name="count" placeholder="New milestone count">
 						<input type="text" name="reached" placeholder="New milestone reached status">
 						<input type="text" name="timestamp" placeholder="New milestone timestamp">
-						<input type="text" name="soundID" placeholder="New milestone sound ID">
+						<select name="soundID" id="milestoneModify-soundID-select">
+							<!-- Automatically generated -->
+						</select>
 						<input type="submit" value="Modify milestone">
 					</form>
 				</div>
 				<div id="milestoneDelete">
 					<h2 class="titles">Delete milestones</h2>
 					<form id="milestoneDelete-form" method="post">
-						<select name="filename" id="milestoneDelete-select">
+						<select name="filename" id="milestoneDelete-id-select">
 							<!-- Automatically generated -->
 						</select>
 						<div id="milestoneDelete-confirm-wrapper">

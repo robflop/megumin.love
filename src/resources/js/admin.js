@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
+	function formatDate(date) {
+		let month = date.getMonth() + 1;
+		if (month < 10) month = `0${month}`;
+
+		return `${date.getDate()}.${month}.${date.getFullYear()}`;
+	}
+
 	function updateSounds(s) {
 		s.forEach(snd => {
 			if (!snd.displayname) snd.displayname = '';
@@ -9,15 +16,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 		// Sort primarily by season and secondarily alphabetically within seasons
 
 		const options = sounds.map(sound => {
+			const source = sound.source ? `From ${sound.source}` : 'No source';
+			const association = sound.association ? `associated with ${sound.association}` : 'No association';
 			return `
 				<option value=${sound.id}>
-					${sound.displayname} (${sound.filename}, ${sound.source}, ${sound.association})
+					${sound.displayname} (${sound.filename}.mp3, ${source}, ${sound.count} clicks, ${association})
 				</option>
 			`;
 		});
 
+		options.unshift('<option value="">No sound selected</option>');
+
 		document.getElementById('soundModify-select').innerHTML = options.join('');
 		document.getElementById('soundDelete-select').innerHTML = options.join('');
+		document.getElementById('milestoneAdd-soundID-select').innerHTML = options.join('');
+		document.getElementById('milestoneModify-soundID-select').innerHTML = options.join('');
 	}
 
 	function updateMilestones(m) {
@@ -25,15 +38,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const options = milestones.map(milestone => {
 			const reachedString = milestone.reached ? 'Reached' : 'Not reached';
+			const sound = sounds.find(snd => snd.id === milestone.soundID);
+			const formattedDate = milestone.timestamp ? formatDate(new Date(milestone.timestamp)) : 'No timestamp';
 			return `
 				<option value=${milestone.id}>
-					Milestone ${milestone.id} (${milestone.count} clicks, ${reachedString}, ${milestone.timestamp}, ${milestone.soundID})
+					Milestone ${milestone.id} (${milestone.count} clicks, ${reachedString}, ${formattedDate}, ${sound ? sound.filename : 'No soundID'})
 				</option>
 			`;
 		});
 
-		document.getElementById('milestoneModify-select').innerHTML = options.join('');
-		document.getElementById('milestoneDelete-select').innerHTML = options.join('');
+		options.unshift('<option value="">No milestone selected</option>');
+
+		document.getElementById('milestoneModify-id-select').innerHTML = options.join('');
+		document.getElementById('milestoneDelete-id-select').innerHTML = options.join('');
 	}
 
 	let sounds = await fetch('/api/sounds').then(res => res.json());
