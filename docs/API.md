@@ -177,7 +177,7 @@ Output:
 
 ## `GET /statistics`
 
-Returns an object containing the website's statistics, mapped by their corresponding date.
+Returns an array of objects containing the website's statistics for each day.
 
 ### Headers
 
@@ -218,18 +218,29 @@ All 3 amount filtering parameters (equals, over, under) can be used alongside ea
 Output:
 
 ```js
-{
-    "2017-05-27": 529745,
-    "2017-05-28": 3694,
-    "2017-05-29": 3148,
-    "2017-05-30": 3296,
-    "2017-05-31": 2725,
-    "2017-06-01": 14945,
-    "2017-06-02": 12012,
-    "2017-06-03": 1518,
-    "2017-06-04": 2214,
-    "2017-06-05": 14534
-}
+[
+    {
+        "id": 41,
+        "date": "2017-05-27",
+        "count": 529745
+    },
+    {
+        "id": 42,
+        "date": "2017-05-28",
+        "count": 3694
+    },
+	// ...
+    {
+        "id": 49,
+        "date": "2017-06-04",
+        "count": 2214
+    },
+    {
+        "id": 50,
+        "date": "2017-06-05",
+        "count": 14534
+    }
+]
 ```
 
 `/statistics?from=2017-11-26&to=2017-12-20&over=10000&under=1000000`
@@ -237,15 +248,29 @@ Output:
 Output:
 
 ```js
-{
-    "2017-11-26": 895102,
-    "2017-11-29": 137571,
-    "2017-11-30": 65460,
-    "2017-12-05": 66553,
-    "2017-12-10": 19278,
-    "2017-12-13": 471346,
-    "2017-12-15": 25590
-}
+[
+    {
+        "id": 224,
+        "date": "2017-11-26",
+        "count": 895102
+    },
+    {
+        "id": 227,
+        "date": "2017-11-29",
+        "count": 137571
+    },
+	// ...
+    {
+        "id": 241,
+        "date": "2017-12-13",
+        "count": 471346
+    },
+    {
+        "id": 243,
+        "date": "2017-12-15",
+        "count": 25590
+    }
+]
 ```
 
 `/statistics?to=2017-12-20&equals=684826`
@@ -253,9 +278,13 @@ Output:
 Output:
 
 ```js
-{
-    "2017-08-23": 684826
-}
+[
+    {
+        "id": 129,
+        "date": "2017-08-23",
+        "count": 684826
+    }
+]
 ```
 
 ---
@@ -405,7 +434,7 @@ Output:
 
 ## `GET /statistics/chartData`
 
-Returns data necessary for constructing the monthly click distribution chart displayed on the Statistics page.
+Returns an array of objects with data necessary for constructing the monthly click distribution chart displayed on the Statistics page.
 
 ### Headers
 
@@ -440,13 +469,20 @@ Output:
 ```js
 [
     {
-        "clicks": 375994,
-        "month": "2018-07"
+        "month": "2017-04",
+        "count": 20085238
     },
-    // ...
     {
-        "clicks": 22482,
-        "month": "2019-04"
+        "month": "2017-05",
+        "count": 3652240
+    },
+    {
+        "month": "2017-06",
+        "count": 179360
+    },
+    {
+        "month": "2017-07",
+        "count": 150923
     },
     // ...
 ]
@@ -459,12 +495,20 @@ Output:
 ```js
 [
     {
-        "clicks": 375994,
-        "month": "2018-07"
+        "month": "2018-07",
+        "count": 375994
     },
     {
-        "clicks": 266681,
-        "month": "2018-08"
+        "month": "2018-08",
+        "count": 266681
+    },
+    {
+        "month": "2018-09",
+        "count": 50542260
+    },
+    {
+        "month": "2018-10",
+        "count": 334915
     },
     // ...
 ]
@@ -477,13 +521,21 @@ Output:
 ```js
 [
     {
-        "clicks": 20085238,
-        "month": "2017-04"
+        "month": "2017-04",
+        "count": 20085238
+    },
+    {
+        "month": "2017-05",
+        "count": 3652240
     },
     // ...
     {
-        "clicks": 334915,
-        "month": "2018-10"
+        "month": "2018-09",
+        "count": 50542260
+    },
+    {
+        "month": "2018-10",
+        "count": 334915
     }
 ]
 ```
@@ -495,20 +547,20 @@ Output:
 ```js
 [
     {
-        "clicks": 375994,
-        "month": "2018-07"
+        "month": "2018-07",
+        "count": 375994
     },
     {
-        "clicks": 266681,
-        "month": "2018-08"
+        "month": "2018-08",
+        "count": 266681
     },
     {
-        "clicks": 50542260,
-        "month": "2018-09"
+        "month": "2018-09",
+        "count": 50542260
     },
     {
-        "clicks": 334915,
-        "month": "2018-10"
+        "month": "2018-10",
+        "count": 334915
     }
 ]
 ```

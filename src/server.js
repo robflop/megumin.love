@@ -13,8 +13,9 @@ const config = require('./config.json');
 const { version: packageVersion } = require('../package.json');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
-let sounds = [], chartData = {}, milestones = [], version = '';
-const statistics = {};
+let sounds = [], statistics = [], chartData = [], milestones = [], version = '';
+
+// TODO before 8.0.0 release: Update sitemap, update github wiki with md files
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
@@ -72,11 +73,11 @@ db.serialize(() => {
 		fetchedDaysAmount = thisMonth.length;
 		average = Math.round(monthly / thisMonth.length);
 
-		rows.forEach(date => statistics[date.date] = date.count);
+		statistics = rows;
 		return Logger.info('Statistics loaded.');
 	});
 
-	db.all('SELECT sum(count) AS count, substr(date, 1, 7) AS month FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
+	db.all('SELECT substr(date, 1, 7) AS month, sum(count) AS count FROM statistics GROUP BY month ORDER BY month ASC', [], (selectErr, rows) => {
 		if (!rows) return Logger.warn('No chart data found.');
 		chartData = rows;
 
@@ -194,33 +195,8 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 
 apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStatistics = statistics;
-	const firstStatisticsEntry = Object.keys(statistics)[0];
-	const latestStatisticsEntry = Object.keys(statistics)[Object.keys(statistics).length - 1];
+	const latestStatisticsEntry = statistics[statistics.length - 1].date;
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
-
-	/*
-	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
-	the object values for dates that are not present in the database. Looping over the statistics wouldn't
-	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
-	would not work if the difference between current statistics iteration and date iterator is bigger than one.
-	*/
-	const filterStatistics = (data, startDate, endDate, condition) => {
-		if (!condition) condition = () => true; // If no condition provided, default to pass all
-		let iterator = startDate;
-		const filteredResult = {};
-
-		while (dateFns.differenceInDays(endDate, iterator) >= 0) {
-			if (!data.hasOwnProperty(iterator)) filteredResult[iterator] = 0;
-			// Check for days missing in statistics and insert value for those
-			if (data.hasOwnProperty(iterator) && condition(iterator)) {
-				filteredResult[iterator] = data[iterator];
-			}
-
-			iterator = dateFns.format(dateFns.addDays(iterator, 1), 'YYYY-MM-DD');
-		}
-
-		return filteredResult;
-	};
 
 	if (Object.keys(req.query).length) {
 		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})-(\\d{2})$');
@@ -251,51 +227,30 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 
 		// Date filtering
 		if (from && !to) {
-			requestedStatistics = filterStatistics(requestedStatistics, from, latestStatisticsEntry, iterator => {
-				return dateFns.isWithinRange(iterator, from, latestStatisticsEntry);
-			});
+			requestedStatistics = requestedStatistics.filter(day => dateFns.isWithinRange(day.date, from, latestStatisticsEntry));
 		}
 		else if (!from && to) {
-			requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, to, iterator => {
-				return dateFns.isSameDay(iterator, to) || dateFns.isBefore(iterator, to);
-			});
+			requestedStatistics = requestedStatistics.filter(day => dateFns.isSameDay(day.date, to) || dateFns.isBefore(day.date, to));
 		}
 		else if (from && to) {
-			requestedStatistics = filterStatistics(requestedStatistics, from, to, iterator => {
-				return dateFns.isWithinRange(iterator, from, to);
-			});
+			requestedStatistics = requestedStatistics.filter(day => dateFns.isWithinRange(day.date, from, to));
 		}
 
 		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
-				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-					return requestedStatistics[iterator] === equals;
-				});
+				requestedStatistics = requestedStatistics.filter(day => day.count === equals);
 			}
 			else if (over && !under) {
-				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-					return requestedStatistics[iterator] > over;
-				});
+				requestedStatistics = requestedStatistics.filter(day => day.count > over);
 			}
 			else if (!over && under) {
-				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-					return requestedStatistics[iterator] < under;
-				});
+				requestedStatistics = requestedStatistics.filter(day => day.count < under);
 			}
 			else if (over && under) {
-				requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry, iterator => {
-					return requestedStatistics[iterator] > over && requestedStatistics[iterator] < under;
-				});
+				requestedStatistics = requestedStatistics.filter(day => day.count > over && day.count < under);
 			}
-
-			for (const entryKey in requestedStatistics) {
-				if (requestedStatistics[entryKey] === 0) delete requestedStatistics[entryKey];
-			} // Remove padded entries if a count filter is used
 		}
-	}
-	else {
-		requestedStatistics = filterStatistics(requestedStatistics, firstStatisticsEntry, latestStatisticsEntry);
 	}
 
 	return res.json(requestedStatistics);
@@ -303,32 +258,8 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 
 apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line complexity
 	let requestedChartData = chartData;
-	const firstChartMonth = chartData[0].month;
 	const latestChartMonth = chartData[chartData.length - 1].month;
-
-	/*
-	Using a date iterator instead of simply looping over the statistics/chart data because I also want to fill out
-	the object values for dates that are not present in the database. Looping over the statistics wouldn't
-	let me grab the dates that aren't present there and using a seperate date iterator inside that loop
-	would not work if the difference between current statistics iteration and date iterator is bigger than one.
-	*/
-	const filterChartData = (data, startDate, endDate, condition) => {
-		if (!condition) condition = () => true; // If no condition provided, default to pass all
-		let iterator = startDate;
-		const filteredResult = [];
-
-		while (dateFns.differenceInMonths(endDate, iterator) >= 0) {
-			if (!data.find(d => d.month === iterator)) filteredResult.push({ month: iterator, count: 0 });
-			// Check for months missing in statistics and insert value for those
-			if (data.find(d => d.month === iterator) && condition(iterator)) {
-				filteredResult.push(data.find(d => d.month === iterator));
-			}
-
-			iterator = dateFns.format(dateFns.addMonths(iterator, 1), 'YYYY-MM');
-		}
-
-		return filteredResult;
-	};
+	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (Object.keys(req.query).length) {
 		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})$');
@@ -359,54 +290,30 @@ apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line co
 
 		// Date filtering
 		if (from && !to) {
-			requestedChartData = filterChartData(requestedChartData, from, latestChartMonth, iterator => {
-				return dateFns.isWithinRange(iterator, from, latestChartMonth);
-			});
+			requestedChartData = requestedChartData.filter(data => dateFns.isWithinRange(data.month, from, latestChartMonth));
 		}
 		else if (!from && to) {
-			requestedChartData = filterChartData(requestedChartData, firstChartMonth, to, iterator => {
-				return dateFns.isSameMonth(iterator, to) || dateFns.isBefore(iterator, to);
-			});
+			requestedChartData = requestedChartData.filter(data => dateFns.isSameMonth(data.month, to) || dateFns.isBefore(data.month, to));
 		}
 		else if (from && to) {
-			requestedChartData = filterChartData(requestedChartData, from, to, iterator => {
-				return dateFns.isWithinRange(iterator, from, to);
-			});
+			requestedChartData = requestedChartData.filter(data => dateFns.isWithinRange(data.month, from, to));
 		}
 
 		// Count filtering
 		if (equals || over || under) {
 			if (equals) {
-				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount === equals;
-				});
+				requestedChartData = requestedChartData.filter(data => data.count === equals);
 			}
 			else if (over && !under) {
-				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount > over;
-				});
+				requestedChartData = requestedChartData.filter(data => data.count > over);
 			}
 			else if (!over && under) {
-				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount < under;
-				});
+				requestedChartData = requestedChartData.filter(data => data.count < under);
 			}
 			else if (over && under) {
-				requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth, iterator => {
-					const dataCount = requestedChartData.find(d => d.month === iterator).count;
-					return dataCount > over && dataCount < under;
-				});
+				requestedChartData = requestedChartData.filter(data => data.count > over && data.count < under);
 			}
-
-			requestedChartData = requestedChartData.filter(entry => entry.count !== 0);
-			// Remove padded entries if a count filter is used
 		}
-	}
-	else {
-		requestedChartData = filterChartData(requestedChartData, firstChartMonth, latestChartMonth);
 	}
 
 	return res.json(requestedChartData);
