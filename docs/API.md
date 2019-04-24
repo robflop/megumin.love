@@ -229,7 +229,7 @@ Output:
         "date": "2017-05-28",
         "count": 3694
     },
-	// ...
+    // ...
     {
         "id": 49,
         "date": "2017-06-04",
@@ -259,7 +259,7 @@ Output:
         "date": "2017-11-29",
         "count": 137571
     },
-	// ...
+    // ...
     {
         "id": 241,
         "date": "2017-12-13",
@@ -329,24 +329,24 @@ Output:
 
 ```js
 [
-	{
-		count: 100000,
-		reached: 1,
-		timestamp: 1555792165395,
-		soundID: 24
-	},
-	{
-		count: 500000,
-		reached: 1,
-		timestamp: 1556152197176,
-		soundID: 42
-	},
-	{
-		count: 1000000,
-		reached: 0,
-		timestamp: 0,
-		soundID: undefined
-	}
+    {
+        count: 100000,
+        reached: 1,
+        timestamp: 1555792165395,
+        soundID: 24
+    },
+    {
+        count: 500000,
+        reached: 1,
+        timestamp: 1556152197176,
+        soundID: 42
+    },
+    {
+        count: 1000000,
+        reached: 0,
+        timestamp: 0,
+        soundID: undefined
+    }
 ]
 ```
 
@@ -356,12 +356,12 @@ Output:
 
 ```js
 [
-	{
-		count: 1000000,
-		reached: 0,
-		timestamp: 0,
-		soundID: undefined
-	}
+    {
+        count: 1000000,
+        reached: 0,
+        timestamp: 0,
+        soundID: undefined
+    }
 ]
 ```
 
@@ -371,12 +371,12 @@ Output:
 
 ```js
 [
-	{
-		count: 500000,
-		reached: 1,
-		timestamp: 1556152197176,
-		soundID: 42
-	}
+    {
+        count: 500000,
+        reached: 1,
+        timestamp: 1556152197176,
+        soundID: 42
+    }
 ]
 ```
 ---
@@ -600,6 +600,7 @@ Output:
 ```js
 {
     "code": 401,
+    "name": "Access denied",
     "message": "Invalid token provided."
 }
 ```
@@ -633,6 +634,7 @@ If either no Authorization header or an incorrect one is provided, the following
 ```js
 {
     "code": 401,
+    "name": "Access denied",
     "message": "Invalid token provided."
 }
 ```
@@ -767,8 +769,8 @@ Output when there is no error:
         "filename": "laugh",
         "displayname": "hahaha",
         "source": "Season 2",
-		"count": 0,
-		"association": null
+        "count": 0,
+        "association": null
     }
 }
 ```
@@ -778,7 +780,18 @@ Output when filename is already in use:
 ```js
 {
     "code": 400,
+    "name": "Invalid filename",
     "message": "Sound filename already in use."
+}
+```
+
+Output when no filename is provided:
+
+```js
+{
+    "code": 400,
+    "name": "Invalid filename",
+    "message": "Filename must be provided."
 }
 ```
 
@@ -787,16 +800,8 @@ Output when either no file or a non-mp3 file is provided:
 ```js
 {
     "code": 400,
+    "name": "Invalid file",
     "message": "An mp3 file must be provided."
-}
-```
-
-Output when not all mandatory properties are provided:
-
-```js
-{
-	"code": 400,
-	"message": "Filename, displayname and source values must be provided."
 }
 ```
 
@@ -804,8 +809,9 @@ Output when count is provided but not of integer type:
 
 ```js
 {
-	"code": 400,
-	"message": "Count must be an integer if provided."
+    "code": 400,
+    "name": "Invalid count",
+    "message": "Count must be an integer if provided."
 }
 ```
 
@@ -814,6 +820,7 @@ Output for other errors:
 ```js
 {
     "code": 500,
+    "name": "Serverside error",
     "message": "An unexpected error occurred."
 }
 ```
@@ -869,8 +876,8 @@ Output when there is no error:
         "filename": "explosion",
         "displayname": "Boom!",
         "source": "Movie 1",
-		"count": 0,
-		"association": null
+        "count": 0,
+        "association": null
     }
 }
 ```
@@ -879,6 +886,7 @@ Output when the requested sound (ID) was not found:
 ```js
 {
     "code": 404,
+    "name": "Invalid sound",
     "message": "Sound not found."
 }
 ```
@@ -887,8 +895,9 @@ Output when count is provided but not of integer type:
 
 ```js
 {
-	"code": 400,
-	"message": "Count must be an integer if provided."
+    "code": 400,
+    "name": "Invalid count",
+    "message": "Sound count must be an integer if provided."
 }
 ```
 
@@ -896,17 +905,19 @@ Output when no property to modify is provided:
 
 ```js
 {
-	"code": 400,
-	"message": "At least one property to modify must be provided."
+    "code": 400,
+    "name": "Invalid parameters",
+    "message": "At least one property to modify must be provided."
 }
 ```
 
-Output when filename or count are provided as empty strings:
+Output when filename is provided as empty strings:
 
 ```js
 {
-	"code": 400,
-	"message": "Filename and count may not be an empty string."
+    "code": 400,
+    "name": "Invalid filename",
+    "message": "Sound filename may not be an empty string."
 }
 ```
 
@@ -915,6 +926,7 @@ Output for misc. errors:
 ```js
 {
     "code": 500,
+    "name": "Serverside error",
     "message": "An unexpected error occurred."
 }
 ```
@@ -959,8 +971,8 @@ Output when there is no error:
         "filename": "explosion",
         "displayname": "Boom!",
         "source": "Movie 1",
-		"count": 0,
-		"association": null
+        "count": 0,
+        "association": null
     }
 }
 ```
@@ -969,6 +981,7 @@ Output when the requested sound (ID) was not found:
 ```js
 {
     "code": 404,
+    "name": "Invalid sound",
     "message": "Sound not found."
 }
 ```
@@ -978,6 +991,7 @@ Output for other errors:
 ```js
 {
     "code": 500,
+    "name": "Serverside error",
     "message": "An unexpected error occurred."
 }
 ```
@@ -1037,6 +1051,7 @@ Output when milestone with same count already exists:
 ```js
 {
     "code": 400,
+    "name": "Invalid count",
     "message": "Milestone with submitted count already exists."
 }
 ```
@@ -1045,8 +1060,9 @@ Output when no count is provided:
 
 ```js
 {
-	"code": 400,
-	"message": "Milestone count must be provided."
+    "code": 400,
+    "name": "Invalid count",
+    "message": "Milestone count must be provided."
 }
 ```
 
@@ -1054,8 +1070,9 @@ Output when count is not an integer:
 
 ```js
 {
-	"code": 400,
-	"message": "Milestone count must be an integer."
+    "code": 400,
+    "name": "Invalid count",
+    "message": "Milestone count must be an integer."
 }
 ```
 
@@ -1063,16 +1080,35 @@ Output when reached status is provided outside of 0 or 1 Boolean integer values:
 
 ```js
 {
-	"code": 400,
-	"message": "Milestone reached status must be an integer of either 0 or 1 if provided."
+    "code": 400,
+    "name": "Invalid status",
+    "message": "Milestone reached status must be an integer of either 0 or 1 if provided."
 }
 ```
 
 Output when any other value is provided but not in Integer format:
+
 ```js
 {
-	"code": 400,
-	"message": "Milestone reached status, timestamp and soundID must be an integer if provided."
+    "code": 400,
+    "name": "Invalid status",
+    "message": "Milestone reached status must be an integer if provided."
+}
+```
+
+```js
+{
+    "code": 400,
+    "name": "Invalid timestamp",
+    "message": "Milestone timestamp must be an integer if provided."
+}
+```
+
+```js
+{
+    "code": 400,
+    "name": "Invalid sound",
+    "message": "Milestone soundID must be an integer if provided."
 }
 ```
 
@@ -1081,6 +1117,7 @@ Output for other errors:
 ```js
 {
     "code": 500,
+    "name": "Serverside error",
     "message": "An unexpected error occurred."
 }
 ```
@@ -1144,6 +1181,7 @@ Output when the requested milestone (ID) was not found:
 ```js
 {
     "code": 404,
+    "name": "Invalid milestone",
     "message": "Milestone not found."
 }
 ```
@@ -1151,8 +1189,9 @@ Output when the requested milestone (ID) was not found:
 Output for when no property to modify was submitted (i.e. only ID):
 ```js
 {
-	"code": 400,
-	"message": "At least one property to modify must be provided."
+    "code": 400,
+    "name": "Invalid parameters",
+    "message": "At least one property to modify must be provided."
 }
 ```
 
@@ -1207,6 +1246,7 @@ Output when the requested milestone (ID) was not found:
 ```js
 {
     "code": 404,
+    "name": "Invalid milestone",
     "message": "Milestone not found."
 }
 ```
@@ -1216,6 +1256,7 @@ Output for other errors:
 ```js
 {
     "code": 500,
+    "name": "Serverside error",
     "message": "An unexpected error occurred."
 }
 ```
