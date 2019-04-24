@@ -143,7 +143,7 @@ apiRouter.use(express.json());
 apiRouter.all('/*', (req, res, next) => {
 	const apiEndpoints = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
-	if (!apiEndpoints.includes(req.path)) return res.status(404).json({ code: 404, message: 'Endpoint not found.' });
+	if (!apiEndpoints.includes(req.path)) return res.status(404).json({ code: 404, name: 'Invalid route', message: 'Endpoint not found.' });
 	else return next();
 });
 
@@ -167,7 +167,7 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
 		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
-			// Check if the param was initially provided, and if the input wasn't a number
+			// Check if the param was initially provided and if the input wasn't a number
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "over", "under" and "equals" parameters must be numbers.' });
 		}
 
@@ -352,7 +352,7 @@ apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses 
 		return res.json({ code: 200, message: 'Successfully logged in!' });
 	}
 	else {
-		return res.status(401).json({ code: 401, message: 'Invalid token provided.' });
+		return res.status(401).json({ code: 401, name: 'Access denied', message: 'Invalid token provided.' });
 	}
 });
 
@@ -362,7 +362,7 @@ apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
 		return next();
 	}
 	else {
-		return res.status(401).json({ code: 401, message: 'Invalid token provided.' });
+		return res.status(401).json({ code: 401, name: 'Access denied', message: 'Invalid token provided.' });
 	}
 });
 
@@ -382,20 +382,20 @@ apiRouter.all('/admin/sounds/*', (req, res, next) => {
 		else return parsedData[d] = originalData[d];
 	});
 
-	if (parsedData.filename === '' || parsedData.count === '') {
-		return res.status(400).json({ code: 400, message: 'Sound filename and count may not be an empty string.' });
+	if (parsedData.filename === '') {
+		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename may not be an empty string if provided.' });
 	}
 	if (parsedData.filename && sounds.find(sound => sound.filename === parsedData.filename)) {
-		return res.status(400).json({ code: 400, message: 'Sound filename already in use.' });
+		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename already in use.' });
 	}
-	if (originalData.count !== undefined && isNaN(parsedData.count)) {
-		return res.status(400).json({ code: 400, message: 'Sound count must be an integer if provided.' });
+	if (parsedData.count === '' || (originalData.count !== undefined && isNaN(parsedData.count))) {
+		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Sound count must be an integer if provided.' });
 	}
 	if (originalData.id !== undefined && isNaN(parseInt(parsedData.id))) {
-		return res.status(400).json({ code: 400, message: 'Sound ID must be an integer.' });
+		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Sound ID must be an integer.' });
 	}
 	if (parsedData.id !== undefined && !sounds.find(sound => sound.id === parsedData.id)) {
-		return res.status(404).json({ code: 404, message: 'Sound not found.' });
+		return res.status(404).json({ code: 404, name: 'Invalid sound', message: 'Sound not found.' });
 	}
 
 	req.body = parsedData;
@@ -414,14 +414,14 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			}
 		}); // If a wrong filetype was provided, delete the created temp file on rejection
 
-		return res.status(400).json({ code: 400, message: 'An mp3 file must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid file', message: 'An mp3 file must be provided.' });
 	}
 
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
 
 	if (!Object.keys(data).includes('filename')) {
-		return res.status(400).json({ code: 400, message: 'Sound filename must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename must be provided.' });
 	}
 
 	Logger.info(`Sound '${data.filename}' (Shown as '${data.displayname}', from '${data.source}') now being uploaded.`);
@@ -443,7 +443,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 				} // Delete temporary file on failure
 			});
 
-			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+			return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 		}
 		Logger.info('(1/3): Database entry successfully created.');
 
@@ -463,7 +463,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			if (renameErr) {
 				Logger.error('An error occurred renaming the temporary file.');
 				Logger.error(renameErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+				return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 			}
 			else Logger.info('(3/3): Uploaded mp3 file successfully renamed to requested filename.');
 		});
@@ -483,10 +483,10 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const stepAmount = data.hasOwnProperty('filename') ? 5 : 2;
 
 	if (!data.id) {
-		return res.status(400).json({ code: 400, message: 'Sound ID must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Sound ID must be provided.' });
 	}
 	if (!['filename', 'displayname', 'source', 'count', 'association'].some(p => Object.keys(data).includes(p))) {
-		return res.status(400).json({ code: 400, message: 'At least one property to modify must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid parameters', message: 'At least one property to modify must be provided.' });
 	}
 
 	const changedSound = sounds.find(sound => sound.id === data.id);
@@ -506,7 +506,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		if (updateErr) {
 			Logger.error('An error occurred updating the database entry, renaming aborted.');
 			Logger.error(updateErr);
-			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+			return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
@@ -522,7 +522,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 				if (copyErr) {
 					Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
 					Logger.error(copyErr);
-					return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+					return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 				}
 				Logger.info(`(3/${stepAmount}): Original mp3 file successfully backed up.`);
 
@@ -534,7 +534,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 							if (backupResErr) return Logger.error(`Backup restoration for the mp3 file failed.`);
 						});
 
-						return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+						return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 					}
 					Logger.info(`(4/${stepAmount}): Original mp3 file successfully renamed.`);
 
@@ -569,7 +569,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 		if (deleteErr) {
 			Logger.error('An error occurred while deleting the database entry, deletion aborted.');
 			Logger.error(deleteErr);
-			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+			return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 		}
 		Logger.info('(1/3): Database entry successfully deleted.');
 
@@ -580,7 +580,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 			if (unlinkErr) {
 				Logger.error('An error occurred while deleting the mp3 file.');
 				Logger.error(unlinkErr);
-				return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+				return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 			}
 			Logger.info('(3/3): mp3 file successfully deleted.');
 
@@ -605,19 +605,25 @@ apiRouter.all('/admin/milestones/*', (req, res, next) => {
 	});
 
 	if (originalData.id && isNaN(parsedData.id)) {
-		return res.status(400).json({ code: 400, message: 'Milestone ID must be an integer.' });
+		return res.status(400).json({ code: 400, name: 'Invalid milestone', message: 'Milestone ID must be an integer.' });
 	}
 	if (originalData.count !== undefined && isNaN(parsedData.count)) {
-		return res.status(400).json({ code: 400, message: 'Milestone count must be an integer.' });
+		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Milestone count must be an integer.' });
 	}
-	if ((originalData.reached !== undefined && isNaN(parsedData.reached)) || (originalData.timestamp && isNaN(parsedData.timestamp)) || (originalData.soundID && isNaN(parsedData.soundID))) { // eslint-disable-line max-len
-		return res.status(400).json({ code: 400, message: 'Milestone reached status, timestamp and soundID must be an integer if provided.' });
+	if (originalData.reached !== undefined && isNaN(parsedData.reached)) {
+		return res.status(400).json({ code: 400, name: 'Invalid status', message: 'Milestone reached status must be an integer if provided.' });
+	}
+	if (originalData.timestamp && isNaN(parsedData.timestamp)) {
+		return res.status(400).json({ code: 400, name: 'Invalid timestamp', message: 'Milestone timestamp must be an integer if provided.' });
+	}
+	if (originalData.soundID && isNaN(parsedData.soundID)) {
+		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Milestone soundID must be an integer if provided.' });
 	}
 	if (originalData.reached !== undefined && (parsedData.reached !== 0 && parsedData.reached !== 1)) {
-		return res.status(400).json({ code: 400, message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid status', message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' }); // eslint-disable-line max-len
 	} // Checking for undefined because reached property can have value 0 which is falsy but still defined
 	if (originalData.id && !milestones.find(ms => ms.id === parsedData.id)) {
-		return res.status(404).json({ code: 404, message: 'Milestone not found.' });
+		return res.status(404).json({ code: 404, name: 'Invalid milestone', message: 'Milestone not found.' });
 	}
 
 	req.body = parsedData;
@@ -630,14 +636,14 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	if (!data.reached) data.reached = 0;
 
 	if (!data.count) {
-		return res.status(400).json({ code: 400, message: 'Milestone count must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Milestone count must be provided.' });
 	}
 
 	Logger.info(`Milestone with count ${data.count} now being added.`);
 
 	if (milestones.find(ms => ms.count === data.count)) {
 		Logger.error(`A milestone with count ${data.count} already exists, adding aborted.`);
-		return res.status(400).json({ code: 400, message: 'Milestone with submitted count already exists.' });
+		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Milestone with submitted count already exists.' });
 	}
 	else {
 		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
@@ -648,10 +654,11 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 			if (insertErr) {
 				Logger.error('An error occurred creating the database entry, addition aborted.');
 				Logger.error(insertErr);
-				const error = insertErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
-				const errorCode = error.includes('ID') ? 400 : 500;
+				const errorCode = insertErr.code.includes('CONSTRAINT') ? 400 : 500;
+				const errorMessage = errorCode === 400 ? 'Sound ID must match a sound on the site.' : 'Please check the server console.';
+				const errorName = errorCode === 400 ? 'Invalid sound' : 'Serverside error';
 
-				return res.status(errorCode).json({ code: errorCode, message: error });
+				return res.status(errorCode).json({ code: errorCode, name: errorName, message: errorMessage });
 			}
 			Logger.info('(1/2): Database entry successfully created.');
 
@@ -680,10 +687,10 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	const data = req.body;
 
 	if (!data.id) {
-		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid milestone', message: 'Milestone ID must be provided.' });
 	}
 	if (!['count', 'reached', 'timestamp', 'soundID'].some(p => Object.keys(data).includes(p))) {
-		return res.status(400).json({ code: 400, message: 'At least one property to modify must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid parameters', message: 'At least one property to modify must be provided.' });
 	}
 
 	const changedMilestone = milestones.find(ms => ms.id === data.id);
@@ -702,10 +709,11 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 		if (updateErr) {
 			Logger.error('An error occurred updating the database entry, modification aborted.');
 			Logger.error(updateErr);
-			const error = updateErr.code.includes('CONSTRAINT') ? 'Sound ID must match a sound on the site' : 'Please check the server console.';
-			const errorCode = error.includes('ID') ? 400 : 500;
+			const errorCode = updateErr.code.includes('CONSTRAINT') ? 400 : 500;
+			const errorMessage = errorCode === 400 ? 'Sound ID must match a sound on the site.' : 'Please check the server console.';
+			const errorName = errorCode === 400 ? 'Invalid sound' : 'Serverside error';
 
-			return res.status(errorCode).json({ code: errorCode, message: error });
+			return res.status(errorCode).json({ code: errorCode, name: errorName, message: errorMessage });
 		}
 		Logger.info('(1/2): Database entry successfully updated.');
 
@@ -726,7 +734,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 	const data = req.body;
 
 	if (!data.id) {
-		return res.status(400).json({ code: 400, message: 'Milestone ID must be provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid milestone', message: 'Milestone ID must be provided.' });
 	}
 
 	const deletedMilestone = milestones.find(ms => ms.id === data.id);
@@ -737,7 +745,7 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 		if (deleteErr) {
 			Logger.error('An error occurred while deleting the database entry, deletion aborted.');
 			Logger.error(deleteErr);
-			return res.status(500).json({ code: 500, message: 'Please check the server console.' });
+			return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 		}
 		Logger.info('(1/2): Database entry successfully deleted.');
 
