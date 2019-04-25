@@ -17,7 +17,7 @@ const databaseVersions = [
 	{
 		targetVersion: '8.0.0',
 		queries: [
-			'ALTER TABLE sounds ADD COLUMN association TEXT;',
+			'ALTER TABLE sounds ADD COLUMN group TEXT;',
 			'CREATE TABLE IF NOT EXISTS meta ( version TEXT NOT NULL );',
 			'INSERT OR IGNORE INTO meta ( version ) VALUES ( \'8.0.0\' );',
 			`CREATE TABLE IF NOT EXISTS milestones (
@@ -34,7 +34,7 @@ const databaseVersions = [
 				displayname TEXT DEFAULT NULL,
 				source TEXT DEFAULT NULL,
 				count INTEGER NOT NULL DEFAULT 0,
-				association TEXT DEFAULT NULL
+				"group" TEXT DEFAULT NULL
 			);`,
 			'INSERT INTO soundsTemp SELECT * FROM sounds;',
 			'DROP TABLE sounds;',

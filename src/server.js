@@ -429,8 +429,9 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 	const latestID = sounds.length ? sounds[sounds.length - 1].id : 0;
 
 	const valuePlaceholders = '?, '.repeat(Object.keys(data).length).slice(0, -2); // Cut off dangling comma and whitespace
+	const columnNames = Object.keys(data).map(k => `"${k}"`).join(', ');
 
-	const query = db.prepare(`INSERT INTO sounds ( ${Object.keys(data).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
+	const query = db.prepare(`INSERT INTO sounds ( ${columnNames} ) VALUES ( ${valuePlaceholders} )`);
 	query.run(...Object.values(data), insertErr => {
 		if (insertErr) {
 			Logger.error('An error occurred creating the database entry, upload aborted.');
@@ -453,7 +454,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			displayname: data.displayname || null,
 			source: data.source || null,
 			count: data.count,
-			association: data.association || null
+			group: data.group || null
 		};
 		sounds.push(newSound);
 
@@ -485,7 +486,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	if (!data.id) {
 		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Sound ID must be provided.' });
 	}
-	if (!['filename', 'displayname', 'source', 'count', 'association'].some(p => Object.keys(data).includes(p))) {
+	if (!['filename', 'displayname', 'source', 'count', 'group'].some(p => Object.keys(data).includes(p))) {
 		return res.status(400).json({ code: 400, name: 'Invalid parameters', message: 'At least one property to modify must be provided.' });
 	}
 
@@ -497,7 +498,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const changedProperties = Object.assign({}, data);
 	delete changedProperties.id; // Only properties to change wanted
 
-	Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
+	Object.keys(changedProperties).forEach(k => columnPlaceholders += `"${k}" = ?, `);
 	columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
 
 	const query = db.prepare(`UPDATE sounds SET ${columnPlaceholders} WHERE id = ?`);
@@ -648,8 +649,9 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 	else {
 		const latestID = milestones.length ? milestones[milestones.length - 1].id : 0;
 		const valuePlaceholders = '?, '.repeat(Object.keys(data).length).slice(0, -2); // Cut off dangling comma and whitespace
+		const columnNames = Object.keys(data).map(k => `"${k}"`).join(', ');
 
-		const query = db.prepare(`INSERT INTO milestones ( ${Object.keys(data).join(', ')} ) VALUES ( ${valuePlaceholders} )`);
+		const query = db.prepare(`INSERT INTO milestones ( ${columnNames} ) VALUES ( ${valuePlaceholders} )`);
 		query.run(...Object.values(data), insertErr => {
 			if (insertErr) {
 				Logger.error('An error occurred creating the database entry, addition aborted.');
@@ -701,7 +703,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	const changedProperties = Object.assign({}, data);
 	delete changedProperties.id; // Only properties to change wanted
 
-	Object.keys(changedProperties).forEach(k => columnPlaceholders += `${k} = ?, `);
+	Object.keys(changedProperties).forEach(k => columnPlaceholders += `"${k}" = ?, `);
 	columnPlaceholders = columnPlaceholders.slice(0, -2); // Cut off dangling comma and whitespace
 
 	const query = db.prepare(`UPDATE milestones SET ${columnPlaceholders} WHERE id = ?`);

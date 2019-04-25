@@ -136,16 +136,16 @@ footer p, footer a {
 	background-image: url('/images/backgrounds/bg1_newyearseve.jpg');
 }
 
-.special_true_goddess {
-	background-image: url('/images/backgrounds/special_true_goddess.jpg')
+.aqua_true_goddess {
+	background-image: url('/images/backgrounds/aqua_true_goddess.jpg')
 }
 
-.special_chivalrous_crusader {
-	background-image: url('/images/backgrounds/special_chivalrous_crusader.jpg')
+.darkness_chivalrous_crusader {
+	background-image: url('/images/backgrounds/darkness_chivalrous_crusader.jpg')
 }
 
-.special_equality_advocate {
-	background-image: url('/images/backgrounds/special_equality_advocate.jpg')
+.kazuma_equality_advocate {
+	background-image: url('/images/backgrounds/kazuma_equality_advocate.jpg')
 }
 
 .bg4 footer p,
@@ -156,8 +156,8 @@ footer p, footer a {
 .bg1_birthday footer p,
 .bg1_christmas footer p,
 .bg1_usa_independence footer p,
-.special_chivalrous_crusader footer p,
-.special_equality_advocate footer p {
+.darkness_chivalrous_crusader footer p,
+.kazuma_equality_advocate footer p {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -350,7 +350,7 @@ footer p, footer a {
 		background-position: -90px;
 	}
 
-	.special_true_goddess {
+	.aqua_true_goddess {
 		background-position: -300px;
 	}
 }
@@ -360,7 +360,7 @@ footer p, footer a {
 		background-position: -215px;
 	}
 
-	.special_true_goddess {
+	.aqua_true_goddess {
 		background-position: -515px;
 	}
 
@@ -399,11 +399,11 @@ footer p, footer a {
 		background-position: -325px;
 	}
 
-	.special_true_goddess {
+	.aqua_true_goddess {
 		background-position: -750px;
 	}
 
-	.special_equality_advocate {
+	.kazuma_equality_advocate {
 		background-position: -700px;
 	}
 
@@ -438,11 +438,11 @@ footer p, footer a {
 		background-position: -425px;
 	}
 
-	.special_true_goddess {
+	.aqua_true_goddess {
 		background-position: -875px;
 	}
 
-	.special_equality_advocate {
+	.kazuma_equality_advocate {
 		background-position: -760px;
 	}
 

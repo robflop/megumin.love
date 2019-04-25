@@ -9,20 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
 		return new Date(year, month - 1, day);
 	}
 
-	function setSpecialEffects(specialBg) {
+	function setSpecialEffects(background, pageload = false) {
+		const currentBackgroundGroup = specialBackgroundGroups.find(group => group.backgrounds.some(bg => bg.filename === backgroundSetting));
+		const backgroundGroup = specialBackgroundGroups.find(group => group.backgrounds.some(bg => bg.filename === background));
+
+		if (!pageload && currentBackgroundGroup && currentBackgroundGroup.name === backgroundGroup.name) return; // Different background within same group
+
 		const existingSpecialCSS = document.getElementById('special-css');
 		if (existingSpecialCSS) document.head.removeChild(existingSpecialCSS);
 
-		const specialBackground = specialBackgrounds.find(s => s.filename === specialBg);
 		const specialCSS = document.createElement('link');
 		specialCSS.rel = 'stylesheet';
-		specialCSS.href = `/css/${specialBackground.css}.min.css`;
+		specialCSS.href = `/css/${backgroundGroup.css}.min.css`;
 		specialCSS.id = 'special-css';
 
 		document.head.appendChild(specialCSS);
 
-		document.getElementById('sidebar-vector').src = `/images/vectors/${specialBackground.svg}.svg`;
-		document.title = originalTitle.replace('Megumin', specialBackground.title);
+		document.getElementById('sidebar-vector').src = `/images/vectors/${backgroundGroup.sidebar}.svg`;
+		document.title = originalTitle.replace('Megumin', backgroundGroup.title);
 	}
 
 	let backgroundSetting = localStorage.getItem('background');
@@ -36,10 +40,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(12, 19), end: setDate(12, 26), versions: 1 },
 		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1), versions: 1 },
 	];
-	const specialBackgrounds = [
-		{ filename: 'special_true_goddess', displayName: 'True Goddess', css: 'true_goddess', svg: 'aqua_sidebar', title: 'Aqua' },
-		{ filename: 'special_chivalrous_crusader', displayName: 'Chivalrous Crusader', css: 'chivalrous_crusader', svg: 'darkness_sidebar', title: 'Darkness' },
-		{ filename: 'special_equality_advocate', displayName: 'Equality Advocate', css: 'equality_advocate', svg: 'kazuma_sidebar', title: 'Kazuma' }
+	const specialBackgroundGroups = [
+		{
+			name: 'aqua', css: 'aqua', sidebar: 'aqua_sidebar', title: 'Aqua',
+			backgrounds: [
+				{ filename: 'aqua_true_goddess', displayname: 'True Goddess' }
+			]
+		},
+		{
+			name: 'darkness', css: 'darkness', sidebar: 'darkness_sidebar', title: 'Darkness',
+			backgrounds: [
+				{ filename: 'darkness_chivalrous_crusader', displayname: 'Chivalrous Crusader' }
+			]
+		},
+		{
+			name: 'kazuma', css: 'kazuma', sidebar: 'kazuma_sidebar', title: 'Kazuma',
+			backgrounds: [
+				{ filename: 'kazuma_equality_advocate', displayname: 'Equality Advocate' }
+			]
+		},
 	];
 	const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -77,9 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	bodyElem.classList.add(backgroundSetting !== 'randomBg' ? backgroundSetting : randomBg);
-	if (specialBackgrounds.map(s => s = s.filename).includes(backgroundSetting)) setSpecialEffects(backgroundSetting);
+	if (specialBackgroundGroups.find(group => group.backgrounds.some(bg => bg.filename === backgroundSetting))) setSpecialEffects(backgroundSetting, true);
 
-	let currentBg = backgroundSetting === 'randomBg' ? randomBg : backgroundSetting;
+	if (backgroundSetting === 'randomBg') backgroundSetting = randomBg;
 
 	bgSelect.addEventListener('change', e => {
 		const { value } = e.target;
@@ -91,12 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
 				document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
 			}
 
-			bodyElem.classList.remove(currentBg);
+			bodyElem.classList.remove(backgroundSetting);
 			bodyElem.classList.add('bg1'); // Reset to default bg
 			return localStorage.removeItem('background');
 		}
 		if (value !== 'randomBg') {
-			if (specialBackgrounds.map(s => s = s.filename).includes(value)) setSpecialEffects(value);
+			const groupName = value.substr(0, value.indexOf('_'));
+
+			if (specialBackgroundGroups.map(group => group.name).includes(groupName)) setSpecialEffects(value);
 			else { // Making sure there are no special background settings left when switching to non-special backgrounds
 				if (document.getElementById('special-css')) document.head.removeChild(document.getElementById('special-css'));
 				if (!document.title.includes('Megumin')) document.title = originalTitle;
@@ -105,10 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 			}
 
-			bodyElem.classList.remove(currentBg);
+			bodyElem.classList.remove(backgroundSetting);
 			bodyElem.classList.add(value);
 
-			currentBg = value;
+			backgroundSetting = value;
 		}
 
 		return localStorage.setItem('background', value);
@@ -126,7 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		else return `<option value="${seasonal.filename}">${seasonal.displayName}</option>`;
 	});
-	const specialBgOptions = specialBackgrounds.map(special => `<option value="${special.filename}">${special.displayName}</option>`);
+	const specialBgOptions = specialBackgroundGroups
+		.map(group => group.backgrounds)
+		.map(bgs => bgs.map(bg => `<option value="${bg.filename}">${bg.displayname}</option>`));
 
 	bgOptions.push(seasonalBgOptions);
 	bgOptions.push(specialBgOptions);
@@ -188,4 +211,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 
 	window.util = util;
+	window.specialBackgroundGroups = specialBackgroundGroups;
 });

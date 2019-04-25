@@ -2,19 +2,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 	let activatedSounds = [];
 	let howlerList = {};
 
-	function loadSoundboard(sounds, association = null) {
+	function loadSoundboard(sounds, bg = null) {
 		sounds.forEach(s => {
 			if (!s.displayname) s.displayname = '';
 			if (!s.source) s.source = '';
 		});
 
-		activatedSounds = sounds
-			.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source))
-		// Sort primarily by season and secondarily alphabetically within seasons
-			.filter(s => s.association === association);
-		// Load sounds with either only associated background, or none with an association
+		const bgGroup = specialBackgroundGroups.find(g => g.backgrounds.some(gBg => gBg.filename === bg));
+		if (bgGroup) sounds = sounds.filter(s => s.group === bgGroup.name);
+		else sounds = sounds.filter(s => !s.group);
+		// If the background is part of a special group, only load associated sounds
+		// Otherwise, only load those without a group
 
-		howlerList = {}; // Wipe before reload
+		activatedSounds = sounds
+			.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
+		// Sort primarily by season and secondarily alphabetically within seasons
+
+		howlerList = {};
 
 		const soundboard = document.getElementById('soundboard');
 		soundboard.innerHTML = ''; // Reset to re-populate
@@ -125,7 +129,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const allSounds = await fetch('/api/sounds').then(res => res.json());
 	let currentBackground = localStorage.getItem('background') || '';
-	loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+	let specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
+	loadSoundboard(allSounds, specialBg);
 
 	const conInfo = await fetch('/api/conInfo').then(res => res.json());
 
@@ -145,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 				data = {};
 			}
 
-			currentBackground = localStorage.getItem('background') || '';
+			specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
 
 			switch (data.type) {
 				case 'crazyMode':
@@ -157,15 +162,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 					break;
 				case 'soundModify':
 					allSounds[allSounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
-					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					loadSoundboard(allSounds, specialBg);
 					break;
 				case 'soundUpload':
 					allSounds.push(data.sound);
-					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					loadSoundboard(allSounds, specialBg);
 					break;
 				case 'soundDelete':
 					allSounds.splice(allSounds.findIndex(snd => snd.id === data.sound.id), 1);
-					loadSoundboard(allSounds, currentBackground.startsWith('special_') ? currentBackground : null);
+					loadSoundboard(allSounds, specialBg);
 					break;
 				default:
 					break;
@@ -175,8 +180,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	document.getElementById('bg-select').addEventListener('change', e => {
 		const { value } = e.target;
+		currentBackground = value;
+		specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
 
-		if (value.startsWith('special_')) loadSoundboard(allSounds, value);
-		else if (value !== 'randomBg') loadSoundboard(allSounds);
+		loadSoundboard(allSounds, specialBg);
 	});
 });

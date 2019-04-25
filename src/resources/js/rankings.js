@@ -2,26 +2,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 	function formatNumber(number) {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	}
-	const characters = { megumin: null, aqua: 'special_true_goddess', darkness: 'special_chivalrous_crusader', kazuma: 'special_equality_advocate' };
+	const characters = specialBackgroundGroups.map(group => {
+		return { group: group.name, title: group.title };
+	});
+	characters.unshift({ group: null, title: 'Megumin' }); // Base sounds
 
 	function updateRankings(s) {
 		const rankingsWrap = document.getElementById('rankings-wrap');
 		rankingsWrap.innerHTML = ''; // Reset to re-populate
 		sounds = s.sort((a, b) => b.count - a.count);
 
-		Object.keys(characters).forEach(character => {
+		characters.forEach(character => {
 			const listWrap = document.createElement('div');
 			listWrap.id = character;
 			rankingsWrap.appendChild(listWrap);
 
-			const characterSounds = sounds.filter(snd => snd.association === characters[character]);
+			const characterSounds = sounds.filter(snd => snd.group === character.group);
 
 			const title = document.createElement('h2');
-			title.innerText = character.charAt(0).toUpperCase() + character.slice(1);
+			title.innerText = character.title;
 			title.classList.add('titles');
 			listWrap.appendChild(title);
 
-			if (!characterSounds.length) {
+			if (!characterSounds.filter(snd => snd.displayname).length) {
 				const warning = document.createElement('h3');
 				warning.id = 'warning';
 				warning.innerText = 'No sounds available.';

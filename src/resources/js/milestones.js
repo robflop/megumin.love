@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	function updateMilestones(ms) {
 		fetch('/api/sounds').then(res => res.json()).then(sounds => {
 			const milestonesWrap = document.getElementById('milestones-wrap');
-			milestonesWrap.innerHTML = ''; // Wipe before reload
+			milestonesWrap.innerHTML = '';
 
 			const milestonesList = document.createElement('ol');
 

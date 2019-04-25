@@ -12,7 +12,7 @@ Using the interface is _highly_ recommended. It's much less effort and less pron
 ### Manually:
 1) Put your new sound file in the `src/resources/sounds/` folder (in mp3 format)
 2) Run this query with the values you want to use for the sound:
-	- `INSERT INTO sounds ( filename, displayname, source, count, association ) VALUES ( <your>, <values>, <here>, 0, <optional value> );`
+	- `INSERT INTO sounds ( filename, displayname, source, count, "group" ) VALUES ( <your>, <values>, <here>, 0, <optional value> );`
 3) Restart the website
 
 ## Modifying sounds
@@ -24,7 +24,7 @@ Using the interface is _highly_ recommended. It's much less effort and less pron
 ### Manually:
 1) Rename the file in the `src/resources/sounds` folder
 2) Run this query with with the new values you want to use for the sound:
-	- `UPDATE sounds SET filename = <your>, displayname = <values>, source = <here>, count = <and>, association = <here> WHERE id = <id>;`
+	- `UPDATE sounds SET filename = <your>, displayname = <values>, source = <here>, count = <and>, "group" = <here> WHERE id = <id>;`
 3) Restart the website
 
 All values are optional, but at least any one must be filled out.
