@@ -7,7 +7,10 @@ A site committed to worshipping best girl Megumin!
 Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [uws](https://www.npmjs.com/package/uws).
 
 ## Self-hosting Usage
-1. Navigate into the folder you cloned the repo to
+
+>_**Important**: It is _**highly**_ recommended to use releases instead of the latest commit, as the master branch will sometimes require frequent DB adjustments or even wipes. No instructions for it will be provided either, so use it at your own risk of heavy breakage._
+
+1. Navigate into the folder you downloaded the latest release / commit to
 2. Rename `src/config.sample.json` to `src/config.json`
 3. *Recommended, but not needed*: Rename `src/db/default.db` to a name of your choosing (take care to change the config appropriately)
    * **Your database may be overwritten** by the default one if you keep the original filename and try updating the website in the future.
