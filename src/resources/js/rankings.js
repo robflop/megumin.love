@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 	function formatNumber(number) {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
 	}
-	const characters = specialBackgroundGroups.map(group => {
-		return { group: group.name, title: group.title };
+	const characters = themes.map(theme => {
+		return { theme: theme.name, title: theme.title };
 	});
-	characters.unshift({ group: null, title: 'Megumin' }); // Base sounds
+	characters.unshift({ theme: null, title: 'Megumin' }); // Base sounds
 
 	function updateRankings(s) {
 		const rankingsWrap = document.getElementById('rankings-wrap');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 			listWrap.id = character;
 			rankingsWrap.appendChild(listWrap);
 
-			const characterSounds = sounds.filter(snd => snd.group === character.group);
+			const characterSounds = sounds.filter(snd => snd.theme === character.theme);
 
 			const title = document.createElement('h2');
 			title.innerText = character.title;

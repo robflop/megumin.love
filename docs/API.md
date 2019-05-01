@@ -738,7 +738,7 @@ Upload a new sound to the website.
 | displayname | Name the sound should be displayed under on the website | Text    | hahaha   |
 | source      | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text    | Season 2 |
 | count*      | Preset count of the sound (defaults to 0)               | Integer | 5000     |
-| group*      | Group for the soundclip (for specials)                  | Text    | goddess  |
+| theme*      | Theme for the soundclip (for specials)                  | Text    | goddess  |
 
 \* Optional parameter
 
@@ -756,7 +756,7 @@ Upload a new sound to the website.
 - displayname `hahaha`
 - source `Season 2`
 - count `null`
-- group `null`
+- theme `null`
 
 Output when there is no error:
 
@@ -770,7 +770,7 @@ Output when there is no error:
         "displayname": "hahaha",
         "source": "Season 2",
         "count": 0,
-        "group": null
+        "theme": null
     }
 }
 ```
@@ -846,7 +846,7 @@ Modify an existing sound on the website.
 | displayname | New displayname | String  | Boom!     |
 | source      | New source      | String  | Movie 1   |
 | count       | New count       | Integer | 5000      |
-| group       | New group       | String  | crimson   |
+| theme       | New theme       | String  | crimson   |
 
 All parameters are optional, but at least any one besides the ID must be provided.
 Parameters that are not provided will remain unchanged.
@@ -877,7 +877,7 @@ Output when there is no error:
         "displayname": "Boom!",
         "source": "Movie 1",
         "count": 0,
-        "group": null
+        "theme": null
     }
 }
 ```
@@ -972,7 +972,7 @@ Output when there is no error:
         "displayname": "Boom!",
         "source": "Movie 1",
         "count": 0,
-        "group": null
+        "theme": null
     }
 }
 ```

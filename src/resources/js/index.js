@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 		const button = document.getElementsByTagName('button')[0];
 		howlerList = {};
 
-		const bgGroup = specialBackgroundGroups.find(g => g.backgrounds.some(gBg => gBg.filename === bg));
-		if (bgGroup) sounds = sounds.filter(s => s.group === bgGroup.name);
-		else sounds = sounds.filter(s => !s.group);
-		// If the background is part of a special group, only load associated sounds
-		// Otherwise, only load those without a group
+		const bgTheme = themes.find(g => g.backgrounds.some(gBg => gBg.filename === bg));
+		if (bgTheme) sounds = sounds.filter(s => s.theme === bgTheme.name);
+		else sounds = sounds.filter(s => !s.theme);
+		// If the background is part of a special theme, only load associated sounds
+		// Otherwise, only load those without a theme
 
 		activatedSounds = sounds;
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const allSounds = await fetch('/api/sounds').then(res => res.json());
 	let currentBackground = localStorage.getItem('background') || '';
-	let specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
+	let specialBg = themes.map(theme => theme.name).some(thm => currentBackground.startsWith(`${thm}_`)) ? currentBackground : null;
 	loadSounds(allSounds, specialBg);
 
 	const conInfo = await fetch('/api/conInfo').then(res => res.json());
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 				data = {};
 			}
 
-			specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
+			specialBg = themes.map(theme => theme.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
 
 			switch (data.type) {
 				case 'counterUpdate':
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	document.getElementById('bg-select').addEventListener('change', e => {
 		const { value } = e.target;
 		currentBackground = value;
-		specialBg = specialBackgroundGroups.map(group => group.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
+		specialBg = themes.map(theme => theme.name).some(grp => currentBackground.startsWith(`${grp}_`)) ? currentBackground : null;
 
 		loadSounds(allSounds, specialBg);
 	});

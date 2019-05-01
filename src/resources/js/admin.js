@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const options = sounds.map(sound => {
 			const source = sound.source ? `From ${sound.source}` : 'No source';
-			const group = sound.group ? `associated with ${sound.group}` : 'No group';
+			const theme = sound.theme ? `associated with ${sound.theme}` : 'No theme';
 			return `
 				<option value=${sound.id}>
-					${sound.displayname} (${sound.filename}.mp3, ${source}, ${sound.count} clicks, ${group})
+					${sound.displayname} (${sound.filename}.mp3, ${source}, ${sound.count} clicks, ${theme})
 				</option>
 			`;
 		});

@@ -454,7 +454,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			displayname: data.displayname || null,
 			source: data.source || null,
 			count: data.count,
-			group: data.group || null
+			theme: data.theme || null
 		};
 		sounds.push(newSound);
 
@@ -486,7 +486,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	if (!data.id) {
 		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Sound ID must be provided.' });
 	}
-	if (!['filename', 'displayname', 'source', 'count', 'group'].some(p => Object.keys(data).includes(p))) {
+	if (!['filename', 'displayname', 'source', 'count', 'theme'].some(p => Object.keys(data).includes(p))) {
 		return res.status(400).json({ code: 400, name: 'Invalid parameters', message: 'At least one property to modify must be provided.' });
 	}
 
