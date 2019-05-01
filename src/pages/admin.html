@@ -61,28 +61,32 @@
 						<input type="text" name="displayname" placeholder="Sound displayname">
 						<input type="text" name="source" placeholder="Sound source">
 						<input type="text" name="count" placeholder="Sound count">
-						<input type="text" name="theme" placeholder="Sound theme">
+						<select name="theme" id="soundUpload-theme-select">
+							<!-- Automatically generated -->
+						</select>
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
 				<div id="soundModify">
 					<h2 class="titles">Modify sounds</h2>
 					<form id="soundModify-form" method="post">
-						<select name="id" id="soundModify-select">
+						<select name="id" id="soundModify-id-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="text" name="filename" placeholder="New filename">
 						<input type="text" name="displayname" placeholder="New displayname">
 						<input type="text" name="source" placeholder="New source">
 						<input type="text" name="count" placeholder="New count">
-						<input type="text" name="theme" placeholder="New theme">
+						<select name="theme" id="soundModify-theme-select">
+							<!-- Automatically generated -->
+						</select>
 						<input type="submit" value="Modify sound">
 					</form>
 				</div>
 				<div id="soundDelete">
 					<h2 class="titles">Delete sounds</h2>
 					<form id="soundDelete-form" method="post">
-						<select name="filename" id="soundDelete-select">
+						<select name="id" id="soundDelete-id-select">
 							<!-- Automatically generated -->
 						</select>
 						<div id="soundDelete-confirm-wrapper">

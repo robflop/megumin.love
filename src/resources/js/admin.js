@@ -24,13 +24,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 				</option>
 			`;
 		});
-
 		options.unshift('<option value="">No sound selected</option>');
 
-		document.getElementById('soundModify-select').innerHTML = options.join('');
-		document.getElementById('soundDelete-select').innerHTML = options.join('');
+		const themeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
+		themeOptions.unshift('<option value="removeTheme">Remove theme</option>');
+		themeOptions.unshift('<option value="">No theme / no change</option>');
+
+		document.getElementById('soundModify-id-select').innerHTML = options.join('');
+		document.getElementById('soundDelete-id-select').innerHTML = options.join('');
 		document.getElementById('milestoneAdd-soundID-select').innerHTML = options.join('');
 		document.getElementById('milestoneModify-soundID-select').innerHTML = options.join('');
+
+		document.getElementById('soundUpload-theme-select').innerHTML = themeOptions.join('');
+		document.getElementById('soundModify-theme-select').innerHTML = themeOptions.join('');
 	}
 
 	function updateMilestones(m) {
