@@ -17,36 +17,37 @@ const databaseVersions = [
 	{
 		targetVersion: '8.0.0',
 		queries: [
-			'ALTER TABLE sounds ADD COLUMN group TEXT;',
-			'CREATE TABLE IF NOT EXISTS meta ( version TEXT NOT NULL );',
-			'INSERT OR IGNORE INTO meta ( version ) VALUES ( \'8.0.0\' );',
-			`CREATE TABLE IF NOT EXISTS milestones (
-				id INTEGER PRIMARY KEY,
-				count INTEGER NOT NULL UNIQUE,
-				reached INTEGER NOT NULL DEFAULT 0,
-				timestamp INTEGER DEFAULT NULL,
-				soundID INTEGER DEFAULT NULL,
-					FOREIGN KEY(soundID) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
+			`CREATE TABLE IF NOT EXISTS meta (
+				version TEXT NOT NULL
 			);`,
-			`CREATE TABLE IF NOT EXISTS soundsTemp (
+			'INSERT OR IGNORE INTO meta ( version ) VALUES ( "8.0.0" );',
+			`CREATE TABLE IF NOT EXISTS sounds_temp (
 				id INTEGER PRIMARY KEY,
 				filename TEXT NOT NULL UNIQUE,
 				displayname TEXT DEFAULT NULL,
 				source TEXT DEFAULT NULL,
 				count INTEGER NOT NULL DEFAULT 0,
-				"group" TEXT DEFAULT NULL
+				theme TEXT DEFAULT NULL
 			);`,
-			'INSERT INTO soundsTemp SELECT * FROM sounds;',
+			'INSERT INTO sounds_temp ( id, filename, displayname, source, count ) SELECT * FROM sounds;',
 			'DROP TABLE sounds;',
-			'ALTER TABLE soundsTemp RENAME TO sounds;',
-			`CREATE TABLE IF NOT EXISTS statisticsTemp (
+			'ALTER TABLE sounds_temp RENAME TO sounds;',
+			`CREATE TABLE IF NOT EXISTS milestones (
+				id INTEGER PRIMARY KEY,
+				count INTEGER NOT NULL UNIQUE,
+				reached INTEGER NOT NULL DEFAULT 0,
+				timestamp INTEGER DEFAULT NULL,
+				sound_id INTEGER DEFAULT NULL,
+					FOREIGN KEY(sound_id) REFERENCES sounds(id) ON UPDATE CASCADE ON DELETE SET NULL
+			);`,
+			`CREATE TABLE IF NOT EXISTS statistics_temp (
 				id INTEGER PRIMARY KEY,
 				date TEXT NOT NULL UNIQUE,
 				count INTEGER NOT NULL DEFAULT 0
 			);`,
-			'INSERT INTO statisticsTemp SELECT * FROM statistics;',
+			'INSERT INTO statistics_temp SELECT * FROM statistics;',
 			'DROP TABLE statistics;',
-			'ALTER TABLE statisticsTemp RENAME TO statistics;'
+			'ALTER TABLE statistics_temp RENAME TO statistics;'
 		]
 	},
 ];
