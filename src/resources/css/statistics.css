@@ -34,17 +34,7 @@ canvas {
 	display: none;
 }
 
-@media only screen and (max-width: 1366px) {
-	footer {
-		bottom: -50px;
-	}
-}
-
 @media only screen and (max-width: 960px) {
-	footer {
-		bottom: -70px;
-	}
-
 	#container {
 		width: 500px;
 	}

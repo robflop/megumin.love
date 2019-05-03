@@ -7,6 +7,8 @@ html {
 body {
 	display: table-cell;
 	min-height: 100%;
+	padding: 0;
+	margin: 0;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
@@ -16,6 +18,13 @@ body {
 	position: relative;
 	font-family: "Open Sans", sans-serif;
 	transition: background-position 0.25s ease-in-out
+}
+
+/* This ::after block is for pushing the footer below the content, don't remove pls */
+body::after {
+	content: '';
+	display: block;
+	height: 50px;
 }
 
 button, .playall {
@@ -54,10 +63,13 @@ footer {
 	bottom: 0;
 	font-family: "Courgette", cursive;
 	margin-left: 10px;
+	width: calc(100% - 10px); /* Avoid x-overflow due to margin */
+	height: 50px;
 }
 
 footer p, footer a {
 	color: #ffebee;
+	width: 380px;
 }
 
 .bg1 {
@@ -458,6 +470,11 @@ footer p, footer a {
 
 @media only screen and (max-width: 360px) {
 	footer {
+		width: 255px;
+		height: 65px;
+	}
+
+	footer a, footer p {
 		width: 255px;
 	}
 

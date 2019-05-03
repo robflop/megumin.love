@@ -99,10 +99,6 @@ label[for="bg-select"], select[id="bg-select"] {
 }
 
 @media only screen and (max-width: 490px) {
-	footer {
-		bottom: -50px;
-	}
-
 	.panel {
 		display: block;
 	}
@@ -120,10 +116,6 @@ label[for="bg-select"], select[id="bg-select"] {
 }
 
 @media only screen and (max-width: 360px) {
-	footer {
-		bottom: -70px;
-	}
-
 	.titles {
 		width: auto;
 	}

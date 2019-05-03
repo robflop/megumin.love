@@ -7,10 +7,6 @@ a[href="/rankings"] {
 	width: 130px;
 }
 
-footer {
-	bottom: -50px;
-}
-
 .source-wrapper {
 	margin-top: 25px;
 }
@@ -106,10 +102,6 @@ footer {
 }
 
 @media only screen and (max-width: 360px) {
-	footer {
-		bottom: -70px;
-	}
-
 	.buttons-wrapper button, .titles {
 		width: 100%;
 	}

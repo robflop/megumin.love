@@ -1,7 +1,3 @@
-footer {
-	bottom: -50px;
-}
-
 #container {
 	width: 1150px;
 	background-color: #ffebee;
@@ -121,10 +117,6 @@ footer {
 }
 
 @media only screen and (max-width: 360px) {
-	footer {
-		bottom: -70px;
-	}
-
 	#container {
 		width: 300px;
 	}

@@ -7,17 +7,7 @@ li {
 	background-color: #ffebee;
 }
 
-@media only screen and (max-width: 1366px) {
-	footer {
-		bottom: -30px;
-	}
-}
-
 @media only screen and (max-width: 960px) {
-	footer {
-		bottom: -50px;
-	}
-
 	#container {
 		width: 500px;
 	}
@@ -26,11 +16,5 @@ li {
 @media only screen and (max-width: 490px) {
 	#container {
 		width: 300px;
-	}
-}
-
-@media only screen and (max-width: 360px) {
-	footer {
-		bottom: -70px;
 	}
 }
