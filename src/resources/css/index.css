@@ -4,29 +4,13 @@ button {
 	margin: 10px 0;
 }
 
-a[href="/versions"], a[href="/soundboard"], [href="/statistics"] {
+a[href="/versions"], a[href="/soundboard"], a[href="/statistics"] {
 	color: #d50000;
 }
 
-a[href="/versions"] {
-	display: inline-block;
-}
-
-a[href="/soundboard"] {
-	margin-left: 50px;
-}
-
-a[href="/statistics"] {
-	margin-left: 65px;
-}
-
-.share-buttons img {
-	height: 24px;
-	width: 24px;
-}
-
-.share-buttons > a {
-	text-decoration: none;
+a[href="/soundboard"], a[href="/statistics"] {
+	margin-left : auto;
+	margin-right: auto;
 }
 
 #container {
@@ -44,42 +28,34 @@ a[href="/statistics"] {
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
+#versions-social-anchors, #soundboard-statistics-anchors {
+	display: flex;
+}
+
 #versions-social-anchors {
+	margin-top: 5px;
 	margin-bottom: 20px;
 }
 
 #share-buttons-frame {
-	display: inline-block;
+	display: inherit;
+	margin-left: auto;
 	vertical-align: middle;
-	margin-left: 185px;
+}
+
+#share-buttons-frame a {
+	height: 24px;
+	width: 24px;
+	text-decoration: none;
+	margin-left: 10px;
 }
 
 @media only screen and (max-width: 360px) {
-	a[href="/soundboard"] {
-		margin-left: 30px;
-	}
-
-	a[href="/statistics"] {
-		margin-left: 45px;
-	}
-
-	footer {
-		bottom: -50px;
-	}
-
-	.share-buttons {
-		margin-left: 10px;
-	}
-
 	#container {
 		max-width: 300px;
 	}
 
 	#counter {
 		font-size: 40px;
-	}
-
-	#share-buttons-frame {
-		margin-left: 95px;
 	}
 }
