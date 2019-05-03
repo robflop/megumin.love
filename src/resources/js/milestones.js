@@ -10,53 +10,53 @@ document.addEventListener('DOMContentLoaded', async () => {
 		return `${date.getDate()}.${month}.${date.getFullYear()}`;
 	}
 
+	const sounds = await fetch('/api/sounds').then(res => res.json());
+
 	function updateMilestones(ms) {
-		fetch('/api/sounds').then(res => res.json()).then(sounds => {
-			const milestonesWrap = document.getElementById('milestones-wrap');
-			milestonesWrap.innerHTML = '';
+		const milestonesWrap = document.getElementById('milestones-wrap');
+		milestonesWrap.innerHTML = '';
 
-			const milestonesList = document.createElement('ol');
+		const milestonesList = document.createElement('ol');
 
-			for (milestone of ms) {
-				const milestoneListElement = document.createElement('li');
-				milestoneListElement.classList.add('milestones');
-				milestoneListElement.id = `milestone-${milestone.id}`;
+		for (milestone of ms) {
+			const milestoneListElement = document.createElement('li');
+			milestoneListElement.classList.add('milestones');
+			milestoneListElement.id = `milestone-${milestone.id}`;
 
-				const milestoneHeader = document.createElement('h3');
-				milestoneHeader.innerText = `Milestone ${milestone.id}`;
+			const milestoneHeader = document.createElement('h3');
+			milestoneHeader.innerText = `Milestone ${milestone.id}`;
 
-				milestoneListElement.appendChild(milestoneHeader);
+			milestoneListElement.appendChild(milestoneHeader);
 
-				const milestoneCount = document.createElement('p');
-				milestoneCount.innerText = `Clicks to reach: ${formatNumber(milestone.count)}`;
+			const milestoneCount = document.createElement('p');
+			milestoneCount.innerText = `Clicks to reach: ${formatNumber(milestone.count)}`;
 
-				milestoneListElement.appendChild(milestoneCount);
+			milestoneListElement.appendChild(milestoneCount);
 
-				const milestoneStatus = document.createElement('p');
-				milestoneStatus.innerText = `Milestone reached: ${milestone.reached === 0 ? 'No' : 'Yes'}`;
+			const milestoneStatus = document.createElement('p');
+			milestoneStatus.innerText = `Milestone reached: ${milestone.reached === 0 ? 'No' : 'Yes'}`;
 
-				milestoneListElement.appendChild(milestoneStatus);
+			milestoneListElement.appendChild(milestoneStatus);
 
-				if (milestone.reached) {
-					const formattedDate = formatDate(new Date(milestone.timestamp));
+			if (milestone.reached) {
+				const formattedDate = formatDate(new Date(milestone.timestamp));
 
-					const milestoneDate = document.createElement('p');
-					milestoneDate.innerText = `Count reached on: ${milestone.timestamp ? formattedDate : 'Unknown'}`;
+				const milestoneDate = document.createElement('p');
+				milestoneDate.innerText = `Count reached on: ${milestone.timestamp ? formattedDate : 'Unknown'}`;
 
-					milestoneListElement.appendChild(milestoneDate);
+				milestoneListElement.appendChild(milestoneDate);
 
-					const milestoneSoundElement = document.createElement('p');
-					const soundObject = sounds.find(s => s.id === milestone.soundID);
-					milestoneSoundElement.innerText = `Sound that played: ${soundObject ? soundObject.displayname : 'Unknown'}`;
+				const milestoneSoundElement = document.createElement('p');
+				const soundObject = sounds.find(s => s.id === milestone.soundID);
+				milestoneSoundElement.innerText = `Sound that played: ${soundObject ? soundObject.displayname : 'Unknown'}`;
 
-					milestoneListElement.appendChild(milestoneSoundElement);
-				}
-
-				milestonesList.appendChild(milestoneListElement);
+				milestoneListElement.appendChild(milestoneSoundElement);
 			}
 
-			milestonesWrap.appendChild(milestonesList);
-		});
+			milestonesList.appendChild(milestoneListElement);
+		}
+
+		milestonesWrap.appendChild(milestonesList);
 	}
 
 	const milestones = await fetch('/api/statistics/milestones').then(res => res.json());
@@ -97,6 +97,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 				case 'milestoneDelete':
 					milestones.splice(milestones.findIndex(ms => ms.id === data.milestone.id), 1);
 					updateMilestones(milestones);
+					break;
+				case 'soundModify':
+					sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
+					break;
+				case 'soundUpload':
+					sounds.push(data.sound);
+					break;
+				case 'soundDelete':
+					sounds.splice(sounds.findIndex(snd => snd.id === data.sound.id), 1);
 					break;
 				default:
 					break;
