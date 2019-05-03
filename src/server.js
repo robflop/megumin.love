@@ -320,14 +320,7 @@ apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line co
 });
 
 apiRouter.get('/statistics/summary', (req, res) => {
-	return res.json({
-		alltime: counter,
-		daily,
-		weekly,
-		monthly,
-		yearly,
-		average
-	});
+	return res.json({ alltime: counter, daily, weekly, monthly, yearly, average });
 });
 
 apiRouter.get('/statistics/milestones', (req, res) => {

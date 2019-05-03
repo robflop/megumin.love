@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const yearly = document.getElementById('yearly');
 	const average = document.getElementById('average');
 
-	const updateStatistics = stats => {
+	function updateStatistics(stats) {
 		alltime.innerText = `All-time clicks: ${formatNumber(stats.summary.alltime)}`;
 		daily.innerText = `Today's clicks: ${formatNumber(stats.summary.daily)}`;
 		weekly.innerText = `This week's clicks: ${formatNumber(stats.summary.weekly)}`;
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		chart.data.labels = stats.chartData.map(entry => entry = entry.month);
 		chart.data.datasets[0].data = stats.chartData.map(entry => entry = entry.count);
 		chart.update();
-	};
+	}
 
 	statistics.summary = await fetch('/api/statistics/summary').then(res => res.json());
 	statistics.chartData = await fetch('/api/statistics/chartData').then(res => res.json());
