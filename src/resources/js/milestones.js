@@ -10,11 +10,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 		return `${date.getDate()}.${month}.${date.getFullYear()}`;
 	}
 
-	const sounds = await fetch('/api/sounds').then(res => res.json());
-
 	function updateMilestones(ms) {
 		const milestonesWrap = document.getElementById('milestones-wrap');
 		milestonesWrap.innerHTML = '';
+
+		if (ms.length === 0) {
+			const warning = document.createElement('h3');
+			warning.id = 'warning';
+			warning.innerText = 'No milestones available.';
+
+			return milestonesWrap.appendChild(warning);
+		}
 
 		const milestonesList = document.createElement('ol');
 
@@ -60,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 
 	const milestones = await fetch('/api/statistics/milestones').then(res => res.json());
+	const sounds = await fetch('/api/sounds').then(res => res.json());
 	updateMilestones(milestones);
 
 	const conInfo = await fetch('/api/conInfo').then(res => res.json());
