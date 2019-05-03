@@ -319,6 +319,10 @@ footer p, footer a {
 }
 
 @media only screen and (max-width: 1366px) {
+	.bg1_easter2 footer p {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
 	#megu-sidebar {
 		min-width: 280px;
 		left: -288px;
@@ -353,6 +357,10 @@ footer p, footer a {
 	.aqua_true_goddess {
 		background-position: -300px;
 	}
+
+	.bg3 footer p {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
 }
 
 @media only screen and (max-width: 720px) {
@@ -361,8 +369,8 @@ footer p, footer a {
 		text-align: center;
 		margin-right: auto;
 		margin-left: auto;
-		left: 0px;
-		right: 0px;
+		left: 0;
+		right: 0;
 	}
 
 	.bg9 {
@@ -371,6 +379,13 @@ footer p, footer a {
 
 	.aqua_true_goddess {
 		background-position: -515px;
+	}
+
+	.bg2 footer p,
+	.bg3 footer p,
+	.bg5 footer p,
+	.bg1_german_unity footer p {
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 
 	#megu-sidebar {
@@ -416,6 +431,13 @@ footer p, footer a {
 		background-position: -700px;
 	}
 
+	.bg2 footer p,
+	.bg3 footer p,
+	.bg5 footer p,
+	.bg1_german_unity footer p {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
 	#megu-sidebar {
 		min-width: 180px;
 		left: -188px;
@@ -457,6 +479,12 @@ footer p, footer a {
 
 	.kazuma_equality_advocate {
 		background-position: -760px;
+	}
+
+	.bg2 footer p,
+	.bg3 footer p,
+	.bg1_german_unity footer p {
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 
 	#megu-sidebar {

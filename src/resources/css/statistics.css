@@ -46,7 +46,7 @@ canvas {
 	}
 
 	#container {
-		max-width: 500px;
+		width: 500px;
 	}
 
 	#chart-wrapper {
@@ -62,7 +62,7 @@ canvas {
 	}
 
 	#container {
-		max-width: 400px;
+		width: 400px;
 	}
 
 	#chart-wrapper {
@@ -78,7 +78,7 @@ canvas {
 	}
 
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 
 	#chart-wrapper {
@@ -87,11 +87,5 @@ canvas {
 
 	#mobile-chart-info {
 		display: block;
-	}
-}
-
-@media only screen and (max-width: 360px) {
-	#container {
-		max-width: 220px;
 	}
 }

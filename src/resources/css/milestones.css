@@ -30,13 +30,7 @@ ol {
 
 @media only screen and (max-width: 960px) {
 	#container {
-		max-width: 500px;
-	}
-}
-
-@media only screen and (max-width: 720px) {
-	#container {
-		max-width: 400px;
+		width: 500px;
 	}
 }
 
@@ -46,16 +40,12 @@ ol {
 	}
 
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 }
 
 @media only screen and (max-width: 360px) {
 	footer {
 		bottom: -70px;
-	}
-
-	#container {
-		max-width: 220px;
 	}
 }

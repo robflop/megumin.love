@@ -38,24 +38,24 @@ a {
 
 @media only screen and (max-width: 960px) {
 	#container {
-		max-width: 600px;
+		width: 600px;
 	}
 }
 
 @media only screen and (max-width: 720px) {
 	#container {
-		max-width: 500px;
+		width: 500px;
 	}
 }
 
 @media only screen and (max-width: 490px) {
 	#container {
-		max-width: 400px;
+		width: 400px;
 	}
 }
 
 @media only screen and (max-width: 360px) {
 	#container {
-		max-width: 320px;
+		width: 320px;
 	}
 }

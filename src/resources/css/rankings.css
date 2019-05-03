@@ -57,13 +57,13 @@ footer {
 
 @media only screen and (max-width: 1366px) {
 	#container {
-		max-width: 900px;
+		width: 900px;
 	}
 }
 
 @media only screen and (max-width: 960px) {
 	#container {
-		max-width: 550px;
+		width: 550px;
 	}
 
 	#container #rankings-wrap {
@@ -97,13 +97,13 @@ footer {
 
 @media only screen and (max-width: 720px) {
 	#container {
-		max-width: 400px;
+		width: 400px;
 	}
 }
 
 @media only screen and (max-width: 490px) {
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 
 	#container #rankings-wrap > div {
@@ -126,6 +126,6 @@ footer {
 	}
 
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 }

@@ -49,21 +49,6 @@ footer {
 	visibility: hidden;
 }
 
-@media only screen and (max-width: 1440px) {
-	.buttons-wrapper button {
-		font-size: 30px;
-	}
-
-	.playall {
-		font-size: 18px;
-	}
-
-	#container {
-		max-width: 1000px;
-	}
-}
-
-
 @media only screen and (max-width: 1366px) {
 	.buttons-wrapper button {
 		font-size: 28px;
@@ -74,7 +59,7 @@ footer {
 	}
 
 	#container {
-		max-width: 960px;
+		width: 1000px;
 	}
 }
 
@@ -88,7 +73,7 @@ footer {
 	}
 
 	#container {
-		max-width: 700px;
+		width: 700px;
 	}
 }
 
@@ -102,7 +87,7 @@ footer {
 	}
 
 	#container {
-		max-width: 600px;
+		width: 600px;
 	}
 }
 
@@ -116,7 +101,7 @@ footer {
 	}
 
 	#container {
-		max-width: 400px;
+		width: 400px;
 	}
 }
 
@@ -134,6 +119,6 @@ footer {
 	}
 
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 }

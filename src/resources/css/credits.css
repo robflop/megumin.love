@@ -19,28 +19,18 @@ li {
 	}
 
 	#container {
-		max-width: 500px;
-	}
-}
-
-@media only screen and (max-width: 720px) {
-	#container {
-		max-width: 400px;
+		width: 500px;
 	}
 }
 
 @media only screen and (max-width: 490px) {
 	#container {
-		max-width: 300px;
+		width: 300px;
 	}
 }
 
 @media only screen and (max-width: 360px) {
 	footer {
 		bottom: -70px;
-	}
-
-	#container {
-		max-width: 200px;
 	}
 }
