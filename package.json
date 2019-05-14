@@ -8,11 +8,11 @@
 		"date-fns": "^1.30.1",
 		"express": "^4.16.4",
 		"express-session": "^1.16.1",
-		"helmet": "^3.16.0",
+		"helmet": "^3.18.0",
 		"multer": "^1.4.1",
 		"node-cron": "^2.0.3",
 		"node-minify": "^3.6.0",
-		"sqlite3": "^4.0.6",
+		"sqlite3": "^4.0.8",
 		"uws": "10.148.1"
 	},
 	"devDependencies": {
