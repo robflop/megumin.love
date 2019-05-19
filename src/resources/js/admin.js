@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const uploadThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
 		const modifyThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
-		modifyThemeOptions.unshift('<option value="removeTheme">Remove theme</option>');
+		modifyThemeOptions.unshift('<option value="megumin">Default theme</option>');
 		modifyThemeOptions.unshift('<option value="">No change</option>');
 
 		document.getElementById('soundModify-id-select').innerHTML = options.join('');
