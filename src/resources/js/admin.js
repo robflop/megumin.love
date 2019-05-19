@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const themeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
 		themeOptions.unshift('<option value="removeTheme">Remove theme</option>');
-		themeOptions.unshift('<option value="">No theme / no change</option>');
+		themeOptions.unshift('<option value="">No theme / No change</option>');
 
 		document.getElementById('soundModify-id-select').innerHTML = options.join('');
 		document.getElementById('soundDelete-id-select').innerHTML = options.join('');
