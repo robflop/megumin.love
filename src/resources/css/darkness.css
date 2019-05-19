@@ -7,7 +7,7 @@ button:hover, .playall:hover {
 	background-color: #FCBB46;
 }
 
-a[href="/versions"], a[href="/soundboard"], [href="/statistics"] {
+a[href="/versions"], a[href="/soundboard"], a[href="/statistics"] {
 	color: #FCBB46;
 }
 
