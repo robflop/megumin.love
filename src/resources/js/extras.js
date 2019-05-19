@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	];
 	const themes = [
 		{
+			name: 'megumin', stylesheet: '', sidebar: '', title: 'Megumin',
+			backgrounds: [] // All default and seasonal backgrounds are seperately specified
+		},
+		{
 			name: 'aqua', stylesheet: 'aqua', sidebar: 'aqua_sidebar', title: 'Aqua',
 			backgrounds: [
 				{ filename: 'aqua_true_goddess', displayname: 'True Goddess' }

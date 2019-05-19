@@ -5,7 +5,9 @@ If done via interface then no restart is required, if done manually changes only
 
 Using the interface is _highly_ recommended. It's much less effort and less prone to errors.
 
-For manual management: `[theme]` always stands for a sound's association. E.g. A soundclip from Megumin (such as "Explosion") would have no theme and go into the `megumin` subfolder of the sounds folder and a Kazuma clip (such as "Steal") has the theme "kazuma" and goes into the "kazuma" subfolder of sounds.
+For manual management: `[theme]` always stands for a sound's association.
+
+E.g. A soundclip from Megumin (such as "Explosion") would have the theme "megumin" and go into the `megumin` subfolder of the sounds folder while a Kazuma clip (such as "Steal") has the theme "kazuma" and goes into the "kazuma" subfolder of sounds.
 
 ### Interface:
 1) Open the admin panel at the `/admin` page and log in

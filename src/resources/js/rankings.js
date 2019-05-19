@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const characters = themes.map(theme => {
 		return { theme: theme.name, title: theme.title };
 	});
-	characters.unshift({ theme: null, title: 'Megumin' }); // Base sounds
 
 	function updateRankings(s) {
 		const rankingsWrap = document.getElementById('rankings-wrap');

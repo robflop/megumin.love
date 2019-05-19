@@ -27,12 +27,13 @@ const databaseVersions = [
 				displayname TEXT DEFAULT NULL,
 				source TEXT DEFAULT NULL,
 				count INTEGER NOT NULL DEFAULT 0,
-				theme TEXT DEFAULT NULL
+				theme TEXT DEFAULT "megumin"
 			);`,
 			'INSERT INTO sounds_temp ( id, filename, displayname, source, count ) SELECT * FROM sounds;',
 			'DROP TABLE sounds;',
 			'ALTER TABLE sounds_temp RENAME TO sounds;',
 			'UPDATE sounds SET filename = "kazuma_megumin" WHERE filename = "kazuma";',
+			'UPDATE sounds SET theme = "megumin" WHERE theme IS NULL;',
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,

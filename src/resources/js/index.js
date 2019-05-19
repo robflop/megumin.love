@@ -29,15 +29,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const bgTheme = themes.find(g => g.backgrounds.some(gBg => gBg.filename === bg));
 		if (bgTheme) sounds = sounds.filter(s => s.theme === bgTheme.name);
-		else sounds = sounds.filter(s => !s.theme);
-		// If the background is part of a special theme, only load associated sounds
-		// Otherwise, only load those without a theme
+		else sounds = sounds.filter(s => s.theme === 'megumin');
+		// If the bg is associated with a special theme, sort sounds by said theme
+		// Otherwise only load default sounds (megumin-related)
 
 		activatedSounds = sounds;
 
 		for (const sound of sounds) {
 			howlerList[sound.filename] = new Howl({
-				src: `/sounds/${sound.theme ? sound.theme : 'megumin'}/${sound.filename}.mp3`
+				src: `/sounds/${sound.theme}/${sound.filename}.mp3`
 			});
 		}
 

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const options = sounds.map(sound => {
 			const source = sound.source ? `From ${sound.source}` : 'No source';
-			const theme = sound.theme ? `associated with ${sound.theme}` : 'No theme';
+			const theme = `associated with "${sound.theme}"`;
 			return `
 				<option value=${sound.id}>
 					${sound.displayname} (${sound.filename}.mp3, ${source}, ${sound.count} clicks, ${theme})
@@ -26,17 +26,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 		options.unshift('<option value="">No sound selected</option>');
 
-		const themeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
-		themeOptions.unshift('<option value="removeTheme">Remove theme</option>');
-		themeOptions.unshift('<option value="">No theme / No change</option>');
+		const uploadThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
+		const modifyThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
+		modifyThemeOptions.unshift('<option value="removeTheme">Remove theme</option>');
+		modifyThemeOptions.unshift('<option value="">No change</option>');
 
 		document.getElementById('soundModify-id-select').innerHTML = options.join('');
 		document.getElementById('soundDelete-id-select').innerHTML = options.join('');
 		document.getElementById('milestoneAdd-soundID-select').innerHTML = options.join('');
 		document.getElementById('milestoneModify-soundID-select').innerHTML = options.join('');
 
-		document.getElementById('soundUpload-theme-select').innerHTML = themeOptions.join('');
-		document.getElementById('soundModify-theme-select').innerHTML = themeOptions.join('');
+		document.getElementById('soundUpload-theme-select').innerHTML = uploadThemeOptions.join('');
+		document.getElementById('soundModify-theme-select').innerHTML = modifyThemeOptions.join('');
 	}
 
 	function updateMilestones(m) {

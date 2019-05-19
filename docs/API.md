@@ -802,7 +802,7 @@ Upload a new sound to the website.
 - displayname `hahaha`
 - source `Season 2`
 - count `null`
-- theme `null`
+- theme `null` (no theme defaults to `megumin`, the base sounds)
 
 Output when there is no error:
 
@@ -816,7 +816,7 @@ Output when there is no error:
         "displayname": "hahaha",
         "source": "Season 2",
         "count": 0,
-        "theme": null
+        "theme": "megumin"
     }
 }
 ```
@@ -910,6 +910,7 @@ Parameters that are not provided will remain unchanged.
 - filename `explosion`
 - displayname `Boom!`
 - source `Movie 1`
+- theme `darkness`
 
 Output when there is no error:
 
@@ -923,7 +924,7 @@ Output when there is no error:
         "displayname": "Boom!",
         "source": "Movie 1",
         "count": 0,
-        "theme": null
+        "theme": "darkness"
     }
 }
 ```
@@ -1018,7 +1019,7 @@ Output when there is no error:
         "displayname": "Boom!",
         "source": "Movie 1",
         "count": 0,
-        "theme": null
+        "theme": "darkness"
     }
 }
 ```
