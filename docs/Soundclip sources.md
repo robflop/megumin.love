@@ -27,7 +27,7 @@
 
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
-| Shut-in NEET       | hikkineet        | 1       | 14:57 - 14:58 |
+| Shut-in NEET       | hikineet_aqua    | 1       | 14:57 - 14:58 |
 | God Blow           | godblow          | 2       | 06:23 - 06:24 |
 | God Requiem        | godrequiem       | 2       | 13:30 - 13:31 |
 | Kazuma             | kazuma_aqua      | 3       | 13:32 - 13:33 |
@@ -49,7 +49,7 @@
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
 | She's useless      | useless          | 1       | 14:24 - 14:26 |
-| Shut-in NEET       | hikkineet        | 1       | 14:58 - 14:59 |
+| Shut-in NEET       | hikineet_kazuma  | 1       | 14:58 - 14:59 |
 | Calm down          | calmdown         | 3       | 04:53 - 04:54 | (idk)
 | Steal              | steal            | 3       | 09:13 - 09:14 |
 | The hell's this?!  | thehell          | 3       | 14:57 - 14:58 |
