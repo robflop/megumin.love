@@ -159,11 +159,16 @@ apiRouter.get('/counter', (req, res) => {
 	return res.json({ counter });
 });
 
+apiRouter.get('/themes', (req, res) => {
+	const themes = ['megumin', ...new Set(sounds.map(s => s.theme).filter(t => t))]; // Filter to remove "null" (i.e. no theme, default)
+	return res.json(themes);
+});
+
 apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
 	if (Object.keys(req.query).length) {
-		const { source } = req.query;
+		const { theme, source } = req.query;
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
 		if ((req.query.equals && isNaN(equals)) || (req.query.over && isNaN(over)) || (req.query.under && isNaN(under))) {
@@ -174,6 +179,12 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 		if ((over && under) && over > under) {
 			return res.status(400).json({ code: 400, name: 'Invalid range', message: 'The "under" parameter must be bigger than the "over" parameter.' });
 		}
+
+		// Theme filtering
+		if (theme) requestedSounds = requestedSounds.filter(sound => {
+			if (!sound.theme && theme === 'megumin') return true; // Default sounds have no theme
+			else return sound.theme === theme;
+		});
 
 		// Source filtering
 		if (source) requestedSounds = requestedSounds.filter(sound => {

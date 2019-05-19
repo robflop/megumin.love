@@ -76,6 +76,49 @@ Output:
 
 ---
 
+## `GET /themes`
+
+Returns a list of all available website themes. By default the website ships with four:
+- megumin
+- aqua
+- darkness
+- kazuma
+
+### Headers
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Content-Type | application/x-www-form-urlencoded |
+
+### Body
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+### Parameters
+
+| Key | Description | Format | Example |
+| --- | ----------- | ------ | ------- |
+| --- | ----------- | ------ | ------- |
+
+#### Example requests
+
+`/themes`
+
+Output:
+
+```js
+[
+    'megumin',
+    'aqua',
+    'darkness',
+    'kazuma'
+]
+```
+
+---
+
 ## `GET /sounds`
 
 Returns an array of objects containing the following information on all of the website's sounds:
@@ -101,12 +144,15 @@ Returns an array of objects containing the following information on all of the w
 
 | Key    | Description                                     | Format  | Example  |
 | ------ | ----------------------------------------------- | ------- | -------- |
+| theme  | Theme to filter the requested sounds by         | String  | megumin  |
 | source | Source a sound must be from to be returned      | String  | Season 1 |
 | equals | The exact amount of clicks a sound must have    | Integer | 51840    |
 | over   | The amount of clicks a sound must at least have | Integer | 25000    |
 | under  | The amount of clicks a sound must at max have   | Integer | 50000    |
 
+A list of themes is available from the `/themes` route (GET).
 All 3 amount filtering parameters (equals, over, under) can be used alongside each other, as well as alongside the source filter.
+No theme filter will return sounds for every available theme.
 
 #### Example requests
 
