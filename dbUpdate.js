@@ -32,6 +32,7 @@ const databaseVersions = [
 			'INSERT INTO sounds_temp ( id, filename, displayname, source, count ) SELECT * FROM sounds;',
 			'DROP TABLE sounds;',
 			'ALTER TABLE sounds_temp RENAME TO sounds;',
+			'UPDATE sounds SET filename = "kazuma_megumin" WHERE filename = "kazuma";',
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
