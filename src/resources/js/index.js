@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		for (const sound of sounds) {
 			howlerList[sound.filename] = new Howl({
-				src: `/sounds/${sound.filename}.mp3`
+				src: `/sounds/${sound.theme ? sound.theme : 'megumin'}/${sound.filename}.mp3`
 			});
 		}
 

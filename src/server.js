@@ -465,7 +465,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		Logger.info('(2/3): Sound cache entry successfully created.');
 
-		rename(req.file.path, `./resources/sounds/${data.filename}.mp3`, renameErr => {
+		rename(req.file.path, `./resources/sounds/${data.theme ? data.theme : 'megumin'}/${data.filename}.mp3`, renameErr => {
 			if (renameErr) {
 				Logger.error('An error occurred renaming the temporary file.');
 				Logger.error(renameErr);
@@ -485,7 +485,6 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	const data = req.body;
-	if (data.theme === 'removeTheme') data.theme = null;
 
 	const stepAmount = data.hasOwnProperty('filename') ? 5 : 2;
 
@@ -498,6 +497,9 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 
 	const changedSound = sounds.find(sound => sound.id === data.id);
 	Logger.info(`Sound '${changedSound.filename}' now being modified.`);
+
+	if (!data.filename) data.filename = changedSound.filename;
+	if (data.theme === 'removeTheme') data.theme = null;
 
 	let columnPlaceholders = '';
 
@@ -517,8 +519,8 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const oldSoundPath = `./resources/sounds/${changedSound.filename}.mp3`;
-		const newSoundPath = `./resources/sounds/${data.filename}.mp3`;
+		const oldSoundPath = `./resources/sounds/${changedSound.theme ? changedSound.theme : 'megumin'}/${changedSound.filename}.mp3`;
+		const newSoundPath = `./resources/sounds/${data.theme ? data.theme : 'megumin'}/${data.filename}.mp3`;
 
 		Object.assign(changedSound, data);
 
@@ -583,7 +585,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 		sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
 		Logger.info('(2/3): Sound cache entry successfully deleted.');
 
-		unlink(`./resources/sounds/${deletedSound.filename}.mp3`, unlinkErr => {
+		unlink(`./resources/sounds/${deletedSound.theme ? deletedSound.theme : 'megumin'}/${deletedSound.filename}.mp3`, unlinkErr => {
 			if (unlinkErr) {
 				Logger.error('An error occurred while deleting the mp3 file.');
 				Logger.error(unlinkErr);
