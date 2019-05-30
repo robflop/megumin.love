@@ -76,7 +76,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Are?               | are              | 2       | 12:45 - 12:46 |
 | Aughh              | aughh            | 2       | 01:41 - 01:42 |
 | Big Hug            | bighug           | 2       | 11:25 - 11:27 | (idk)
-| Chomu Faint        | chomusukefaint   |         |               |
+| Chomu Faint        | chomusukefaint   | -       | --:-- - --:-- | (dead)
 | Chomusuke          | chomusuke        | 2       | 00:51 - 00:52 |
 | Chunchunmaru       | chunchunmaru     |         |               |
 | Come at me!        | comeatme         | 2       | 09:33 - 09:35 | (idk)
@@ -94,9 +94,9 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Nani?!             | nani             | 2       | 13:24 - 13:25 |
 | Objection!!        | objection        | 1       | 16:57 - 16:59 |
 | Oh                 | oh               | 2       | 13:12 - 13:13 | (idk)
-| RIP Chomu          | ripchomusuke     |         |               |
+| RIP Chomu          | ripchomusuke     | 3       | 10:35 - 10:40 |
 | Sigh               | sigh             | 2       | 08:54 - 08:55 | (idk)
-| Thinking           | thinking         |         |               |
+| Thinking           | thinking         | 3       | 06:50 - 07:00 |
 | Tropes             | tropes           | 2       | 12:49 - 12:50 | (idk)
 | True Power         | truepower        | 2       | 18:44 - 18:45 | (idk)
 | Waah!              | waah             | 2       | 20:19 - 20:20 | (idk)
@@ -108,6 +108,37 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | しょうがない       | shouganai        | 2       | 08:56 - 08:57 | (idk)
 | どうしましょう     | doushimashou     | 2       | 01:27 - 01:28 | (idk)
 | よろしい           | yoroshii         | 2       | 09:31 - 09:32 | (idk)
+
+## Aqua
+
+| Displayname        | Filename         | Episode | Timestamp     |
+| ------------------ | ---------------- | ------- | ------------- |
+| Treasure           | treasure         | 3       | 06:45 - 06:46 | (idk)
+
+## Darkness
+
+| Displayname        | Filename         | Episode | Timestamp     |
+| ------------------ | ---------------- | ------- | ------------- |
+|                    |                  |         |               |
+
+## Kazuma
+
+| Displayname        | Filename         | Episode | Timestamp     |
+| ------------------ | ---------------- | ------- | ------------- |
+| Snipe              | snipe            | 2       | 04:35 - 04:37 |
+| Lurk               | lurk             | 3       | 18:26 - 18:27 |
+
+---
+
+# Archived
+
+These sounds were included with megumin.love by default at some point in the past, but have since been removed.
+
+## Megumin
+
+| Displayname        | Filename         | Episode | Timestamp     |
+| ------------------ | ---------------- | ------- | ------------- |
+|                    |                  |         |               |
 
 ## Aqua
 
@@ -125,4 +156,3 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
-| Snipe              | snipe            | 2       | 04:35 - 04:37 |
