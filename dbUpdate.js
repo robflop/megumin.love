@@ -53,7 +53,15 @@ const databaseVersions = [
 			( "thehell", "The hell's this?!", "Season 1", 0, "kazuma" ),
 			( "createwater", "Create Water", "Season 1", 0, "kazuma" ),
 			( "nice-explosion", "Nice explosion", "Season 1", 0, "kazuma" ),
-			( "kazuma_kazuma", "Kazuma", "Season 1", 0, "kazuma" );
+			( "kazuma_kazuma", "Kazuma", "Season 1", 0, "kazuma" ),
+			( "treasure", "Treasure", "Season 2", 0, "aqua" ),
+			( "sacredexorcism", "Sacred Exorcism", "Season 2", 0, "aqua" ),
+			( "forcefire", "Force Fire", "Season 2", 0, "aqua" ),
+			( "snipe", "Snipe", "Season 2", 0, "kazuma" ),
+			( "freeze", "Freeze", "Season 2", 0, "kazuma" ),
+			( "lurk", "Lurk", "Season 2", 0, "kazuma" ),
+			( "damnit", "Damn it!", "Season 2", 0, "kazuma" ),
+			( "wahaha", "Wahaha", "Season 2", 0, "megumin" );
 			`,
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
