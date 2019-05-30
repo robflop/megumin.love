@@ -1,137 +1,113 @@
-Clips are sorted primarily by Episode, and secondarily by timestamp.
+Clips are sorted primarily by Source (Season -> Episode), and secondarily by timestamp.
 
-# Season 1 clips
-
-## Megumin
-
-| Displayname        | Filename       | Episode | Timestamp     |
-| ------------------ | -------------- | ------- | ------------- |
-| My name is..       | name           | 2       | 09:14 - 09:15 |
-| Magic Item         | magic-item     | 2       | 10:32 - 10:34 |
-| Eyepatch-Pull      | pull           | 2       | 10:50 - 10:52 |
-| Yamero!!           | yamero         | 2       | 10:52 - 10:54 |
-| Itai!              | itai           | 2       | 11:05 - 11:08 |
-| Parents            | parents        | 2       | 11:25 - 11:28 |
-| Oi                 | oi             | 2       | 11:35 - 11:36 |
-| Hyoizaburo!        | hyoizaburo     | 2       | 11:40 - 11:42 |
-| Explosion!         | explosion      | 4       | 08:04 - 08:06 |
-| Eugh #1            | eugh1          | 4       | 08:15 - 08:17 |
-| 'plosion!          | plosion        | 4       | 08:57 - 08:58 |
-| Eugh #2            | eugh2          | 4       | 08:58 - 08:59 |
-| 'sion!             | sion           | 4       | 09:03 - 09:04 |
-| Eugh #3            | eugh3          | 4       | 09:04 - 09:05 |
-| 'n!                | n              | 4       | 09:10 - 09:13 |
-| Eugh #4            | eugh4          | 4       | 09:14 - 09:15 |
-| Kazuma             | kazuma_megumin | 7       | 04:25 - 04:26 |
-| Star Entry         | star           | 10      | 19:04 - 19:05 |
-
-## Aqua
-
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| Shut-in NEET       | hikineet_aqua    | 1       | 14:57 - 14:58 |
-| God Blow           | godblow          | 2       | 06:23 - 06:24 |
-| God Requiem        | godrequiem       | 2       | 13:30 - 13:31 |
-| Kazuma             | kazuma_aqua      | 3       | 13:32 - 13:33 |
-| Nature's Beauty    | naturesbeauty    | 3       | 19:41 - 19:42 |
-| Kazuma-san         | kazumasan        | 4       | 01:34 - 01:36 |
-| Sacred Break Spell | sacredbreakspell | 4       | 21:04 - 21:08 |
-| Purification       | purification     | 5       | 07:58 - 07:59 |
-| Turn Undead        | turnundead       | 6       | 03:48 - 03:51 |
-
-## Darkness
-
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| No mercy           | nomercy          | 4       | 00:54 - 00:56 | (idk)
-| What to do         | whattodo         | 4       | 18:56 - 18:58 | (idk)
-| Kazuma             | kazuma_darkness  | 7       | 04:10 - 04:11 |
-
-## Kazuma
-
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| She's useless      | useless          | 1       | 14:24 - 14:26 |
-| Shut-in NEET       | hikineet_kazuma  | 1       | 14:58 - 14:59 |
-| Calm down          | calmdown         | 3       | 04:53 - 04:54 | (idk)
-| Steal              | steal            | 3       | 09:13 - 09:14 |
-| The hell's this?!  | thehell          | 3       | 14:57 - 14:58 |
-| Create Water       | createwater      | 4       | 00:12 - 00:14 |
-| Nice explosion     | nice-explosion   | 4       | 10:09 - 10:11 |
-| Kazuma             | kazuma_kazuma    | 7       | 04:11 - 04:12 |
-
----
-
-# Season 2 clips
+# Active clips
 
 ## Megumin
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| 'losion!           | losion           | 1       | 00:22 - 00:23 | (idk)
-| 'n! 2              | n2               | 3       | 00:34 - 00:39 | (idk)
-| 'sion! 2           | sion2            | 3       | 00:28 - 00:30 | (idk)
-| *splat*            | splat            | 2       | 07:03 - 07:04 | (idk)
-| ♬Explosions♬       | lalala           | 3       | 00:07 - 00:11 |
-| Are?               | are              | 2       | 12:45 - 12:46 |
-| Aughh              | aughh            | 2       | 01:41 - 01:42 |
-| Big Hug            | bighug           | 2       | 11:25 - 11:27 | (idk)
-| Chomu Faint        | chomusukefaint   | -       | --:-- - --:-- | (dead)
-| Chomusuke          | chomusuke        | 2       | 00:51 - 00:52 |
-| Chunchunmaru       | chunchunmaru     | 6       | 10:45 - 10:46 |
-| Come at me!        | comeatme         | 2       | 09:33 - 09:35 | (idk)
-| Dododo             | dododo           | 2       | 01:24 - 01:26 | (idk)
-| Don't wanna        | dontwanna        | 2       | 08:27 - 08:28 | (idk)
-| Explosion! 2       | explosion2       | 1       | 00:16 - 00:17 |
-| Friends            | friends          | 2       | 10:20 - 10.23 | (idk)
-| Hau                | hau              | 2       | 01:23 - 01:24 |
-| Hmph               | hmph             | 1       | 21:35 - 21:37 |
-| Hua                | hua              | 3       | 00:39 - 00:40 | (idk)
-| I see              | isee             | 2       | 12:35 - 12:36 |
-| It's cold          | itscold          | 2       | 08:28 - 08:29 | (idk)
-| Ladies first       | ladiesfirst      | 2       | 11:55 - 11:57 | (idk)
-| My Win!            | mywin            | 2       | 10:41 - 10:42 | (idk)
-| Nani?!             | nani             | 2       | 13:24 - 13:25 |
-| Objection!!        | objection        | 1       | 16:57 - 16:59 |
-| Oh                 | oh               | 2       | 13:12 - 13:13 | (idk)
-| RIP Chomu          | ripchomusuke     | 3       | 10:35 - 10:40 |
-| Sigh               | sigh             | 2       | 08:54 - 08:55 | (idk)
-| Thinking           | thinking         | 3       | 06:50 - 07:00 |
-| Tropes             | tropes           | 2       | 12:49 - 12:50 | (idk)
-| True Power         | truepower        | 2       | 18:44 - 18:45 | (idk)
-| Waah!              | waah             | 2       | 20:19 - 20:20 | (idk)
-| Well, thanks       | wellthanks       | 2       | 11:22 - 11:24 | (idk)
-| What's this?!      | whatsthis        | 2       | 20:20 - 20:21 | (idk)
-| Who..?             | who              | 2       | 07:14 - 07:15 | (idk)
-| Yes                | yes              | 2       | 13:45 - 13:46 | (idk)
-| Zuryah!!           | zuryah           | 2       | 20:39 - 20:42 | (idk)
-| しょうがない       | shouganai        | 2       | 08:56 - 08:57 | (idk)
-| どうしましょう     | doushimashou     | 2       | 01:27 - 01:28 | (idk)
-| よろしい           | yoroshii         | 2       | 09:31 - 09:32 | (idk)
-| Wahaha             | wahaha           | 6      | 14:17 - 14:19 |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+| My name is..       | name             | Season 1, Episode 02 | 09:14 - 09:15 |
+| Magic Item         | magic-item       | Season 1, Episode 02 | 10:32 - 10:34 |
+| Eyepatch-Pull      | pull             | Season 1, Episode 02 | 10:50 - 10:52 |
+| Yamero!!           | yamero           | Season 1, Episode 02 | 10:52 - 10:54 |
+| Itai!              | itai             | Season 1, Episode 02 | 11:05 - 11:08 |
+| Parents            | parents          | Season 1, Episode 02 | 11:25 - 11:28 |
+| Oi                 | oi               | Season 1, Episode 02 | 11:35 - 11:36 |
+| Hyoizaburo!        | hyoizaburo       | Season 1, Episode 02 | 11:40 - 11:42 |
+| Explosion!         | explosion        | Season 1, Episode 04 | 08:04 - 08:06 |
+| Eugh #1            | eugh1            | Season 1, Episode 04 | 08:15 - 08:17 |
+| 'plosion!          | plosion          | Season 1, Episode 04 | 08:57 - 08:58 |
+| Eugh #2            | eugh2            | Season 1, Episode 04 | 08:58 - 08:59 |
+| 'sion!             | sion             | Season 1, Episode 04 | 09:03 - 09:04 |
+| Eugh #3            | eugh3            | Season 1, Episode 04 | 09:04 - 09:05 |
+| 'n!                | n                | Season 1, Episode 04 | 09:10 - 09:13 |
+| Eugh #4            | eugh4            | Season 1, Episode 04 | 09:14 - 09:15 |
+| Kazuma             | kazuma_megumin   | Season 1, Episode 07 | 04:25 - 04:26 |
+| Star Entry         | star             | Season 1, Episode 10 | 19:04 - 19:05 |
+| Explosion! 2       | explosion2       | Season 2, Episode 01 | 00:16 - 00:17 |
+| 'losion!           | losion           | Season 2, Episode 01 | 00:22 - 00:23 | (idk)
+| Objection!!        | objection        | Season 2, Episode 01 | 16:57 - 16:59 |
+| Hmph               | hmph             | Season 2, Episode 01 | 21:35 - 21:37 |
+| Chomusuke          | chomusuke        | Season 2, Episode 02 | 00:51 - 00:52 |
+| Dododo             | dododo           | Season 2, Episode 02 | 01:24 - 01:26 | (idk)
+| Hau                | hau              | Season 2, Episode 02 | 01:23 - 01:24 |
+| どうしましょう     | doushimashou     | Season 2, Episode 02 | 01:27 - 01:28 | (idk)
+| Aughh              | aughh            | Season 2, Episode 02 | 01:41 - 01:42 |
+| *splat*            | splat            | Season 2, Episode 02 | 07:03 - 07:04 | (idk)
+| Who..?             | who              | Season 2, Episode 02 | 07:14 - 07:15 | (idk)
+| Don't wanna        | dontwanna        | Season 2, Episode 02 | 08:27 - 08:28 | (idk)
+| It's cold          | itscold          | Season 2, Episode 02 | 08:28 - 08:29 | (idk)
+| Sigh               | sigh             | Season 2, Episode 02 | 08:54 - 08:55 | (idk)
+| しょうがない       | shouganai        | Season 2, Episode 02 | 08:56 - 08:57 | (idk)
+| よろしい           | yoroshii         | Season 2, Episode 02 | 09:31 - 09:32 | (idk)
+| Come at me!        | comeatme         | Season 2, Episode 02 | 09:33 - 09:35 | (idk)
+| Friends            | friends          | Season 2, Episode 02 | 10:20 - 10.23 | (idk)
+| My Win!            | mywin            | Season 2, Episode 02 | 10:41 - 10:42 | (idk)
+| Well, thanks       | wellthanks       | Season 2, Episode 02 | 11:22 - 11:24 | (idk)
+| Big Hug            | bighug           | Season 2, Episode 02 | 11:25 - 11:27 | (idk)
+| Ladies first       | ladiesfirst      | Season 2, Episode 02 | 11:55 - 11:57 | (idk)
+| I see              | isee             | Season 2, Episode 02 | 12:35 - 12:36 |
+| Are?               | are              | Season 2, Episode 02 | 12:45 - 12:46 |
+| Tropes             | tropes           | Season 2, Episode 02 | 12:49 - 12:50 | (idk)
+| Oh                 | oh               | Season 2, Episode 02 | 13:12 - 13:13 | (idk)
+| Nani?!             | nani             | Season 2, Episode 02 | 13:24 - 13:25 |
+| Yes                | yes              | Season 2, Episode 02 | 13:45 - 13:46 | (idk)
+| True Power         | truepower        | Season 2, Episode 02 | 18:44 - 18:45 | (idk)
+| Waah!              | waah             | Season 2, Episode 02 | 20:19 - 20:20 | (idk)
+| What's this?!      | whatsthis        | Season 2, Episode 02 | 20:20 - 20:21 | (idk)
+| Zuryah!!           | zuryah           | Season 2, Episode 02 | 20:39 - 20:42 | (idk)
+| ♬Explosions♬       | lalala           | Season 2, Episode 03 | 00:07 - 00:11 |
+| 'sion! 2           | sion2            | Season 2, Episode 03 | 00:28 - 00:30 | (idk)
+| 'n! 2              | n2               | Season 2, Episode 03 | 00:34 - 00:39 | (idk)
+| Hua                | hua              | Season 2, Episode 03 | 00:39 - 00:40 | (idk)
+| Thinking           | thinking         | Season 2, Episode 03 | 06:50 - 07:00 |
+| RIP Chomu          | ripchomusuke     | Season 2, Episode 03 | 10:35 - 10:40 |
+| Chunchunmaru       | chunchunmaru     | Season 2, Episode 06 | 10:45 - 10:46 |
+| Wahaha             | wahaha           | Season 2, Episode 06 | 14:17 - 14:19 |
+
+| Chomu Faint        | chomusukefaint   | -                    | --:-- - --:-- | (dead)
 
 ## Aqua
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| Treasure           | treasure         | 3       | 06:45 - 06:46 | (idk)
-| Sacred Exorcism    | sacredexorcism   | 5       | 15:29 - 15:32 |
-| Force Fire         | forcefire        | 6       | 12:58 - 12:59 |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+| Shut-in NEET       | hikineet_aqua    | Season 1, Episode 01 | 14:57 - 14:58 |
+| God Blow           | godblow          | Season 1, Episode 02 | 06:23 - 06:24 |
+| God Requiem        | godrequiem       | Season 1, Episode 02 | 13:30 - 13:31 |
+| Kazuma             | kazuma_aqua      | Season 1, Episode 03 | 13:32 - 13:33 |
+| Nature's Beauty    | naturesbeauty    | Season 1, Episode 03 | 19:41 - 19:42 |
+| Kazuma-san         | kazumasan        | Season 1, Episode 04 | 01:34 - 01:36 |
+| Sacred Break Spell | sacredbreakspell | Season 1, Episode 04 | 21:04 - 21:08 |
+| Purification       | purification     | Season 1, Episode 05 | 07:58 - 07:59 |
+| Turn Undead        | turnundead       | Season 1, Episode 06 | 03:48 - 03:51 |
+| Treasure           | treasure         | Season 2, Episode 03 | 06:45 - 06:46 | (idk)
+| Sacred Exorcism    | sacredexorcism   | Season 2, Episode 05 | 15:29 - 15:32 |
+| Force Fire         | forcefire        | Season 2, Episode 06 | 12:58 - 12:59 |
 
 ## Darkness
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-|                    |                  |         |               |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+| No mercy           | nomercy          | Season 1, Episode 04 | 00:54 - 00:56 | (idk)
+| What to do         | whattodo         | Season 1, Episode 04 | 18:56 - 18:58 | (idk)
+| Kazuma             | kazuma_darkness  | Season 1, Episode 07 | 04:10 - 04:11 |
 
 ## Kazuma
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-| Snipe              | snipe            | 2       | 04:35 - 04:37 |
-| Lurk               | lurk             | 3       | 18:26 - 18:27 |
-| Freeze             | freeze           | 6       | 05:07 - 05:08 |
-| Damn it all!       | damnit           | 8       | 21:50 - 21:53 |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+| She's useless      | useless          | Season 1, Episode 01 | 14:24 - 14:26 |
+| Shut-in NEET       | hikineet_kazuma  | Season 1, Episode 01 | 14:58 - 14:59 |
+| Calm down          | calmdown         | Season 1, Episode 03 | 04:53 - 04:54 | (idk)
+| Steal              | steal            | Season 1, Episode 03 | 09:13 - 09:14 |
+| The hell's this?!  | thehell          | Season 1, Episode 03 | 14:57 - 14:58 |
+| Create Water       | createwater      | Season 1, Episode 04 | 00:12 - 00:14 |
+| Nice explosion     | nice-explosion   | Season 1, Episode 04 | 10:09 - 10:11 |
+| Kazuma             | kazuma_kazuma    | Season 1, Episode 07 | 04:11 - 04:12 |
+| Snipe              | snipe            | Season 2, Episode 02 | 04:35 - 04:37 |
+| Lurk               | lurk             | Season 2, Episode 03 | 18:26 - 18:27 |
+| Freeze             | freeze           | Season 2, Episode 06 | 05:07 - 05:08 |
+| Damn it all!       | damnit           | Season 2, Episode 08 | 21:50 - 21:53 |
 
 ---
 
@@ -141,23 +117,24 @@ These sounds were included with megumin.love by default at some point in the pas
 
 ## Megumin
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-|                    |                  |         |               |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+|                    |                  |                      |               |
 
 ## Aqua
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-|                    |                  |         |               |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+|                    |                  |                      |               |
 
 ## Darkness
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
-|                    |                  |         |               |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+|                    |                  |                      |               |
 
 ## Kazuma
 
-| Displayname        | Filename         | Episode | Timestamp     |
-| ------------------ | ---------------- | ------- | ------------- |
+| Displayname        | Filename         | Source               | Timestamp     |
+| ------------------ | ---------------- | -------------------- | ------------- |
+|                    |                  |                      |               |
