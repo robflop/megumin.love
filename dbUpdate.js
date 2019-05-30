@@ -63,6 +63,8 @@ const databaseVersions = [
 			( "damnit", "Damn it!", "Season 2", 0, "kazuma" ),
 			( "wahaha", "Wahaha", "Season 2", 0, "megumin" );
 			`,
+			'UPDATE sounds SET source = NULL where filename = "realname";',
+			'UPDATE sounds SET displayname = NULL where filename = "realname";',
 			`CREATE TABLE IF NOT EXISTS milestones (
 				id INTEGER PRIMARY KEY,
 				count INTEGER NOT NULL UNIQUE,
