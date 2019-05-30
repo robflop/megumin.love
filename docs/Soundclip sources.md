@@ -131,6 +131,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Snipe              | snipe            | 2       | 04:35 - 04:37 |
 | Lurk               | lurk             | 3       | 18:26 - 18:27 |
 | Freeze             | freeze           | 6       | 05:07 - 05:08 |
+| Damn it all!       | damnit           | 8       | 21:50 - 21:53 |
 
 ---
 
