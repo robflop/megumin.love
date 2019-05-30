@@ -6,24 +6,24 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 
 | Displayname        | Filename       | Episode | Timestamp     |
 | ------------------ | -------------- | ------- | ------------- |
-| 'n!                | n              | 4       | 09:10 - 09:13 |
-| 'plosion!          | plosion        | 4       | 08:57 - 08:58 |
-| 'sion!             | sion           | 4       | 09:03 - 09:04 |
-| Eugh #1            | eugh1          | 4       | 08:15 - 08:17 |
-| Eugh #2            | eugh2          | 4       | 08:58 - 08:59 |
-| Eugh #3            | eugh3          | 4       | 09:04 - 09:05 |
-| Eugh #4            | eugh4          | 4       | 09:14 - 09:15 |
-| Explosion!         | explosion      | 4       | 08:04 - 08:06 |
-| Eyepatch-Pull      | pull           | 2       | 10:50 - 10:52 |
-| Hyoizaburo!        | hyoizaburo     | 2       | 11:40 - 11:42 |
-| Kazuma             | kazuma_megumin | 7       | 04:25 - 04:26 |
-| Magic Item         | magic-item     | 2       | 10:32 - 10:34 |
 | My name is..       | name           | 2       | 09:14 - 09:15 |
-| Oi                 | oi             | 2       | 11:35 - 11:36 |
-| Parents            | parents        | 2       | 11:25 - 11:28 |
-| Star Entry         | star           | 10      | 19:04 - 19:05 |
+| Magic Item         | magic-item     | 2       | 10:32 - 10:34 |
+| Eyepatch-Pull      | pull           | 2       | 10:50 - 10:52 |
 | やめろ!!           | yamero         | 2       | 10:52 - 10:54 |
 | 痛い!              | itai           | 2       | 11:05 - 11:08 |
+| Parents            | parents        | 2       | 11:25 - 11:28 |
+| Oi                 | oi             | 2       | 11:35 - 11:36 |
+| Hyoizaburo!        | hyoizaburo     | 2       | 11:40 - 11:42 |
+| Explosion!         | explosion      | 4       | 08:04 - 08:06 |
+| Eugh #1            | eugh1          | 4       | 08:15 - 08:17 |
+| 'plosion!          | plosion        | 4       | 08:57 - 08:58 |
+| Eugh #2            | eugh2          | 4       | 08:58 - 08:59 |
+| 'sion!             | sion           | 4       | 09:03 - 09:04 |
+| Eugh #3            | eugh3          | 4       | 09:04 - 09:05 |
+| 'n!                | n              | 4       | 09:10 - 09:13 |
+| Eugh #4            | eugh4          | 4       | 09:14 - 09:15 |
+| Kazuma             | kazuma_megumin | 7       | 04:25 - 04:26 |
+| Star Entry         | star           | 10      | 19:04 - 19:05 |
 
 ## Aqua
 
