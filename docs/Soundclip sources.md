@@ -78,7 +78,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Big Hug            | bighug           | 2       | 11:25 - 11:27 | (idk)
 | Chomu Faint        | chomusukefaint   | -       | --:-- - --:-- | (dead)
 | Chomusuke          | chomusuke        | 2       | 00:51 - 00:52 |
-| Chunchunmaru       | chunchunmaru     |         |               |
+| Chunchunmaru       | chunchunmaru     | 6       | 10:45 - 10:46 |
 | Come at me!        | comeatme         | 2       | 09:33 - 09:35 | (idk)
 | Dododo             | dododo           | 2       | 01:24 - 01:26 | (idk)
 | Don't wanna        | dontwanna        | 2       | 08:27 - 08:28 | (idk)
@@ -108,6 +108,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | しょうがない       | shouganai        | 2       | 08:56 - 08:57 | (idk)
 | どうしましょう     | doushimashou     | 2       | 01:27 - 01:28 | (idk)
 | よろしい           | yoroshii         | 2       | 09:31 - 09:32 | (idk)
+| Wahaha             | wahaha           | 6      | 14:17 - 14:19 |
 
 ## Aqua
 
@@ -115,6 +116,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | ------------------ | ---------------- | ------- | ------------- |
 | Treasure           | treasure         | 3       | 06:45 - 06:46 | (idk)
 | Sacred Exorcism    | sacredexorcism   | 5       | 15:29 - 15:32 |
+| Force Fire         | forcefire        | 6       | 12:58 - 12:59 |
 
 ## Darkness
 
@@ -128,6 +130,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | ------------------ | ---------------- | ------- | ------------- |
 | Snipe              | snipe            | 2       | 04:35 - 04:37 |
 | Lurk               | lurk             | 3       | 18:26 - 18:27 |
+| Freeze             | freeze           | 6       | 05:07 - 05:08 |
 
 ---
 
