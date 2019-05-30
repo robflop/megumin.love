@@ -110,10 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (value === 'reset') {
 			if (document.getElementById('theme')) document.head.removeChild(document.getElementById('theme'));
-			if (!document.title.includes('Megumin')) document.title = originalTitle;
-			if (!document.getElementById('sidebar-vector').src.includes('megumin_sidebar')) {
-				document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
-			}
+			document.title = originalTitle;
+			document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
 
 			bodyElem.classList.remove(backgroundSetting);
 			bodyElem.classList.add('bg1'); // Reset to default bg
@@ -125,10 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (themes.map(thm => thm.name).includes(themeName)) setSpecialEffects(value);
 			else { // Making sure there are no special background settings left when switching to non-special backgrounds
 				if (document.getElementById('theme')) document.head.removeChild(document.getElementById('theme'));
-				if (!document.title.includes('Megumin')) document.title = originalTitle;
-				if (!document.getElementById('sidebar-vector').src.includes('megumin_sidebar')) {
-					document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
-				}
+				document.title = originalTitle;
+				document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
 			}
 
 			bodyElem.classList.remove(backgroundSetting);
