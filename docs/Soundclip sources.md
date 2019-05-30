@@ -114,6 +114,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
 | Treasure           | treasure         | 3       | 06:45 - 06:46 | (idk)
+| Sacred Exorcism    | sacredexorcism   | 5       | 15:29 - 15:32 |
 
 ## Darkness
 
