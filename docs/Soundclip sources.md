@@ -68,46 +68,46 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
-| 'losion!           | losion           |         |               |
-| 'n! 2              | n2               |         |               |
-| 'sion! 2           | sion2            |         |               |
-| *splat*            | splat            |         |               |
+| 'losion!           | losion           |         |               | (idk)
+| 'n! 2              | n2               | 3       | 00:34 - 00:39 | (idk)
+| 'sion! 2           | sion2            | 3       | 00:28 - 00:30 | (idk)
+| *splat*            | splat            | 2       | 07:03 - 07:04 | (idk)
 | ♬Explosions♬       | lalala           | 3       | 00:07 - 00:11 |
-| Are?               | are              |         |               |
-| Aughh              | aughh            |         |               |
-| Big Hug            | bighug           |         |               |
+| Are?               | are              | 2       | 12:45 - 12:46 |
+| Aughh              | aughh            | 2       | 01:41 - 01:42 |
+| Big Hug            | bighug           | 2       | 11:25 - 11:27 | (idk)
 | Chomu Faint        | chomusukefaint   |         |               |
-| Chomusuke          | chomusuke        |         |               |
+| Chomusuke          | chomusuke        | 2       | 00:51 - 00:52 |
 | Chunchunmaru       | chunchunmaru     |         |               |
-| Come at me!        | comeatme         |         |               |
-| Dododo             | dododo           |         |               |
-| Don't wanna        | dontwanna        |         |               |
+| Come at me!        | comeatme         | 2       | 09:33 - 09:35 | (idk)
+| Dododo             | dododo           | 2       | 01:24 - 01:26 | (idk)
+| Don't wanna        | dontwanna        | 2       | 08:27 - 08:28 | (idk)
 | Explosion! 2       | explosion2       |         |               |
-| Friends            | friends          |         |               |
-| Hau                | hau              |         |               |
+| Friends            | friends          | 2       | 10:20 - 10.23 | (idk)
+| Hau                | hau              | 2       | 01:23 - 01:24 |
 | Hmph               | hmph             | 1       | 21:35 - 21:37 |
-| Hua                | hua              |         |               |
-| I see              | isee             |         |               |
-| It's cold          | itscold          |         |               |
-| Ladies first       | ladiesfirst      |         |               |
-| My Win!            | mywin            |         |               |
-| Nani?!             | nani             |         |               |
+| Hua                | hua              | 3       | 00:39 - 00:40 | (idk)
+| I see              | isee             | 2       | 12:35 - 12:36 |
+| It's cold          | itscold          | 2       | 08:28 - 08:29 | (idk)
+| Ladies first       | ladiesfirst      | 2       | 11:55 - 11:57 | (idk)
+| My Win!            | mywin            | 2       | 10:41 - 10:42 | (idk)
+| Nani?!             | nani             | 2       | 13:24 - 13:25 |
 | Objection!!        | objection        | 1       | 16:57 - 16:59 |
-| Oh                 | oh               |         |               |
+| Oh                 | oh               | 2       | 13:12 - 13:13 | (idk)
 | RIP Chomu          | ripchomusuke     |         |               |
-| Sigh               | sigh             |         |               |
+| Sigh               | sigh             | 2       | 08:54 - 08:55 | (idk)
 | Thinking           | thinking         |         |               |
-| Tropes             | tropes           |         |               |
-| True Power         | truepower        |         |               |
-| Waah!              | waah             |         |               |
-| Well, thanks       | wellthanks       |         |               |
-| What's this?!      | whatsthis        |         |               |
-| Who..?             | who              |         |               |
-| Yes                | yes              |         |               |
-| Zuryah!!           | zuryah           |         |               |
-| しょうがない       | shouganai        |         |               |
-| どうしましょう     | doushimashou     |         |               |
-| よろしい           | yoroshii         |         |               |
+| Tropes             | tropes           | 2       | 12:49 - 12:50 | (idk)
+| True Power         | truepower        | 2       | 18:44 - 18:45 | (idk)
+| Waah!              | waah             | 2       | 20:19 - 20:20 | (idk)
+| Well, thanks       | wellthanks       | 2       | 11:22 - 11:24 | (idk)
+| What's this?!      | whatsthis        | 2       | 20:20 - 20:21 | (idk)
+| Who..?             | who              | 2       | 07:14 - 07:15 | (idk)
+| Yes                | yes              | 2       | 13:45 - 13:46 | (idk)
+| Zuryah!!           | zuryah           | 2       | 20:39 - 20:42 | (idk)
+| しょうがない       | shouganai        | 2       | 08:56 - 08:57 | (idk)
+| どうしましょう     | doushimashou     | 2       | 01:27 - 01:28 | (idk)
+| よろしい           | yoroshii         | 2       | 09:31 - 09:32 | (idk)
 
 ## Aqua
 
@@ -125,4 +125,4 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
-|                    |                  |         |               |
+| Snipe              | snipe            | 2       | 04:35 - 04:37 |
