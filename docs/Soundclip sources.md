@@ -9,8 +9,8 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | My name is..       | name           | 2       | 09:14 - 09:15 |
 | Magic Item         | magic-item     | 2       | 10:32 - 10:34 |
 | Eyepatch-Pull      | pull           | 2       | 10:50 - 10:52 |
-| やめろ!!           | yamero         | 2       | 10:52 - 10:54 |
-| 痛い!              | itai           | 2       | 11:05 - 11:08 |
+| Yamero!!           | yamero         | 2       | 10:52 - 10:54 |
+| Itai!              | itai           | 2       | 11:05 - 11:08 |
 | Parents            | parents        | 2       | 11:25 - 11:28 |
 | Oi                 | oi             | 2       | 11:35 - 11:36 |
 | Hyoizaburo!        | hyoizaburo     | 2       | 11:40 - 11:42 |
