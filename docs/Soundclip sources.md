@@ -68,7 +68,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 
 | Displayname        | Filename         | Episode | Timestamp     |
 | ------------------ | ---------------- | ------- | ------------- |
-| 'losion!           | losion           |         |               | (idk)
+| 'losion!           | losion           | 1       | 00:22 - 00:23 | (idk)
 | 'n! 2              | n2               | 3       | 00:34 - 00:39 | (idk)
 | 'sion! 2           | sion2            | 3       | 00:28 - 00:30 | (idk)
 | *splat*            | splat            | 2       | 07:03 - 07:04 | (idk)
@@ -82,7 +82,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Come at me!        | comeatme         | 2       | 09:33 - 09:35 | (idk)
 | Dododo             | dododo           | 2       | 01:24 - 01:26 | (idk)
 | Don't wanna        | dontwanna        | 2       | 08:27 - 08:28 | (idk)
-| Explosion! 2       | explosion2       |         |               |
+| Explosion! 2       | explosion2       | 1       | 00:16 - 00:17 |
 | Friends            | friends          | 2       | 10:20 - 10.23 | (idk)
 | Hau                | hau              | 2       | 01:23 - 01:24 |
 | Hmph               | hmph             | 1       | 21:35 - 21:37 |
