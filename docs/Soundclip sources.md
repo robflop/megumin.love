@@ -72,7 +72,7 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | 'n! 2              | n2               |         |               |
 | 'sion! 2           | sion2            |         |               |
 | *splat*            | splat            |         |               |
-| ♬Explosions♬       | lalala           |         |               |
+| ♬Explosions♬       | lalala           | 3       | 00:07 - 00:11 |
 | Are?               | are              |         |               |
 | Aughh              | aughh            |         |               |
 | Big Hug            | bighug           |         |               |
@@ -85,14 +85,14 @@ Clips are sorted primarily by Episode, and secondarily by timestamp.
 | Explosion! 2       | explosion2       |         |               |
 | Friends            | friends          |         |               |
 | Hau                | hau              |         |               |
-| Hmph               | hmph             |         |               |
+| Hmph               | hmph             | 1       | 21:35 - 21:37 |
 | Hua                | hua              |         |               |
 | I see              | isee             |         |               |
 | It's cold          | itscold          |         |               |
 | Ladies first       | ladiesfirst      |         |               |
 | My Win!            | mywin            |         |               |
 | Nani?!             | nani             |         |               |
-| Objection!!        | objection        |         |               |
+| Objection!!        | objection        | 1       | 16:57 - 16:59 |
 | Oh                 | oh               |         |               |
 | RIP Chomu          | ripchomusuke     |         |               |
 | Sigh               | sigh             |         |               |
