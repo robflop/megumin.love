@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 
 			howlerList[sound.filename] = new Howl({
-				src: `/sounds/${sound.theme}/${sound.filename}.mp3`
+				src: `/sounds/${sound.theme}/${sourceName ? sourceName : 'no-source'}/${sound.filename}.mp3`
 			});
 
 			if (sound.displayname === '' || sound.source === '') continue;

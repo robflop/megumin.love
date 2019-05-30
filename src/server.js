@@ -465,7 +465,9 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		Logger.info('(2/3): Sound cache entry successfully created.');
 
-		rename(req.file.path, `./resources/sounds/${data.theme}/${data.filename}.mp3`, renameErr => {
+		const sourceFolder = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+
+		rename(req.file.path, `./resources/sounds/${data.theme}/${sourceFolder}/${data.filename}.mp3`, renameErr => {
 			if (renameErr) {
 				Logger.error('An error occurred renaming the temporary file.');
 				Logger.error(renameErr);
@@ -519,8 +521,11 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const oldSoundPath = `./resources/sounds/${changedSound.theme}/${changedSound.filename}.mp3`;
-		const newSoundPath = `./resources/sounds/${data.theme}/${data.filename}.mp3`;
+		const oldSource = changedSound.source ? changedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+		const newSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+
+		const oldSoundPath = `./resources/sounds/${changedSound.theme}/${oldSource}/${changedSound.filename}.mp3`;
+		const newSoundPath = `./resources/sounds/${data.theme}/${newSource}/${data.filename}.mp3`;
 
 		Object.assign(changedSound, data);
 
@@ -585,7 +590,9 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 		sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
 		Logger.info('(2/3): Sound cache entry successfully deleted.');
 
-		unlink(`./resources/sounds/${deletedSound.theme}/${deletedSound.filename}.mp3`, unlinkErr => {
+		const sourceFolder = deletedSound.source ? deletedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+
+		unlink(`./resources/sounds/${deletedSound.theme}/${sourceFolder}/${deletedSound.filename}.mp3`, unlinkErr => {
 			if (unlinkErr) {
 				Logger.error('An error occurred while deleting the mp3 file.');
 				Logger.error(unlinkErr);
