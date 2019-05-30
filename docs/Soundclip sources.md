@@ -1,3 +1,5 @@
+Clips are sorted primarily by Episode, and secondarily by timestamp.
+
 # Season 1 clips
 
 ## Megumin
@@ -31,10 +33,11 @@
 | God Blow           | godblow          | 2       | 06:23 - 06:24 |
 | God Requiem        | godrequiem       | 2       | 13:30 - 13:31 |
 | Kazuma             | kazuma_aqua      | 3       | 13:32 - 13:33 |
+| Nature's Beauty    | naturesbeauty    | 3       | 19:41 - 19:42 |
 | Kazuma-san         | kazumasan        | 4       | 01:34 - 01:36 |
 | Sacred Break Spell | sacredbreakspell | 4       | 21:04 - 21:08 |
 | Purification       | purification     | 5       | 07:58 - 07:59 |
-| Turn Undead        | turnundead       |         |
+| Turn Undead        | turnundead       | 6       | 03:48 - 03:51 |
 
 ## Darkness
 
