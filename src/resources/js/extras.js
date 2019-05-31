@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	bgSelect.addEventListener('change', e => {
 		const { value } = e.target;
 
-		if (value === 'reset') {
+		if (['reset', 'randomBg'].includes(value)) {
 			if (document.getElementById('theme')) document.head.removeChild(document.getElementById('theme'));
 			document.title = originalTitle;
 			document.getElementById('sidebar-vector').src = '/images/vectors/megumin_sidebar.svg';
