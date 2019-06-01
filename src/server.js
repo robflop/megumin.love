@@ -402,6 +402,11 @@ apiRouter.all('/admin/sounds/*', (req, res, next) => {
 		return res.status(404).json({ code: 404, name: 'Invalid sound', message: 'Sound not found.' });
 	}
 
+	if (parsedData.filename) parsedData.filename = parsedData.filename.toString();
+	if (parsedData.displayname) parsedData.displayname = parsedData.displayname.toString();
+	if (parsedData.theme) parsedData.theme = parsedData.theme.toString();
+	if (parsedData.source) parsedData.source = parsedData.source.toString();
+
 	req.body = parsedData;
 
 	return next();
