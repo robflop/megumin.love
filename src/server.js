@@ -538,7 +538,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
 		const oldSource = changedSound.source ? changedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
-		const newSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+		const newSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : oldSource;
 
 		const newTheme = data.theme ? data.theme : changedSound.theme;
 
