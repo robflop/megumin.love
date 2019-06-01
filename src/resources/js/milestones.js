@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 
 	function updateMilestones(ms) {
+		ms = ms.sort((a, b) => b.count - a.count); // Reverse order
+
 		const milestonesWrap = document.getElementById('milestones-wrap');
 		milestonesWrap.innerHTML = '';
 
