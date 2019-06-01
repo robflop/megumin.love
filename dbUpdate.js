@@ -48,7 +48,6 @@ const databaseVersions = [
 			( "kazuma_darkness", "Kazuma", "Season 1", 0, "darkness" ),
 			( "useless", "She's useless", "Season 1", 0, "kazuma" ),
 			( "hikineet_kazuma", "Shut-in NEET", "Season 1", 0, "kazuma" ),
-			( "calmdown", "Calm down", "Season 1", 0, "kazuma" ),
 			( "steal", "Steal", "Season 1", 0, "kazuma" ),
 			( "thehell", "The hell's this?!", "Season 1", 0, "kazuma" ),
 			( "createwater", "Create Water", "Season 1", 0, "kazuma" ),
