@@ -59,7 +59,7 @@ const databaseVersions = [
 			( "snipe", "Snipe", "Season 2", 0, "kazuma" ),
 			( "freeze", "Freeze", "Season 2", 0, "kazuma" ),
 			( "lurk", "Lurk", "Season 2", 0, "kazuma" ),
-			( "damnit", "Damn it!", "Season 2", 0, "kazuma" ),
+			( "damnitall", "Damn it all!", "Season 2", 0, "kazuma" ),
 			( "wahaha", "Wahaha", "Season 2", 0, "megumin" );
 			`,
 			'UPDATE sounds SET source = "no-source" WHERE source IS NULL;',
