@@ -541,8 +541,8 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const soundSource = data.source ? cleanString(data.source) : cleanString(changedSound.source);
-		const soundTheme = data.theme ? cleanString(data.theme) : cleanString(changedSound.theme);
+		const soundSource = cleanString(data.source || changedSound.source);
+		const soundTheme = cleanString(data.theme || changedSound.theme);
 
 		const newFolderPath = join('./resources/sounds/', soundTheme, soundSource);
 		const newFolderExists = existsSync(newFolderPath);
