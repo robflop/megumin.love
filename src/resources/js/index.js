@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		activatedSounds = sounds;
 
 		for (const sound of sounds) {
-			const sourceName = sound.source ? sound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 
 			howlerList[sound.filename] = new Howl({
 				src: `/sounds/${sound.theme}/${sourceName}/${sound.filename}.mp3`

@@ -25,7 +25,7 @@ const databaseVersions = [
 				id INTEGER PRIMARY KEY,
 				filename TEXT NOT NULL UNIQUE,
 				displayname TEXT DEFAULT NULL,
-				source TEXT DEFAULT NULL,
+				source TEXT DEFAULT "no-source",
 				count INTEGER NOT NULL DEFAULT 0,
 				theme TEXT DEFAULT "megumin"
 			);`,
@@ -63,7 +63,7 @@ const databaseVersions = [
 			( "damnit", "Damn it!", "Season 2", 0, "kazuma" ),
 			( "wahaha", "Wahaha", "Season 2", 0, "megumin" );
 			`,
-			'UPDATE sounds SET source = NULL where filename = "realname";',
+			'UPDATE sounds SET source = "no-source" WHERE source IS NULL;',
 			'UPDATE sounds SET displayname = NULL where filename = "realname";',
 			'UPDATE sounds SET displayname = "Itai!" where filename = "itai";',
 			'UPDATE sounds SET displayname = "Yamero!" where filename = "yamero";',

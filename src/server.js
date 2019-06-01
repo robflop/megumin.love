@@ -15,7 +15,7 @@ const { version: packageVersion } = require('../package.json');
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
 let sounds = [], statistics = [], chartData = [], milestones = [], version = '';
 
-// TODO before 8.0.0 release: Update sitemap, update github wiki with md files
+// TODO before 8.0.0 release: Update sitemap, update github wiki with md files, normalize sound levels, get rid of legacy sound files
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
@@ -188,7 +188,7 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 
 		// Source filtering
 		if (source) requestedSounds = requestedSounds.filter(sound => {
-			if (!sound.source) return false;
+			if (sound.source === 'no-source') return false;
 			else return sound.source.toLowerCase() === source.toLowerCase();
 		});
 
@@ -429,6 +429,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
 	if (!data.theme) data.theme = 'megumin'; // Default theme
+	if (!data.source) data.source = 'no-source';
 
 	if (!Object.keys(data).includes('filename')) {
 		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename must be provided.' });
@@ -462,7 +463,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 			id: latestID + 1,
 			filename: data.filename,
 			displayname: data.displayname || null,
-			source: data.source || null,
+			source: data.source,
 			count: data.count,
 			theme: data.theme
 		};
@@ -470,21 +471,22 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		Logger.info('(2/3): Sound cache entry successfully created.');
 
-		const sourceFolder = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+		const folderPath = join('./resources/sounds/', data.theme, data.source);
+		const folderExists = existsSync(folderPath);
 
-		const sourceFolderExists = existsSync(`./resources/sounds/${data.theme}/${sourceFolder}`);
-
-		if (!sourceFolderExists) {
-			mkdir(`./resources/sounds/${data.theme}/${sourceFolder}`, createErr => {
+		if (!folderExists) {
+			mkdir(folderPath, createErr => {
 				if (createErr) {
-					Logger.error('An error occurred creating the new source folder.');
+					Logger.error('An error occurred creating the new sound folder.');
 					Logger.error(createErr);
 					return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 				}
 			});
 		}
 
-		rename(req.file.path, `./resources/sounds/${data.theme}/${sourceFolder}/${data.filename}.mp3`, renameErr => {
+		const soundPath = join(folderPath, `${data.filename}.mp3`);
+
+		rename(req.file.path, soundPath, renameErr => {
 			if (renameErr) {
 				Logger.error('An error occurred renaming the temporary file.');
 				Logger.error(renameErr);
@@ -537,25 +539,23 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const oldSource = changedSound.source ? changedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
-		const newSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : oldSource;
+		const newFolderPath = join('./resources/sounds/', data.theme || changedSound.theme, data.source || changedSound.source);
+		const newFolderExists = existsSync(newFolderPath);
 
-		const newTheme = data.theme ? data.theme : changedSound.theme;
-
-		const newSourceFolderExists = existsSync(`./resources/sounds/${newTheme}/${newSource}`);
-
-		if (!newSourceFolderExists) {
-			mkdir(`./resources/sounds/${newTheme}/${newSource}`, createErr => {
+		if (!newFolderExists) {
+			mkdir(newFolderPath, createErr => {
 				if (createErr) {
-					Logger.error('An error occurred creating the new source folder.');
+					Logger.error('An error occurred creating the new sound folder.');
 					Logger.error(createErr);
 					return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
 				}
 			});
 		}
 
-		const oldSoundPath = `./resources/sounds/${changedSound.theme}/${oldSource}/${changedSound.filename}.mp3`;
-		const newSoundPath = `./resources/sounds/${newTheme}/${newSource}/${data.filename}.mp3`;
+		const oldFolderPath = join('./resources/sounds/', changedSound.theme, changedSound.source.replace(/\s/g, '-').toLowerCase());
+
+		const oldSoundPath = join(oldFolderPath, `${changedSound.filename}.mp3`);
+		const newSoundPath = join(newFolderPath, `${data.filename}.mp3`);
 
 		Object.assign(changedSound, data);
 
@@ -620,7 +620,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 		sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
 		Logger.info('(2/3): Sound cache entry successfully deleted.');
 
-		const sourceFolder = deletedSound.source ? deletedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
+		const sourceFolder = deletedSound.source.replace(/\s/g, '-').toLowerCase();
 
 		unlink(`./resources/sounds/${deletedSound.theme}/${sourceFolder}/${deletedSound.filename}.mp3`, unlinkErr => {
 			if (unlinkErr) {

@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	function loadSoundboard(sounds, bg = null) {
 		sounds.forEach(s => {
 			if (!s.displayname) s.displayname = '';
-			if (!s.source) s.source = '';
 		});
 
 		const bgTheme = themes.find(g => g.backgrounds.some(gBg => gBg.filename === bg));
@@ -37,10 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 			const sourceName = sound.source.replace(/\s/g, '-').toLowerCase();
 
 			howlerList[sound.filename] = new Howl({
-				src: `/sounds/${sound.theme}/${sourceName ? sourceName : 'no-source'}/${sound.filename}.mp3`
+				src: `/sounds/${sound.theme}/${sourceName}/${sound.filename}.mp3`
 			});
 
-			if (sound.displayname === '' || sound.source === '') continue;
+			if (sound.displayname === '' || sound.source === 'no-source') continue;
 			// Don't make button for those without displayname or source
 
 			if (document.getElementById(`${sound.source.replace(/\s/g, '-').toLowerCase()}-buttons`)) {

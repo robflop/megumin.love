@@ -777,16 +777,18 @@ Upload a new sound to the website.
 
 ### Body
 
-| Key         | Description                                             | Type    | Example  |
-| ----------- | ------------------------------------------------------- | ------- | -------- |
-| file        | Sound file (mp3) that contains the sound to be played   | File    | -------- |
-| filename    | Filename the sound file should be saved under           | Text    | laugh    |
-| displayname | Name the sound should be displayed under on the website | Text    | hahaha   |
-| source      | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text    | Season 2 |
-| count*      | Preset count of the sound (defaults to 0)               | Integer | 5000     |
-| theme*      | Theme for the soundclip (defaults to "megumin")         | Text    | goddess  |
+| Key          | Description                                             | Type    | Example  |
+| ------------ | ------------------------------------------------------- | ------- | -------- |
+| file         | Sound file (mp3) that contains the sound to be played   | File    | -------- |
+| filename     | Filename the sound file should be saved under           | Text    | laugh    |
+| displayname* | Name the sound should be displayed under on the website | Text    | hahaha   |
+| source*      | Origin of the soundclip (i.e. Season, OVA, Movie, etc)  | Text    | Season 2 |
+| count*       | Preset count of the sound (defaults to 0)               | Integer | 5000     |
+| theme*       | Theme for the soundclip (defaults to "megumin")         | Text    | goddess  |
 
 \* Optional parameter
+
+**Info**: While source and displayname are optional, if either is not provided, they won't show up on the soundboard or rankings (but be included on the main page button).
 
 ### Parameters
 

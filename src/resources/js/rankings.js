@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 			const list = document.createElement('ol');
 
 			for (const sound of characterSounds) {
-				if (!sound.displayname || !sound.source) continue;
+				if (!sound.displayname || sound.source === 'no-source') continue;
 				// Don't list those without displayname or source
 				const rankingListItem = document.createElement('li');
 				rankingListItem.id = sound.filename;

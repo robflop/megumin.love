@@ -9,14 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 	function updateSounds(s) {
 		s.forEach(snd => {
 			if (!snd.displayname) snd.displayname = '';
-			if (!snd.source) snd.source = '';
 		});
 
 		sounds = s.sort((a, b) => a.source === b.source ? a.displayname.localeCompare(b.displayname) : a.source.localeCompare(b.source));
 		// Sort primarily by season and secondarily alphabetically within seasons
 
 		const options = sounds.map(sound => {
-			const source = sound.source ? `From ${sound.source}` : 'No source';
+			const source = sound.source === 'no-source' ? 'No source' : `From ${sound.source}`;
 			const theme = `associated with "${sound.theme}"`;
 			return `
 				<option value=${sound.id}>
