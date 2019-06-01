@@ -15,7 +15,7 @@ const { version: packageVersion } = require('../package.json');
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
 let sounds = [], statistics = [], chartData = [], milestones = [], version = '';
 
-// TODO before 8.0.0 release: Update sitemap, update github wiki with md files, normalize sound levels, get rid of legacy sound files
+// TODO before 8.0.0 release: Update sitemap, update github wiki with md files, get rid of legacy sound files
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
