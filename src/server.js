@@ -471,7 +471,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		Logger.info('(2/3): Sound cache entry successfully created.');
 
-		const folderPath = join('./resources/sounds/', data.theme, data.source);
+		const folderPath = join('./resources/sounds/', data.theme.replace(/\s/g, '-').toLowerCase(), data.source.replace(/\s/g, '-').toLowerCase());
 		const folderExists = existsSync(folderPath);
 
 		if (!folderExists) {
@@ -539,7 +539,10 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const newFolderPath = join('./resources/sounds/', data.theme || changedSound.theme, data.source || changedSound.source);
+		const soundSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : changedSound.source.replace(/\s/g, '-').toLowerCase();
+		const soundTheme = data.theme ? data.theme.replace(/\s/g, '-').toLowerCase() : changedSound.theme.replace(/\s/g, '-').toLowerCase();
+
+		const newFolderPath = join('./resources/sounds/', soundTheme, soundSource);
 		const newFolderExists = existsSync(newFolderPath);
 
 		if (!newFolderExists) {
