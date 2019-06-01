@@ -423,7 +423,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 	const data = req.body;
 	if (data.count === undefined) data.count = 0;
-	if (!data.theme || data.theme === 'removeTheme') data.theme = 'megumin'; // Default theme
+	if (!data.theme) data.theme = 'megumin'; // Default theme
 
 	if (!Object.keys(data).includes('filename')) {
 		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename must be provided.' });
@@ -501,7 +501,6 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 	Logger.info(`Sound '${changedSound.filename}' now being modified.`);
 
 	if (!data.filename) data.filename = changedSound.filename;
-	if (data.theme === 'removeTheme') data.theme = 'megumin'; // Default theme
 
 	let columnPlaceholders = '';
 
