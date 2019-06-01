@@ -108,6 +108,10 @@ const pages = [
 	}
 ];
 
+function cleanString(string) {
+	return string.replace(/\s/g, '-').toLowerCase();
+}
+
 readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
 	const pageName = file.slice(0, -5).toLowerCase(); // -5 for cutting '.html'
 
@@ -469,7 +473,7 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		Logger.info('(2/3): Sound cache entry successfully created.');
 
-		const folderPath = join('./resources/sounds/', data.theme.replace(/\s/g, '-').toLowerCase(), data.source.replace(/\s/g, '-').toLowerCase());
+		const folderPath = join('./resources/sounds/', cleanString(data.theme), cleanString(data.source));
 		const folderExists = existsSync(folderPath);
 
 		if (!folderExists) {
@@ -537,8 +541,8 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		}
 		Logger.info(`(1/${stepAmount}): Database entry successfully updated.`);
 
-		const soundSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : changedSound.source.replace(/\s/g, '-').toLowerCase();
-		const soundTheme = data.theme ? data.theme.replace(/\s/g, '-').toLowerCase() : changedSound.theme.replace(/\s/g, '-').toLowerCase();
+		const soundSource = data.source ? cleanString(data.source) : cleanString(changedSound.source);
+		const soundTheme = data.theme ? cleanString(data.theme) : cleanString(changedSound.theme);
 
 		const newFolderPath = join('./resources/sounds/', soundTheme, soundSource);
 		const newFolderExists = existsSync(newFolderPath);
@@ -553,7 +557,7 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 			});
 		}
 
-		const oldFolderPath = join('./resources/sounds/', changedSound.theme, changedSound.source.replace(/\s/g, '-').toLowerCase());
+		const oldFolderPath = join('./resources/sounds/', cleanString(changedSound.theme), cleanString(changedSound.source));
 
 		const oldSoundPath = join(oldFolderPath, `${changedSound.filename}.mp3`);
 		const newSoundPath = join(newFolderPath, `${data.filename}.mp3`);
@@ -621,7 +625,7 @@ apiRouter.delete('/admin/sounds/delete', (req, res) => {
 		sounds.splice(sounds.findIndex(sound => sound.id === deletedSound.id), 1);
 		Logger.info('(2/3): Sound cache entry successfully deleted.');
 
-		const sourceFolder = deletedSound.source.replace(/\s/g, '-').toLowerCase();
+		const sourceFolder = cleanString(deletedSound.source);
 
 		unlink(`./resources/sounds/${deletedSound.theme}/${sourceFolder}/${deletedSound.filename}.mp3`, unlinkErr => {
 			if (unlinkErr) {
