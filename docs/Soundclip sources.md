@@ -28,14 +28,13 @@ Clips are sorted primarily by Source (Season -> Episode), and secondarily by tim
 | Objection!!        | objection        | Season 2, Episode 01 | 16:57 - 16:59 |
 | Chomusuke          | chomusuke        | Season 2, Episode 02 | 00:51 - 00:52 |
 | Panic              | panic            | Season 2, Episode 02 | 01:24 - 01:26 |
-| よろしい           | yoroshii         | Season 2, Episode 02 | 09:31 - 09:32 | (idk)
 | Come at me!        | comeatme         | Season 2, Episode 02 | 09:33 - 09:35 | (idk)
 | Friends            | friends          | Season 2, Episode 02 | 10:20 - 10.23 |
 | My Win!            | mywin            | Season 2, Episode 02 | 10:41 - 10:42 |
-| Ladies first       | ladiesfirst      | Season 2, Episode 02 | 11:55 - 11:57 | (idk)
+| Ladies first       | ladiesfirst      | Season 2, Episode 02 | 11:55 - 11:57 |
 | Nani?!             | nani             | Season 2, Episode 02 | 13:24 - 13:25 |
 | Yes                | yes              | Season 2, Episode 02 | 13:45 - 13:46 |
-| Zuryah!!           | zuryah           | Season 2, Episode 02 | 20:39 - 20:42 | (idk)
+| Zuryah!!           | zuryah           | Season 2, Episode 02 | 20:39 - 20:42 |
 | ♬Explosions♬       | lalala           | Season 2, Episode 03 | 00:07 - 00:11 |
 | 'sion! 2           | sion2            | Season 2, Episode 03 | 00:28 - 00:30 |
 | 'n! 2              | n2               | Season 2, Episode 03 | 00:34 - 00:39 |
@@ -107,6 +106,7 @@ They can still be accessed in the [sound_archive](https://github.com/robflop/meg
 | It's cold          | itscold          | Season 2, Episode 02 | 08:28 - 08:29 |
 | Sigh               | sigh             | Season 2, Episode 02 | 08:54 - 08:55 |
 | しょうがない       | shouganai        | Season 2, Episode 02 | 08:56 - 08:57 |
+| よろしい           | yoroshii         | Season 2, Episode 02 | 09:31 - 09:32 |
 | Well, thanks       | wellthanks       | Season 2, Episode 02 | 11:22 - 11:24 |
 | Big Hug            | bighug           | Season 2, Episode 02 | 11:25 - 11:27 |
 | I see              | isee             | Season 2, Episode 02 | 12:35 - 12:36 |
