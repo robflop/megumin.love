@@ -57,10 +57,10 @@
 					<h2 class="titles">Upload sounds</h2>
 					<form id="soundUpload-form" enctype="multipart/form-data" method="post">
 						<input type="file" name="file" accept="audio/mp3" required>
-						<input type="text" name="filename" placeholder="(Required) Sound filename" required>
+						<input type="text" name="filename" placeholder="Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname">
 						<input type="text" name="source" placeholder="Sound source">
-						<input type="text" name="count" placeholder="Sound count">
+						<input type="text" name="count" placeholder="Sound click count">
 						<select name="theme" id="soundUpload-theme-select">
 							<!-- Automatically generated -->
 						</select>
@@ -76,7 +76,7 @@
 						<input type="text" name="filename" placeholder="New filename">
 						<input type="text" name="displayname" placeholder="New displayname">
 						<input type="text" name="source" placeholder="New source">
-						<input type="text" name="count" placeholder="New count">
+						<input type="text" name="count" placeholder="New click count">
 						<select name="theme" id="soundModify-theme-select">
 							<!-- Automatically generated -->
 						</select>
@@ -107,7 +107,7 @@
 				<div id="milestoneAdd">
 					<h2 class="titles">Add milestones</h2>
 					<form id="milestoneAdd-form" method="post">
-						<input type="text" name="count" placeholder="(Required) Milestone count" required>
+						<input type="text" name="count" placeholder="Milestone click count" required>
 						<input type="text" name="reached" placeholder="Milestone reached status">
 						<input type="text" name="timestamp" placeholder="Milestone timestamp (Unix)">
 						<select name="soundID" id="milestoneAdd-soundID-select">
@@ -122,7 +122,7 @@
 						<select name="id" id="milestoneModify-id-select">
 							<!-- Automatically generated -->
 						</select>
-						<input type="text" name="count" placeholder="New milestone count">
+						<input type="text" name="count" placeholder="New milestone click count">
 						<input type="text" name="reached" placeholder="New milestone reached status">
 						<input type="text" name="timestamp" placeholder="New milestone timestamp">
 						<select name="soundID" id="milestoneModify-soundID-select">

@@ -944,7 +944,7 @@ Output when count is provided but not of integer type:
 {
     "code": 400,
     "name": "Invalid count",
-    "message": "Sound count must be an integer if provided."
+    "message": "Sound click count must be an integer if provided."
 }
 ```
 

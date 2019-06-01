@@ -26,10 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 		options.unshift('<option value="">No sound selected</option>');
 
-		const uploadThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
+		const uploadThemeOptions = themes.map(theme => `<option value=${theme.name}>Theme: ${theme.name}</option>`);
 		const modifyThemeOptions = themes.map(theme => `<option value=${theme.name}>${theme.name}</option>`);
 		modifyThemeOptions.unshift('<option value="megumin">Default theme</option>');
-		modifyThemeOptions.unshift('<option value="">No change</option>');
+		modifyThemeOptions.unshift('<option value="">No theme change</option>');
 
 		document.getElementById('soundModify-id-select').innerHTML = options.join('');
 		document.getElementById('soundDelete-id-select').innerHTML = options.join('');

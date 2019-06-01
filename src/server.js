@@ -393,7 +393,7 @@ apiRouter.all('/admin/sounds/*', (req, res, next) => {
 		return res.status(400).json({ code: 400, name: 'Invalid filename', message: 'Sound filename already in use.' });
 	}
 	if (parsedData.count === '' || (originalData.count !== undefined && isNaN(parsedData.count))) {
-		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Sound count must be an integer if provided.' });
+		return res.status(400).json({ code: 400, name: 'Invalid count', message: 'Sound click count must be an integer if provided.' });
 	}
 	if (originalData.id !== undefined && isNaN(parseInt(parsedData.id))) {
 		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Sound ID must be an integer.' });
