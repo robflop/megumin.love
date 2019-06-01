@@ -365,7 +365,7 @@ No milestones are activated by default, so none may exist.
 | Key      | Description                                       | Format     | Example      |
 | -------- | ------------------------------------------------- | ---------- | ------------ |
 | reached  | Whether the milestone needs to have been reached  | Integer    | 0 / 1        |
-| soundID  | ID the milestone must have been reached with      | Integer    | 42           |
+| sound_id  | ID the milestone must have been reached with      | Integer    | 42           |
 
 #### Example requests
 
@@ -379,19 +379,19 @@ Output:
         count: 100000,
         reached: 1,
         timestamp: 1555792165395,
-        soundID: 24
+        sound_id: 24
     },
     {
         count: 500000,
         reached: 1,
         timestamp: 1556152197176,
-        soundID: 42
+        sound_id: 42
     },
     {
         count: 1000000,
         reached: 0,
         timestamp: 0,
-        soundID: undefined
+        sound_id: undefined
     }
 ]
 ```
@@ -406,12 +406,12 @@ Output:
         count: 1000000,
         reached: 0,
         timestamp: 0,
-        soundID: undefined
+        sound_id: undefined
     }
 ]
 ```
 
-`/statistics/milestones?soundID=42`
+`/statistics/milestones?sound_id=42`
 
 Output:
 
@@ -421,7 +421,7 @@ Output:
         count: 500000,
         reached: 1,
         timestamp: 1556152197176,
-        soundID: 42
+        sound_id: 42
     }
 ]
 ```
@@ -1062,7 +1062,7 @@ Add a new milestone to the site.
 | count     | The count at which the milestone is reached         | Integer | 1000000       |
 | reached   | Integer whether the milestone has been reached      | Integer | 0 / 1         |
 | timestamp | Unix time of when the timestamp was reached         | Integer | 1555847635067 |
-| soundID   | ID of sound that played when milestone was reached  | Integer | 42            |
+| sound_id   | ID of sound that played when milestone was reached  | Integer | 42            |
 
 All values except `count` are optional and will be filled out once the milestone is reached.
 
@@ -1088,7 +1088,7 @@ Output when there is no error:
         "count": 1000000,
         "reached": 0,
         "timestamp": null,
-        "soundID": null
+        "sound_id": null
     }
 }
 ```
@@ -1155,7 +1155,7 @@ Output when any other value is provided but not in Integer format:
 {
     "code": 400,
     "name": "Invalid sound",
-    "message": "Milestone soundID must be an integer if provided."
+    "message": "Milestone sound_id must be an integer if provided."
 }
 ```
 
@@ -1189,7 +1189,7 @@ Modify an existing sound on the website.
 | count     | New clicks count the milestone is for                      | Integer | 2000000         |
 | reached   | New status as to whether the milestone has been reached    | Integer | 0 / 1           |
 | timestamp | New unix timestamp for when the milestone was reached      | Integer | 1550247538345   |
-| soundID   | New ID of the sound that played when milestone was reached | Integer | 39              |
+| sound_id   | New ID of the sound that played when milestone was reached | Integer | 39              |
 
 ID parameter is mandatory, all others are optional, but at least one must be filled out.
 
@@ -1206,7 +1206,7 @@ ID parameter is mandatory, all others are optional, but at least one must be fil
 - count `2000000`
 - reached `1`
 - timestamp `1550247538345`
-- soundID `39`
+- sound_id `39`
 
 Output when there is no error:
 
@@ -1219,7 +1219,7 @@ Output when there is no error:
         "count": 2000000,
         "reached": 1,
         "timestamp": 1550247538345,
-        "soundID": 39
+        "sound_id": 39
     }
 }
 ```
@@ -1284,7 +1284,7 @@ Output when there is no error:
         "count": 2000000,
         "reached": 1,
         "timestamp": 1550247538345,
-        "soundID": 39
+        "sound_id": 39
     }
 }
 ```

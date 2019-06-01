@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		document.getElementById('soundModify-id-select').innerHTML = options.join('');
 		document.getElementById('soundDelete-id-select').innerHTML = options.join('');
-		document.getElementById('milestoneAdd-soundID-select').innerHTML = options.join('');
-		document.getElementById('milestoneModify-soundID-select').innerHTML = options.join('');
+		document.getElementById('milestoneAdd-sound_id-select').innerHTML = options.join('');
+		document.getElementById('milestoneModify-sound_id-select').innerHTML = options.join('');
 
 		document.getElementById('soundUpload-theme-select').innerHTML = uploadThemeOptions.join('');
 		document.getElementById('soundModify-theme-select').innerHTML = modifyThemeOptions.join('');
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const options = milestones.map(milestone => {
 			const reachedString = milestone.reached ? 'Reached' : 'Not reached';
-			const sound = sounds.find(snd => snd.id === milestone.soundID);
+			const sound = sounds.find(snd => snd.id === milestone.sound_id);
 			const formattedDate = milestone.timestamp ? formatDate(new Date(milestone.timestamp)) : 'No timestamp';
 			return `
 				<option value=${milestone.id}>
-					Milestone ${milestone.id} (${milestone.count} clicks, ${reachedString}, ${formattedDate}, ${sound ? sound.filename : 'No soundID'})
+					Milestone ${milestone.id} (${milestone.count} clicks, ${reachedString}, ${formattedDate}, ${sound ? sound.filename : 'No sound'})
 				</option>
 			`;
 		});

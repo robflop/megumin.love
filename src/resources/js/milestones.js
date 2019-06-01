@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 				milestoneListElement.appendChild(milestoneDate);
 
 				const milestoneSoundElement = document.createElement('p');
-				const soundObject = sounds.find(s => s.id === milestone.soundID);
+				const soundObject = sounds.find(s => s.id === milestone.sound_id);
 				milestoneSoundElement.innerText = `Sound that played: ${soundObject ? soundObject.displayname : 'Unknown'}`;
 
 				milestoneListElement.appendChild(milestoneSoundElement);

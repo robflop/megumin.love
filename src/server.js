@@ -335,14 +335,14 @@ apiRouter.get('/statistics/summary', (req, res) => {
 });
 
 apiRouter.get('/statistics/milestones', (req, res) => {
-	const [reached, soundID] = [parseInt(req.query.reached), parseInt(req.query.soundID)];
+	const [reached, sound_id] = [parseInt(req.query.reached), parseInt(req.query.sound_id)];
 	let requestedMilestones = milestones;
 
 	if (!isNaN(reached)) {
 		requestedMilestones = requestedMilestones.filter(ms => ms.reached === reached);
 	}
-	if (!isNaN(soundID)) {
-		requestedMilestones = requestedMilestones.filter(ms => ms.soundID === soundID);
+	if (!isNaN(sound_id)) {
+		requestedMilestones = requestedMilestones.filter(ms => ms.sound_id === sound_id);
 	}
 
 	return res.json(requestedMilestones);
@@ -632,8 +632,8 @@ apiRouter.all('/admin/milestones/*', (req, res, next) => {
 	if (originalData.timestamp && isNaN(parsedData.timestamp)) {
 		return res.status(400).json({ code: 400, name: 'Invalid timestamp', message: 'Milestone timestamp must be an integer if provided.' });
 	}
-	if (originalData.soundID && isNaN(parsedData.soundID)) {
-		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Milestone soundID must be an integer if provided.' });
+	if (originalData.sound_id && isNaN(parsedData.sound_id)) {
+		return res.status(400).json({ code: 400, name: 'Invalid sound', message: 'Milestone sound_id must be an integer if provided.' });
 	}
 	if (originalData.reached !== undefined && (parsedData.reached !== 0 && parsedData.reached !== 1)) {
 		return res.status(400).json({ code: 400, name: 'Invalid status', message: 'Milestone reached status must be an integer of either 0 or 1 if provided.' }); // eslint-disable-line max-len
@@ -684,7 +684,7 @@ apiRouter.post('/admin/milestones/add', (req, res) => {
 				count: data.count,
 				reached: data.reached,
 				timestamp: data.timestamp || null,
-				soundID: data.soundID || null
+				sound_id: data.sound_id || null
 			};
 			milestones.push(newMilestone);
 
@@ -706,7 +706,7 @@ apiRouter.patch('/admin/milestones/modify', (req, res) => {
 	if (!data.id) {
 		return res.status(400).json({ code: 400, name: 'Invalid milestone', message: 'Milestone ID must be provided.' });
 	}
-	if (!['count', 'reached', 'timestamp', 'soundID'].some(p => Object.keys(data).includes(p))) {
+	if (!['count', 'reached', 'timestamp', 'sound_id'].some(p => Object.keys(data).includes(p))) {
 		return res.status(400).json({ code: 400, name: 'Invalid parameters', message: 'At least one property to modify must be provided.' });
 	}
 
@@ -868,9 +868,9 @@ socketServer.on('connection', socket => {
 
 				Logger.info(`Milestone ${reachedMilestone.id} (${reachedMilestone.count} clicks) reached! Entry being updated.`);
 
-				Object.assign(reachedMilestone, { reached: 1, timestamp, soundID: soundEntry.id });
+				Object.assign(reachedMilestone, { reached: 1, timestamp, sound_id: soundEntry.id });
 
-				const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, soundID = ? WHERE id = ?');
+				const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, sound_id = ? WHERE id = ?');
 				query.run(1, timestamp, soundEntry.id, reachedMilestone.id, updateErr => {
 					if (updateErr) {
 						Logger.error('An error occurred updating the milestone entry.');
