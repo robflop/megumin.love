@@ -7,7 +7,7 @@ const { schedule } = require('node-cron');
 const uws = require('uws');
 const dateFns = require('date-fns');
 const { join } = require('path');
-const { readdirSync, unlink, rename, copyFile } = require('fs');
+const { readdirSync, unlink, rename, copyFile, existsSync, mkdir } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 const { version: packageVersion } = require('../package.json');
@@ -467,6 +467,18 @@ apiRouter.post('/admin/sounds/upload', multer({ dest: './resources/temp' }).sing
 
 		const sourceFolder = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
 
+		const sourceFolderExists = existsSync(`./resources/sounds/${data.theme}/${sourceFolder}`);
+
+		if (!sourceFolderExists) {
+			mkdir(`./resources/sounds/${data.theme}/${sourceFolder}`, createErr => {
+				if (createErr) {
+					Logger.error('An error occurred creating the new source folder.');
+					Logger.error(createErr);
+					return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
+				}
+			});
+		}
+
 		rename(req.file.path, `./resources/sounds/${data.theme}/${sourceFolder}/${data.filename}.mp3`, renameErr => {
 			if (renameErr) {
 				Logger.error('An error occurred renaming the temporary file.');
@@ -523,14 +535,28 @@ apiRouter.patch('/admin/sounds/modify', (req, res) => {
 		const oldSource = changedSound.source ? changedSound.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
 		const newSource = data.source ? data.source.replace(/\s/g, '-').toLowerCase() : 'no-source';
 
+		const newTheme = data.theme ? data.theme : changedSound.theme;
+
+		const newSourceFolderExists = existsSync(`./resources/sounds/${newTheme}/${newSource}`);
+
+		if (!newSourceFolderExists) {
+			mkdir(`./resources/sounds/${newTheme}/${newSource}`, createErr => {
+				if (createErr) {
+					Logger.error('An error occurred creating the new source folder.');
+					Logger.error(createErr);
+					return res.status(500).json({ code: 500, name: 'Serverside error', message: 'Please check the server console.' });
+				}
+			});
+		}
+
 		const oldSoundPath = `./resources/sounds/${changedSound.theme}/${oldSource}/${changedSound.filename}.mp3`;
-		const newSoundPath = `./resources/sounds/${data.theme}/${newSource}/${data.filename}.mp3`;
+		const newSoundPath = `./resources/sounds/${newTheme}/${newSource}/${data.filename}.mp3`;
 
 		Object.assign(changedSound, data);
 
 		Logger.info(`(2/${stepAmount}): Sound cache entry successfully updated.`);
 
-		if (data.filename) {
+		if (data.filename || data.source || data.theme) {
 			copyFile(oldSoundPath, `${oldSoundPath}.bak`, copyErr => {
 				if (copyErr) {
 					Logger.error('An error occurred backing up the original mp3 file, renaming aborted.');
