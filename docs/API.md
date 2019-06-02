@@ -376,22 +376,22 @@ Output:
 ```js
 [
     {
-        count: 100000,
-        reached: 1,
-        timestamp: 1555792165395,
-        sound_id: 24
+        "count": 100000,
+        "reached": 1,
+        "timestamp": 1555792165395,
+        "sound_id": 24
     },
     {
-        count: 500000,
-        reached: 1,
-        timestamp: 1556152197176,
-        sound_id: 42
+        "count": 500000,
+        "reached": 1,
+        "timestamp": 1556152197176,
+        "sound_id": 42
     },
     {
-        count: 1000000,
-        reached: 0,
-        timestamp: 0,
-        sound_id: undefined
+        "count": 1000000,
+        "reached": 0,
+        "timestamp": 0,
+        "sound_id": undefined
     }
 ]
 ```
@@ -403,10 +403,10 @@ Output:
 ```js
 [
     {
-        count: 1000000,
-        reached: 0,
-        timestamp: 0,
-        sound_id: undefined
+        "count": 1000000,
+        "reached": 0,
+        "timestamp": 0,
+        "sound_id": undefined
     }
 ]
 ```
@@ -418,10 +418,10 @@ Output:
 ```js
 [
     {
-        count: 500000,
-        reached: 1,
-        timestamp: 1556152197176,
-        sound_id: 42
+        "count": 500000,
+        "reached": 1,
+        "timestamp": 1556152197176,
+        "sound_id": 42
     }
 ]
 ```
