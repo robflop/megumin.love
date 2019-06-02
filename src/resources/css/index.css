@@ -50,6 +50,20 @@ a[href="/soundboard"], a[href="/statistics"] {
 	margin-left: 10px;
 }
 
+#notice {
+	margin-top: 15px;
+	font-size: 20px;
+	text-align: center;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-color: #9c9c9c;
+}
+
+#notice p, #notice a {
+	color: #ff8080;
+	margin: 0;
+}
+
 @media only screen and (max-width: 360px) {
 	#container {
 		width: 340px;
