@@ -43,3 +43,7 @@ a[href="/rankings"] {
 #counter {
 	color: #0066ff;
 }
+
+#notice p, #notice a {
+	color: #0066ff;
+}
