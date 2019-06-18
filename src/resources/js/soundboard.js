@@ -42,13 +42,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 			if (sound.displayname === '' || sound.source === 'no-source') continue;
 			// Don't make button for those without displayname or source
 
-			if (document.getElementById(`${sound.source.replace(/\s/g, '-').toLowerCase()}-buttons`)) {
+			if (document.getElementById(`${sourceName}-buttons`)) {
 				// Check if buttons wrapper for source exists and if not create it
 				const soundButton = document.createElement('button');
 				soundButton.id = sound.filename;
 				soundButton.innerText = sound.displayname;
 
-				document.getElementById(`${sound.source.replace(/\s/g, '-').toLowerCase()}-buttons`).appendChild(soundButton);
+				document.getElementById(`${sourceName}-buttons`).appendChild(soundButton);
 			}
 			else {
 				const sourceWrapper = document.createElement('div');
