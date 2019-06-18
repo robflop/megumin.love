@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 		// If the bg is associated with a special theme, sort sounds by said theme
 		// Otherwise only load default sounds (megumin-related)
 
+		sounds = sounds.filter(s => s.source !== 'no-source' && s.displayname);
+		// Only load sounds with source and displayname
+
 		activatedSounds = sounds;
 
 		for (const sound of sounds) {
