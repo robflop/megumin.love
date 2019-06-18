@@ -1022,10 +1022,17 @@ schedule('0 0 * * 1', () => {
 	});
 }); // Reset weekly counter at the start of each week
 
-schedule('0 0 * * *', () => {
+schedule('1 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
 	average = Math.round(monthly / fetchedDaysAmount);
-	statistics[dateFns.format(new Date(), 'YYYY-MM-DD')] = 0;
+
+	const latestID = statistics[statistics.length - 1].id;
+
+	statistics.push({
+		id: latestID + 1,
+		date: dateFns.format(new Date(), 'YYYY-MM-DD'),
+		count: 0,
+	});
 
 	Logger.info('Daily counter reset & fetched days amount incremented.');
 	return emitUpdate({
@@ -1035,4 +1042,4 @@ schedule('0 0 * * *', () => {
 			summary: { alltime: counter, daily, weekly, monthly, yearly, average }
 		},
 	});
-}); // Reset daily counter and update local statistics map at each midnight
+}); // Reset daily counter and update local statistics map at 1 minute past midnight
