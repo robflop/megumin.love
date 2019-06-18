@@ -17,10 +17,6 @@ const databaseVersions = [
 	{
 		targetVersion: '8.0.0',
 		queries: [
-			`CREATE TABLE IF NOT EXISTS meta (
-				version TEXT NOT NULL
-			);`,
-			'INSERT OR IGNORE INTO meta ( version ) VALUES ( "8.0.0" );',
 			`CREATE TABLE IF NOT EXISTS sounds_temp (
 				id INTEGER PRIMARY KEY,
 				filename TEXT NOT NULL UNIQUE,
@@ -63,6 +59,7 @@ const databaseVersions = [
 			( "wahaha", "Wahaha", "Season 2", 0, "megumin" );
 			`,
 			'UPDATE sounds SET source = "no-source" WHERE source IS NULL;',
+			'UPDATE sounds SET source = "no-source" WHERE source = "";',
 			'UPDATE sounds SET displayname = NULL where filename = "realname";',
 			'UPDATE sounds SET displayname = "Itai!" where filename = "itai";',
 			'UPDATE sounds SET displayname = "Yamero!" where filename = "yamero";',
@@ -84,6 +81,12 @@ const databaseVersions = [
 			'ALTER TABLE statistics_temp RENAME TO statistics;'
 		]
 	},
+	{
+		targetVersion: '8.0.1',
+		queries: [
+			'DROP TABLE meta;'
+		]
+	}
 ];
 
 const { Database } = require('sqlite3');
@@ -93,7 +96,8 @@ const { copyFile } = require('fs');
 const { databasePath } = require('./src/config.json');
 
 const db = new Database(join('src', databasePath));
-let currentVersion, newVersion, force;
+let { version: currentVersion } = require('./package.json');
+let newVersion, force;
 
 const newVersionCLI = process.argv.filter(arg => arg.includes('newVersion='))[0];
 const currentVersionCLI = process.argv.filter(arg => arg.includes('currentVersion='))[0];
@@ -102,7 +106,6 @@ const forceCLI = process.argv.filter(arg => arg.includes('--force'))[0];
 if (newVersionCLI) newVersion = newVersionCLI.substr(newVersionCLI.indexOf('=') + 1).trim();
 if (currentVersionCLI) currentVersion = currentVersionCLI.substr(currentVersionCLI.indexOf('=') + 1).trim();
 if (forceCLI) force = true;
-
 
 console.log('This is the megumin.love database migration tool.');
 console.log('------------------------------------');
@@ -115,39 +118,30 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 	}
 });
 
-if (!currentVersion) {
-	db.get('SELECT version FROM meta', [], (selectErr, data) => {
-		if (selectErr || !data || (data && !data.version)) currentVersion = 'Unknown';
-		else currentVersion = data.version;
+if (!currentVersion) currentVersion = 'Unknown';
 
-		console.log('------------------------------------');
-		console.log(`Detected database version: ${currentVersion}`);
+console.log('------------------------------------');
+console.log(`Detected database version: ${currentVersion}`);
 
-		if (currentVersion === 'Unknown') {
-			console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
+if (currentVersion === 'Unknown') {
+	console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
 
-			const currentVersionInput = createInterface({
-				input: process.stdin,
-				output: process.stdout,
-				prompt: 'Starting database version: '
-			});
+	const currentVersionInput = createInterface({
+		input: process.stdin,
+		output: process.stdout,
+		prompt: 'Starting database version: '
+	});
 
-			currentVersionInput.prompt();
+	currentVersionInput.prompt();
 
-			currentVersionInput.on('line', ver => {
-				currentVersion = ver.trim();
-				currentVersionInput.close();
-			});
+	currentVersionInput.on('line', ver => {
+		currentVersion = ver.trim();
+		currentVersionInput.close();
+	});
 
-			currentVersionInput.on('close', () => {
-				if (!newVersion) promptNewVersion();
-				else executeUpdateQueries();
-			});
-		}
-		else {
-			if (!newVersion) promptNewVersion(); // eslint-disable-line no-lonely-if
-			else executeUpdateQueries();
-		}
+	currentVersionInput.on('close', () => {
+		if (!newVersion) promptNewVersion();
+		else executeUpdateQueries();
 	});
 }
 else {

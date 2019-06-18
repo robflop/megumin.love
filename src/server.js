@@ -10,10 +10,10 @@ const { join } = require('path');
 const { readdirSync, unlink, rename, copyFile, existsSync, mkdir } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
-const { version: packageVersion } = require('../package.json');
+const { version } = require('../package.json');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
-let sounds = [], statistics = [], chartData = [], milestones = [], version = '';
+let sounds = [], statistics = [], chartData = [], milestones = [];
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
@@ -23,16 +23,6 @@ const db = new Database(config.databasePath, () => {
 });
 
 db.serialize(() => {
-	db.get('SELECT version FROM meta', [], (selectErr, row) => {
-		if (!row || !row.version) {
-			version = packageVersion;
-			return Logger.warn('No version number found, substituted by package.json value. You should consider fixing this in the database.');
-		}
-		version = row.version;
-
-		return Logger.info('Version number loaded.');
-	});
-
 	db.get('SELECT counter FROM main_counter', [], (selectErr, row) => {
 		if (!row || row.counter === undefined) {
 			db.run('INSERT INTO main_counter ( counter ) VALUES ( 0 )');
