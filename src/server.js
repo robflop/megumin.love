@@ -895,7 +895,7 @@ socketServer.on('connection', socket => {
 
 			currentMonthData ? currentMonthData.count++ : chartData.push({ count: 1, month: currentMonth });
 
-			statistics[currentDate] = daily;
+			statistics.find(s => s.date === currentDate).count = daily;
 
 			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
 			if (reachedMilestone) {
