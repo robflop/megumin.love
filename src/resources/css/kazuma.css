@@ -1,5 +1,7 @@
 :root {
-	--main-text: #22ea9e; /* 1st */
-	--main-button: #0a575b;
-	--title-text: #22ea9e;
+	--main-text: #22ea9e;
+	--main-button: #224E4F;
+	--main-hover: #0F8589;
+	--title-text: #00c89d;
+	--backlink-text: #367579;
 }

@@ -3,7 +3,9 @@
 	--rgba-background: rgba(0, 0, 0, 0.5);
 	--main-text: #d50000;
 	--main-button: #b71c1c;
+	--main-hover: var(--main-text);
 	--title-text: #ef9a9a;
+	--backlink-text: var(--main-text);
 	--seperator-color: #9c9c9c;
 	--warning-text: #383838;
 }
@@ -55,7 +57,7 @@ button::-moz-focus-inner, .playall::-moz-focus-inner {
 }
 
 button:hover, .playall:hover {
-	background-color: var(--main-text);
+	background-color: var(--main-hover);
 	transform: translate3d(0, -3px, 0);
 }
 
@@ -193,7 +195,7 @@ footer p, footer a {
 }
 
 .backlink-anchor {
-	color: var(--main-text);
+	color: var(--backlink-text);
 }
 
 #megu-sidebar {
