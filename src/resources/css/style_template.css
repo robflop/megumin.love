@@ -2,6 +2,7 @@
 	--white-background: #ffebee;
 	--rgba-background: rgba(0, 0, 0, 0.5);
 	--main-text: #d50000;
+	--main-button: #b71c1c;
 	--title-text: #ef9a9a;
 	--seperator-color: #9c9c9c;
 	--warning-text: #383838;
@@ -37,7 +38,7 @@ body::after {
 }
 
 button, .playall {
-	background-color: #b71c1c;
+	background-color: var(--main-button);
 	color: var(--title-text);
 	border: 0;
 	border-radius: 10px;

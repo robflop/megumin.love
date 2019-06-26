@@ -1,49 +1,5 @@
-button, .playall {
-	background-color: #0345a8;
-	color: #00b9a9;
-}
-
-button:hover, .playall:hover {
-	background-color: #0066ff;
-}
-
-a[href="/versions"], a[href="/soundboard"], a[href="/statistics"] {
-	color: #0066ff;
-}
-
-a[href="/rankings"] {
-	color: #0066ff;
-}
-
-.titles {
-	color: #0066ff;
-}
-
-.response {
-	color: #00b9a9;
-}
-
-.backlink-anchor {
-	color: #0066ff;
-}
-
-#loading {
-	color: #00b9a9;
-}
-
-#notification {
-	background-color: #0345a8;
-	color: #00b9a9;
-}
-
-#crazymode-warning {
-	color: #0066ff;
-}
-
-#counter {
-	color: #0066ff;
-}
-
-#notice p, #notice a {
-	color: #0066ff;
+:root {
+	--main-text: #0066ff;
+	--main-button: #0345a8;
+	--title-text: #00b9a9;
 }
