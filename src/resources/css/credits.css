@@ -4,7 +4,7 @@ li {
 
 #container {
 	width: 700px;
-	background-color: #ffebee;
+	background-color: var(--white-background);
 }
 
 @media only screen and (max-width: 960px) {

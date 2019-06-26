@@ -5,7 +5,7 @@ button {
 }
 
 a[href="/versions"], a[href="/soundboard"], a[href="/statistics"] {
-	color: #d50000;
+	color: var(--main-text);
 }
 
 a[href="/soundboard"], a[href="/statistics"] {
@@ -15,7 +15,7 @@ a[href="/soundboard"], a[href="/statistics"] {
 
 #container {
 	width: 360px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--rgba-background);
 	margin: 225px auto auto auto;
 }
 
@@ -23,7 +23,7 @@ a[href="/soundboard"], a[href="/statistics"] {
 	position: relative;
 	text-align: center;
 	font-size: 50px;
-	color: #d50000;
+	color: var(--main-text);
 	margin: auto;
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
 }
@@ -56,11 +56,11 @@ a[href="/soundboard"], a[href="/statistics"] {
 	text-align: center;
 	border-top-style: solid;
 	border-top-width: 1px;
-	border-color: #9c9c9c;
+	border-color: var(--seperator-color);
 }
 
 #notice p, #notice a {
-	color: #ff8080;
+	color: var(--title-text);
 	margin: 0;
 }
 

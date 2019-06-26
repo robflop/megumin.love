@@ -1,5 +1,5 @@
 a[href="/rankings"] {
-	color: #d50000;
+	color: var(--main-text);
 	text-align: center;
 	display: block;
 	font-size: 30px;
@@ -34,7 +34,7 @@ a[href="/rankings"] {
 
 #container {
 	width: 1175px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--rgba-background);
 }
 
 #container::after {

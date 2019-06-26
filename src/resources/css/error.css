@@ -8,7 +8,7 @@ h1, p {
 
 p, a {
 	text-align: center;
-	color: #ffebee;
+	color: var(--white-background);
 	display: block;
 }
 
@@ -17,7 +17,7 @@ a {
 }
 
 .big-red {
-	color: #d50000;
+	color: var(--main-text);
 	font-size: 72px;
 	text-align: center;
 }

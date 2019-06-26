@@ -9,13 +9,13 @@ ol {
 	padding: 8px 0;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
-	border-color: #9c9c9c;
+	border-color: var(--seperator-color);
 	list-style: none;
 }
 
 #container {
 	width: 600px;
-	background-color: #ffebee;
+	background-color: var(--white-background);
 }
 
 #container :last-child {

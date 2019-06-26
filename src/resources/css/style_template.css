@@ -1,3 +1,12 @@
+:root {
+	--white-background: #ffebee;
+	--rgba-background: rgba(0, 0, 0, 0.5);
+	--main-text: #d50000;
+	--title-text: #ef9a9a;
+	--seperator-color: #9c9c9c;
+	--warning-text: #383838;
+}
+
 html {
 	height: 100%;
 	width: 100%;
@@ -29,7 +38,7 @@ body::after {
 
 button, .playall {
 	background-color: #b71c1c;
-	color: #ef9a9a;
+	color: var(--title-text);
 	border: 0;
 	border-radius: 10px;
 	cursor: pointer;
@@ -45,7 +54,7 @@ button::-moz-focus-inner, .playall::-moz-focus-inner {
 }
 
 button:hover, .playall:hover {
-	background-color: #d50000;
+	background-color: var(--main-text);
 	transform: translate3d(0, -3px, 0);
 }
 
@@ -68,7 +77,7 @@ footer {
 }
 
 footer p, footer a {
-	color: #ffebee;
+	color: var(--white-background);
 	width: 380px;
 }
 
@@ -170,20 +179,20 @@ footer p, footer a {
 .bg1_usa_independence footer p,
 .darkness_chivalrous_crusader footer p,
 .kazuma_equality_advocate footer p {
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--rgba-background);
 }
 
 .titles {
 	margin: 0 auto;
 	text-align: center;
-	color: #ef9a9a;
+	color: var(--title-text);
 	border-bottom: solid;
 	border-radius: 25px;
 	width: 60%;
 }
 
 .backlink-anchor {
-	color: #d50000;
+	color: var(--main-text);
 }
 
 #megu-sidebar {
@@ -282,11 +291,11 @@ footer p, footer a {
 
 #loading {
 	font-size: 48px;
-	color: #d50000;
+	color: var(--main-text);
 }
 
-#warning { /* Created on main page / soundboard when no sounds are available */
-	color: #383838;
+#warning { /* Created on various pages when no data is available */
+	color: var(--warning-text);
 }
 
 #notification-wrapper {
@@ -302,8 +311,8 @@ footer p, footer a {
 #notification {
 	display: inline-block;
 	text-align: left;
-	background-color: #b71c1c;
-	color: #ef9a9a;
+	background-color: var(--main-text);
+	color: var(--title-text);
 	font-size: 30px;
 	max-width: 1400px;
 	word-wrap: break-word;
@@ -322,7 +331,7 @@ footer p, footer a {
 
 #crazymode-warning {
 	font-style: italic;
-	color: #d50000;
+	color: var(--main-text);
 }
 
 #backlink-bottom {
@@ -332,7 +341,7 @@ footer p, footer a {
 
 @media only screen and (max-width: 1366px) {
 	.bg1_easter2 footer p {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--rgba-background);
 	}
 
 	#megu-sidebar {
@@ -371,7 +380,7 @@ footer p, footer a {
 	}
 
 	.bg3 footer p {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--rgba-background);
 	}
 }
 
@@ -397,7 +406,7 @@ footer p, footer a {
 	.bg3 footer p,
 	.bg5 footer p,
 	.bg1_german_unity footer p {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--rgba-background);
 	}
 
 	#megu-sidebar {
@@ -447,7 +456,7 @@ footer p, footer a {
 	.bg3 footer p,
 	.bg5 footer p,
 	.bg1_german_unity footer p {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--rgba-background);
 	}
 
 	#megu-sidebar {
@@ -501,7 +510,7 @@ footer p, footer a {
 	.bg2 footer p,
 	.bg3 footer p,
 	.bg1_german_unity footer p {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--rgba-background);
 	}
 
 	#megu-sidebar {

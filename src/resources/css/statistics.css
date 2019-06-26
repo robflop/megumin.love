@@ -13,12 +13,12 @@ canvas {
 	padding: 8px 0;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
-	border-color: #9c9c9c;
+	border-color: var(--seperator-color);
 }
 
 #container {
 	width: 600px;
-	background-color: #ffebee;
+	background-color: var(--white-background);
 }
 
 #container :nth-last-child(2) {

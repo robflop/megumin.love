@@ -5,7 +5,7 @@ form, #login-res {
 
 #container {
 	width: 320px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--rgba-background);
 }
 
 #backlink-top {
@@ -16,7 +16,7 @@ form, #login-res {
 #login-res {
 	display: none;
 	font-size: 16px;
-	color: #ef9a9a;
+	color: var(--title-text);
 }
 
 /* No media queries needed as container is only 320px wide */

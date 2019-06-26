@@ -10,7 +10,7 @@ div ul {
 
 #container {
 	width: 600px;
-	background-color: #ffebee;
+	background-color: var(--white-background);
 }
 
 @media only screen and (max-width: 960px) {

@@ -1,6 +1,6 @@
 #container {
 	width: 1150px;
-	background-color: #ffebee;
+	background-color: var(--white-background);
 }
 
 #container::after {
