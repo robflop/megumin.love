@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages",
-		"minify": "node minifyAssets.js",
+		"minify": "node scripts/minifyAssets.js",
 		"setup": "npm install && npm run minify"
 	},
 	"repository": {
