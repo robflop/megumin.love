@@ -2,7 +2,7 @@ const compressor = require('node-minify');
 const { readdirSync } = require('fs');
 const { basename, join } = require('path');
 
-const resources = (...dir) => join(...[__dirname, 'src', 'resources'].concat(dir));
+const resources = (...dir) => join(...[__dirname, '..', 'src', 'resources'].concat(dir));
 
 const Logger = require(resources('js', 'Logger'));
 

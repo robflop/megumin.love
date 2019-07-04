@@ -139,8 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		return localStorage.setItem('background', value);
 	});
 
-	const bgOptions = defaultBackgrounds.map(bg => `<option value="${bg}">Background ${bg.substr(2)}</option>`);
-	const seasonalBgOptions = seasonalBackgrounds.map(seasonal => {
+	let defaultBgOptions = defaultBackgrounds.map(bg => `<option value="${bg}">Background ${bg.substr(2)}</option>`);
+	defaultBgOptions = `<optgroup label="Megumin">${defaultBgOptions.join('')}</optgroup>`;
+
+	let seasonalBgOptions = seasonalBackgrounds.map(seasonal => {
 		if (seasonal.versions > 1) {
 			let seasonalVersions = '';
 			for (let i = 1; i <= seasonal.versions; i++) {
@@ -151,16 +153,26 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		else return `<option value="${seasonal.filename}">${seasonal.displayName}</option>`;
 	});
-	const themeOptions = themes
-		.map(theme => theme.backgrounds)
-		.map(bgs => bgs.map(bg => `<option value="${bg.filename}">${bg.displayname}</option>`));
+	seasonalBgOptions = `<optgroup label="Seasonals (Megumin)">${seasonalBgOptions.join('')}</optgroup>`;
 
-	bgOptions.push(seasonalBgOptions);
-	bgOptions.push(themeOptions);
-	bgOptions.unshift('<option value="randomBg">Random (Default)</option>');
-	bgOptions.unshift('<option value="reset">Reset Preference</option>');
+	const themeBgOptions = themes.map(theme => {
+		if (theme.name === 'megumin') return ''; // Handled differently
 
-	bgSelect.innerHTML = bgOptions.join('');
+		let optionsString = `<optgroup label="${theme.title}">`;
+		theme.backgrounds.forEach(bg => optionsString += `<option value="${bg.filename}">${bg.displayname}</option>`);
+		optionsString += '</optgroup>';
+
+		return optionsString;
+	});
+
+	bgSettings = `
+		<optgroup label="Settings">
+			<option value="reset">Reset Preference</option>
+			<option value="randomBg">Random (Default)</option>
+		</optgroup>
+	`;
+
+	bgSelect.innerHTML = [bgSettings, defaultBgOptions, seasonalBgOptions, themeBgOptions].join('');
 	bgSelect.value = backgroundSetting;
 
 	preferSeasonalsToggle.checked = preferSeasonals;
