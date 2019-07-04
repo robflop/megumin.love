@@ -15,18 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (!pageload && currentTheme && currentTheme.name === newTheme.name) return; // Different background within same theme
 
-		const existingSpecialCSS = document.getElementById('theme');
-		if (existingSpecialCSS) document.head.removeChild(existingSpecialCSS);
-
-		const specialCSS = document.createElement('link');
-		specialCSS.rel = 'stylesheet';
-		specialCSS.href = `/css/${newTheme.stylesheet}.min.css`;
-		specialCSS.id = 'theme';
-
-		document.head.appendChild(specialCSS);
-
 		document.getElementById('sidebar-vector').src = `/images/vectors/${newTheme.sidebar}.svg`;
 		document.title = originalTitle.replace('Megumin', newTheme.title);
+
+		let specialCSS = document.getElementById('theme');
+		if (specialCSS) {
+			specialCSS.href = `/css/${newTheme.stylesheet}.min.css`;
+		}
+		else {
+			specialCSS = document.createElement('link');
+			specialCSS.rel = 'stylesheet';
+			specialCSS.href = `/css/${newTheme.stylesheet}.min.css`;
+			specialCSS.id = 'theme';
+
+			document.head.appendChild(specialCSS);
+		}
 	}
 
 	let backgroundSetting = localStorage.getItem('background');
