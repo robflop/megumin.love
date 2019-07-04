@@ -157,6 +157,7 @@
 				"hoist": "functions",
 				"allow": []
 			}
-		]
+		],
+		"no-prototype-builtins": "off"
 	}
 }
