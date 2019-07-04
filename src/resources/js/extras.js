@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const seasonalBackgrounds = [
 		{ filename: 'bg1_easter1', displayName: 'Easter (1)', start: setDate(4, 14), end: setDate(4, 28) },
 		{ filename: 'bg1_easter2', displayName: 'Easter (2)', start: setDate(4, 14), end: setDate(4, 28) },
-		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 14), end: setDate(7, 14) },
+		{ filename: 'bg1_usa_independence', displayName: 'USA Independence', start: setDate(7, 4), end: setDate(7, 4) },
 		{ filename: 'bg1_german_unity', displayName: 'German Unity Day', start: setDate(10, 3), end: setDate(10, 3) },
 		{ filename: 'bg1_halloween1', displayName: 'Halloween (1)', start: setDate(10, 26), end: setDate(11, 2) },
 		{ filename: 'bg1_halloween2', displayName: 'Halloween (2)', start: setDate(10, 26), end: setDate(11, 2) },
