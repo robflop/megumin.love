@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});
 
 	const soundModifyForm = document.getElementById('soundModify-form');
-	document.getElementById('soundModify-form').addEventListener('submit', async e => {
+	soundModifyForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
 		const data = {};
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});
 
 	const soundDeleteForm = document.getElementById('soundDelete-form');
-	document.getElementById('soundDelete-form').addEventListener('submit', async e => {
+	soundDeleteForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
 		const deleteRes = await fetch('/api/admin/sounds/delete', {
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});
 
 	const milestoneModifyForm = document.getElementById('milestoneModify-form');
-	document.getElementById('milestoneModify-form').addEventListener('submit', async e => {
+	milestoneModifyForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
 		const data = {};
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});
 
 	const milestoneDeleteForm = document.getElementById('milestoneDelete-form');
-	document.getElementById('milestoneDelete-form').addEventListener('submit', async e => {
+	milestoneDeleteForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
 		const deleteRes = await fetch('/api/admin/milestones/delete', {
