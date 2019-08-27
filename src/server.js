@@ -903,7 +903,15 @@ socketServer.on('connection', socket => {
 
 			currentMonthData ? currentMonthData.count++ : chartData.push({ count: 1, month: currentMonth });
 
-			statistics.find(s => s.date === currentDate).count = daily;
+			const currentStatistics = statistics.find(s => s.date === currentDate);
+			if (currentStatistics) currentStatistics.count = daily; // Safeguard against entry not existing for some reason
+			else {
+				statistics.push({
+					id: statistics.length,
+					date: currentDate,
+					count: daily
+				});
+			}
 
 			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
 			if (reachedMilestone) {
