@@ -50,11 +50,11 @@ db.serialize(() => {
 		const startOfBootMonth = dateFns.startOfMonth(new Date()), endOfBootMonth = dateFns.endOfMonth(new Date());
 		const startOfBootYear = dateFns.startOfYear(new Date()), endOfBootYear = dateFns.endOfYear(new Date());
 
-		const thisWeek = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootWeek, endOfBootWeek));
-		const thisMonth = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootMonth, endOfBootMonth));
-		const thisYear = rows.filter(row => dateFns.isWithinRange(row.date, startOfBootYear, endOfBootYear));
+		const thisWeek = rows.filter(row => dateFns.isWithinInterval(dateFns.parseISO(row.date), { start: startOfBootWeek, end: endOfBootWeek }));
+		const thisMonth = rows.filter(row => dateFns.isWithinInterval(dateFns.parseISO(row.date), { start: startOfBootMonth, end: endOfBootMonth }));
+		const thisYear = rows.filter(row => dateFns.isWithinInterval(dateFns.parseISO(row.date), { start: startOfBootYear, end: endOfBootYear }));
 
-		daily = rows.find(row => row.date === dateFns.format(new Date(), 'YYYY-MM-DD')).count;
+		daily = rows.find(row => row.date === dateFns.format(new Date(), 'yyyy-MM-dd')).count;
 		weekly = thisWeek.reduce((total, date) => total += date.count, 0);
 		monthly = thisMonth.reduce((total, date) => total += date.count, 0);
 		yearly = thisYear.reduce((total, date) => total += date.count, 0);
@@ -198,24 +198,23 @@ apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 
 apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 	let requestedStatistics = statistics;
-	const latestStatisticsEntry = statistics[statistics.length - 1].date;
+	const latestStatisticsEntry = dateFns.parseISO(statistics[statistics.length - 1].date);
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (Object.keys(req.query).length) {
-		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})-(\\d{2})$');
-
-		const { from, to } = req.query;
+		const [from, to] = [dateFns.parseISO(req.query.from), dateFns.parseISO(req.query.to)];
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
-			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM-DD format.' });
+		if ((req.query.from && isNaN(from)) || (req.query.to && isNaN(to))) {
+			// Check if the param was initially provided, and if the input wasn't in the correct format
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in yyyy-MM-dd format.' });
 		}
 
-		if ((to && dateFns.isAfter(to, latestStatisticsEntry)) || (from && dateFns.isAfter(from, latestStatisticsEntry))) {
+		if ((req.query.from && dateFns.isAfter(from, latestStatisticsEntry)) || (req.query.to && dateFns.isAfter(to, latestStatisticsEntry))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
-		if ((to && from) && dateFns.isAfter(from, to)) {
+		if ((req.query.from && req.query.to) && dateFns.isAfter(from, to)) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
@@ -229,14 +228,23 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 		}
 
 		// Date filtering
-		if (from && !to) {
-			requestedStatistics = requestedStatistics.filter(day => dateFns.isWithinRange(day.date, from, latestStatisticsEntry));
+		if (req.query.from && !req.query.to) {
+			requestedStatistics = requestedStatistics.filter(day => {
+				const parsedDate = dateFns.parseISO(day.date);
+				return dateFns.isWithinInterval(parsedDate, { start: from, end: latestStatisticsEntry });
+			});
 		}
-		else if (!from && to) {
-			requestedStatistics = requestedStatistics.filter(day => dateFns.isSameDay(day.date, to) || dateFns.isBefore(day.date, to));
+		else if (!req.query.from && req.query.to) {
+			requestedStatistics = requestedStatistics.filter(day => {
+				const parsedDate = dateFns.parseISO(day.date);
+				return dateFns.isSameDay(parsedDate, to) || dateFns.isBefore(parsedDate, to);
+			});
 		}
-		else if (from && to) {
-			requestedStatistics = requestedStatistics.filter(day => dateFns.isWithinRange(day.date, from, to));
+		else if (req.query.from && req.query.to) {
+			requestedStatistics = requestedStatistics.filter(day => {
+				const parsedDate = dateFns.parseISO(day.date);
+				return dateFns.isWithinInterval(parsedDate, { start: from, end: to });
+			});
 		}
 
 		// Count filtering
@@ -261,24 +269,23 @@ apiRouter.get('/statistics', (req, res) => { // eslint-disable-line complexity
 
 apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line complexity
 	let requestedChartData = chartData;
-	const latestChartMonth = chartData[chartData.length - 1].month;
+	const latestChartMonth = dateFns.parseISO(chartData[chartData.length - 1].month);
 	// Grab latest statistics entry from the object itself instead of just today's date to make sure the entry exists
 
 	if (Object.keys(req.query).length) {
-		const dateRegex = new RegExp('^(\\d{4})-(\\d{2})$');
-
-		const { from, to } = req.query;
+		const [from, to] = [dateFns.parseISO(req.query.from), dateFns.parseISO(req.query.to)];
 		const [equals, over, under] = [parseInt(req.query.equals), parseInt(req.query.over), parseInt(req.query.under)];
 
-		if ((from && !dateRegex.test(from)) || (to && !dateRegex.test(to))) {
-			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in YYYY-MM format.' });
+		if ((req.query.from && isNaN(from)) || (req.query.to && isNaN(to))) {
+			// Check if the param was initially provided, and if the input wasn't in the correct format
+			return res.status(400).json({ code: 400, name: 'Wrong Format', message: 'Dates must be provided in yyyy-MM format.' });
 		}
 
-		if ((to && dateFns.isAfter(to, latestChartMonth)) || (from && dateFns.isAfter(from, latestChartMonth))) {
+		if ((req.query.from && dateFns.isAfter(from, latestChartMonth)) || (req.query.to && dateFns.isAfter(to, latestChartMonth))) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'Dates may not be in the future.' });
 		}
 
-		if ((to && from) && dateFns.isAfter(from, to)) {
+		if ((req.query.from && req.query.to) && dateFns.isAfter(from, to)) {
 			return res.status(400).json({ code: 400, name: 'Invalid timespan', message: 'The start date must be before the end date.' });
 		}
 
@@ -292,14 +299,23 @@ apiRouter.get('/statistics/chartData', (req, res) => { // eslint-disable-line co
 		}
 
 		// Date filtering
-		if (from && !to) {
-			requestedChartData = requestedChartData.filter(data => dateFns.isWithinRange(data.month, from, latestChartMonth));
+		if (req.query.from && !req.query.to) {
+			requestedChartData = requestedChartData.filter(data => {
+				const parsedMonth = dateFns.parseISO(data.month);
+				return dateFns.isWithinInterval(parsedMonth, { start: from, end: latestChartMonth });
+			});
 		}
-		else if (!from && to) {
-			requestedChartData = requestedChartData.filter(data => dateFns.isSameMonth(data.month, to) || dateFns.isBefore(data.month, to));
+		else if (!req.query.from && req.query.to) {
+			requestedChartData = requestedChartData.filter(data => {
+				const parsedMonth = dateFns.parseISO(data.month);
+				return dateFns.isSameMonth(parsedMonth, to) || dateFns.isBefore(parsedMonth, to);
+			});
 		}
-		else if (from && to) {
-			requestedChartData = requestedChartData.filter(data => dateFns.isWithinRange(data.month, from, to));
+		else if (req.query.from && req.query.to) {
+			requestedChartData = requestedChartData.filter(data => {
+				const parsedMonth = dateFns.parseISO(data.month);
+				return dateFns.isWithinInterval(parsedMonth, { start: from, end: to });
+			});
 		}
 
 		// Count filtering
@@ -806,6 +822,8 @@ apiRouter.delete('/admin/milestones/delete', (req, res) => {
 apiRouter.post('/admin/notification', (req, res) => {
 	const data = req.body;
 
+	if (!data.duration || !data.text) return res.json({ code: 400, name: 'Invalid notification', message: 'Notification text and duration must be provided.' });
+
 	Logger.info(`Announcement with text '${data.text}' displayed for ${data.duration} seconds.`);
 
 	emitUpdate({
@@ -874,7 +892,7 @@ socketServer.on('connection', socket => {
 
 			if (!soundEntry) return;
 
-			const currentDate = dateFns.format(new Date(), 'YYYY-MM-DD');
+			const currentDate = dateFns.format(new Date(), 'yyyy-MM-dd');
 			const currentMonth = currentDate.substring(0, 7);
 			const currentMonthData = chartData.find(d => d.month === currentMonth);
 
@@ -1020,7 +1038,7 @@ schedule('1 0 * * *', () => {
 
 	statistics.push({
 		id: latestID + 1,
-		date: dateFns.format(new Date(), 'YYYY-MM-DD'),
+		date: dateFns.format(new Date(), 'yyyy-MM-dd'),
 		count: 0,
 	});
 
