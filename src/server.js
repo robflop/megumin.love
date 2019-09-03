@@ -907,7 +907,7 @@ socketServer.on('connection', socket => {
 			if (currentStatistics) currentStatistics.count = daily; // Safeguard against entry not existing for some reason
 			else {
 				statistics.push({
-					id: statistics.length,
+					id: statistics.length + 1,
 					date: currentDate,
 					count: daily
 				});
