@@ -907,7 +907,7 @@ socketServer.on('connection', socket => {
 			if (currentStatistics) currentStatistics.count = daily; // Safeguard against entry not existing for some reason
 			else {
 				statistics.push({
-					id: statistics.length + 1,
+					id: statistics[statistics.length - 1].id + 1,
 					date: currentDate,
 					count: daily
 				});
@@ -1042,10 +1042,8 @@ schedule('1 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
 	average = Math.round(monthly / fetchedDaysAmount);
 
-	const latestID = statistics[statistics.length - 1].id;
-
 	statistics.push({
-		id: latestID + 1,
+		id: statistics[statistics.length - 1].id + 1,
 		date: dateFns.format(new Date(), 'yyyy-MM-dd'),
 		count: 0,
 	});
