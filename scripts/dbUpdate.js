@@ -82,9 +82,12 @@ const databaseVersions = [
 		]
 	},
 	{
-		targetVersion: '8.0.1',
+		targetVersion: '8.1.0',
 		queries: [
-			'DROP TABLE meta;'
+			`CREATE TABLE IF NOT EXISTS meta (
+				version TEXT NOT NULL
+			);`,
+			'INSERT INTO meta ( version ) VALUES ( "8.1.0" );'
 		]
 	}
 ];
@@ -93,11 +96,10 @@ const { Database } = require('sqlite3');
 const { join } = require('path');
 const { createInterface } = require('readline');
 const { copyFile } = require('fs');
-const { databasePath } = require('./src/config.json');
+const { databasePath } = require('../src/config.json');
 
 const db = new Database(join('src', databasePath));
-let { version: currentVersion } = require('./package.json');
-let newVersion, force;
+let currentVersion, newVersion, force;
 
 const newVersionCLI = process.argv.filter(arg => arg.includes('newVersion='))[0];
 const currentVersionCLI = process.argv.filter(arg => arg.includes('currentVersion='))[0];
@@ -118,36 +120,20 @@ copyFile(db.filename, `${db.filename}.bak`, err => {
 	}
 });
 
-if (!currentVersion) currentVersion = 'Unknown';
+db.get('SELECT version FROM meta', (selectErr, row) => {
+	if (selectErr) {
+		currentVersion = require('../package.json').version;
+	}
+	else {
+		currentVersion = row.version;
+	}
 
-console.log('------------------------------------');
-console.log(`Detected database version: ${currentVersion}`);
+	console.log('------------------------------------');
+	console.log(`Detected database version: ${currentVersion}`);
 
-if (currentVersion === 'Unknown') {
-	console.log('\nPlease enter your version of megumin.love before the update (e.g. 6.0.2 or 7.1.0).');
-
-	const currentVersionInput = createInterface({
-		input: process.stdin,
-		output: process.stdout,
-		prompt: 'Starting database version: '
-	});
-
-	currentVersionInput.prompt();
-
-	currentVersionInput.on('line', ver => {
-		currentVersion = ver.trim();
-		currentVersionInput.close();
-	});
-
-	currentVersionInput.on('close', () => {
-		if (!newVersion) promptNewVersion();
-		else executeUpdateQueries();
-	});
-}
-else {
-	if (!newVersion) promptNewVersion(); // eslint-disable-line no-lonely-if
+	if (!newVersion) promptNewVersion();
 	else executeUpdateQueries();
-}
+});
 
 function promptNewVersion() {
 	const newVersionInput = createInterface({
