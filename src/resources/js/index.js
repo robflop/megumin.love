@@ -5,21 +5,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 	let activatedSounds = [];
 	let howlerList = {};
 
-	function toggleButton(hasSounds) {
+	function setButton(activated) {
 		const button = document.getElementsByTagName('button')[0];
 
-		if (hasSounds) {
+		if (activated) {
 			button.innerText = 'やめろ!!';
-			button.disabled = false;
 			button.removeAttribute('style');
 			// Removes inline CSS but keeps stylesheet intact
+			button.disabled = false;
 		}
 		else {
+			button.disabled = true;
 			button.innerText = 'No sounds available.';
 			button.style.fontSize = '40px';
 			button.style.backgroundColor = '#606060';
 			button.style.color = '#383838';
-			button.disabled = true;
 		}
 	}
 
@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 			});
 		}
 
-		if (sounds.length > 0 && button.innerText === 'No sounds available.') toggleButton(true);
-		if (!sounds.length && button.innerText === 'やめろ!!') toggleButton(false);
+		if (sounds.length > 0 && button.disabled) setButton(true);
+		if (!sounds.length && !button.disabled) setButton(false);
 	}
 
 	const counterRes = await fetch('/api/counter').then(res => res.json());
