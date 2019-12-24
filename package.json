@@ -12,11 +12,11 @@
 		"multer": "^1.4.2",
 		"node-cron": "^2.0.3",
 		"node-minify": "^3.6.0",
-		"sqlite3": "^4.1.0",
-		"uws": "10.148.1"
+		"sqlite3": "^4.1.1",
+		"ws": "^7.2.1"
 	},
 	"devDependencies": {
-		"eslint": "^6.7.0",
+		"eslint": "^6.8.0",
 		"htmlhint": "^0.11.0"
 	},
 	"scripts": {

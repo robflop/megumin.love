@@ -4,8 +4,6 @@
 
 A site committed to worshipping best girl Megumin!
 
-Runs on [NodeJS](https://nodejs.org/en/) mainly with [Express](https://expressjs.com), [SQLite3](https://www.sqlite.org/) and [uws](https://www.npmjs.com/package/uws).
-
 ## Self-hosting Usage
 
 >_**Important**: It is _**highly**_ recommended to use releases instead of the latest commit, as the master branch will sometimes require frequent DB adjustments or even wipes. No instructions for it will be provided either, so use it at your own risk of heavy breakage._

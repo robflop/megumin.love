@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const multer = require('multer');
 const { Database } = require('sqlite3');
 const { schedule } = require('node-cron');
-const uws = require('uws');
+const ws = require('ws');
 const dateFns = require('date-fns');
 const { join } = require('path');
 const { readdirSync, unlink, rename, copyFile, existsSync, mkdir } = require('fs');
@@ -857,7 +857,7 @@ http.listen(config.port, () => {
 });
 
 // Socket server
-const socketServer = new uws.Server({ server: http });
+const socketServer = new ws.Server({ server: http });
 
 function emitUpdate(eventData, options = {}) {
 	if (options.excludeSocket) {
@@ -870,6 +870,37 @@ function emitUpdate(eventData, options = {}) {
 	}
 
 	return socketServer.clients.forEach(socket => socket.send(JSON.stringify(eventData)));
+}
+
+function markMilestoneAchieved(milestone, sound) {
+	const timestamp = Date.now();
+
+	Logger.info(`Milestone ${milestone.id} (${milestone.count} clicks) reached! Entry being updated.`);
+
+	Object.assign(milestone, { reached: 1, timestamp, sound_id: sound.id });
+
+	const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, sound_id = ? WHERE id = ?');
+	query.run(1, timestamp, sound.id, milestone.id, updateErr => {
+		if (updateErr) {
+			Logger.error(`An error occurred updating the milestone entry of milestone ${milestone.id}.`);
+			Logger.error(updateErr);
+		}
+
+		const readableCount = milestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+
+		emitUpdate({
+			type: 'notification',
+			notification: {
+				text: `Milestone ${milestone.id} of ${readableCount} clicks has been reached!`,
+				duration: 3
+			}
+		});
+
+		return emitUpdate({
+			type: 'milestoneUpdate',
+			milestone: milestone
+		});
+	});
 }
 
 socketServer.on('connection', socket => {
@@ -901,10 +932,10 @@ socketServer.on('connection', socket => {
 			++monthly; ++yearly;
 			average = Math.round(monthly / fetchedDaysAmount);
 
-			currentMonthData ? currentMonthData.count++ : chartData.push({ count: 1, month: currentMonth });
+			currentMonthData ? ++currentMonthData.count : chartData.push({ count: 1, month: currentMonth });
 
 			const currentStatistics = statistics.find(s => s.date === currentDate);
-			if (currentStatistics) currentStatistics.count = daily; // Safeguard against entry not existing for some reason
+			if (currentStatistics) currentStatistics.count = daily;
 			else {
 				statistics.push({
 					id: statistics[statistics.length - 1].id + 1,
@@ -914,36 +945,7 @@ socketServer.on('connection', socket => {
 			}
 
 			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
-			if (reachedMilestone) {
-				const timestamp = Date.now();
-
-				Logger.info(`Milestone ${reachedMilestone.id} (${reachedMilestone.count} clicks) reached! Entry being updated.`);
-
-				Object.assign(reachedMilestone, { reached: 1, timestamp, sound_id: soundEntry.id });
-
-				const query = db.prepare('UPDATE milestones SET reached = ?, timestamp = ?, sound_id = ? WHERE id = ?');
-				query.run(1, timestamp, soundEntry.id, reachedMilestone.id, updateErr => {
-					if (updateErr) {
-						Logger.error('An error occurred updating the milestone entry.');
-						Logger.error(updateErr);
-					}
-
-					const readableCount = reachedMilestone.count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-
-					emitUpdate({
-						type: 'notification',
-						notification: {
-							text: `Milestone ${reachedMilestone.id} of ${readableCount} clicks has been reached!`,
-							duration: 3
-						}
-					});
-
-					return emitUpdate({
-						type: 'milestoneUpdate',
-						milestone: reachedMilestone
-					});
-				});
-			}
+			if (reachedMilestone) markMilestoneAchieved(reachedMilestone, soundEntry);
 
 			emitUpdate({
 				type: 'crazyMode',
