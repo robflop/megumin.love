@@ -4,5 +4,5 @@
 	"databasePath": "./db/default.db",
 	"updateInterval": 15,
 	"adminToken": "pathOfExplosions",
-	"sessionSecret": "someKindOfSecret"
+	"sessionSecret": "erisPadsHerChest"
 }

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	/* Backgrounds */
+	/* Backgrounds and Themes */
 
 	const originalTitle = document.title;
 	const currentDate = new Date(); currentDate.setHours(0, 0, 0, 0); // Breaks when hours not set to midnight
