@@ -10,6 +10,7 @@ const { join } = require('path');
 const { readdirSync, unlink, rename, copyFile, existsSync, mkdir } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
+const { adminToken: defaultToken, sessionSecret: defaultSecret } = require('./config.sample.json');
 const { version } = require('../package.json');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
@@ -79,6 +80,17 @@ db.serialize(() => {
 		return Logger.info('Milestones loaded.');
 	});
 });
+
+// Warning for default admin token and session secret
+const warnings = [];
+
+if (config.adminToken === defaultToken) warnings.push('Admin token');
+if (config.sessionSecret === defaultSecret) warnings.push('Session secret');
+
+if (warnings.length) {
+	Logger.warn(`Make sure to change the ${warnings.join(' and ')} value(s) in the configuration.`);
+	Logger.warn('If left unchanged, anyone can gain access to the admin panel and do as they please.');
+}
 
 // Webserver
 const server = express();
