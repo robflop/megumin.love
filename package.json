@@ -5,10 +5,10 @@
 	"main": "src/server.js",
 	"dependencies": {
 		"chalk": "^3.0.0",
-		"date-fns": "^2.8.1",
+		"date-fns": "^2.10.0",
 		"express": "^4.17.1",
 		"express-session": "^1.17.0",
-		"helmet": "^3.21.2",
+		"helmet": "^3.21.3",
 		"multer": "^1.4.2",
 		"node-cron": "^2.0.3",
 		"node-minify": "^3.6.0",
