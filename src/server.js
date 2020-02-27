@@ -81,6 +81,19 @@ db.serialize(() => {
 	});
 });
 
+function updateDatabase() {
+	db.serialize(() => {
+		db.run('UPDATE main_counter SET counter = ?', counter);
+
+		db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date("now", "localtime"), ? )', daily);
+		db.run('UPDATE statistics SET count = ? WHERE date = date("now", "localtime")', daily);
+
+		for (const sound of sounds) {
+			db.run('UPDATE sounds SET count = ? WHERE id = ?', sound.count, sound.id);
+		}
+	});
+}
+
 // Warning for default admin token and session secret
 const warnings = [];
 
@@ -382,7 +395,7 @@ apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses 
 
 apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
 	if (config.adminToken === req.headers.authorization) {
-		Logger.info(`A user has sent a request to the '${req.path}' endpoint.`);
+		Logger.info(`An authorized user has sent a request to the '${req.path}' endpoint.`);
 		return next();
 	}
 	else {
@@ -846,6 +859,13 @@ apiRouter.post('/admin/notification', (req, res) => {
 	return res.json({ code: 200, message: 'Notification sent.' });
 });
 
+apiRouter.get('/admin/database/save', (req, res) => {
+	updateDatabase();
+
+	Logger.info('Database manually updated via the /admin/database/save endpoint.');
+	return res.json({ code: 200, message: 'Database successfully updated.' });
+});
+
 server.use('/api', apiRouter);
 
 for (const page of pages) {
@@ -999,16 +1019,7 @@ socketServer.on('connection', socket => {
 
 // Database updates
 schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {
-	db.serialize(() => {
-		db.run('UPDATE main_counter SET counter = ?', counter);
-
-		db.run('INSERT OR IGNORE INTO statistics ( date, count ) VALUES ( date("now", "localtime"), ? )', daily);
-		db.run('UPDATE statistics SET count = ? WHERE date = date("now", "localtime")', daily);
-
-		for (const sound of sounds) {
-			db.run('UPDATE sounds SET count = ? WHERE id = ?', sound.count, sound.id);
-		}
-	});
+	updateDatabase();
 
 	return Logger.info('Database updated.');
 }); // Update db at every n-th minute
