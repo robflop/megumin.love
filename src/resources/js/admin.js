@@ -272,6 +272,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
+	// TODO: Make logic for config frontend panel
+
 	document.getElementById('logout').addEventListener('click', async e => {
 		e.preventDefault();
 

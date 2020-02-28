@@ -65,9 +65,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	float: right;
 }
 
-
-
-#soundUpload, #soundModify, #soundDelete, #milestoneAdd, #milestoneModify, #milestoneDelete {
+.sub-panel {
 	width: 33%;
 	text-align: center;
 	display: block;
@@ -93,7 +91,7 @@ label[for="bg-select"], select[id="bg-select"] {
 		width: 600px;
 	}
 
-	#soundUpload, #soundModify, #soundDelete, #milestoneAdd, #milestoneModify, #milestoneDelete {
+	.sub-panel {
 		width: 34%;
 	}
 }
@@ -107,7 +105,7 @@ label[for="bg-select"], select[id="bg-select"] {
 		width: 400px;
 	}
 
-	#soundUpload, #soundModify, #soundDelete, #milestoneAdd, #milestoneModify, #milestoneDelete {
+	.sub-panel {
 		text-align: center;
 		display: block;
 		margin-left: 5%;

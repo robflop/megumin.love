@@ -53,7 +53,7 @@
 			<button id="logout">Logout</button>
 			<h1 class="titles">megumin.love Admin Panel</h1>
 			<div class="panel" id="soundPanel">
-				<div id="soundUpload">
+				<div class="sub-panel" id="soundUpload">
 					<h2 class="titles">Upload sounds</h2>
 					<form id="soundUpload-form" enctype="multipart/form-data" method="post">
 						<input type="file" name="file" accept="audio/mp3" required>
@@ -67,7 +67,7 @@
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
-				<div id="soundModify">
+				<div class="sub-panel" id="soundModify">
 					<h2 class="titles">Modify sounds</h2>
 					<form id="soundModify-form" method="post">
 						<select name="id" id="soundModify-id-select" required>
@@ -83,7 +83,7 @@
 						<input type="submit" value="Modify sound">
 					</form>
 				</div>
-				<div id="soundDelete">
+				<div class="sub-panel" id="soundDelete">
 					<h2 class="titles">Delete sounds</h2>
 					<form id="soundDelete-form" method="post">
 						<select name="id" id="soundDelete-id-select" required>
@@ -104,7 +104,7 @@
 
 
 			<div class="panel" id="milestonePanel">
-				<div id="milestoneAdd">
+				<div class="sub-panel" id="milestoneAdd">
 					<h2 class="titles">Add milestones</h2>
 					<form id="milestoneAdd-form" method="post">
 						<input type="text" name="count" placeholder="Milestone click count" required>
@@ -116,7 +116,7 @@
 						<input type="submit" value="Add milestone">
 					</form>
 				</div>
-				<div id="milestoneModify">
+				<div class="sub-panel" id="milestoneModify">
 					<h2 class="titles">Modify milestones</h2>
 					<form id="milestoneModify-form" method="post">
 						<select name="id" id="milestoneModify-id-select" required>
@@ -131,7 +131,7 @@
 						<input type="submit" value="Modify milestone">
 					</form>
 				</div>
-				<div id="milestoneDelete">
+				<div class="sub-panel" id="milestoneDelete">
 					<h2 class="titles">Delete milestones</h2>
 					<form id="milestoneDelete-form" method="post">
 						<select name="filename" id="milestoneDelete-id-select">
@@ -148,6 +148,25 @@
 				</div>
 
 				<p class="response" id="milestoneResponse"></p>
+			</div>
+
+			<!-- TODO: Finish frontend panel for config -->
+			<div class="panel" id="configPanel">
+				<div class="sub-panel" id="update-frequency">
+					<h2 class="titles">Database update frequency</h2>
+					<form id="update-frequency-form" method="post">
+						<input type="number" name="frequency" placeholder="Frequency in minutes (1-60)" required min="1" max="60">
+						<input type="submit" value="Change frequency">
+					</form>
+				</div>
+
+				<div class="sub-panel" id="socket-connections">
+					<h2 class="titles">WebSocket Connection limit</h2>
+					<form id="socket-connections-form" method="post">
+						<input type="number" name="limit" placeholder="Connections per IP" required min="-1" pattern="[1-9]\d*">
+						<input type="submit" value="Change limit">
+					</form>
+				</div>
 			</div>
 
 			<div id="backlink-bottom">

@@ -16,6 +16,8 @@ const { version } = require('../package.json');
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
 let sounds = [], statistics = [], chartData = [], milestones = [];
 
+const socketConnections = [];
+
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
 	db.exec('PRAGMA foreign_keys = ON;', pragmaErr => {
@@ -866,6 +868,8 @@ apiRouter.get('/admin/database/save', (req, res) => {
 	return res.json({ code: 200, message: 'Database successfully updated.' });
 });
 
+// TODO: Make endpoints for changing update frequency and changing connection limit
+
 server.use('/api', apiRouter);
 
 for (const page of pages) {
@@ -935,7 +939,21 @@ function markMilestoneAchieved(milestone, sound) {
 	});
 }
 
-socketServer.on('connection', socket => {
+socketServer.on('connection', (socket, req) => {
+	/*if (!req.headers['user-agent']
+		|| !req.headers.origin
+		|| ((req.headers.origin !== config.SSLproxy ? `https://${config.domain}` : `http://${config.domain}:${config.port}`)
+			&& req.headers.origin !== `http://localhost:${config.port}`)) {
+		Logger.info(req.headers.origin, req.headers['user-agent']);
+		return socket.close();
+	} */
+
+	if (config.socketConnections > 0) {
+		const connections = socketConnections.filter(con => con === req.connection.remoteAddress);
+		if (connections.length >= config.socketConnections) return socket.close();
+		else socketConnections.push(req.connection.remoteAddress);
+	}
+
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
 	socket.on('message', message => {
@@ -1013,6 +1031,7 @@ socketServer.on('connection', socket => {
 	});
 
 	socket.on('close', (code, reason) => {
+		if (config.socketConnections > 0) socketConnections.splice(socketConnections.indexOf(req.connection.remoteAddress), 1);
 		return clearInterval(socket.pingInterval);
 	});
 });
