@@ -4,7 +4,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 	const statistics = {};
 	const chartContext = document.getElementsByTagName('canvas')[0];
-	const tickArray = [10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000, 100000000];
+	const tickArray = [
+		10000, 25000, 50000, 100000, 250000,
+		500000, 1000000, 2500000, 5000000, 10000000,
+		25000000, 50000000, 100000000, 250000000, 500000000,
+		1000000000
+	];
 
 	// Establish basic chart model without data
 	const chart = new Chart(chartContext, {
@@ -23,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 					ticks: {
 						callback: tick => tick.toLocaleString('de-DE'),
 						min: 10000,
-						max: 100000000
+						max: 1000000000
 					},
 					afterBuildTicks: axis => axis.ticks = tickArray
 				}]

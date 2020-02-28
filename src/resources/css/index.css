@@ -14,7 +14,7 @@ a[href="/soundboard"], a[href="/statistics"] {
 }
 
 #container {
-	width: 360px;
+	width: 410px;
 	background-color: var(--rgba-background);
 	margin: 225px auto auto auto;
 }
