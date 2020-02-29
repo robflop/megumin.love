@@ -870,6 +870,7 @@ apiRouter.get('/admin/database/save', (req, res) => {
 
 // TODO: Make endpoints for config and data panel
 // Make admin routes for ws limit, db freq and request rl
+// Also route for toggling bulk mode
 
 server.use('/api', apiRouter);
 
@@ -948,6 +949,7 @@ socketServer.on('connection', (socket, req) => {
 		Logger.info(req.headers.origin, req.headers['user-agent']);
 		return socket.close();
 	} */
+	// TODO: Implement ratelimiting and bulk mode handling here
 
 	if (config.socketConnections > 0) {
 		const connections = socketConnections.filter(con => con === req.connection.remoteAddress);

@@ -17,6 +17,29 @@ label[for="bg-select"], select[id="bg-select"] {
 	border-color: var(--seperator-color);
 }
 
+.panel .sub-panel {
+	width: 33%;
+	text-align: center;
+	display: block;
+	padding-bottom: 10px;
+}
+
+.panel .sub-panel button {
+	margin-top: 10px;
+}
+
+.panel .sub-panel p {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 0px;
+	color: white; /* TODO: Needs prettification */
+}
+
+.panel .sub-panel label {
+	background-color: rgba(255, 255, 255, 0.5);
+	margin-right: 10px;
+}
+
 .response {
 	display: none;
 	text-align: center;
@@ -65,26 +88,8 @@ label[for="bg-select"], select[id="bg-select"] {
 	float: right;
 }
 
-.panel .sub-panel {
-	width: 33%;
-	text-align: center;
-	display: block;
-}
-
-.panel .sub-panel button {
-	margin-top: 10px;
-}
-
-.panel .sub-panel p {
-	display: block;
-	margin-top: 5px;
-	margin-bottom: 0px;
-	color: white; /* TODO: Needs prettification */
-}
-
-.panel .sub-panel label {
-	background-color: rgba(255, 255, 255, 0.5);
-	margin-right: 10px;
+#config-panel .sub-panel {
+	width: 50%;
 }
 
 @media only screen and (max-width: 960px) {
