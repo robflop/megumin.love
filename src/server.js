@@ -94,6 +94,8 @@ function updateDatabase() {
 			db.run('UPDATE sounds SET count = ? WHERE id = ?', sound.count, sound.id);
 		}
 	});
+
+	Logger.info('Database successfully updated.');
 }
 
 // Warning for default admin token and session secret
@@ -864,7 +866,7 @@ apiRouter.post('/admin/notification', (req, res) => {
 apiRouter.get('/admin/database/save', (req, res) => {
 	updateDatabase();
 
-	Logger.info('Database manually updated via the /admin/database/save endpoint.');
+	Logger.info('Database update initialized via the /admin/database/save endpoint.');
 	return res.json({ code: 200, message: 'Database successfully updated.' });
 });
 
@@ -942,20 +944,24 @@ function markMilestoneAchieved(milestone, sound) {
 }
 
 socketServer.on('connection', (socket, req) => {
-	/*if (!req.headers['user-agent']
+	/*
+	if (!req.headers['user-agent']
 		|| !req.headers.origin
 		|| ((req.headers.origin !== config.SSLproxy ? `https://${config.domain}` : `http://${config.domain}:${config.port}`)
 			&& req.headers.origin !== `http://localhost:${config.port}`)) {
 		Logger.info(req.headers.origin, req.headers['user-agent']);
 		return socket.close();
-	} */
+	}
+	*/
 	// TODO: Implement ratelimiting and bulk mode handling here
 
+	/*
 	if (config.socketConnections > 0) {
 		const connections = socketConnections.filter(con => con === req.connection.remoteAddress);
 		if (connections.length >= config.socketConnections) return socket.close();
 		else socketConnections.push(req.connection.remoteAddress);
 	}
+	*/
 
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
@@ -1034,7 +1040,7 @@ socketServer.on('connection', (socket, req) => {
 	});
 
 	socket.on('close', (code, reason) => {
-		if (config.socketConnections > 0) socketConnections.splice(socketConnections.indexOf(req.connection.remoteAddress), 1);
+		/*if (config.socketConnections > 0) socketConnections.splice(socketConnections.indexOf(req.connection.remoteAddress), 1); */
 		return clearInterval(socket.pingInterval);
 	});
 });
