@@ -52,6 +52,7 @@
 			</div>
 			<button id="logout">Logout</button>
 			<h1 class="titles">megumin.love Admin Panel</h1>
+			<!-- TODO: Clean up naming scheme for all IDs across all files (no camelcasing) -->
 			<div class="panel" id="soundPanel">
 				<div class="sub-panel" id="soundUpload">
 					<h2 class="titles">Upload sounds</h2>
@@ -102,7 +103,6 @@
 				<p class="response" id="soundResponse"></p>
 			</div>
 
-
 			<div class="panel" id="milestonePanel">
 				<div class="sub-panel" id="milestoneAdd">
 					<h2 class="titles">Add milestones</h2>
@@ -151,9 +151,10 @@
 			</div>
 
 			<!-- TODO: Finish frontend panel for config -->
-			<div class="panel" id="configPanel">
+			<div class="panel" id="config-panel">
 				<div class="sub-panel" id="update-frequency">
 					<h2 class="titles">Database update frequency</h2>
+					<p id="update-frequency-current">Loading...</p>
 					<form id="update-frequency-form" method="post">
 						<input type="number" name="frequency" placeholder="Frequency in minutes (1-60)" required min="1" max="60">
 						<input type="submit" value="Change frequency">
@@ -161,12 +162,60 @@
 				</div>
 
 				<div class="sub-panel" id="socket-connections">
-					<h2 class="titles">WebSocket Connection limit</h2>
+					<h2 class="titles">WebSocket connection limit</h2>
+					<p id="socket-connections-current">Loading...</p>
+					<!-- TODO: Add note about entering -1 to disable -->
 					<form id="socket-connections-form" method="post">
-						<input type="number" name="limit" placeholder="Connections per IP" required min="-1" pattern="[1-9]\d*">
-						<input type="submit" value="Change limit">
+						<input type="number" name="limit" placeholder="Connections per IP" required min="-1">
+						<input type="submit" value="Change connection limit">
 					</form>
 				</div>
+
+				<div class="sub-panel" id="click-ratelimit">
+					<h2 class="titles">WebSocket requests ratelimit</h2>
+					<p class="rate-limit-current">Loading...</p>
+					<!-- TODO: Add note about entering -1 to disable -->
+					<form id="rate-limit-form" method="post">
+						<input type="number" name="ratelimit" placeholder="Requests (clicks) / minute" required min="-1">
+						<input type="submit" value="Change click ratelimit">
+					</form>
+				</div>
+
+				<p class="response" id="config-response"></p>
+			</div>
+
+			<div class="panel" id="data-panel">
+				<div class="sub-panel" id="main-count-interaction">
+					<h2 class="titles">Main count interactions</h2>
+					<button id="reload-count-button">
+						Reload main count from db
+					</button>
+					<button id="save-count-button">
+						Save main count to db
+					</button>
+				</div>
+
+				<div class="sub-panel" id="statistics-interaction">
+					<h2 class="titles">Statistics interactions</h2>
+					<button id="reload-statistics-button">
+						Reload statistics from db
+					</button>
+					<button id="save-statistics-button">
+						Save statistics to db
+					</button>
+				</div>
+
+				<div class="sub-panel" id="milestones-interaction">
+					<h2 class="titles">Milestone interactions</h2>
+					<button id="reload-milestones-button">
+						Reload milestones from db
+					</button>
+					<button id="save-milestones-button">
+						Save milestones to db
+					</button>
+				</div>
+
+				<p class="response" id="data-response"></p>
 			</div>
 
 			<div id="backlink-bottom">

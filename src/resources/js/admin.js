@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});
 
 	// TODO: Make logic for config frontend panel
+	// Includes loading current db freq and current ws limit + req rl
+	// TOOD: Make logic for data panel
 
 	document.getElementById('logout').addEventListener('click', async e => {
 		e.preventDefault();

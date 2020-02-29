@@ -868,7 +868,8 @@ apiRouter.get('/admin/database/save', (req, res) => {
 	return res.json({ code: 200, message: 'Database successfully updated.' });
 });
 
-// TODO: Make endpoints for changing update frequency and changing connection limit
+// TODO: Make endpoints for config and data panel
+// Make admin routes for ws limit, db freq and request rl
 
 server.use('/api', apiRouter);
 

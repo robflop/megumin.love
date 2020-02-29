@@ -6,5 +6,6 @@
 	"updateInterval": 15,
 	"adminToken": "pathOfExplosions",
 	"sessionSecret": "erisPadsHerChest",
-	"socketConnections": -1
+	"socketConnections": -1,
+	"requestsPerMinute": -1
 }

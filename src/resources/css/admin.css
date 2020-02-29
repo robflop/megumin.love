@@ -48,7 +48,7 @@ label[for="bg-select"], select[id="bg-select"] {
 
 #container form input[type="checkbox"] {
 	display: inline-block;
-	vertical-align: middle;
+	vertical-align: bottom;
 	width: 16px;
 	height: 16px;
 }
@@ -65,19 +65,26 @@ label[for="bg-select"], select[id="bg-select"] {
 	float: right;
 }
 
-.sub-panel {
+.panel .sub-panel {
 	width: 33%;
 	text-align: center;
 	display: block;
 }
 
-#soundDelete-confirm-wrapper label, #milestoneDelete-confirm-wrapper label {
-	background-color: rgba(255, 255, 255, 0.5);
-	margin-right: 10px;
+.panel .sub-panel button {
+	margin-top: 10px;
 }
 
-#soundDelete-confirm-wrapper input[type="checkbox"], #milestoneDelete-confirm-wrapper input[type="checkbox"] {
-	vertical-align: bottom;
+.panel .sub-panel p {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 0px;
+	color: white; /* TODO: Needs prettification */
+}
+
+.panel .sub-panel label {
+	background-color: rgba(255, 255, 255, 0.5);
+	margin-right: 10px;
 }
 
 @media only screen and (max-width: 960px) {
