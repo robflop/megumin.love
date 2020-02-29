@@ -12,7 +12,7 @@ A site committed to worshipping best girl Megumin!
 2. Rename `src/config.sample.json` to `src/config.json`
 3. *Recommended, but not needed*: Rename `src/db/default.db` to a name of your choosing (take care to change the config appropriately)
    * **Your database may be overwritten** by the default one if you keep the original filename and try updating the website in the future.
-4. Open the `config.json` file and [configure the website's settings]((https://github.com/robflop/megumin.love/wiki/Configuration) (**Make sure to change the admin token and session secret**)
+4. Open the `config.json` file and [configure the website's settings](https://github.com/robflop/megumin.love/wiki/Configuration) (**Make sure to change the admin token and session secret**)
 5. Run `npm run setup` once to install dependencies and minify resources (needs to be re-run on site updates)
 6. Navigate into the `src` folder if you aren't already in it to set the working directory properly
 7. Boot up the website's server at `server.js` with the process manager of your choice
