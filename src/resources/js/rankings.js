@@ -55,10 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const meta = await fetch('/api/meta').then(res => res.json());
 
-	const domainOrIP = document.URL.split('/')[2].split(':')[0];
-	const host = meta.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${meta.port}`;
-
-	const ws = new WebSocket(host);
+	const wsAddress = document.location.protocol === 'https:' ? `wss://${document.location.host}` : `ws://${document.location.host}`;
+	const ws = new WebSocket(wsAddress);
 
 	ws.addEventListener('open', event => {
 		ws.addEventListener('message', message => {
