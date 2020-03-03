@@ -1,7 +1,7 @@
 {
 	"domain": "megumin.love",
 	"port": 5959,
-	"SSLproxy": false,
+	"proxy": false,
 	"databasePath": "./db/default.db",
 	"updateInterval": 15,
 	"adminToken": "pathOfExplosions",

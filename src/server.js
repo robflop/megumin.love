@@ -147,7 +147,7 @@ readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
 server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
-if (config.proxied) server.set('trust proxy', true);
+if (config.proxy) server.set('trust proxy', true);
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
@@ -174,7 +174,7 @@ apiRouter.get('/', (req, res) => {
 });
 
 apiRouter.get('/meta', (req, res) => {
-	return res.json({ port: config.port, ssl: config.SSLproxy, version });
+	return res.json({ port: config.port, proxy: config.proxy, version });
 });
 
 apiRouter.get('/counter', (req, res) => {
@@ -893,7 +893,7 @@ server.use((req, res) => res.status(401).sendFile('401.html', { root: './pages/e
 server.use((req, res) => res.status(500).sendFile('500.html', { root: './pages/error/' }));
 
 http.listen(config.port, () => {
-	const options = `${config.SSLproxy ? ' (Proxied to SSL)' : ''}`;
+	const options = `${config.proxy ? ' (behind Proxy)' : ''}`;
 	return Logger.info(`megumin.love booting on port ${config.port}...${options}`);
 });
 
@@ -950,7 +950,7 @@ socketServer.on('connection', (socket, req) => {
 	if (config.socketConnections > 0) {
 		Logger.info(require('util').inspect(req.headers));
 
-		const requestIP = config.proxied ? req.headers['x-real-ip'] : req.connection.remoteAddress;
+		const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
 		// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
 		let user = socketConnections.filter(u => u.ip === requestIP)[0];
 
@@ -1051,7 +1051,7 @@ socketServer.on('connection', (socket, req) => {
 
 	socket.on('close', (code, reason) => {
 		if (config.socketConnections > 0) {
-			const requestIP = config.proxied ? req.headers['x-real-ip'] : req.connection.remoteAddress;
+			const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
 			// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
 			const user = socketConnections.filter(u => u.ip === requestIP)[0];
 
