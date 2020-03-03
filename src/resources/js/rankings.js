@@ -74,7 +74,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 					if (data.notification) document.getElementById('notification').innerText = data.notification.text;
 					util.fade(document.getElementById('notification-wrapper'), data.notification.duration * 1000, 0.1);
 					break;
-				case 'soundClick':
+				case 'soundUpdate':
+					sounds[data.soundFilename].count++;
+					updateRankings(sounds);
+					break;
+				case 'bulkSoundUpdate':
+					data.sounds = JSON.parse(data.sounds);
+					Object.keys(data.sounds).forEach(s => {
+						const sound = sounds[sounds.findIndex(snd => snd.filename === s)];
+						sound.count = sound.count + data.sounds[s];
+					});
+					updateRankings(sounds);
+					break;
 				case 'soundModify':
 					sounds[sounds.findIndex(snd => snd.id === data.sound.id)] = data.sound;
 					updateRankings(sounds);

@@ -17,6 +17,7 @@ let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fe
 let sounds = [], statistics = [], chartData = [], milestones = [];
 
 const socketConnections = [];
+let queuedMainClicks = false, queuedSoundboardClicks = {};
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
@@ -945,7 +946,7 @@ function markMilestoneAchieved(milestone, sound) {
 }
 
 socketServer.on('connection', (socket, req) => {
-	// TODO: Implement ratelimiting and bulk mode handling here
+	// TODO: Implement ratelimiting
 
 	if (config.socketConnections > 0) {
 		const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
@@ -1008,19 +1009,26 @@ socketServer.on('connection', (socket, req) => {
 			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
 			if (reachedMilestone) markMilestoneAchieved(reachedMilestone, soundEntry);
 
-			emitUpdate({
-				type: 'crazyMode',
-				soundFilename: soundEntry.filename
-			}, { excludeSocket: socket });
+			if (config.responseInterval > 0) {
+				// Queue update if bulk mode enabled
+				queuedMainClicks = true;
+			}
+			else {
+				// Immediately send response
+				emitUpdate({
+					type: 'crazyMode',
+					soundFilename: soundEntry.filename
+				}, { excludeSocket: socket });
 
-			return emitUpdate({
-				type: 'counterUpdate',
-				counter,
-				statistics: {
-					summary: { alltime: counter, daily, weekly, monthly, yearly, average },
-					newChartData: currentMonthData
-				},
-			});
+				return emitUpdate({
+					type: 'counterUpdate',
+					counter,
+					statistics: {
+						summary: { alltime: counter, daily, weekly, monthly, yearly, average },
+						newChartData: currentMonthData
+					},
+				});
+			}
 		}
 
 		if (data.type === 'sbClick') {
@@ -1029,15 +1037,23 @@ socketServer.on('connection', (socket, req) => {
 			if (soundEntry) ++soundEntry.count;
 			else return;
 
-			emitUpdate({
-				type: 'crazyMode',
-				soundFilename: soundEntry.filename
-			}, { excludeSocket: socket });
+			if (config.responseInterval > 0) {
+				// Queue update if bulk mode enabled
+				if (queuedSoundboardClicks.hasOwnProperty(soundEntry.filename)) queuedSoundboardClicks[soundEntry.filename]++;
+				else queuedSoundboardClicks[soundEntry.filename] = 1;
+			}
+			else {
+				// Immediately send response
+				emitUpdate({
+					type: 'crazyMode',
+					soundFilename: soundEntry.filename
+				}, { excludeSocket: socket });
 
-			return emitUpdate({
-				type: 'soundClick',
-				sound: soundEntry
-			});
+				return emitUpdate({
+					type: 'soundClick',
+					soundFilename: soundEntry.filename
+				});
+			}
 		}
 	});
 
@@ -1054,6 +1070,39 @@ socketServer.on('connection', (socket, req) => {
 		return clearInterval(socket.pingInterval);
 	});
 });
+
+// Bulk mode response intervals
+if (config.responseInterval > 0) {
+	let mainClickResponseInterval = setInterval(() => {
+		const currentDate = dateFns.format(new Date(), 'yyyy-MM-dd');
+		const currentMonth = currentDate.substring(0, 7);
+		const currentMonthData = chartData.find(d => d.month === currentMonth);
+
+		if (queuedMainClicks) {
+			emitUpdate({
+				type: 'counterUpdate',
+				counter,
+				statistics: {
+					summary: { alltime: counter, daily, weekly, monthly, yearly, average },
+					newChartData: currentMonthData
+				},
+			});
+			queuedMainClicks = false;
+		}
+
+	}, config.responseInterval);
+
+	let soundboardClickResponseInterval = setInterval(() => {
+		if (Object.keys(queuedSoundboardClicks).length !== 0) {
+			emitUpdate({
+				type: 'bulkSoundUpdate',
+				sounds: JSON.stringify(queuedSoundboardClicks)
+			});
+			queuedSoundboardClicks = {};
+		}
+
+	}, config.responseInterval);
+}
 
 // Database updates
 schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {

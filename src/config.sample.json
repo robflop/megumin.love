@@ -8,5 +8,5 @@
 	"sessionSecret": "erisPadsHerChest",
 	"socketConnections": -1,
 	"requestsPerMinute": -1,
-	"responseFrequency": -1
+	"responseInterval": -1
 }
