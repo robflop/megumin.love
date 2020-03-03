@@ -968,7 +968,6 @@ socketServer.on('connection', (socket, req) => {
 		if (config.requestsPerMinute > 0) {
 			user.ratelimitInterval = setInterval(() => {
 				user.ratelimitClicks = 0;
-				Logger.info(`Limit quota cleared for ${user.ip}`);
 			}, 1000 * 60);
 		} // Clear ratelimit every 60 seconds
 	}
@@ -977,15 +976,8 @@ socketServer.on('connection', (socket, req) => {
 
 	socket.on('message', message => {
 		if (config.requestsPerMinute > 0) {
-
-			if (user.ratelimitClicks >= config.requestsPerMinute) {
-				Logger.info(`Limit quota hit for ${user.ip}`);
-				return;
-			}
-			else {
-				Logger.info(`Limit quota incremented for ${user.ip}`);
-				user.ratelimitClicks++;
-			}
+			if (user.ratelimitClicks >= config.requestsPerMinute) return;
+			else user.ratelimitClicks++;
 		}
 
 		let data;
