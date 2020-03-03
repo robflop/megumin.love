@@ -34,7 +34,7 @@ Output:
 ```js
 {
     "port": 5959,
-	"ssl": false,
+	"proxy": false,
 	"version": "8.1.0"
 }
 ```
