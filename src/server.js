@@ -398,7 +398,7 @@ apiRouter.post('/login', (req, res) => { // Only actual page (not raw API) uses 
 });
 
 apiRouter.all(['/admin/', '/admin/*'], (req, res, next) => {
-	if (config.adminToken === req.headers.authorization) {
+	if (req.session.loggedIn || config.adminToken === req.headers.authorization) {
 		Logger.info(`An authorized user has sent a request to the '${req.path}' endpoint.`);
 		return next();
 	}
