@@ -2,10 +2,10 @@ Base domain for all requests is ``megumin.love/api``. Response format for all ro
 
 ---
 
-## `GET /conInfo`
+## `GET /meta`
 
-Returns necessary data for the client to properly connect to the server, such as whether the website is proxied to SSL and what port it is being run on.
-(Mostly used by the browser to connect to websocket server etc, very likely not necessary for API use outside of that)
+Returns meta information about the website, such as the current version as well as connection info such as the port or whether the instance is behind a proxy.
+Mostly used when accessing the website in a browser, so that the browser fills in relevant data on the page and establishes connections properly.
 
 ### Headers
 
@@ -27,14 +27,15 @@ Returns necessary data for the client to properly connect to the server, such as
 
 ##### Example requests
 
-`/conInfo`
+`/meta`
 
 Output:
 
 ```js
 {
     "port": 5959,
-    "ssl": false
+	"ssl": false,
+	"version": "8.1.0"
 }
 ```
 

@@ -172,7 +172,7 @@ apiRouter.get('/', (req, res) => {
 	return res.json({ code: 200, message: 'You have reached the megumin.love API.' });
 });
 
-apiRouter.get('/conInfo', (req, res) => {
+apiRouter.get('/meta', (req, res) => {
 	return res.json({ port: config.port, ssl: config.SSLproxy, version });
 });
 

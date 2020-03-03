@@ -58,14 +58,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 	let specialBg = themes.map(theme => theme.name).some(thm => currentBackground.startsWith(`${thm}_`)) ? currentBackground : null;
 	loadSounds(allSounds, specialBg);
 
-	const conInfo = await fetch('/api/conInfo').then(res => res.json());
+	const meta = await fetch('/api/meta').then(res => res.json());
 
 	versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
-	trimmedVersion = conInfo.version.substring(0, conInfo.version.lastIndexOf('.'));
+	trimmedVersion = meta.version.substring(0, meta.version.lastIndexOf('.'));
 	versionsAnchor.innerText = `[ver${trimmedVersion}]`;
 
 	const domainOrIP = document.URL.split('/')[2].split(':')[0];
-	const host = conInfo.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${conInfo.port}`;
+	const host = meta.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${meta.port}`;
 
 	const ws = new WebSocket(host);
 

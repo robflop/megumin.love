@@ -66,10 +66,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	updateStatistics(statistics);
 
-	const conInfo = await fetch('/api/conInfo').then(res => res.json());
+	const meta = await fetch('/api/meta').then(res => res.json());
 
 	const domainOrIP = document.URL.split('/')[2].split(':')[0];
-	const host = conInfo.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${conInfo.port}`;
+	const host = meta.ssl ? `wss://${domainOrIP}` : `ws://${domainOrIP}:${meta.port}`;
 
 	const ws = new WebSocket(host);
 
