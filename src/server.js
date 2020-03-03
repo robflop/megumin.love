@@ -147,12 +147,13 @@ readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
 server.use(helmet({
 	hsts: false // HSTS sent via nginx
 }));
-if (config.SSLproxy) server.set('trust proxy', 1);
+if (config.proxied) server.set('trust proxy', true);
 server.use(session({
 	secret: config.sessionSecret,
 	resave: false,
 	saveUninitialized: false,
-	cookie: { secure: 'auto' }
+	cookie: { secure: 'auto' },
+	unset: 'destroy'
 }));
 server.use(express.static('./resources'));
 
@@ -944,24 +945,33 @@ function markMilestoneAchieved(milestone, sound) {
 }
 
 socketServer.on('connection', (socket, req) => {
-	/*
-	if (!req.headers['user-agent']
-		|| !req.headers.origin
-		|| ((req.headers.origin !== config.SSLproxy ? `https://${config.domain}` : `http://${config.domain}:${config.port}`)
-			&& req.headers.origin !== `http://localhost:${config.port}`)) {
-		Logger.info(req.headers.origin, req.headers['user-agent']);
-		return socket.close();
-	}
-	*/
 	// TODO: Implement ratelimiting and bulk mode handling here
 
-	/*
 	if (config.socketConnections > 0) {
-		const connections = socketConnections.filter(con => con === req.connection.remoteAddress);
-		if (connections.length >= config.socketConnections) return socket.close();
-		else socketConnections.push(req.connection.remoteAddress);
+		Logger.info(require('util').inspect(req.headers));
+
+		const requestIP = config.proxied ? req.headers['x-real-ip'] : req.connection.remoteAddress;
+		// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
+		let user = socketConnections.filter(u => u.ip === requestIP)[0];
+
+		if (!user) {
+			user = {
+				ip: requestIP,
+				connections: 0, // Set to 1 below via increment
+				clicks: 0 // For ratelimiting
+			};
+			socketConnections.push(user);
+		}
+
+		if (user.connections >= config.socketConnections) {
+			Logger.info(`Rejected Connection from ${requestIP}, total from this ip: ${user.connections}`);
+			return socket.close();
+		}
+		else {
+			user.connections++;
+			Logger.info(`Accepted Connection from ${requestIP}, total from this ip: ${user.connections}`);
+		}
 	}
-	*/
 
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
@@ -1040,7 +1050,20 @@ socketServer.on('connection', (socket, req) => {
 	});
 
 	socket.on('close', (code, reason) => {
-		/*if (config.socketConnections > 0) socketConnections.splice(socketConnections.indexOf(req.connection.remoteAddress), 1); */
+		if (config.socketConnections > 0) {
+			const requestIP = config.proxied ? req.headers['x-real-ip'] : req.connection.remoteAddress;
+			// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
+			const user = socketConnections.filter(u => u.ip === requestIP)[0];
+
+			if (user.connections - 1 <= 0) {
+				Logger.info(`Closed last Connection to ${requestIP}, deleting`);
+				socketConnections.splice(socketConnections.findIndex(u => u.ip === requestIP), 1);
+			}
+			else {
+				Logger.info(`Closed Connection to ${requestIP}, remaining connections from this ip: ${user.connections}`);
+				user.connections--;
+			}
+		}
 		return clearInterval(socket.pingInterval);
 	});
 });
