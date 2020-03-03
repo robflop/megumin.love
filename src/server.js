@@ -948,8 +948,6 @@ socketServer.on('connection', (socket, req) => {
 	// TODO: Implement ratelimiting and bulk mode handling here
 
 	if (config.socketConnections > 0) {
-		Logger.info(require('util').inspect(req.headers));
-
 		const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
 		// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
 		let user = socketConnections.filter(u => u.ip === requestIP)[0];
@@ -963,14 +961,8 @@ socketServer.on('connection', (socket, req) => {
 			socketConnections.push(user);
 		}
 
-		if (user.connections >= config.socketConnections) {
-			Logger.info(`Rejected Connection from ${requestIP}, total from this ip: ${user.connections}`);
-			return socket.close();
-		}
-		else {
-			user.connections++;
-			Logger.info(`Accepted Connection from ${requestIP}, total from this ip: ${user.connections}`);
-		}
+		if (user.connections >= config.socketConnections) return socket.close();
+		else user.connections++;
 	}
 
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
@@ -1055,15 +1047,10 @@ socketServer.on('connection', (socket, req) => {
 			// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
 			const user = socketConnections.filter(u => u.ip === requestIP)[0];
 
-			if (user.connections - 1 <= 0) {
-				Logger.info(`Closed last Connection to ${requestIP}, deleting`);
-				socketConnections.splice(socketConnections.findIndex(u => u.ip === requestIP), 1);
-			}
-			else {
-				Logger.info(`Closed Connection to ${requestIP}, remaining connections from this ip: ${user.connections}`);
-				user.connections--;
-			}
+			if (user.connections - 1 <= 0) socketConnections.splice(socketConnections.findIndex(u => u.ip === requestIP), 1);
+			else user.connections--;
 		}
+
 		return clearInterval(socket.pingInterval);
 	});
 });
