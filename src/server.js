@@ -946,29 +946,48 @@ function markMilestoneAchieved(milestone, sound) {
 }
 
 socketServer.on('connection', (socket, req) => {
-	// TODO: Implement ratelimiting
+	const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
+	let user = socketConnections.filter(u => u.ip === requestIP)[0];
 
-	if (config.socketConnections > 0) {
-		const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
-		// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
-		let user = socketConnections.filter(u => u.ip === requestIP)[0];
-
+	if (config.socketConnections > 0 || config.requestsPerMinute > 0) {
 		if (!user) {
 			user = {
 				ip: requestIP,
-				connections: 0, // Set to 1 below via increment
-				clicks: 0 // For ratelimiting
+				connections: 0,
+				ratelimitClicks: 0,
+				ratelimitInterval: null
 			};
 			socketConnections.push(user);
 		}
 
-		if (user.connections >= config.socketConnections) return socket.close();
-		else user.connections++;
+		if (config.socketConnections > 0) {
+			if (user.connections >= config.socketConnections) return socket.close();
+			else user.connections++;
+		}
+
+		if (config.requestsPerMinute > 0) {
+			user.ratelimitInterval = setInterval(() => {
+				user.ratelimitClicks = 0;
+				Logger.info(`Limit quota cleared for ${user.ip}`);
+			}, 1000 * 60);
+		} // Clear ratelimit every 60 seconds
 	}
 
 	socket.pingInterval = setInterval(() => socket.ping(), 1000 * 45);
 
 	socket.on('message', message => {
+		if (config.requestsPerMinute > 0) {
+
+			if (user.ratelimitClicks >= config.requestsPerMinute) {
+				Logger.info(`Limit quota hit for ${user.ip}`);
+				return;
+			}
+			else {
+				Logger.info(`Limit quota incremented for ${user.ip}`);
+				user.ratelimitClicks++;
+			}
+		}
+
 		let data;
 
 		try {
@@ -1059,10 +1078,6 @@ socketServer.on('connection', (socket, req) => {
 
 	socket.on('close', (code, reason) => {
 		if (config.socketConnections > 0) {
-			const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
-			// Use actual request IP if using proxies (reverse proxy, cloudflare, etc) or plain remote address if no header set
-			const user = socketConnections.filter(u => u.ip === requestIP)[0];
-
 			if (user.connections - 1 <= 0) socketConnections.splice(socketConnections.findIndex(u => u.ip === requestIP), 1);
 			else user.connections--;
 		}
@@ -1089,7 +1104,6 @@ if (config.responseInterval > 0) {
 			});
 			queuedMainClicks = false;
 		}
-
 	}, config.responseInterval);
 
 	let soundboardClickResponseInterval = setInterval(() => {
@@ -1100,7 +1114,6 @@ if (config.responseInterval > 0) {
 			});
 			queuedSoundboardClicks = {};
 		}
-
 	}, config.responseInterval);
 }
 
