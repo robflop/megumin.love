@@ -93,7 +93,7 @@
 		"new-cap": "off",
 		"no-array-constructor": "error",
 		"no-inline-comments": "off",
-		"no-lonely-if": "error",
+		"no-lonely-if": "off",
 		"no-mixed-operators": "off",
 		"no-multiple-empty-lines": ["error", {
 			"max": 2,

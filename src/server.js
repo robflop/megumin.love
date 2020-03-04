@@ -7,7 +7,7 @@ const { scheduleJob } = require('node-schedule');
 const ws = require('ws');
 const dateFns = require('date-fns');
 const { join } = require('path');
-const { readdirSync, unlink, rename, copyFile, existsSync, mkdir } = require('fs');
+const { readdirSync, unlink, rename, copyFile, existsSync, mkdir, writeFile } = require('fs');
 const Logger = require('./resources/js/Logger');
 const config = require('./config.json');
 const { adminToken: defaultToken, sessionSecret: defaultSecret } = require('./config.sample.json');
@@ -18,8 +18,9 @@ let sounds = [], statistics = [], chartData = [], milestones = [];
 
 let databaseUpdateJob;
 
-const socketConnections = [];
+let socketConnections = [];
 let queuedMainClicks = false, queuedSoundboardClicks = {};
+let mainClickResponseInterval, soundboardClickResponseInterval;
 
 // On-boot database interaction
 const db = new Database(config.databasePath, () => {
@@ -132,6 +133,81 @@ const pages = [
 
 function cleanString(string) {
 	return string.replace(/\s/g, '-').toLowerCase();
+}
+
+function updateConfigFile() {
+	writeFile(join(__dirname, 'config.json'), JSON.stringify(config, null, '\t'), err => {
+		if (err) {
+			Logger.error('An error occurred updating the configuration file.');
+		}
+		else {
+			Logger.info('Configuration file updated.');
+		}
+	});
+}
+
+function manageConnections(connectionLimit, ratelimit) {
+	if (connectionLimit > 0 || ratelimit > 0) {
+		if (socketConnections.length === 0) {
+			// Create data
+			socketServer.clients.forEach(client => {
+				let user = socketConnections.find(u => u.ip === client.realIP);
+				if (!user) {
+					user = {
+						ip: client.realIP,
+						connections: 1,
+						ratelimitClicks: 0,
+						ratelimitInterval: null
+					};
+
+					if (ratelimit > 0) {
+						user.ratelimitInterval = setInterval(() => {
+							if (user.connections === 0) {
+								// If user is no longer connected, clear their ratelimit interval and remove their info
+								clearInterval(user.ratelimitInterval);
+								socketConnections.splice(socketConnections.findIndex(u => u.ip === user.ip), 1);
+							}
+							user.ratelimitClicks = 0;
+						}, 1000 * 60);
+					}
+
+					socketConnections.push(user);
+				}
+				else {
+					if (connectionLimit > 0) {
+						if (user.connections >= connectionLimit) client.close(); // Close existing excess connections
+						else user.connections++;
+					}
+				}
+			});
+		}
+		else {
+			// Modify existing data
+			if (ratelimit > 0) {
+				socketConnections.forEach(user => {
+					clearInterval(user.ratelimitInterval); // Prevent duplication
+					user.ratelimitInterval = setInterval(() => {
+						if (user.connections === 0) {
+							// If user is no longer connected, clear their ratelimit interval and remove their info
+							clearInterval(user.ratelimitInterval);
+							socketConnections.splice(socketConnections.findIndex(u => u.ip === user.ip), 1);
+						}
+						user.ratelimitClicks = 0;
+					}, 1000 * 60);
+				});
+			}
+			if (ratelimit === -1) {
+				socketConnections.forEach(user => {
+					clearInterval(user.ratelimitInterval);
+				});
+			}
+		}
+	}
+	else {
+		// Clear data
+		socketConnections.forEach(c => clearInterval(c.ratelimitInterval));
+		socketConnections = [];
+	}
 }
 
 readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
@@ -874,9 +950,87 @@ apiRouter.get('/admin/database/save', (req, res) => {
 	return res.json({ code: 200, message: 'Database successfully updated.' });
 });
 
-// TODO: Make endpoints for config and data panel
-// Make admin routes for ws limit, db freq and request rl
-// Also route for toggling bulk mode
+// TODO: Make endpoints for data panel
+
+apiRouter.get('/admin/config', (req, res) => {
+	return res.json({
+		updateInterval: config.updateInterval,
+		socketConnections: config.socketConnections,
+		requestsPerMinute: config.requestsPerMinute,
+		responseInterval: config.responseInterval
+	});
+});
+
+apiRouter.patch('/admin/config/updateinterval', (req, res) => {
+	const data = req.body;
+	data.interval = parseInt(data.interval);
+
+	if (data.interval <= 0 || data.interval > 60 || isNaN(data.interval)) {
+		return res.status(400).json({ code: 400, name: 'Invalid interval', message: 'Update interval must be between 1 and 60 minutes.' });
+	}
+
+	config.updateInterval = data.interval;
+	databaseUpdateJob.reschedule(`*/${data.interval} * * * *`);
+
+	updateConfigFile();
+
+	Logger.info(`Database updating rescheduled to minute ${data.interval}.`);
+	return res.json({ code: 200, message: 'Update interval successfully updated' });
+});
+
+apiRouter.patch('/admin/config/responseinterval', (req, res) => {
+	const data = req.body;
+	data.interval = parseInt(data.interval);
+
+	if (data.interval < -1 || data.interval === 0 || isNaN(data.interval)) {
+		return res.status(400).json({ code: 400, name: 'Invalid interval', message: 'Response interval must be either -1 or any number above 0.' });
+	}
+
+	if (data.interval === -1) config.responseInterval = -1;
+	else config.responseInterval = data.interval;
+
+	manageResponseIntervals(data.interval);
+	updateConfigFile();
+
+	Logger.info(`Response interval set to respond ${data.interval === -1 ? 'immediately' : `after ${data.interval}ms`}.`);
+	return res.json({ code: 200, message: 'Response interval successfully updated' });
+});
+
+apiRouter.patch('/admin/config/connections', (req, res) => {
+	const data = req.body;
+	data.connections = parseInt(data.connections);
+
+	if (data.connections < -1 || data.connections === 0 || isNaN(data.connections)) {
+		return res.status(400).json({ code: 400, name: 'Invalid limit', message: 'Connections limit must be either -1 or any number above 0.' });
+	}
+
+	if (data.connections === -1) config.socketConnections = -1;
+	else config.socketConnections = data.connections;
+
+	manageConnections(data.connections, config.requestsPerMinute);
+	updateConfigFile();
+
+	Logger.info(`Connection limit ${data.interval === -1 ? 'disabled' : `set to ${data.connections} connections`}.`);
+	return res.json({ code: 200, message: 'Connection limit successfully updated' });
+});
+
+apiRouter.patch('/admin/config/ratelimit', (req, res) => {
+	const data = req.body;
+	data.ratelimit = parseInt(data.ratelimit);
+
+	if (data.ratelimit < -1 || data.ratelimit === 0 || isNaN(data.ratelimit)) {
+		return res.status(400).json({ code: 400, name: 'Invalid ratelimit', message: 'Ratelimit must be either -1 or any number above 0.' });
+	}
+
+	if (data.ratelimit === -1) config.requestsPerMinute = -1;
+	else config.requestsPerMinute = data.ratelimit;
+
+	manageConnections(config.socketConnections, data.ratelimit);
+	updateConfigFile();
+
+	Logger.info(`Ratelimit ${data.ratelimit === -1 ? 'disabled' : `set to ${data.ratelimit} clicks per minute`}.`);
+	return res.json({ code: 200, message: 'Click ratelimit successfully updated' });
+});
 
 server.use('/api', apiRouter);
 
@@ -947,14 +1101,54 @@ function markMilestoneAchieved(milestone, sound) {
 	});
 }
 
+// Bulk mode response intervals
+function manageResponseIntervals(interval) {
+	clearInterval(mainClickResponseInterval);
+	clearInterval(soundboardClickResponseInterval);
+	// Clears if previously set
+
+	if (interval > 0) {
+		mainClickResponseInterval = setInterval(() => {
+			const currentDate = dateFns.format(new Date(), 'yyyy-MM-dd');
+			const currentMonth = currentDate.substring(0, 7);
+			const currentMonthData = chartData.find(d => d.month === currentMonth);
+
+			if (queuedMainClicks) {
+				emitUpdate({
+					type: 'counterUpdate',
+					counter,
+					statistics: {
+						summary: { alltime: counter, daily, weekly, monthly, yearly, average },
+						newChartData: currentMonthData
+					},
+				});
+				queuedMainClicks = false;
+			}
+		}, interval);
+
+		soundboardClickResponseInterval = setInterval(() => {
+			if (Object.keys(queuedSoundboardClicks).length !== 0) {
+				emitUpdate({
+					type: 'bulkSoundUpdate',
+					sounds: JSON.stringify(queuedSoundboardClicks)
+				});
+				queuedSoundboardClicks = {};
+			}
+		}, interval);
+	}
+}
+
+manageResponseIntervals(config.responseInterval); // Initializes response intervals if they are set
+
 socketServer.on('connection', (socket, req) => {
-	const requestIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
-	let user = socketConnections.filter(u => u.ip === requestIP)[0];
+	socket.realIP = config.proxy ? req.headers['x-real-ip'] : req.connection.remoteAddress;
 
 	if (config.socketConnections > 0 || config.requestsPerMinute > 0) {
+		let user = socketConnections.find(u => u.ip === socket.realIP);
+
 		if (!user) {
 			user = {
-				ip: requestIP,
+				ip: socket.realIP,
 				connections: 0,
 				ratelimitClicks: 0,
 				ratelimitInterval: null
@@ -963,12 +1157,20 @@ socketServer.on('connection', (socket, req) => {
 		}
 
 		if (config.socketConnections > 0) {
-			if (user.connections >= config.socketConnections) return socket.close();
+			if (user.connections >= config.socketConnections) {
+				socket.limitKicked = true; // For keeping track of decrementing connection count (see socket close event)
+				return socket.close();
+			}
 			else user.connections++;
 		}
 
 		if (config.requestsPerMinute > 0) {
 			user.ratelimitInterval = setInterval(() => {
+				if (user.connections === 0) {
+					// If user is no longer connected, clear their ratelimit interval and remove their info
+					clearInterval(user.ratelimitInterval);
+					socketConnections.splice(socketConnections.findIndex(u => u.ip === user.ip), 1);
+				}
 				user.ratelimitClicks = 0;
 			}, 1000 * 60);
 		} // Clear ratelimit every 60 seconds
@@ -978,6 +1180,8 @@ socketServer.on('connection', (socket, req) => {
 
 	socket.on('message', message => {
 		if (config.requestsPerMinute > 0) {
+			const user = socketConnections.find(u => u.ip === socket.realIP);
+
 			if (user.ratelimitClicks >= config.requestsPerMinute) return;
 			else user.ratelimitClicks++;
 		}
@@ -1019,7 +1223,7 @@ socketServer.on('connection', (socket, req) => {
 				});
 			}
 
-			const reachedMilestone = milestones.filter(ms => ms.count <= counter && !ms.reached)[0];
+			const reachedMilestone = milestones.find(ms => ms.count <= counter && !ms.reached);
 			if (reachedMilestone) markMilestoneAchieved(reachedMilestone, soundEntry);
 
 			if (config.responseInterval > 0) {
@@ -1071,45 +1275,24 @@ socketServer.on('connection', (socket, req) => {
 	});
 
 	socket.on('close', (code, reason) => {
-		if (config.socketConnections > 0) {
-			if (user.connections - 1 <= 0) socketConnections.splice(socketConnections.findIndex(u => u.ip === requestIP), 1);
+		if (config.socketConnections > 0 && !socket.limitKicked) {
+			/*
+			limitKicked property so the connection counter doesn't decrement for connections
+			which were intentionally closed and not recorded when the connection limit was activated
+			*/
+			const user = socketConnections.find(u => u.ip === socket.realIP);
+
+			if (user.connections - 1 <= 0) {
+				if (config.requestsPerMinute === -1) socketConnections.splice(socketConnections.findIndex(u => u.ip === socket.realIP), 1);
+				else user.connections = 0;
+				// Keeping data until next ratelimit clear if ratelimit is activated because otherwise users could reconnect to reset ratelimit
+			}
 			else user.connections--;
 		}
 
 		return clearInterval(socket.pingInterval);
 	});
 });
-
-// Bulk mode response intervals
-if (config.responseInterval > 0) {
-	let mainClickResponseInterval = setInterval(() => {
-		const currentDate = dateFns.format(new Date(), 'yyyy-MM-dd');
-		const currentMonth = currentDate.substring(0, 7);
-		const currentMonthData = chartData.find(d => d.month === currentMonth);
-
-		if (queuedMainClicks) {
-			emitUpdate({
-				type: 'counterUpdate',
-				counter,
-				statistics: {
-					summary: { alltime: counter, daily, weekly, monthly, yearly, average },
-					newChartData: currentMonthData
-				},
-			});
-			queuedMainClicks = false;
-		}
-	}, config.responseInterval);
-
-	let soundboardClickResponseInterval = setInterval(() => {
-		if (Object.keys(queuedSoundboardClicks).length !== 0) {
-			emitUpdate({
-				type: 'bulkSoundUpdate',
-				sounds: JSON.stringify(queuedSoundboardClicks)
-			});
-			queuedSoundboardClicks = {};
-		}
-	}, config.responseInterval);
-}
 
 // Database updates
 

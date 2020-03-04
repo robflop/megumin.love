@@ -65,8 +65,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 	let milestones = await fetch('/api/statistics/milestones').then(res => res.json());
 	updateMilestones(milestones);
 
+	const config = await fetch('/api/admin/config').then(res => res.json());
+	document.getElementById('update-interval-current').innerHTML = `Current: ${config.updateInterval}`;
+	document.getElementById('response-interval-current').innerHTML = `Current: ${config.responseInterval} | -1 to immediately respond`;
+	document.getElementById('socket-connections-current').innerHTML = `Current: ${config.socketConnections} | -1 to disable`;
+	document.getElementById('rate-limit-current').innerHTML = `Current: ${config.requestsPerMinute} | -1 to disable`;
+
 	const soundResponse = document.getElementById('soundResponse');
 	const milestoneResponse = document.getElementById('milestoneResponse');
+	const configResponse = document.getElementById('config-response');
+	const dataResponse = document.getElementById('data-response');
+
+	// TODO: Mess with formdata, https://stackoverflow.com/a/55306625, https://stackoverflow.com/a/46376650
+
+	/* ------ Sound-panel Forms ------ */
 
 	const soundUploadForm = document.getElementById('soundUpload-form');
 	soundUploadForm.addEventListener('submit', async e => {
@@ -172,6 +184,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
+	/* ------ Milestone-panel Forms ------ */
+
 	const milestoneAddForm = document.getElementById('milestoneAdd-form');
 	milestoneAddForm.addEventListener('submit', async e => {
 		e.preventDefault();
@@ -272,8 +286,145 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	// TODO: Make logic for config frontend panel
-	// Includes loading current db freq and current ws limit + req rl
+	/* ------ Config-panel Forms ------ */
+
+	const updateIntervalForm = document.getElementById('update-interval-form');
+	updateIntervalForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const data = {};
+
+		for (let i = 0; i < updateIntervalForm.elements.length - 1; i++) {
+			const field = updateIntervalForm.elements[i];
+			if (field.value !== '') data[field.name] = field.value;
+		} // Minus one of its length to take out the submit button
+
+		const intervalRes = await fetch('/api/admin/config/updateinterval', {
+			method: 'PATCH',
+			headers: {
+				'Authorization': localStorage.getItem('token'),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(res => res.json());
+
+		if (intervalRes.code === 200) {
+			updateIntervalForm.reset();
+
+			configResponse.innerText = 'Update interval successfully updated!';
+			util.fade(configResponse, 5000);
+
+			document.getElementById('update-interval-current').innerHTML = `Current: ${data.interval}`;
+		}
+		else {
+			configResponse.innerText = `An Error occurred (Code ${intervalRes.code}): ${intervalRes.message}`;
+			util.fade(configResponse, 5000);
+		}
+	});
+
+	const responseIntervalForm = document.getElementById('response-interval-form');
+	responseIntervalForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const data = {};
+
+		for (let i = 0; i < responseIntervalForm.elements.length - 1; i++) {
+			const field = responseIntervalForm.elements[i];
+			if (field.value !== '') data[field.name] = field.value;
+		} // Minus one of its length to take out the submit button
+
+		const intervalRes = await fetch('/api/admin/config/responseinterval', {
+			method: 'PATCH',
+			headers: {
+				'Authorization': localStorage.getItem('token'),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(res => res.json());
+
+		if (intervalRes.code === 200) {
+			responseIntervalForm.reset();
+
+			configResponse.innerText = 'Response interval successfully updated!';
+			util.fade(configResponse, 5000);
+
+			document.getElementById('response-interval-current').innerHTML = `Current: ${data.interval} | -1 to immediately respond`;
+		}
+		else {
+			configResponse.innerText = `An Error occurred (Code ${intervalRes.code}): ${intervalRes.message}`;
+			util.fade(configResponse, 5000);
+		}
+	});
+
+	const socketConnectionsForm = document.getElementById('socket-connections-form');
+	socketConnectionsForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const data = {};
+
+		for (let i = 0; i < socketConnectionsForm.elements.length - 1; i++) {
+			const field = socketConnectionsForm.elements[i];
+			if (field.value !== '') data[field.name] = field.value;
+		} // Minus one of its length to take out the submit button
+
+		const connectionsRes = await fetch('/api/admin/config/connections', {
+			method: 'PATCH',
+			headers: {
+				'Authorization': localStorage.getItem('token'),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(res => res.json());
+
+		if (connectionsRes.code === 200) {
+			socketConnectionsForm.reset();
+
+			configResponse.innerText = 'Connection limit successfully updated!';
+			util.fade(configResponse, 5000);
+
+			document.getElementById('socket-connections-current').innerHTML = `Current: ${data.connections} | -1 to disable`;
+		}
+		else {
+			configResponse.innerText = `An Error occurred (Code ${connectionsRes.code}): ${connectionsRes.message}`;
+			util.fade(configResponse, 5000);
+		}
+	});
+
+	const rateLimitForm = document.getElementById('rate-limit-form');
+	rateLimitForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const data = {};
+
+		for (let i = 0; i < rateLimitForm.elements.length - 1; i++) {
+			const field = rateLimitForm.elements[i];
+			if (field.value !== '') data[field.name] = field.value;
+		} // Minus one of its length to take out the submit button
+
+		const ratelimitRes = await fetch('/api/admin/config/ratelimit', {
+			method: 'PATCH',
+			headers: {
+				'Authorization': localStorage.getItem('token'),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(res => res.json());
+
+		if (ratelimitRes.code === 200) {
+			rateLimitForm.reset();
+
+			configResponse.innerText = 'Ratelimit successfully updated!';
+			util.fade(configResponse, 5000);
+
+			document.getElementById('rate-limit-current').innerHTML = `Current: ${data.ratelimit} | -1 to disable`;
+		}
+		else {
+			configResponse.innerText = `An Error occurred (Code ${ratelimitRes.code}): ${ratelimitRes.message}`;
+			util.fade(configResponse, 5000);
+		}
+	});
+
+	/* ------ Data-panel Forms ------ */
 	// TOOD: Make logic for data panel
 
 	document.getElementById('logout').addEventListener('click', async e => {
