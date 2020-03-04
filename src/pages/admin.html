@@ -52,47 +52,46 @@
 			</div>
 			<button id="logout">Logout</button>
 			<h1 class="titles">megumin.love Admin Panel</h1>
-			<!-- TODO: Clean up naming scheme for all IDs across all files (no camelcasing) -->
-			<div class="panel" id="soundPanel">
-				<div class="sub-panel" id="soundUpload">
+			<div class="panel" id="sound-panel">
+				<div class="sub-panel" id="sound-upload">
 					<h2 class="titles">Upload sounds</h2>
-					<form id="soundUpload-form" enctype="multipart/form-data" method="post">
+					<form id="sound-upload-form" enctype="multipart/form-data" method="post">
 						<input type="file" name="file" accept="audio/mp3" required>
 						<input type="text" name="filename" placeholder="Sound filename" required>
 						<input type="text" name="displayname" placeholder="Sound displayname">
 						<input type="text" name="source" placeholder="Sound source">
 						<input type="text" name="count" placeholder="Sound click count">
-						<select name="theme" id="soundUpload-theme-select">
+						<select name="theme" id="sound-upload-theme-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="submit" value="Upload sound">
 					</form>
 				</div>
-				<div class="sub-panel" id="soundModify">
+				<div class="sub-panel" id="sound-modify">
 					<h2 class="titles">Modify sounds</h2>
-					<form id="soundModify-form" method="post">
-						<select name="id" id="soundModify-id-select" required>
+					<form id="sound-modify-form" method="post">
+						<select name="id" id="sound-modify-id-select" required>
 							<!-- Automatically generated -->
 						</select>
 						<input type="text" name="filename" placeholder="New filename">
 						<input type="text" name="displayname" placeholder="New displayname">
 						<input type="text" name="source" placeholder="New source">
 						<input type="text" name="count" placeholder="New click count">
-						<select name="theme" id="soundModify-theme-select">
+						<select name="theme" id="sound-modify-theme-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="submit" value="Modify sound">
 					</form>
 				</div>
-				<div class="sub-panel" id="soundDelete">
+				<div class="sub-panel" id="sound-delete">
 					<h2 class="titles">Delete sounds</h2>
-					<form id="soundDelete-form" method="post">
-						<select name="id" id="soundDelete-id-select" required>
+					<form id="sound-delete-form" method="post">
+						<select name="id" id="sound-delete-id-select" required>
 							<!-- Automatically generated -->
 						</select>
-						<div id="soundDelete-confirm-wrapper">
-							<label for="soundDelete-confirmation">
-								<input type="checkbox" name="soundDelete-confirmation" required>
+						<div id="sound-delete-confirm-wrapper">
+							<label for="sound-delete-confirmation">
+								<input type="checkbox" name="sound-delete-confirmation" required>
 								Confirm deletion
 							</label>
 						</div>
@@ -100,46 +99,46 @@
 					</form>
 				</div>
 
-				<p class="response" id="soundResponse"></p>
+				<p class="response" id="sound-response"></p>
 			</div>
 
-			<div class="panel" id="milestonePanel">
-				<div class="sub-panel" id="milestoneAdd">
+			<div class="panel" id="milestone-panel">
+				<div class="sub-panel" id="milestone-add">
 					<h2 class="titles">Add milestones</h2>
-					<form id="milestoneAdd-form" method="post">
+					<form id="milestone-add-form" method="post">
 						<input type="text" name="count" placeholder="Milestone click count" required>
 						<input type="text" name="reached" placeholder="Milestone reached status">
 						<input type="text" name="timestamp" placeholder="Milestone timestamp (Unix)">
-						<select name="sound_id" id="milestoneAdd-sound_id-select">
+						<select name="sound_id" id="milestone-add-sound_id-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="submit" value="Add milestone">
 					</form>
 				</div>
-				<div class="sub-panel" id="milestoneModify">
+				<div class="sub-panel" id="milestone-modify">
 					<h2 class="titles">Modify milestones</h2>
-					<form id="milestoneModify-form" method="post">
-						<select name="id" id="milestoneModify-id-select" required>
+					<form id="milestone-modify-form" method="post">
+						<select name="id" id="milestone-modify-id-select" required>
 							<!-- Automatically generated -->
 						</select>
 						<input type="text" name="count" placeholder="New milestone click count">
 						<input type="text" name="reached" placeholder="New milestone reached status">
 						<input type="text" name="timestamp" placeholder="New milestone timestamp">
-						<select name="sound_id" id="milestoneModify-sound_id-select">
+						<select name="sound_id" id="milestone-modify-sound_id-select">
 							<!-- Automatically generated -->
 						</select>
 						<input type="submit" value="Modify milestone">
 					</form>
 				</div>
-				<div class="sub-panel" id="milestoneDelete">
+				<div class="sub-panel" id="milestone-delete">
 					<h2 class="titles">Delete milestones</h2>
-					<form id="milestoneDelete-form" method="post">
-						<select name="filename" id="milestoneDelete-id-select">
+					<form id="milestone-delete-form" method="post">
+						<select name="filename" id="milestone-delete-id-select">
 							<!-- Automatically generated -->
 						</select>
-						<div id="milestoneDelete-confirm-wrapper">
-							<label for="milestoneDelete-confirmation">
-								<input type="checkbox" name="milestoneDelete-confirmation" required>
+						<div id="milestone-delete-confirm-wrapper">
+							<label for="milestone-delete-confirmation">
+								<input type="checkbox" name="milestone-delete-confirmation" required>
 								Confirm deletion
 							</label>
 						</div>
@@ -147,7 +146,7 @@
 					</form>
 				</div>
 
-				<p class="response" id="milestoneResponse"></p>
+				<p class="response" id="milestone-response"></p>
 			</div>
 
 			<div class="panel" id="config-panel">

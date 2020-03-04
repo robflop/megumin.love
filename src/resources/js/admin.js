@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 		modifyThemeOptions.unshift('<option value="megumin">Default theme</option>');
 		modifyThemeOptions.unshift('<option value="">No theme change</option>');
 
-		document.getElementById('soundModify-id-select').innerHTML = options.join('');
-		document.getElementById('soundDelete-id-select').innerHTML = options.join('');
-		document.getElementById('milestoneAdd-sound_id-select').innerHTML = options.join('');
-		document.getElementById('milestoneModify-sound_id-select').innerHTML = options.join('');
+		document.getElementById('sound-modify-id-select').innerHTML = options.join('');
+		document.getElementById('sound-delete-id-select').innerHTML = options.join('');
+		document.getElementById('milestone-add-sound_id-select').innerHTML = options.join('');
+		document.getElementById('milestone-modify-sound_id-select').innerHTML = options.join('');
 
-		document.getElementById('soundUpload-theme-select').innerHTML = uploadThemeOptions.join('');
-		document.getElementById('soundModify-theme-select').innerHTML = modifyThemeOptions.join('');
+		document.getElementById('sound-upload-theme-select').innerHTML = uploadThemeOptions.join('');
+		document.getElementById('sound-modify-theme-select').innerHTML = modifyThemeOptions.join('');
 	}
 
 	function updateMilestones(m) {
@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		options.unshift('<option value="">No milestone selected</option>');
 
-		document.getElementById('milestoneModify-id-select').innerHTML = options.join('');
-		document.getElementById('milestoneDelete-id-select').innerHTML = options.join('');
+		document.getElementById('milestone-modify-id-select').innerHTML = options.join('');
+		document.getElementById('milestone-delete-id-select').innerHTML = options.join('');
 	}
 
 	let sounds = await fetch('/api/sounds').then(res => res.json());
@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	document.getElementById('socket-connections-current').innerHTML = `Current: ${config.socketConnections} | -1 to disable`;
 	document.getElementById('rate-limit-current').innerHTML = `Current: ${config.requestsPerMinute} | -1 to disable`;
 
-	const soundResponse = document.getElementById('soundResponse');
-	const milestoneResponse = document.getElementById('milestoneResponse');
+	const soundResponse = document.getElementById('sound-response');
+	const milestoneResponse = document.getElementById('milestone-response');
 	const configResponse = document.getElementById('config-response');
 	const dataResponse = document.getElementById('data-response');
 
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	/* ------ Sound-panel Forms ------ */
 
-	const soundUploadForm = document.getElementById('soundUpload-form');
+	const soundUploadForm = document.getElementById('sound-upload-form');
 	soundUploadForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	const soundModifyForm = document.getElementById('soundModify-form');
+	const soundModifyForm = document.getElementById('sound-modify-form');
 	soundModifyForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	const soundDeleteForm = document.getElementById('soundDelete-form');
+	const soundDeleteForm = document.getElementById('sound-delete-form');
 	soundDeleteForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	/* ------ Milestone-panel Forms ------ */
 
-	const milestoneAddForm = document.getElementById('milestoneAdd-form');
+	const milestoneAddForm = document.getElementById('milestone-add-form');
 	milestoneAddForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	const milestoneModifyForm = document.getElementById('milestoneModify-form');
+	const milestoneModifyForm = document.getElementById('milestone-modify-form');
 	milestoneModifyForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	const milestoneDeleteForm = document.getElementById('milestoneDelete-form');
+	const milestoneDeleteForm = document.getElementById('milestone-delete-form');
 	milestoneDeleteForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
