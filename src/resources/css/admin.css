@@ -32,7 +32,7 @@ label[for="bg-select"], select[id="bg-select"] {
 	display: block;
 	margin-top: 5px;
 	margin-bottom: 0px;
-	color: white; /* TODO: Needs prettification */
+	color: white;
 }
 
 .panel .sub-panel label {

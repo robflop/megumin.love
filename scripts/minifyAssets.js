@@ -1,4 +1,7 @@
-const compressor = require('node-minify');
+const compressor = require('@node-minify/core');
+const uglifyES = require('@node-minify/uglify-es');
+const cleanCSS = require('@node-minify/clean-css');
+
 const { readdirSync } = require('fs');
 const { basename, join } = require('path');
 
@@ -16,8 +19,8 @@ function minifyAssets() {
 	jsFiles.splice(0, 1); // Remove eslintrc
 
 	cssFiles.forEach(fileName => {
-		compressor.minify({
-			compressor: 'clean-css',
+		compressor({
+			compressor: cleanCSS,
 			input: join(cssPath, fileName),
 			output: join(cssPath, `${basename(fileName, '.css')}.min.css`),
 		});
@@ -26,8 +29,8 @@ function minifyAssets() {
 	Logger.info('CSS minification complete.');
 
 	jsFiles.forEach(fileName => {
-		compressor.minify({
-			compressor: 'uglify-es',
+		compressor({
+			compressor: uglifyES,
 			input: join(jsPath, fileName),
 			output: join(jsPath, `${basename(fileName, '.js')}.min.js`),
 		});
