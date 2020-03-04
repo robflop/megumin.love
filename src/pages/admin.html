@@ -152,39 +152,36 @@
 
 			<!-- TODO: Finish frontend panel for config -->
 			<div class="panel" id="config-panel">
-				<div class="sub-panel" id="update-frequency">
-					<h2 class="titles">Database update frequency</h2>
-					<p id="update-frequency-current">Loading...</p>
-					<form id="update-frequency-form" method="post">
-						<input type="number" name="frequency" placeholder="Frequency in minutes (1-60)" required min="1" max="60">
-						<input type="submit" value="Change frequency">
+				<div class="sub-panel" id="update-interval">
+					<h2 class="titles">Database update interval</h2>
+					<p id="update-interval-current">Loading...</p>
+					<form id="update-interval-form" method="post">
+						<input type="number" name="interval" placeholder="Interval in minutes (1-60)" required min="1" max="60">
+						<input type="submit" value="Change interval">
 					</form>
 				</div>
 
 				<div class="sub-panel" id="response-interval">
 					<h2 class="titles">Response interval</h2>
-					<form class="response-interval-form" method="post">
-						<p class="response-interval-current">Loading...</p>
-						<!-- TODO: Add note about entering -1 to respond immediately -->
-						<input type="number" name="ratelimit" placeholder="Respond after x ms" required min="-1">
-						<input type="submit" value="Save response interval">
+					<p id="response-interval-current">Loading...</p>
+					<form id="response-interval-form" method="post">
+						<input type="number" name="interval" placeholder="Respond after x ms" required min="-1">
+						<input type="submit" value="Change response interval">
 					</form>
 				</div>
 
 				<div class="sub-panel" id="socket-connections">
 					<h2 class="titles">WebSocket connection limit</h2>
 					<p id="socket-connections-current">Loading...</p>
-					<!-- TODO: Add note about entering -1 to disable -->
 					<form id="socket-connections-form" method="post">
-						<input type="number" name="limit" placeholder="Connections per IP" required min="-1">
+						<input type="number" name="connections" placeholder="Connections per IP" required min="-1">
 						<input type="submit" value="Change connection limit">
 					</form>
 				</div>
 
 				<div class="sub-panel" id="click-ratelimit">
 					<h2 class="titles">WebSocket requests ratelimit</h2>
-					<p class="rate-limit-current">Loading...</p>
-					<!-- TODO: Add note about entering -1 to disable -->
+					<p id="rate-limit-current">Loading...</p>
 					<form id="rate-limit-form" method="post">
 						<input type="number" name="ratelimit" placeholder="Requests (clicks) / minute" required min="-1">
 						<input type="submit" value="Change click ratelimit">
