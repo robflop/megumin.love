@@ -3,7 +3,7 @@ const session = require('express-session');
 const helmet = require('helmet');
 const multer = require('multer');
 const { Database } = require('sqlite3');
-const { schedule } = require('node-cron');
+const { scheduleJob } = require('node-schedule');
 const ws = require('ws');
 const dateFns = require('date-fns');
 const { join } = require('path');
@@ -15,6 +15,8 @@ const { version } = require('../package.json');
 
 let counter = 0, daily = 0, weekly = 0, monthly = 0, yearly = 0, average = 0, fetchedDaysAmount = 1;
 let sounds = [], statistics = [], chartData = [], milestones = [];
+
+let databaseUpdateJob;
 
 const socketConnections = [];
 let queuedMainClicks = false, queuedSoundboardClicks = {};
@@ -1110,13 +1112,15 @@ if (config.responseInterval > 0) {
 }
 
 // Database updates
-schedule(`*/${Math.round(config.updateInterval)} * * * *`, () => {
+
+// eslint-disable-next-line prefer-const
+databaseUpdateJob = scheduleJob(`*/${config.updateInterval} * * * *`, () => {
 	updateDatabase();
 
 	return Logger.info('Database updated.');
 }); // Update db at every n-th minute
 
-schedule('0 0 1 1 *', () => {
+scheduleJob('0 0 1 1 *', () => {
 	yearly = 0;
 
 	Logger.info('Yearly counter reset.');
@@ -1129,7 +1133,7 @@ schedule('0 0 1 1 *', () => {
 	});
 }); // Reset yearly counter at the start of each year
 
-schedule('0 0 1 * *', () => {
+scheduleJob('0 0 1 * *', () => {
 	monthly = 0; fetchedDaysAmount = 1;
 
 	Logger.info('Monthly counter & fetched days amount reset.');
@@ -1142,7 +1146,7 @@ schedule('0 0 1 * *', () => {
 	});
 }); // Reset monthly counter at the start of each month
 
-schedule('0 0 * * 1', () => {
+scheduleJob('0 0 * * 1', () => {
 	weekly = 0;
 
 	Logger.info('Weekly counter reset.');
@@ -1155,7 +1159,7 @@ schedule('0 0 * * 1', () => {
 	});
 }); // Reset weekly counter at the start of each week
 
-schedule('1 0 * * *', () => {
+scheduleJob('1 0 * * *', () => {
 	daily = 0; ++fetchedDaysAmount;
 	average = Math.round(monthly / fetchedDaysAmount);
 
