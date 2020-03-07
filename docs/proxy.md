@@ -1,11 +1,7 @@
-// TODO: Adjust text
-If you want to proxy the website to the SSL port (443), so that users can access the site via `https://<domain>` instead of `http://<domain>:<port>`, then flip on the `SSLproxy` setting in the config.
-This will make the front-end WebSocket connections connect to `wss://<domain>` instead of `ws://<domain>:<port>`.
-Not changing this setting but still proxying to the SSL port (443) will result in every counter of the page being unresponsive, as the WebSocket connections will fail.
+If you want to proxy the website through a webserver like nginx (e.g. for SSL or any other proxy such as Cloudflare), you will need to set the `proxy` config setting to `true` for certain parts of the website to function correctly (e.g. Ratelimiting, connection limits).
 
-If you're not going to be running the site with SSL just leave the setting at the default `false` value and everything should be fine.
-
-Fully functional nginx example:
+The below provided nginx sample config will proxy the website to `https://domain.tld` from `http://domain.tld:port`.
+As I don't know how to set this up for Apache, I cannot provide a working sample.
 -
 
 ```nginx
