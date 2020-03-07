@@ -241,6 +241,8 @@ const apiRouter = express.Router();
 apiRouter.use(express.urlencoded({ extended: true }));
 apiRouter.use(express.json());
 
+// TODO: Write all ApiDocs
+
 apiRouter.all('/*', (req, res, next) => {
 	const apiEndpoints = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
@@ -258,14 +260,15 @@ apiRouter.get('/', (req, res) => {
  * @apiName GetMeta
  * @apiGroup Meta
  *
- * @apiSuccess (200) {Number} port The website's port
- * @apiSuccess (200) {Boolean} proxy Whether the proxy setting is activated
- * @apiSuccess (200) {String} version The website's version
+ * @apiSuccess (Success 200) {Number} port The website's port
+ * @apiSuccess (Success 200) {String} version The website's version
+ *
+ * @apiExample {curl} Example Request:
+ *     $ curl https://megumin.love/api/meta
  *
  * @apiSuccessExample {json} Example Response:
  * {
  *     "port": 5959,
- *     "proxy": false,
  *     "version": "9.0.0"
  * }
  *

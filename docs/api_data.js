@@ -7,23 +7,16 @@ define({ "api": [
     "group": "Meta",
     "success": {
       "fields": {
-        "200": [
+        "Success 200": [
           {
-            "group": "200",
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "port",
             "description": "<p>The website's port</p>"
           },
           {
-            "group": "200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "proxy",
-            "description": "<p>Whether the proxy setting is activated</p>"
-          },
-          {
-            "group": "200",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "version",
@@ -34,11 +27,18 @@ define({ "api": [
       "examples": [
         {
           "title": "Example Response:",
-          "content": "{\n    \"port\": 5959,\n    \"proxy\": false,\n    \"version\": \"9.0.0\"\n}",
+          "content": "{\n    \"port\": 5959,\n    \"version\": \"9.0.0\"\n}",
           "type": "json"
         }
       ]
     },
+    "examples": [
+      {
+        "title": "Example Request:",
+        "content": "$ curl https://megumin.love/api/meta",
+        "type": "curl"
+      }
+    ],
     "version": "0.0.0",
     "filename": "src/server.js",
     "groupTitle": "Meta"
