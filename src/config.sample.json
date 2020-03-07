@@ -1,5 +1,4 @@
 {
-	"domain": "megumin.love",
 	"port": 5959,
 	"proxy": false,
 	"databasePath": "./db/default.db",

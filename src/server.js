@@ -253,7 +253,7 @@ apiRouter.get('/', (req, res) => {
 });
 
 apiRouter.get('/meta', (req, res) => {
-	return res.json({ port: config.port, proxy: config.proxy, version });
+	return res.json({ port: config.port, version });
 });
 
 apiRouter.get('/counter', (req, res) => {
