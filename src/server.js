@@ -252,6 +252,24 @@ apiRouter.get('/', (req, res) => {
 	return res.json({ code: 200, message: 'You have reached the megumin.love API.' });
 });
 
+/**
+ *
+ * @api {get} /meta Get Meta Information
+ * @apiName GetMeta
+ * @apiGroup Meta
+ *
+ * @apiSuccess (200) {Number} port The website's port
+ * @apiSuccess (200) {Boolean} proxy Whether the proxy setting is activated
+ * @apiSuccess (200) {String} version The website's version
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *     "port": 5959,
+ *     "proxy": false,
+ *     "version": "9.0.0"
+ * }
+ *
+ */
 apiRouter.get('/meta', (req, res) => {
 	return res.json({ port: config.port, version });
 });
