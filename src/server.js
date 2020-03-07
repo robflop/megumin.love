@@ -98,8 +98,6 @@ function updateDatabase() {
 			db.run('UPDATE sounds SET count = ? WHERE id = ?', sound.count, sound.id);
 		}
 	});
-
-	Logger.info('Database successfully updated.');
 }
 
 // Warning for default admin token and session secret
@@ -1319,7 +1317,7 @@ socketServer.on('connection', (socket, req) => {
 databaseUpdateJob = scheduleJob(`*/${config.updateInterval} * * * *`, () => {
 	updateDatabase();
 
-	return Logger.info('Database updated.');
+	return Logger.info('Database successfully updated.');
 }); // Update db at every n-th minute
 
 scheduleJob('0 0 1 1 *', () => {
