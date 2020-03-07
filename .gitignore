@@ -10,8 +10,8 @@ src/db/megumin_love.db
 src/resources/testfile.mp3
 
 # Minified files
-/**/*.min.css
-/**/*.min.js
+/src/**/*.min.css
+/src/**/*.min.js
 
 # Runtime data
 pids
