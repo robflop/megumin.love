@@ -424,8 +424,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	/* ------ Data-panel Forms ------ */
-	// TOOD: Make logic for data panel
+	/* ------ Logout ------ */
 
 	document.getElementById('logout').addEventListener('click', async e => {
 		e.preventDefault();
