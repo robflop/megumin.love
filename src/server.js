@@ -950,8 +950,6 @@ apiRouter.get('/admin/database/save', (req, res) => {
 	return res.json({ code: 200, message: 'Database successfully updated.' });
 });
 
-// TODO: Make endpoints for data panel
-
 apiRouter.get('/admin/config', (req, res) => {
 	return res.json({
 		updateInterval: config.updateInterval,
