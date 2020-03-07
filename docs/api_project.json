@@ -1,4 +1,8 @@
 {
+  "title": "apiDoc: megumin.love",
+  "template": {
+    "withCompare": false
+  },
   "name": "megumin.love",
   "version": "8.1.0",
   "description": "Fansite about best girl Megumin from the anime called 'Kono Subarashii Sekai ni Shukufuku wo!'",
@@ -7,7 +11,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2020-03-07T11:44:08.696Z",
+    "time": "2020-03-07T12:00:31.101Z",
     "url": "http://apidocjs.com",
     "version": "0.20.0"
   }

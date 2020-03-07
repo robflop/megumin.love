@@ -33,7 +33,7 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "Success-Response:",
+          "title": "Example Response:",
           "content": "{\n    \"port\": 5959,\n    \"proxy\": false,\n    \"version\": \"9.0.0\"\n}",
           "type": "json"
         }

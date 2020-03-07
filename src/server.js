@@ -262,7 +262,7 @@ apiRouter.get('/', (req, res) => {
  * @apiSuccess (200) {Boolean} proxy Whether the proxy setting is activated
  * @apiSuccess (200) {String} version The website's version
  *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample {json} Example Response:
  * {
  *     "port": 5959,
  *     "proxy": false,
