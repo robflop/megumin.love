@@ -280,7 +280,7 @@ apiRouter.get('/counter', (req, res) => {
 });
 
 apiRouter.get('/themes', (req, res) => {
-	const themes = ['megumin', ...new Set(sounds.map(s => s.theme).filter(t => t))]; // Filter to remove "null" (i.e. no theme, default)
+	const themes = [...new Set(sounds.map(s => s.theme).filter(t => t))]; // Filter to remove "null" (i.e. no theme, default)
 	return res.json(themes);
 });
 
