@@ -120,7 +120,7 @@
   {
     "type": "GET",
     "url": "/sounds",
-    "title": "Get all sounds",
+    "title": "Get sound data",
     "name": "GetSounds",
     "group": "Sounds",
     "parameter": {
@@ -184,7 +184,7 @@
             "type": "Object[]",
             "optional": false,
             "field": "sounds",
-            "description": "<p>An array containing sounds objects</p>"
+            "description": "<p>An array containing sound objects</p>"
           },
           {
             "group": "Success 200",
@@ -198,7 +198,7 @@
             "type": "String",
             "optional": false,
             "field": "sounds.filename",
-            "description": "<p>The backend filename of the soundfile</p>"
+            "description": "<p>The backend filename of the sound</p>"
           },
           {
             "group": "Success 200",

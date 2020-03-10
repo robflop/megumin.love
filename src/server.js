@@ -363,9 +363,9 @@ apiRouter.get('/themes', (req, res) => {
  * @apiExample {curl} Example with parameters:
  *     $ curl -X GET 'https://megumin.love/api/sounds?source=Season%201&over=25000&under=50000'
  *
- * @apiSuccess (Success 200) {Object[]} sounds An array containing sounds objects
+ * @apiSuccess (Success 200) {Object[]} sounds An array containing sound objects
  * @apiSuccess (Success 200) {Number} sounds.id The id of the sound
- * @apiSuccess (Success 200) {String} sounds.filename The backend filename of the soundfile
+ * @apiSuccess (Success 200) {String} sounds.filename The backend filename of the sound
  * @apiSuccess (Success 200) {String} sounds.displayname The frontend display name of the sound
  * @apiSuccess (Success 200) {String} sounds.source The source of the sound
  * @apiSuccess (Success 200) {Number} sounds.count The soundboard click counter of the sound
