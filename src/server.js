@@ -241,6 +241,15 @@ apiRouter.use(express.json());
 
 // TODO: Write all ApiDocs
 
+/* Definitions for apiDoc to use in documentation below */
+
+/**
+ * @apiDefine admin Admininistrator Permission
+*    Admininistrator permission is required to access this endpoint.
+ */
+
+/* apiDoc Definitions end */
+
 apiRouter.all('/*', (req, res, next) => {
 	const apiEndpoints = apiRouter.stack.filter(r => r.route).map(r => r.route.path);
 
@@ -256,13 +265,13 @@ apiRouter.get('/', (req, res) => {
  *
  * @api {get} /meta Get Meta Information
  * @apiName GetMeta
- * @apiGroup Meta
+ * @apiGroup General
+ *
+ * @apiExample {curl} Example Request:
+ *     $ curl -X GET 'https://megumin.love/api/meta'
  *
  * @apiSuccess (Success 200) {Number} port The website's port
  * @apiSuccess (Success 200) {String} version The website's version
- *
- * @apiExample {curl} Example Request:
- *     $ curl https://megumin.love/api/meta
  *
  * @apiSuccessExample {json} Example Response:
  * {
@@ -275,15 +284,112 @@ apiRouter.get('/meta', (req, res) => {
 	return res.json({ port: config.port, version });
 });
 
+/**
+ *
+ * @api {GET} /counter Get main counter
+ * @apiName GetCounter
+ * @apiGroup General
+ *
+ * @apiExample {curl} Example Request:
+ *     $ curl -X GET 'https://megumin.love/api/counter'
+ *
+ * @apiSuccess (Success 200) {Number} counter The website's main counter
+ *
+ * @apiSuccessExample {json} Example Response:
+ * {
+ *     "counter": 59206101
+ * }
+ *
+ */
 apiRouter.get('/counter', (req, res) => {
 	return res.json({ counter });
 });
 
+/**
+ *
+ * @api {GET} /themes Get all themes
+ * @apiName GetThemes
+ * @apiGroup General
+ *
+ * @apiExample {curl} Example Request:
+ *     $ curl -X GET 'https://megumin.love/api/themes'
+ *
+ * @apiSuccess (Success 200) {String[]} themes An array containing the available theme names
+ *
+ * @apiSuccessExample {json} Example Response:
+ * [
+ *    "megumin",
+ *    "aqua",
+ *    "darkness",
+ *    "kazuma"
+ * ]
+ *
+ */
 apiRouter.get('/themes', (req, res) => {
 	const themes = [...new Set(sounds.map(s => s.theme).filter(t => t))]; // Filter to remove "null" (i.e. no theme, default)
 	return res.json(themes);
 });
 
+/**
+ *
+ * @api {GET} /sounds Get sound data
+ * @apiName GetSounds
+ * @apiGroup Sounds
+ *
+ * @apiParam (Query string) {String} theme Theme name to filter the sounds by (acquired via <code>/themes</code>). E.g.:
+ * ```
+ * theme=megumin
+ * ```
+ * @apiParam (Query string) {String} source Source name to filter the sounds by. E.g.:
+ * ```
+ * source=Season 1
+ * ```
+ * @apiParam (Query string) {Number} equals Exact click amount to filter the sounds by. E.g.:
+ * ```
+ * equals=51840
+ * ```
+ * @apiParam (Query string) {Number} over Minimum (exclusive) click amount to filter the sounds by. E.g.:
+ * ```
+ * over=25000
+ * ```
+ * @apiParam (Query string) {Number} under Maximum (exclusive) click amount to filter the sounds by E.g.:
+ * ```
+ * under=50000
+ * ```
+ *
+ * @apiExample {curl} Unfiltered example:
+ *     $ curl -X GET 'https://megumin.love/api/sounds'
+ *
+ * @apiExample {curl} Example with parameters:
+ *     $ curl -X GET 'https://megumin.love/api/sounds?source=Season%201&over=25000&under=50000'
+ *
+ * @apiSuccess (Success 200) {Object[]} sounds An array containing sounds objects
+ * @apiSuccess (Success 200) {Number} sounds.id The id of the sound
+ * @apiSuccess (Success 200) {String} sounds.filename The backend filename of the soundfile
+ * @apiSuccess (Success 200) {String} sounds.displayname The frontend display name of the sound
+ * @apiSuccess (Success 200) {String} sounds.source The source of the sound
+ * @apiSuccess (Success 200) {Number} sounds.count The soundboard click counter of the sound
+ *
+ * @apiSuccessExample {json} Successful unfiltered response:
+ *  [
+ *     {
+ *         "id": 1,
+ *         "filename": "eugh1",
+ *         "displayname": "Eugh #1",
+ *         "source": "Season 1",
+ *         "count": 15532
+ *     },
+ *     {
+ *         "id": 2,
+ *         "filename": "eugh2",
+ *         "displayname": "Eugh #2",
+ *         "source": "Season 1",
+ *         "count": 12671
+ *     },
+ *     // Potentially more sounds ...
+ * ]
+ *
+ */
 apiRouter.get('/sounds', (req, res) => { // eslint-disable-line complexity
 	let requestedSounds = sounds;
 
