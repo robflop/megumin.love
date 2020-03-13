@@ -33,7 +33,7 @@ Clips are sorted primarily by Source (Season -> Episode), and secondarily by tim
 | Nani?!             | nani             | Season 2, Episode 02 | 13:24 - 13:25 |
 | Yes                | yes              | Season 2, Episode 02 | 13:45 - 13:46 |
 | Zuryah!!           | zuryah           | Season 2, Episode 02 | 20:39 - 20:42 |
-| ♬Explosions♬       | lalala           | Season 2, Episode 03 | 00:07 - 00:11 |
+| ♬Explosions♬      | lalala           | Season 2, Episode 03 | 00:07 - 00:11 |
 | 'sion! 2           | sion2            | Season 2, Episode 03 | 00:28 - 00:30 |
 | 'n! 2              | n2               | Season 2, Episode 03 | 00:34 - 00:39 |
 | Thinking           | thinking         | Season 2, Episode 03 | 06:50 - 07:00 |
@@ -96,16 +96,16 @@ They can still be accessed in the [sound_archive](https://github.com/robflop/meg
 | Star Entry         | star             | Season 1, Episode 10 | 19:04 - 19:05 |
 | Hmph               | hmph             | Season 2, Episode 01 | 21:35 - 21:37 |
 | Hau                | hau              | Season 2, Episode 02 | 01:23 - 01:24 |
-| Dododo            | dododo            | Season 2, Episode 02 | 01:24 - 01:26 |
-| どうしましょう     | doushimashou     | Season 2, Episode 02 | 01:27 - 01:28 |
+| Dododo             | dododo           | Season 2, Episode 02 | 01:24 - 01:26 |
+| どうしましょう      | doushimashou     | Season 2, Episode 02 | 01:27 - 01:28 |
 | Aughh              | aughh            | Season 2, Episode 02 | 01:41 - 01:42 |
 | *splat*            | splat            | Season 2, Episode 02 | 07:03 - 07:04 |
 | Who..?             | who              | Season 2, Episode 02 | 07:14 - 07:15 |
 | Don't wanna        | dontwanna        | Season 2, Episode 02 | 08:27 - 08:28 |
 | It's cold          | itscold          | Season 2, Episode 02 | 08:28 - 08:29 |
 | Sigh               | sigh             | Season 2, Episode 02 | 08:54 - 08:55 |
-| しょうがない       | shouganai        | Season 2, Episode 02 | 08:56 - 08:57 |
-| よろしい           | yoroshii         | Season 2, Episode 02 | 09:31 - 09:32 |
+| しょうがない        | shouganai        | Season 2, Episode 02 | 08:56 - 08:57 |
+| よろしい            | yoroshii         | Season 2, Episode 02 | 09:31 - 09:32 |
 | Come at me!        | comeatme         | Season 2, Episode 02 | 09:33 - 09:35 |
 | Well, thanks       | wellthanks       | Season 2, Episode 02 | 11:22 - 11:24 |
 | Big Hug            | bighug           | Season 2, Episode 02 | 11:25 - 11:27 |

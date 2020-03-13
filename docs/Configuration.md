@@ -6,7 +6,7 @@ Configures which port the web- and socket server will run on.
 
 ## `proxy`
 
-Tells the backend whether the server is being run for a proxy for the purpose of connection limits and ratelimits. If you use a proxy but do not toggle this setting, these functionalities will malfunction as requests will appear to come from your server's ip (or your proxy's ip, respectively), thus believing all users are the same and putting the limit of one user on all users.
+Tells the backend whether the server is being run for a proxy for the purpose of connection limits and ratelimits. If you use a proxy but do not toggle this setting, these functionalities will malfunction as requests will appear to come from your server's ip (or your proxy's ip, respectively), thus believing all users are the same and putting the limit of one user on all users. Also see [this page](https://github.com/robflop/megumin.love/wiki/proxy).
 
 ---
 
