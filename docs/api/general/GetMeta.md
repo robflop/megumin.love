@@ -1,6 +1,6 @@
 ## `GET /meta`
 
-Returns meta information about the website, such as the current version as well as connection info such as the port or whether the instance is behind a proxy.
+Returns meta information about the website, such as the current version as well as connection info such as the port.
 Mostly used when accessing the website in a browser, so that the browser fills in relevant data on the page and establishes connections properly.
 
 ### Headers
