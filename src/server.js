@@ -938,7 +938,7 @@ apiRouter.post('/admin/notification', (req, res) => {
 		notification: data
 	});
 
-	return res.json({ code: 200, message: 'Notification sent.' });
+	return res.json({ code: 200, message: 'Notification sent.', notification: data });
 });
 
 apiRouter.get('/admin/database/save', (req, res) => {
@@ -961,8 +961,8 @@ apiRouter.patch('/admin/config/updateinterval', (req, res) => {
 	const data = req.body;
 	data.interval = parseInt(data.interval);
 
-	if (data.interval <= 0 || data.interval > 60 || isNaN(data.interval)) {
-		return res.status(400).json({ code: 400, name: 'Invalid interval', message: 'Update interval must be between 1 and 60 minutes.' });
+	if (data.interval <= 0 || isNaN(data.interval)) {
+		return res.status(400).json({ code: 400, name: 'Invalid interval', message: 'Update interval must be any integer above 0.' });
 	}
 
 	config.updateInterval = data.interval;
@@ -971,7 +971,7 @@ apiRouter.patch('/admin/config/updateinterval', (req, res) => {
 	updateConfigFile();
 
 	Logger.info(`Database updating rescheduled to minute ${data.interval}.`);
-	return res.json({ code: 200, message: 'Update interval successfully updated' });
+	return res.json({ code: 200, message: 'Update interval successfully updated', interval: data.interval });
 });
 
 apiRouter.patch('/admin/config/responseinterval', (req, res) => {
@@ -989,10 +989,10 @@ apiRouter.patch('/admin/config/responseinterval', (req, res) => {
 	updateConfigFile();
 
 	Logger.info(`Response interval set to respond ${data.interval === -1 ? 'immediately' : `after ${data.interval}ms`}.`);
-	return res.json({ code: 200, message: 'Response interval successfully updated' });
+	return res.json({ code: 200, message: 'Response interval successfully updated', interval: data.interval });
 });
 
-apiRouter.patch('/admin/config/connections', (req, res) => {
+apiRouter.patch('/admin/config/connectionlimit', (req, res) => {
 	const data = req.body;
 	data.connections = parseInt(data.connections);
 
@@ -1007,7 +1007,7 @@ apiRouter.patch('/admin/config/connections', (req, res) => {
 	updateConfigFile();
 
 	Logger.info(`Connection limit ${data.interval === -1 ? 'disabled' : `set to ${data.connections} connections`}.`);
-	return res.json({ code: 200, message: 'Connection limit successfully updated' });
+	return res.json({ code: 200, message: 'Connection limit successfully updated', connections: data.connections });
 });
 
 apiRouter.patch('/admin/config/ratelimit', (req, res) => {
@@ -1025,7 +1025,7 @@ apiRouter.patch('/admin/config/ratelimit', (req, res) => {
 	updateConfigFile();
 
 	Logger.info(`Ratelimit ${data.ratelimit === -1 ? 'disabled' : `set to ${data.ratelimit} clicks per minute`}.`);
-	return res.json({ code: 200, message: 'Click ratelimit successfully updated' });
+	return res.json({ code: 200, message: 'Click ratelimit successfully updated', ratelimit: data.ratelimit });
 });
 
 server.use('/api', apiRouter);
