@@ -89,6 +89,12 @@ const databaseVersions = [
 			);`,
 			'INSERT INTO meta ( version ) VALUES ( "8.1.0" );'
 		]
+	},
+	{
+		targetVersion: '9.0.0',
+		queries: [
+			'UPDATE meta SET version = "9.0.0";'
+		]
 	}
 ];
 

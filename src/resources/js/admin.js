@@ -74,9 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const soundResponse = document.getElementById('sound-response');
 	const milestoneResponse = document.getElementById('milestone-response');
 	const configResponse = document.getElementById('config-response');
-	const dataResponse = document.getElementById('data-response');
-
-	// TODO: Mess with formdata, https://stackoverflow.com/a/55306625, https://stackoverflow.com/a/46376650
 
 	/* ------ Sound-panel Forms ------ */
 
