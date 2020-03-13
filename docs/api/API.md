@@ -1,15 +1,3 @@
-# Misc
-
-- [Archived sounds](https://github.com/robflop/megumin.love/wiki/Archived-sounds)
-- [Configuration](https://github.com/robflop/megumin.love/wiki/Configuration)
-- [Custom sounds](https://github.com/robflop/megumin.love/wiki/Custom-sounds)
-- [Milestones](https://github.com/robflop/megumin.love/wiki/Milestones)
-- [Proxy](https://github.com/robflop/megumin.love/wiki/Proxy)
-- [Soundclip sources](https://github.com/robflop/megumin.love/wiki/Soundclip-sources)
-- [Themes](https://github.com/robflop/megumin.love/wiki/Themes)
-
-# [API](https://github.com/robflop/megumin.love/wiki/API)
-
 ## [Admin](https://github.com/robflop/megumin.love/wiki/Admin)
 
 - [Configuration](https://github.com/robflop/megumin.love/wiki/AdminGeneral)
