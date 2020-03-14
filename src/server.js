@@ -259,7 +259,7 @@ apiRouter.get('/counter', (req, res) => {
 });
 
 apiRouter.get('/themes', (req, res) => {
-	const themes = [...new Set(sounds.map(s => s.theme).filter(t => t))]; // Filter to remove "null" (i.e. no theme, default)
+	const themes = [...new Set(sounds.map(s => s.theme))];
 	return res.json(themes);
 });
 
