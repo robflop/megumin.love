@@ -5,6 +5,7 @@ workflows:
     jobs:
       - node-lts
       - node-current
+      - node-8.17.0
 jobs:
   node-lts: &node-template
     docker:
@@ -26,3 +27,7 @@ jobs:
     <<: *node-template
     docker:
       - image: circleci/node:current
+  node-8.17.0:
+    <<: *node-template
+    docker:
+      - image: circleci/node:8.17.0
