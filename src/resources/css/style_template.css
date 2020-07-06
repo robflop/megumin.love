@@ -266,7 +266,7 @@ footer p, footer a {
 }
 
 #sidebar-content ul li::before {
-	content: "->";
+	content: "-> ";
 }
 
 #sidebar-content hr {
