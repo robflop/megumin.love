@@ -10,7 +10,7 @@ jobs:
   node-lts: &node-template
     docker:
       - image: circleci/node:lts
-    working_directory: ~/src
+    working_directory: ~/
     steps:
       - checkout
       - restore_cache:
