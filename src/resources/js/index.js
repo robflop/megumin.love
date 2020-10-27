@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const meta = await fetch('/api/meta').then(res => res.json());
 
-	versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
-	trimmedVersion = meta.version.substring(0, meta.version.indexOf('.', meta.version.indexOf('.') + 1)); // Gets major and patch ver, discards all after
+	let versionsAnchor = document.querySelectorAll("a[href='/versions']")[0];
+	let trimmedVersion = meta.version.substring(0, meta.version.indexOf('.', meta.version.indexOf('.') + 1)); // Gets major and patch ver, discards all after
 	versionsAnchor.innerText = `[ver${trimmedVersion}]`;
 
 	const wsAddress = document.location.protocol === 'https:' ? `wss://${document.location.host}` : `ws://${document.location.host}`;

@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		return optionsString;
 	});
 
-	bgSettings = `
+	let bgSettings = `
 		<optgroup label="Settings">
 			<option value="reset">Reset Preference</option>
 			<option value="randomBg">Random (Default)</option>

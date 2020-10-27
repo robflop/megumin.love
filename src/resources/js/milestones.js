@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		const milestonesList = document.createElement('ol');
 
-		for (milestone of ms) {
+		for (let milestone of ms) {
 			const milestoneListElement = document.createElement('li');
 			milestoneListElement.classList.add('milestones');
 			milestoneListElement.id = `milestone-${milestone.id}`;
