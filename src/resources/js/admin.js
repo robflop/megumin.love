@@ -426,13 +426,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 	document.getElementById('logout').addEventListener('click', async e => {
 		e.preventDefault();
 
-		const logoutRes = fetch('/api/admin/logout', {
+		const logoutRes = await fetch('/api/admin/logout', {
 			method: 'GET',
 			headers: {
 				Authorization: localStorage.getItem('token'),
 			}
 		}).then(res => res.json());
 
-		if (logoutRes.code === 200) return window.location.href = '/';
+		if (logoutRes.code === 200) return window.location = '/';
 	});
 });
