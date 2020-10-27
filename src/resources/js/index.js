@@ -1,3 +1,5 @@
+import { util, themes } from './extras.min.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 	function formatNumber(number) {
 		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');

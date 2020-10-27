@@ -1,3 +1,5 @@
+import { util, themes } from './extras.min.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 	function formatDate(date) {
 		let month = date.getMonth() + 1;

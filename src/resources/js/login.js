@@ -1,3 +1,5 @@
+import { util } from './extras.min.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 	document.getElementsByTagName('form')[0].addEventListener('submit', async e => {
 		const token = e.target[0].value;

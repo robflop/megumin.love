@@ -1,3 +1,5 @@
+let util, themes; // To be exported via ES module below
+
 document.addEventListener('DOMContentLoaded', () => {
 	/* Backgrounds and Themes */
 
@@ -45,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ filename: 'bg1_christmas', displayName: 'Christmas', start: setDate(12, 19), end: setDate(12, 26) },
 		{ filename: 'bg1_newyearseve', displayName: 'New Year\'s Eve', start: setDate(12, 31), end: setDate(1, 1) },
 	];
-	const themes = [
+
+	themes = [ // Declared in top scope, to be exported
 		{
 			name: 'megumin', stylesheet: '', sidebar: '', title: 'Megumin',
 			backgrounds: [] // All default and seasonal backgrounds are seperately specified
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	/* Util funcs */
 
-	const util = {};
+	util = {}; // Declared in top scope, to be exported
 
 	let fadeInterval;
 
@@ -225,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}, 100);
 	};
-
-	window.util = util;
-	window.themes = themes;
 });
+
+export { util, themes }; // ES module export
