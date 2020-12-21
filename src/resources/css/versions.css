@@ -1,3 +1,7 @@
+:root {
+	--warning-text: #d50000;
+}
+
 div h2 {
 	margin-bottom: 5px;
 	text-align: center;
