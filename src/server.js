@@ -222,7 +222,18 @@ readdirSync(pagePath).filter(f => f.endsWith('.html')).forEach(file => {
 });
 
 server.use(helmet({
-	hsts: false // HSTS sent via nginx
+	hsts: false, // HSTS sent via nginx
+	contentSecurityPolicy: false
+}));
+server.use(helmet.contentSecurityPolicy({
+	directives: {
+		defaultSrc: ["'self'"],
+		styleSrc: ["'self'", 'fonts.googleapis.com'],
+		fontSrc: ["'self'", 'fonts.gstatic.com'],
+		scriptSrc: ["'self'", 'cdn.jsdelivr.net'],
+		imgSrc: ["'self'"],
+		objectSrc: ["'none'"]
+	},
 }));
 if (config.proxy) server.set('trust proxy', true);
 server.use(session({
