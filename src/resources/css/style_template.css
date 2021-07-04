@@ -20,7 +20,6 @@ body {
 	display: table-cell;
 	min-height: 100%;
 	padding: 0;
-	margin: 0;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
@@ -228,15 +227,11 @@ footer p, footer a {
 }
 
 #sidebar-content {
-	display: flex;
-	flex-direction: column;
-	position: relative;
 	max-width: 330px;
 	max-height: 390px;
 	padding: 0.25em 0.75em 0.75em;
 	font-size: 15px;
 	overflow-y: auto;
-	z-index: 150;
 }
 
 #sidebar-content h1,
