@@ -1,6 +1,6 @@
 ## [Admin](https://github.com/robflop/megumin.love/wiki/Admin)
 
-- [Configuration](https://github.com/robflop/megumin.love/wiki/AdminGeneral)
+- [Configuration](https://github.com/robflop/megumin.love/wiki/AdminConfiguration)
   - [Config](https://github.com/robflop/megumin.love/wiki/GetConfig)
   - [Connection limit](https://github.com/robflop/megumin.love/wiki/PatchConnectionLimit)
   - [Ratelimit](https://github.com/robflop/megumin.love/wiki/PatchRatelimit)
