@@ -1,6 +1,6 @@
 ## Admin routes
 
-- [Configuration-related](https://github.com/robflop/megumin.love/wiki/AdminGeneral)
+- [Configuration-related](https://github.com/robflop/megumin.love/wiki/AdminConfiguration)
   - [/admin/config](https://github.com/robflop/megumin.love/wiki/GetConfig)
   - [/admin/config/connectionlimit](https://github.com/robflop/megumin.love/wiki/PatchConnectionLimit)
   - [/admin/config/ratelimit](https://github.com/robflop/megumin.love/wiki/PatchRatelimit)
