@@ -228,8 +228,8 @@ server.use(helmet({
 server.use(helmet.contentSecurityPolicy({
 	directives: {
 		defaultSrc: ["'self'"],
-		styleSrc: ["'self'", 'fonts.googleapis.com'],
-		fontSrc: ["'self'", 'fonts.gstatic.com'],
+		styleSrc: ["'self'"],
+		fontSrc: ["'self'"],
 		scriptSrc: ["'self'", 'cdn.jsdelivr.net'],
 		imgSrc: ["'self'"],
 		objectSrc: ["'none'"]

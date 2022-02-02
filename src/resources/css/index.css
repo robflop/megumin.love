@@ -30,6 +30,7 @@ a[href="/soundboard"], a[href="/statistics"] {
 
 #versions-social-anchors, #soundboard-statistics-anchors {
 	display: flex;
+	font-size: 18px;
 }
 
 #versions-social-anchors {
