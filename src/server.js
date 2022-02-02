@@ -230,7 +230,7 @@ server.use(helmet.contentSecurityPolicy({
 		defaultSrc: ["'self'"],
 		styleSrc: ["'self'"],
 		fontSrc: ["'self'"],
-		scriptSrc: ["'self'", 'cdn.jsdelivr.net'],
+		scriptSrc: ["'self'"],
 		imgSrc: ["'self'"],
 		objectSrc: ["'none'"]
 	},

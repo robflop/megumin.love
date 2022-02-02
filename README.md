@@ -26,5 +26,7 @@ For information on updating the version of the website, adding/modifying/deletin
 
 Licensed under the [MIT License](LICENSE.md).
 
-The "Courgette" font was created by Karolina Lach and is licensed under the [OFL-1.1](/src/resources/fonts/Courgette/OFL.txt).
-The "Lato" font was created by Łukasz Dziedzic and is licensed under the [OFL-1.1](/src/resources/fonts/Lato/OFL.txt).
+The "Courgette" font was created by Karolina Lach and is licensed under the [OFL-1.1 License](/src/resources/fonts/Courgette/OFL.txt).
+The "Lato" font was created by Łukasz Dziedzic and is licensed under the [OFL-1.1 License](/src/resources/fonts/Lato/OFL.txt).
+
+"howler.js" was created by James "goldfire" Simpson and is licensed under the [MIT License](/src/resources/js/howler/LICENSE.md).
