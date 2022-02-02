@@ -11,10 +11,10 @@ const Logger = require(resources('js', 'Logger'));
 
 function minifyAssets() {
 	const cssPath = resources('css');
-	const cssFiles = readdirSync(cssPath).filter(f => !f.endsWith('.min.css'));
+	const cssFiles = readdirSync(cssPath).filter(f => f.endsWith('.css') && !f.endsWith('.min.css'));
 
 	const jsPath = resources('js');
-	const jsFiles = readdirSync(jsPath).filter(f => !f.endsWith('.min.js'));
+	const jsFiles = readdirSync(jsPath).filter(f => f.endsWith('.js') && !f.endsWith('.min.js'));
 
 	jsFiles.splice(0, 1); // Remove eslintrc
 
