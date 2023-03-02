@@ -13,6 +13,7 @@ src/resources/testfile.mp3
 /src/**/*.min.css
 /src/**/*.min.js
 !/src/resources/js/howler/howler.min.js
+!/src/resources/js/chartjs/chartjs.min.js
 
 # Runtime data
 pids
