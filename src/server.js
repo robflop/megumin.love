@@ -23,7 +23,7 @@ let queuedMainClicks = false, queuedSoundboardClicks = {};
 let mainClickResponseInterval, soundboardClickResponseInterval;
 
 // On-boot database interaction
-const db = new Database(config.databasePath, () => {
+const db = new Database(join(__dirname, config.databasePath), () => {
 	db.exec('PRAGMA foreign_keys = ON;', pragmaErr => {
 		if (pragmaErr) return Logger.error('Foreign key enforcement pragma query failed.');
 	});
