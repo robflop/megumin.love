@@ -19,7 +19,7 @@
 		"@node-minify/core": "^6.2.0",
 		"@node-minify/uglify-es": "^6.2.0",
 		"eslint": "^7.32.0",
-		"htmlhint": "^0.15.1"
+		"htmlhint": "^1.1.4"
 	},
 	"scripts": {
 		"test": "eslint src/server.js src/resources/js && htmlhint src/pages",
